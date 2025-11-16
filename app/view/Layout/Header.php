@@ -26,9 +26,9 @@ $inactiveClassMobile = 'text-gray-600 hover:text-gray-800 font-medium px-4 py-2 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.8">
-    <title>Dashboard</title>
+    <link rel="icon" type="image/png" href="/img/LOGO PNJ FIX 1.png">
+    <title>RuanginPNJ - <?= $judul; ?></title>
     <link href="/css/output.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body class="bg-[#F3F5FA] min-h-screen font-sf-pro">
 
@@ -61,7 +61,7 @@ $inactiveClassMobile = 'text-gray-600 hover:text-gray-800 font-medium px-4 py-2 
 
             <div id="mobile-menu" class="md:hidden hidden pb-4">
                 <div class="flex flex-col space-y-2 px-6 mt-4">
-                    <a href="#" class="<?php echo ($activeController == 'Dashboard') ? $activeClass : $inactiveClass; ?>">
+                    <a href="/Dashboard" class="<?php echo ($activeController == 'Dashboard') ? $activeClass : $inactiveClass; ?>">
                         Ruangan
                     </a>
                     <a href="/History" class="<?php echo ($activeController == 'History') ? $activeClass : $inactiveClass; ?>">

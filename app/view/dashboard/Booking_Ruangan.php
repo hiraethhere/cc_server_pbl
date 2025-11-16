@@ -30,7 +30,7 @@ $formAction = '/Booking/handleBooking';
                                     Total Jam
                                 </label>
                                 <div id="totalTime" class="inline-flex items-center px-4 py-2 text-gray-800 font-bold rounded-full text-lg">
-                                    <i class="fas fa-hourglass-half mr-2"></i> 
+                                    <i class="fas fa-hourglass-half mr-2 text-gray-500"></i> 
                                     0 Jam 0 Menit
                                 </div>
                             </div>
@@ -99,7 +99,7 @@ $formAction = '/Booking/handleBooking';
                                 </div>
                             </div>
                         </div>
-                        <button type="button" onclick="addMember()" 
+                        <button type="button" onclick="addMember()"
                                 class="mt-4 flex items-center text-blue-600 hover:text-blue-800 hover:cursor-pointer text-sm font-medium transition">
                             <i class="fas fa-plus mr-1"></i> Tambah Anggota
                         </button>
@@ -118,34 +118,77 @@ $formAction = '/Booking/handleBooking';
             </div>
         </div>
 
-        <div class="order-1 lg:order-none lg:col-span-1">
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden sticky top-24">
+        <div class="order-1 lg:order-none lg:col-span-1 space-y-6">
+    
+            <!-- KARTU RUANGAN (TIDAK STICKY) -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
                 <div class="h-56">
-                    <img src="/img/DefaultRuangan.jpg" 
-                        alt="Ruangan" class="w-full h-full object-cover">
+                    <img src="/img/DefaultRuangan.jpg" alt="Ruangan" class="w-full h-full object-cover">
                 </div>
                 <div class="p-6">
-                    <h3 class="font-bold text-2xl text-gray-800 mb-4">Ruang Lentera Edukasi</h3>
+                    <h3 class="font-bold text-2xl text-gray-800 mb-4"><?= $detailRuangan['nama_ruangan'] ?></h3>
                     <div class="space-y-3 text-sm text-gray-600 mb-6">
-                        <p class="flex items-center"><i class="fas fa-layer-group text-blue-600 mr-3"></i> Lantai 2</p>
-                        <p class="flex items-center"><i class="fas fa-vector-square text-green-600 mr-3"></i> 30m²</p>
-                        <p class="flex items-center"><i class="fas fa-users text-indigo-600 mr-3"></i> 4 - 8 Orang</p>
+                        <p class="flex items-center">
+                            <svg class="w-5 h-5 text-blue-600 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                <polyline points="9 22 9 12 15 12 15 22"/>
+                            </svg>
+                            lt <?= $detailRuangan['lantai'] ?>
+                        </p>
+                        <p class="flex items-center">
+                            <svg class="w-5 h-5 text-indigo-600 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                            <?= $detailRuangan['jumlah_minimal'] . ' - ' . $detailRuangan['jumlah_maksimal'] ?> orang
+                        </p>
                     </div>
                     <details class="text-gray-600">
                         <summary class="text-base font-semibold cursor-pointer text-blue-600 hover:text-blue-800 flex items-center">
-                            <i class="fas fa-info-circle mr-2"></i> Deskripsi Lengkap
-                            <i class="fas fa-chevron-down text-sm ml-1 transform details-arrow-icon transition duration-300"></i>
+                            Deskripsi Lengkap
+                            <svg class="w-4 h-4 ml-1 transform transition duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
                         </summary>
                         <p class="mt-3 text-sm leading-relaxed text-justify">
-                            Ruang Lentera Edukasi adalah ruangan modern yang dirancang untuk mendukung kegiatan pembelajaran dan diskusi kelompok.
+                            <?=  $detailRuangan['deskripsi'] ?>
                         </p>
                     </details>
+                </div>
+            </div>
+
+            <!-- KARTU TATA TERTIB (STICKY) -->
+            <div class="lg:sticky lg:top-6 bg-white rounded-lg shadow-sm border border-gray-200 p-5 z-10">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <!-- SVG Timbangan -->
+                        <svg class="w-6 h-6 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2v4"/>
+                            <path d="M12 18v4"/>
+                            <path d="M5 8h14"/>
+                            <path d="M7 12h10"/>
+                            <path d="M8.5 15c-.8 0-1.5-.9-1.5-2s.7-2 1.5-2"/>
+                            <path d="M15.5 15c.8 0 1.5-.9 1.5-2s-.7-2-1.5-2"/>
+                            <path d="M12 12c-1.1 0-2-1.3-2-3s.9-3 2-3 2 1.3 2 3-.9 3-2 3z"/>
+                            <path d="M12 12v6"/>
+                            <path d="M9 18h6"/>
+                        </svg>
+                        <span class="text-lg font-semibold text-gray-900">Tata Tertib</span>
+                    </div>
+                    <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
                 </div>
             </div>
         </div>
     </div>
 </main>
 
+<!-- **************************************************
+INI POP UP KONFIRMASI
+******************************************************* -->
 <div id="confirmModal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
     <div class="bg-white rounded-2xl p-8 w-full max-w-sm mx-4 text-center">
         <div class="mb-4">
@@ -154,18 +197,21 @@ $formAction = '/Booking/handleBooking';
         <h3 class="text-xl font-bold text-gray-800 mb-2">Konfirmasi Booking</h3>
         <p class="text-sm text-gray-600 mb-6">Data anggota akan tersimpan untuk selamanya dan tidak bisa diubah.</p>
         <div class="grid grid-cols-2 gap-3">
-            <button type="button" onclick="closeConfirmModal()" 
-                    class="px-6 py-3 bg-white text-[#171E29] rounded-lg border font-semibold hover:bg-gray-300 transition hover:cursor-pointer">
+            <button type="button"
+                    class="px-6 py-2 bg-white text-[#171E29] rounded-lg border font-semibold hover:bg-gray-300 transition hover:cursor-pointer text-sm">
                 Batalkan
             </button>
             <button type="button" 
-                    class="px-6 py-3 bg-[#38C55C] text-white rounded-lg font-semibold hover:bg-green-600 transition hover:cursor-pointer">
+                    class="px-6 py-2 bg-[#38C55C] text-white rounded-lg font-semibold hover:bg-green-600 transition hover:cursor-pointer text-sm">
                 Konfirmasi
             </button>
         </div>
     </div>
 </div>
 
+<!-- **************************************************
+INI POP UP SUCCESS
+******************************************************* -->
 <div id="successModal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
     <div class="bg-white rounded-2xl p-8 w-full max-w-sm mx-4 text-center border border-[#8E97A6]">
         <div class="mb-4">
@@ -173,37 +219,18 @@ $formAction = '/Booking/handleBooking';
         </div>
         <h3 class="text-xl font-bold text-gray-800 mb-2">Request Booking Berhasil</h3>
         <p class="text-sm text-gray-600 mb-6">Tunggu approval dari admin</p>
-        <button onclick="window.location.href = '../Ruangan/index.php';" 
-                class="w-full px-6 py-3 bg-[#38C55C] text-white rounded-lg font-semibold hover:bg-green-600 transition hover:cursor-pointer">
+        <button
+                class="w-full px-6 py-2 bg-[#38C55C] text-white rounded-lg font-semibold hover:bg-green-600 transition hover:cursor-pointer">
             OK
         </button>
     </div>
 </div>
 
 
+<!-- **************************************************
+JS DIGUNAKAN UNTUK MENAMBAH & MENGHAPUS MEMBER
+******************************************************* -->
 <script>
-    // Calculate total time (WAJIB JS)
-    function calculateTotal() {
-        const start = document.getElementById('jamMulai').value;
-        const end = document.getElementById('jamSelesai').value;
-        const totalEl = document.getElementById('totalTime');
-        // Logika perhitungan jam (hanya bisa dilakukan di client-side JS tanpa reload)
-        if (!start || !end) {
-            totalEl.innerHTML = '<i class="fas fa-hourglass-half mr-2 text-gray-500"></i> 0 Jam 0 Menit';
-            return;
-        }
-        const [sh, sm] = start.split(':').map(Number);
-        const [eh, em] = end.split(':').map(Number);
-        let diff = (eh * 60 + em) - (sh * 60 + sm);
-        if (diff <= 0) {
-            totalEl.innerHTML = '<i class="fas fa-hourglass-half mr-2 text-gray-500"></i> 0 Jam 0 Menit';
-            return;
-        }
-        const hours = Math.floor(diff / 60);
-        const minutes = diff % 60;
-        totalEl.innerHTML = `<i class="fas fa-hourglass-half mr-2 text-gray-500"></i> ${hours} Jam ${minutes} Menit`;
-    }
-
     // Add member (WAJIB JS)
     let memberCount = 2;
     function addMember() {
@@ -218,7 +245,12 @@ $formAction = '/Booking/handleBooking';
                     <span class="ml-2 font-medium text-sm text-gray-800">Anggota</span>
                 </div>
                 <button type="button" onclick="removeMember(this)" class="text-red-600 hover:text-red-800 transition">
-                    <i class="fas fa-trash-alt"></i>
+                    <svg class="w-5 h-5 text-red-600 hover:text-red-800 transition" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
                 </button>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -243,15 +275,4 @@ $formAction = '/Booking/handleBooking';
         });
         memberCount = document.querySelectorAll('.member-card').length;
     }
-
-    function closeConfirmModal() {
-        document.getElementById('confirmModal').classList.add('hidden');
-    }
-
-    // Event Listeners
-    document.addEventListener('DOMContentLoaded', () => {
-        const jamSelects = document.querySelectorAll('#jamMulai, #jamSelesai');
-        jamSelects.forEach(select => select.addEventListener('change', calculateTotal));
-        calculateTotal();  
-    });
 </script>
