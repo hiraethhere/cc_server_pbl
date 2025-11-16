@@ -3,16 +3,20 @@
 
 class Auth extends Controller {
 
+    public function __construct()
+    {
+        if(isset($_SESSION['user'])){
+            header('location: /dashboard');
+            exit;
+        } 
+    }
+
     public function registerForm(){
         $this->view('Auth/register');
         $this->view('Layout/Footer');
     }
 
     public function index(){
-        if(isset($_SESSION['user'])){
-            header('location: /dashboard');
-            exit;
-        } 
         $this->view('Auth/login');
         $this->view('Layout/Footer');
     }
@@ -84,7 +88,7 @@ class Auth extends Controller {
             throw new Exception('Akun anda belum AKtif!');
         }
 
-        if (!$user['suspend_count'] < 3){
+        if ($user['suspend_count'] >= 3){
             throw new Exception('Akun anda sedang di suspend, silahkan hubungi admin!');
         }
 
@@ -100,6 +104,7 @@ class Auth extends Controller {
         ];
         $_SESSION['role'] = $user['role'];
 
+        generateCsrf();
 
         Flasher::setFlash('Berhasil', 'login', 'success');
         if ($user['role'] === 'admin') {

@@ -17,3 +17,12 @@ function param_enum($value, $allowed, $errorMessage = "Parameter tidak valid")
     }
     return $value;
 }
+
+function validateCsrf($token){
+    if (empty($_SESSION['csrf_token']) || empty($token)) {
+        return false;
+    }
+
+    return hash_equals($_SESSION['csrf_token'], $token);
+}
+
