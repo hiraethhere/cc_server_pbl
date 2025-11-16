@@ -63,10 +63,10 @@
             </div>
 
 
-            <div class="flex flex-col bg-white justify-center items-center rounded-2xl w-1/2 px-2 py-4">
+            <div class="flex flex-col bg-white justify-center items-center rounded-2xl w-1/2 py-4">
                 <p class="text-xs">Bukti foto akun KubacaPNJ</p>
                 <div>
-                    <img src="/img/ActivityHistory.png" alt="Bukti Foto Akun KubacaPNJ" class="mt-2 w-72 h-96 object-cover rounded-lg border border-gray-300">
+                    <img src="/img/Profil-Kubaca_Contoh.jpg" alt="Bukti Foto Akun KubacaPNJ" class="mt-2 w-auto h-124 object-cover rounded-lg border border-gray-300">
                 </div>
             </div>
         </div>
