@@ -145,18 +145,5 @@
 
             
         </div>
-
-        <div class="flex justify-center items-center gap-2 py-4 text-sm text-gray-600">
-            <button class="px-2">&lt;</button>
-            <button class="px-2 bg-blue-100 text-blue-600 rounded">1</button>
-            <button class="px-2">2</button>
-            <button class="px-2">3</button>
-            <span>...</span>
-            <button class="px-2">8</button>
-            <button class="px-2">&gt;</button>
-            <span class="ml-4">Go to</span>
-            <input type="text" class="w-10 mx-1 text-center border rounded" value="1">
-            <span>Page</span>
-        </div>
     </div>
 </main>

@@ -6,6 +6,7 @@
     <link rel="icon" type="image/png" href="/img/LOGO PNJ FIX 1.png">
     <title>RuanginPNJ - <?= $data['judul']; ?></title>
     <link href="/css/output.css" rel="stylesheet">
+    <link href="js/script.js" rel="script">
 </head>
 <body class="bg-gray-50 font-sf-pro flex min-h-screen">
 

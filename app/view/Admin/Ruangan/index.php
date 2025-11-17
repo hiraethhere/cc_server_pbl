@@ -1,7 +1,7 @@
     <main class="flex-1 p-8 overflow-y-auto bg-[#F3F5FA]">
 
         <nav class="text-sm text-dark-overlay/60 w-full mb-6">
-            <a href="/Akun" class="text-gray-900 hover:text-[#1E68FB]">Data Peminjaman Ruangan</a>
+            <a href="/Admin/Ruangan" class="text-gray-900 hover:text-[#1E68FB]">Data Peminjaman Ruangan</a>
             <span class="mx-2">></span>
             <span class="text-dark-overlay/60 font-medium hover:cursor-pointer">Hari Ini</span>
         </nav>
@@ -50,7 +50,7 @@
 
 
             <div class="flex justify-center order-1 md:order-2 items-center">
-                <a href="/History/Peminjaman" class="text-white bg-[#1E68FB] font-medium flex items-center text-sm transition px-4 py-2 rounded-full hover:from-blue-600 hover:to-blue-700">
+                <a href="/Admin/dataRuangan" class="text-white bg-[#1E68FB] font-medium flex items-center text-sm transition px-4 py-2 rounded-full hover:from-blue-600 hover:to-blue-700">
                     Lihat Data Ruangan
                     <div class="text-white"> 
                         <svg class="w-5 h-5 fill-current ml-2" 
