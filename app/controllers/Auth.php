@@ -3,20 +3,20 @@
 
 class Auth extends Controller {
 
-    public function __construct()
-    {
+    public function registerForm(){
         if(isset($_SESSION['user'])){
             header('location: /dashboard');
             exit;
         } 
-    }
-
-    public function registerForm(){
         $this->view('Auth/register');
         $this->view('Layout/Footer');
     }
 
     public function index(){
+        if(isset($_SESSION['user'])){
+            header('location: /dashboard');
+            exit;
+        } 
         $this->view('Auth/login');
         $this->view('Layout/Footer');
     }
@@ -34,7 +34,6 @@ class Auth extends Controller {
             } else {
                 throw new Exception('Mohon upload files');
             }
-
 
             $data = [
                 'username' => $_POST['username'],
@@ -125,6 +124,115 @@ class Auth extends Controller {
         }
     }
 
+        public function forgetPassword(){
+
+        if (isset($_POST['email'])) {
+            $user = $this->model('userModel')->findUserByEmail($_POST['email']);
+
+            if (!$user) {
+            Flasher::setFlash('Email tidak terdaftar', 'Coba lagi', 'error');
+            header('location: /auth/forgetPassword');
+                exit;
+            }
+
+            $_SESSION['reset_email'] = $user['email'];
+            $_SESSION['name'] = $user['username'];
+            $_SESSION['otp'] = generateOTP();
+            $_SESSION['otp_expire'] = time() + 600;
+
+            try{
+            sendEmail($_SESSION['reset_email'], $_SESSION['name'], 'hidup jokowi, ini otp lu', $_SESSION['otp']);
+            header('location: /auth/verifyPassword');
+            exit;   
+            } catch(Exception $e){
+            Flasher::setFlash($e->getMessage(), 'Gagal mengirim email', 'danger');
+            header('Location: /auth/forgetPassword');
+            exit;
+            }
+        }
+        $this->view('Auth/forgetPassword');
+        $this->view('Layout/Footer');
+    }
+
+    // ini buat lupa password ya bukan password biasa
+    public function verifyPassword(){
+        if (!isset($_SESSION['reset_email'])) {
+            header('location: /auth/forgetPassword');
+            exit;
+        }
+        if (isset($_POST['otp-1'])) {
+            $otp =
+                ($_POST['otp-1'] ?? '') .
+                ($_POST['otp-2'] ?? '') .
+                ($_POST['otp-3'] ?? '') .
+                ($_POST['otp-4'] ?? '') .
+                ($_POST['otp-5'] ?? '') . 
+                ($_POST['otp-6'] ?? '');;
+
+                if (time() > $_SESSION['otp_expire']) {
+                    Flasher::setFlash('Kode OTP sudah kedaluwarsa', 'Silakan minta ulang', 'danger');
+                    unset($_SESSION['reset_email'], $_SESSION['otp'], $_SESSION['otp_expire']);
+                    header('Location: /auth/forgetPassword');
+                    exit;
+                }
+
+                $sessionOTP = $_SESSION['otp'];
+                if ($otp !== $sessionOTP) {
+                Flasher::setFlash('OTP salah', 'Coba lagi', 'danger');
+                header('Location: /auth/verifyPassword');
+                exit;
+            }
+                    
+                $_SESSION['reset_verified'] = true;
+
+                unset($_SESSION['otp'], $_SESSION['otp_expire']);
+                header('location: /auth/resetPassword');
+                exit;
+
+            
+            header('location: /auth/resetPassword');
+            exit;
+        }
+
+        $this->view('auth/verifyOTP');
+    }
+
+    public function resetPassword(){
+       if (!isset($_SESSION['reset_verified'])) {
+            Flasher::setFlash('Forbidden', 'Coba lagi', 'danger');
+            header('location: /auth/verifyPassword');
+            exit;
+            }
+
+        if (isset($_POST['passwordBaru'])) {
+            if ($_POST['passwordBaru'] !== $_POST['password']) {
+                Flasher::setFlash('Password tidak sama', 'Coba lagi', 'danger');
+                header('location: /auth/resetPassword');
+                exit;
+            }
+
+            $data = [
+                'password' => password_hash($_POST['password'], PASSWORD_DEFAULT),
+                'email' => $_SESSION['reset_email']
+            ];
+            $result = $this->model('userModel')->updatePassword($data);
+
+            if ($result) {
+            // hapus session reset
+            unset($_SESSION['reset_email'], $_SESSION['reset_verified'], $_SESSION['otp']);
+            Flasher::setFlash('Berhasil', 'Ubah password', 'success');
+            header('location: /auth/');
+            exit;
+            }else {
+                Flasher::setFlash('Gagal', "Ubah Password", "danger");
+                header('location: /auth/resetPassword');
+                exit;
+            }
+        }
+
+        $this->view('auth/resetPassword');
+    }
+
     public function handleLogout(){
         session_unset();
         session_destroy();
@@ -172,11 +280,6 @@ class Auth extends Controller {
         // 6. Bersihkan memori
         imagedestroy($image);
         exit; // Penting, agar tidak ada output lain
-    }
-
-    public function forgetPassword(){
-        $this->view('Auth/forgetPassword');
-        $this->view('Layout/Footer');
     }
 
     public function pending(){

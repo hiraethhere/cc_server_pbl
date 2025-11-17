@@ -55,4 +55,13 @@ class UserModel {
         $this->db->execute();
         return $this->db->rowCount();
     }
+
+    public function updatePassword($data){
+    $this->db->query("UPDATE users SET password = :password WHERE email = :email");
+    $this->db->bind(':password', $data['password']);
+    $this->db->bind(':email', $data['email']);
+    $this->db->execute(); 
+    
+    return $this->db->rowCount(); 
+}
 }

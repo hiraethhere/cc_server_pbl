@@ -18,8 +18,19 @@ class Email extends Controller {
         }catch (Exception $e){
            echo "Gagal mengirim email. Error: " . $e->getMessage();
         }
+    }
 
+    public function sendOTP(){
+        try {
+            $emailTujuan = 'test@mailpit.local';
+            $namaPenerima = 'user test';
+            $subjek = 'Jangan Bagikan kode ini ke siapapun!';
+            $isiEmail = $_SESSION[''];
 
-
+            sendEmail($emailTujuan, $namaPenerima, $subjek, $isiEmail);
+            echo "Email berhasil dikirim ke $emailTujuan";
+        }catch (Exception $e){
+           echo "Gagal mengirim email. Error: " . $e->getMessage();
+        }
     }
 }
