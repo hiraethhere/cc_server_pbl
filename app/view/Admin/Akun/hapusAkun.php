@@ -19,7 +19,7 @@
                             <input type="password" id="password" name="passwordLama" placeholder="••••••••"
                                 class="w-full bg-white px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
-                                <i class="fas fa-eye hover:cursor-pointer" id="toggleIcon"></i>
+                                
                             </button>
                         </div>
                     </div>
@@ -33,7 +33,7 @@
 
                     <div class="grid grid-cols-2 gap-3 mt-2">
                         <button class="px-4 py-2 bg-white text-gray-800 rounded-lg font-medium hover:bg-gray-100 border border-gray-400 transition hover:cursor-pointer">Batalkan</button>
-                        <button class="px-4 py-2 bg-[#1E68FB] text-white rounded-lg font-medium hover:bg-blue-700 transition shadow-sm hover:cursor-pointer">Konfirmasi</button>
+                        <button type="button" class="px-4 py-2 bg-[#1E68FB] text-white rounded-lg font-medium hover:bg-blue-700 transition shadow-sm hover:cursor-pointer">Konfirmasi</button>
                     </div>
                 </div>
             </form>

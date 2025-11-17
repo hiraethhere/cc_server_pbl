@@ -8,12 +8,13 @@
     <link rel="icon" type="image/png" href="/img/LOGO PNJ FIX 1.png">
     <title>RuanginPNJ - Login</title>
     <link href="/css/output.css" rel="stylesheet">
+    <link href="/js/script.js" rel="script">
 
 </head>
 <body class="font-sf-pro" >
     
     <div class="bg-cover bg-center min-h-screen flex flex-col items-center justify-center"
-         style="background-image: url('/img/Background 1.png');>   
+         style="background-image: url('/img/Background 1.png');">   
 
         <div class="flex items-center justify-center w-fit h-fit max-w-lg my-8git"> 
             <div class="bg-[#F3F5FA] rounded-2xl shadow-2xl p-8 w-lg h-fit max-w-lg md:h-fit sm:h-full mb-5 mt-1">

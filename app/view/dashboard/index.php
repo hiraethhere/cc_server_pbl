@@ -30,14 +30,16 @@
             <?php foreach($ruangan as $r) : ?>
 
             <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
-                <div class="relative h-48 bg-gradient-to-br from-gray-300 to-gray-400">
+                <div class="relative h-48 from-gray-300 to-gray-400">
                     <img src="/img/<?= $r['img_ruangan'] ?>" 
                         alt="Ruang Lentera Edukasi" class="w-full h-full object-cover">
                 </div>
-                <div class="p-5">
-                    <h3 class="font-bold text-lg text-[#1A1A1A] mb-2"><?= $r['nama_ruangan'] ?></h3>
-                    <p class="text-dark-overlay/80 mb-4 text-justify text-sm"><?= $r['deskripsi_singkat'] ?></p>
-                    <hr class="border-t border-[#171E29] mb-4">
+                <div class="grid grid-rows-[2fr_1fr] p-5">
+                    <div>
+                        <h3 class="font-bold text-lg text-[#1A1A1A] mb-2"><?= $r['nama_ruangan'] ?></h3>
+                        <p class="text-dark-overlay/80 mb-4 text-justify text-sm"><?= $r['deskripsi_singkat'] ?></p>
+                        <hr class="border-t border-[#171E29] mb-4">
+                    </div>
                     <div class="grid grid-cols-2 items-center text-sm text-gray-600">
                         <div class="grid grid-cols-2 justify-items-start mb-2 mr-6 md:text-md text-xs">
                             <div class="flex md:flex-col lg:flex-row flex-col justify-center items-center md:mr-2">
@@ -50,7 +52,7 @@
                                         stroke-linejoin="round"/>
                                 </svg>
                                 <span class="inline-flex items-center lg:flex-row flex-col">
-                                    <?= $r['lantai'] ?>
+                                    Lt <?= $r['lantai'] ?>
                                 </span>
                             </div>
                             <div class="flex md:flex-col lg:flex-row flex-col justify-center items-center">                            
