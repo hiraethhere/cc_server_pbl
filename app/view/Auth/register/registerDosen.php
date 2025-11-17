@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="/img/LOGO PNJ FIX 1.png">
-    <title>RuanginPNJ - Registrasi</title>
+    <title>RuanginPNJ - Registrasi Dosen</title>
     <link href="/css/output.css" rel="stylesheet">
 
 </head>
@@ -14,34 +14,44 @@
          style="background-image: url('/img/Background 1.png'); 
              background-color: rgba(139, 92, 113, 0.7); background-blend-mode: multiply;">
 
-        <div class="bg-[#F3F5FA] rounded-2xl shadow-2xl p-8 w-full max-w-lg">
+        <div class="bg-[#F3F5FA] rounded-2xl shadow-2xl p-8 w-full max-w-xl">
+        
+        <div>
+            <a class="flex items-center space-x-2 text-[#1E68FB] hover:underline mb-4 hover:cursor-pointer text-sm" href="/auth/registerForm">
+                <img src="/icon/back.svg" alt="Back to Home" width="20" height="20">
+                <span>Kembali pilih role</span>
+            </a>
+        </div>
+
             <!-- Header -->
-            <div class="mb-6">
+            <div class="mb-6 mt-6">
                 <h1 class="text-3xl font-bold text-[#171E29] mb-2">Registrasi Akun</h1>
-                <p class="text-sm text-gray-600">Temukan, pinjam, dan nikmati fasilitas favortimu dengan mudah.</p>
+                <p class="text-sm text-gray-600">Pinjam ruangan perpustakaan dengan mudah, praktis, dan cepat.</p>
             </div>
 
             <!-- Form -->
             <form action="/auth/handleRegister" method="POST" enctype="multipart/form-data">
+                
+                <!-- Nama -->
+                <div class="col-span-2 sm:col-span-1 mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
+                    <input type="text" name="username" placeholder="Input nama" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Email PNJ -->
+                <div class="col-span-2 sm:col-span-1 mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Email PNJ</label>
+                    <input type="email" name="email" placeholder="Input email" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
                 <div class="grid grid-cols-2 gap-4">
-                    <!-- Nama -->
-                    <div class="col-span-2 sm:col-span-1">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Nama</label>
-                        <input type="text" name="username" placeholder="Input nama" 
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
 
                     <!-- NIM -->
                     <div class="col-span-2 sm:col-span-1">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">NIM</label>
-                        <input type="text" name="nomor_induk" placeholder="Input NIM" 
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-
-                    <!-- Email PNJ -->
-                    <div class="col-span-2 sm:col-span-1">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Email PNJ</label>
-                        <input type="email" name="email" placeholder="Input email" 
+                        <label class="block text-sm font-medium text-gray-700 mb-2">NIP</label>
+                        <input type="text" name="nomor_induk" placeholder="Input NIP" 
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
 
@@ -86,32 +96,18 @@
                     </div>
                 </div>
 
-                <!-- Upload Foto -->
-                <div class="mt-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Upload foto bukti akun KabacaPNJ (Halaman profil)
-                    </label>
-                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition duration-200 cursor-pointer">
-                        <input type="file" name="buktiKubaca" id="buktiKubaca" accept="image/*" class="hidden" onchange="previewFile()">
-                        <label for="buktiKubaca" class="cursor-pointer">
-                            <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
-                            <p class="text-sm text-gray-600" id="fileName">Upload foto bukti kubaca</p>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Login Link -->
-                <div class="mt-6 text-sm">
-                    <span class="text-gray-600">Sudah punya akun? </span>
-                    <a href="/auth/formLogin" class="text-blue-600 hover:underline font-medium">Login</a>
-                </div>
-
                 <!-- Submit Button -->
                 <button type="submit" 
                     class="w-full mt-6 bg-[#38C55C] text-white py-3 rounded-lg font-semibold hover:bg-green-600 hover:cursor-pointer transition duration-200 shadow-lg">
                     Daftar - Explore Ruangan Sekarang
                 </button>
             </form>
+
+            <!-- Login Link -->
+                <div class="mt-6 text-sm">
+                    <span class="text-gray-600">Sudah punya akun? </span>
+                    <a href="/auth/formLogin" class="text-blue-600 hover:underline font-medium">Login</a>
+                </div>
         </div>
 
         <!-- **************************************************

@@ -4,7 +4,22 @@
 class Auth extends Controller {
 
     public function registerForm(){
-        $this->view('Auth/register');
+        $this->view('Auth/register/index');
+        $this->view('Layout/Footer');
+    }
+
+    public function registerMahasiswa(){
+        $this->view('Auth/register/registerMahasiswa');
+        $this->view('Layout/Footer');
+    }
+
+    public function registerDosen(){
+        $this->view('Auth/register/registerDosen');
+        $this->view('Layout/Footer');
+    }
+
+    public function registerTendik(){
+        $this->view('Auth/register/registerTendik');
         $this->view('Layout/Footer');
     }
 
