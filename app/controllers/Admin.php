@@ -45,14 +45,28 @@ class Admin extends Controller {
         $data['judul'] = 'Data Ruangan';
         $data['navbar'] = 'Ruangan';
         $this->view('Layout/Sidebar', $data);
-        $this->view('Admin/ruangan');
+        $this->view('Admin/Ruangan/index');
     }
 
     public function Akun(){
         $data['judul'] = 'Profile Admin';
         $data['navbar'] = 'Akun';
         $this->view('Layout/Sidebar', $data);
-        $this->view('Admin/akun');
+        $this->view('Admin/Akun/index');
+    }
+
+    public function gantiPassword(){
+        $data['judul'] = 'Ganti Password';
+        $data['navbar'] = 'Akun';
+        $this->view('Layout/Sidebar', $data);
+        $this->view('Admin/Akun/gantiPassword');
+    }
+
+    public function hapusAkun(){
+        $data['judul'] = 'Hapus Akun';
+        $data['navbar'] = 'Akun';
+        $this->view('Layout/Sidebar', $data);
+        $this->view('Admin/Akun/hapusAkun');
     }
 
 }
