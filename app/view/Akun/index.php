@@ -54,7 +54,7 @@
            class="bg-[#1E68FB] text-white hover:from-blue-600 hover:to-blue-700 text-center py-3 rounded-lg font-semibold transition duration-200">
             Ganti Password
         </a>
-        <a href="/Auth/handleLogout"
+        <a href="#" onclick="showModal()"
             class="block w-full bg-[#C90B0B] text-white hover:bg-red-700 text-center py-3 rounded-lg font-semibold transition duration-200">
             Logout
         </a>
@@ -66,7 +66,7 @@
     <!-- **************************************************
     INI POP UP KONFIRMASI LOGOUT
     ******************************************************* -->
-    <div id="successModal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
+    <div id="successModal" class="fixed inset-0 flex items-center justify-center z-50 hidden ">
         <div class="bg-white rounded-2xl p-8 w-full max-w-sm mx-4 text-center border border-[#8E97A6]">
             <div class="mb-4">
                 <i class="fas fa-sign-out-alt text-[#C90B0B] text-5xl"></i>
@@ -74,14 +74,14 @@
             <h3 class="text-xl font-bold text-gray-800 mb-2">Logout</h3>
             <p class="text-sm text-gray-600 mb-6">Apakah anda yakin ingin logout?</p>
             <div class="flex justify-center space-x-4">
-                <button
+                <button onclick="hideModal()"
                         class="w-full px-6 py-1 bg-white text-sm text-black rounded-lg border border-gray-500 font-semibold hover:bg-gray-100 transition hover:cursor-pointer">
                     Batalkan
-                </button>
-                <button
+                </button>   
+                <a href="/auth/handleLogout"
                         class="w-full px-6 py-1 bg-[#C90B0B] text-sm text-white rounded-lg font-semibold hover:bg-red-800 transition hover:cursor-pointer">
                     Logout
-                </button>
+                </a>
             </div>
         </div>
     </div>
@@ -132,3 +132,20 @@
         </div>
     </div>
 </div> -->
+
+<script>
+    // Fungsi untuk menampilkan modal logout
+    function showModal() {
+        document.getElementById('successModal').classList.remove('hidden');
+    }
+
+    // Fungsi untuk menyembunyikan modal logout
+    function hideModal() {
+        document.getElementById('successModal').classList.add('hidden');
+    }
+
+    // Tambahkan event listener pada tombol batalkan
+    document.querySelector('#successModal button:first-of-type').addEventListener('click', hideModal);
+
+
+</script>
