@@ -19,9 +19,9 @@ final class CreateTablePengumuman extends AbstractMigration
      */
     public function change(): void
     {
-        $table = $this->table('pengumuman', ['id' => 'id_pengumuman']);
-        $table->addColumn('nama_pengumuman', 'string')
-              ->addColumn('isi_pengumuman', 'text')
+        $table = $this->table('announcement', ['id' => 'id_announcement']);
+        $table->addColumn('announcement_name', 'string')
+              ->addColumn('announcement_content', 'text')
               ->addTimestamps()
               ->create();
     }

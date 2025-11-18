@@ -19,23 +19,23 @@ final class CreateTableRuangan extends AbstractMigration
      */
     public function change(): void
     {
-        $table = $this->table('ruangan', ['id' => 'id_ruangan']);
+        $table = $this->table('rooms', ['id' => 'id_room']);
         $table->addColumn('id_pengumuman', 'integer', ['signed' => false, 'null' => true])
                 -> addForeignKey('id_pengumuman', 'pengumuman', 'id_pengumuman', [
                     'delete' => 'SET_NULL',
                     'update' => 'CASCADE'  
                 ])
-                ->addColumn('nama_ruangan', 'string')
-                ->addColumn('img_ruangan', 'string', ['null' => true])
-                ->addColumn('deskripsi', 'text', ['null' => true])
-                ->addColumn('deskripsi_singkat', 'string',['limit' => 101] )
-                ->addColumn('lantai', 'tinyinteger')
+                ->addColumn('room_name', 'string')
+                ->addColumn('room_img', 'string', ['null' => true])
+                ->addColumn('description', 'text', ['null' => true])
+                ->addColumn('short_description', 'string',['limit' => 101] )
+                ->addColumn('floor', 'tinyinteger')
                 ->addColumn('status', 'enum', [
                   'values' => ['active', 'non-active', 'deleted'],
                   'default' => 'active'
               ])
-                ->addColumn('jumlah_maksimal', 'tinyinteger')
-                ->addColumn('jumlah_minimal', 'tinyinteger')
+                ->addColumn('max_capacity', 'tinyinteger')
+                ->addColumn('min_capacity', 'tinyinteger')
                 ->addTimestamps()
                 ->create();
     }

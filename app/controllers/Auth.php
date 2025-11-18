@@ -19,10 +19,15 @@ class Auth extends Controller {
     // }
 
     public function registerForms(){
+
         if(isset($_SESSION['user'])){
             header('location: /dashboard');
             exit;
-        }   
+        }
+
+        if (isset($_POST['backToRole'])) {
+            unset($_SESSION['regisRole']);
+        }
 
         if (isset($_POST['role'])) {
             $_SESSION['regisRole'] = $_POST['role'];
@@ -50,6 +55,8 @@ class Auth extends Controller {
             }
             $this->view('Layout/Footer');
     }
+
+    // public function 
 
     // public function registerMahasiswa(){
     //     $this->view('Auth/register/registerMahasiswa');

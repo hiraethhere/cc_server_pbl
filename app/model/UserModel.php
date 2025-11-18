@@ -2,6 +2,7 @@
 
 class UserModel {
 
+    private $table = 'users';
     private $db;
 
     public function __construct(){

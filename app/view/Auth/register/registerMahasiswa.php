@@ -14,12 +14,23 @@
          style="background-image: url('/img/Background 1.png'); 
              background-color: rgba(139, 92, 113, 0.7); background-blend-mode: multiply;">
 
+
         <div class="bg-[#F3F5FA] rounded-2xl shadow-2xl p-8 w-full max-w-xl">
             <!-- Header -->
             <div class="mb-6">
+                <form action="" method="post">
+                    <div>
+                    <input type="hidden" name="backToRole" value="anton">
+                    <button type="submit" class="flex items-center space-x-2 text-[#1E68FB] hover:underline mb-4 hover:cursor-pointer text-sm" href="/auth/registerForms">
+                    <img src="/icon/back.svg" alt="Back to Home" width="20" height="20">
+                    <span>Kembali pilih role</span>
+                    </button>
+                    </div>
+                </form>
                 <h1 class="text-3xl font-bold text-[#171E29] mb-2">Registrasi Akun</h1>
                 <p class="text-sm text-gray-600">Pinjam ruangan perpustakaan dengan mudah, praktis, dan cepat.</p>
             </div>
+            
 
             <!-- Form -->
             <form action="/auth/handleRegister" method="POST" enctype="multipart/form-data">

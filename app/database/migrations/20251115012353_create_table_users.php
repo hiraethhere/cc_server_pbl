@@ -30,17 +30,18 @@ final class CreateTableUsers extends AbstractMigration
               ->addColumn('password', 'string')
               ->addColumn('email', 'string')
               ->addColumn('nomor_induk', 'string', ['limit' => 30])
-              ->addColumn('jurusanUnit', 'string', ['null' => true])
+              ->addColumn('jurusan_unit', 'string', ['null' => true])
               ->addColumn('prodi', 'string', ['null' => true])
               ->addColumn('status', 'enum', [
                   'values' => ['pending', 'rejected', 'active', 'deleted', 'cancelled'],
                   'default' => 'pending'
               ])
               ->addColumn('suspend_count', 'integer', ['default' => 0])
-              ->addColumn('email_verify', 'boolean', ['default' => false])
-              ->addColumn('alasan_reject', 'string', ['null' => true])
-              ->addColumn('foto_profil', 'string', ['null' => true])
-              ->addColumn('foto_bukti', 'string', ['null' => true])
+              ->addColumn('email_verified', 'boolean', ['default' => false])
+              ->addColumn('reject_reason', 'string', ['null' => true])
+              ->addColumn('profile_photo', 'string', ['null' => true])
+              ->addColumn('kubaca_photo', 'string', ['null' => true])
+              ->addColumn('expired_at', 'datetime', ['null' => true])
               
               // Menambahkan index unik
               ->addIndex('email', ['unique' => true])
