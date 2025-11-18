@@ -52,7 +52,7 @@
                     <div class="flex items-center justify-between mb-4 text-sm">
                         <div>
                             <span class="text-gray-600">Belum punya akun? </span>
-                            <a href="/auth/registerForm" class="text-blue-600 hover:underline font-medium">Registrasi</a>
+                            <a href="/auth/registerForms" class="text-blue-600 hover:underline font-medium">Registrasi</a>
                         </div>
                         <a href="/Auth/ForgetPassword" class="text-blue-600 hover:underline font-medium">Lupa Password?</a>
                     </div>

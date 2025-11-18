@@ -7,30 +7,64 @@ class Auth extends Controller {
         if(isset($_SESSION['user'])){
             header('location: /dashboard');
             exit;
-        } 
+        }
+        unset($_SESSION['regisRole']);
         $this->view('Auth/login');
         $this->view('Layout/Footer');
     }
 
-    public function registerForm(){
-        $this->view('Auth/register/index');
-        $this->view('Layout/Footer');
+    // public function registerForm(){
+    //     $this->view('Auth/register/index');
+    //     $this->view('Layout/Footer');
+    // }
+
+    public function registerForms(){
+        if(isset($_SESSION['user'])){
+            header('location: /dashboard');
+            exit;
+        }   
+
+        if (isset($_POST['role'])) {
+            $_SESSION['regisRole'] = $_POST['role'];
+        }
+
+        $forms = $_SESSION['regisRole'] ?? null;
+
+        switch ($forms) {
+            case "3":
+                $this->view('Auth/register/registerMahasiswa');
+
+                break;
+            case "4":
+                $this->view('Auth/register/registerDosen');
+
+                break;
+            case "5":
+                $this->view('Auth/register/registerTendik');
+        
+                break;
+            default:
+                $this->view('Auth/register/index');
+            
+                break;
+            }
+            $this->view('Layout/Footer');
     }
 
-    public function registerMahasiswa(){
-        $this->view('Auth/register/registerMahasiswa');
-        $this->view('Layout/Footer');
-    }
+    // public function registerMahasiswa(){
+    //     $this->view('Auth/register/registerMahasiswa');
+    //     $this->view('Layout/Footer');
+    // }
 
-    public function registerDosen(){
-        $this->view('Auth/register/registerDosen');
-        $this->view('Layout/Footer');
-    }
+    // public function registerDosen(){
+    //     $this->view('Auth/register/registerDosen');
+    //     $this->view('Layout/Footer');
+    // }
 
-    public function registerTendik(){
-        $this->view('Auth/register/registerTendik');
-        $this->view('Layout/Footer');
-    }
+    // public function registerTendik(){
+    //     $this->view('Auth/register/registerTendik');
+    //     $this->view('Layout/Footer');
+    // }
 
     //belum bisa jangan dipake
     public function handleRegister(){
