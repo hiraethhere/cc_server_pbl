@@ -46,17 +46,22 @@ class UserModel {
 
     public function createUser($data){
         $this->db->query(
-            "INSERT INTO users (username, nomor_induk, email, password, jurusan, fotobukti, updated_at, created_at) 
-            VALUES (:username, :nomor_induk, :email, :password, :jurusan, :fotobukti, :now, :now)"
+            "INSERT INTO users (id_role, username, nomor_induk, email, password, jurusan_unit, prodi, suspend_count, email_verified kubaca_photo, profile_photo, expired_at created_at) 
+            VALUES (:id_role, :username, :nomor_induk, :email, :password, :jurusan_unit :prodi,:suspend_count, :email_verified, :kubaca_photo, profile_photo :expired_at, :now)"
         );
 
+        $this->db->bind('id_role', $data['id_role']);
         $this->db->bind(':username', $data['username']);
         $this->db->bind(':email', $data['email']);
         $this->db->bind(':password', $data['password']);
         $this->db->bind(':nomor_induk', $data['nomor_induk']);
-        $this->db->bind(':fotobukti', $data['fotobukti']);
-        $this->db->bind(':jurusan', $data['jurusan']);
+        $this->db->bind(':jurusan_unit', $data['jurusan_unit']);
+        $this->db->bind(':prodi', $data['prodi']);
         $this->db->bind('suspend_count', $data['suspend_count']);
+        $this->db->bind(':email_verified', $data['email_verified']);
+        $this->db->bind(':kubaca_photo', $data['kubaca_photo']);
+        $this->db->bind(':profile_photo', $data['profile_photo']);
+        $this->db->bind(':expired_at', $data['expired_at']);
         $this->db->bind(':now', $data['now']);
         $this->db->execute();
         return $this->db->rowCount();

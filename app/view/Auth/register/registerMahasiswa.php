@@ -60,7 +60,7 @@
                     <!-- Jurusan -->
                     <div class="col-span-2 sm:col-span-1">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Jurusan</label>
-                        <select name="jurusan" 
+                        <select name="jurusan" id="jurusan"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="" disabled selected hidden>Jurusan</option>
                             <option value="Teknik Informatika">Teknik Informatika</option>
@@ -74,14 +74,9 @@
                     <!-- Prodi -->
                     <div class="col-span-2 sm:col-span-1">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Prodi</label>
-                        <select name="Prodi" 
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <select name="prodi" id="prodi" disabled
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 select-none ">
                             <option value="" disabled selected hidden>Prodi</option>
-                            <option value="Ini isi otomatis">Ini isi otomatis</option>
-                            <option value="Ini isi otomatis">Ini isi otomatis</option>
-                            <option value="Ini isi otomatis">Ini isi otomatis</option>
-                            <option value="Ini isi otomatis">Ini isi otomatis</option>
-                            <option value="Ini isi otomatis">Ini isi otomatis</option>
                         </select>
                     </div>
 
@@ -115,7 +110,7 @@
                 <!-- Upload Foto -->
                 <div class="mt-6">
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Upload foto bukti akun KabacaPNJ (Halaman profil)
+                        Upload foto bukti akun KubacaPNJ (Halaman profil)
                     </label>
                     <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition duration-200 cursor-pointer">
                         <input type="file" name="buktiKubaca" id="buktiKubaca" accept="image/*" class="hidden" onchange="previewFile()">
@@ -175,4 +170,34 @@
                 toggleIcon.classList.add('fa-eye');
             }
         }
+
+        // Ambil data dari PHP Helper, convert ke JSON biar bisa dibaca JS
+    const dataKampus = <?= json_encode($dataProdi); ?>; 
+
+    const jurusanSelect = document.getElementById('jurusan');
+    const prodiSelect = document.getElementById('prodi');
+
+    jurusanSelect.addEventListener('change', function() {
+        const selectedJurusan = this.value;
+        const listProdi = dataKampus[selectedJurusan]; // Ambil array prodi dari key jurusan
+
+        // Reset dropdown prodi
+        prodiSelect.innerHTML = '<option value="" disabled selected hidden>Pilih Prodi</option>';
+
+
+        if (listProdi) {
+            listProdi.forEach(function(prodiName) {
+                const option = document.createElement('option');
+                option.value = prodiName;
+                option.textContent = prodiName;
+                prodiSelect.appendChild(option);
+                prodiSelect.classList.remove('disabled:opacity-75')
+                prodiSelect.removeAttribute('disabled')
+            });
+        } else {
+            // KUNCI LAGI: Jika entah kenapa datanya kosong/error
+            prodiSelect.disabled = true;
+        }
+    });
+
     </script>

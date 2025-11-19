@@ -37,7 +37,8 @@ class Auth extends Controller {
 
         switch ($forms) {
             case "3":
-                $this->view('Auth/register/registerMahasiswa');
+                $data['dataProdi'] = getProdi();
+                $this->view('Auth/register/registerMahasiswa', $data);
 
                 break;
             case "4":
@@ -87,14 +88,28 @@ class Auth extends Controller {
                 throw new Exception('Mohon upload files');
             }
 
+            if ($_SESSION['roleRegis'] === '3') {
+                if (!validateEmail($_POST['email'])) {
+                    throw new Exception('email tidak valid');
+                }
+                $expiredDate = countExpiredAt($_POST['email'], $_POST['prodi']);
+            } else{
+                $expiredDate = NULL;
+            }
+
             $data = [
+                'id_role' => $_SESSION['roleRegis'],
                 'username' => $_POST['username'],
                 'password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
                 'nomor_induk' => $_POST['nomor_induk'],
                 'email' => $_POST['email'],
                 'jurusan' => $_POST['jurusan'],
-                'fotobukti' => $buktiKubaca,
+                'prodi' => $_POST['prodi'] ?? NULL,
+                'kubaca_photo' => $buktiKubaca ?? NULL,
+                'profile_photo' => 'DefaultProfilePicture.jpg',
                 'suspend_count' => 0,
+                'email_verified' => true,
+                'expired_at' => $expiredDate,
                 'now' => date('Y-m-d H:i:s')
             ];
 
