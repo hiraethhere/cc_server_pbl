@@ -1,6 +1,6 @@
 <?php
 
-class m_20251119_create_table_roles extends Migration{
+class m_20251119_01_create_table_roles extends Migration{
 
     public function up(){
 

@@ -1,7 +1,7 @@
 <?php
 
 
-class m_20251119_create_table_users extends Migration{
+class m_20251119_02_create_table_users extends Migration{
 
     public function up()
     {

@@ -20,7 +20,7 @@ class m_20251119_04_create_table_rooms extends Migration{
 
                     CONSTRAINT fk_room_announcement 
                     FOREIGN KEY (id_announcement)
-                    REFERENCES announcements(id_announcement)
+                    REFERENCES announcement(id_announcement)
                     ON DELETE SET NULL
                     ON UPDATE CASCADE
                 );";
