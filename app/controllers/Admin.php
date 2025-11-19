@@ -35,7 +35,7 @@ class Admin extends Controller {
         $data['judul'] = 'Detail Anggota';
         $data['navbar'] = 'Anggota';
         $this->view('Layout/Sidebar', $data);
-        $this->view('Admin/Anggota/detail');
+        $this->view('Admin/Anggota/detail', $data);
     }
 
     public function Selesaikan(){

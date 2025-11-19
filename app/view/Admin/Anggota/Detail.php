@@ -17,7 +17,7 @@
                     <div class="mb-1">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Nama</label>
                         <div class="relative">
-                            <input type="Text" id="Nama" name="Nama" placeholder="Nama Lengkap" readonly
+                            <input type="Text" id="Nama" name="Nama" placeholder="<?= $user['username'] ?>" readonly
                                 class="w-full bg-white px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
                         </div>
                     </div>
@@ -25,7 +25,7 @@
                     <div class="mb-1">
                         <label class="block text-sm font-medium text-gray-700 mb-2">NIM</label>
                         <div class="relative">
-                            <input type="Text" id="NIM" name="NIM" placeholder="NIM" readonly
+                            <input type="Text" id="NIM" name="NIM" placeholder="<?= $user['nomor_induk'] ?>" readonly
                                 class="w-full bg-white px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
                         </div>
                     </div>
@@ -33,7 +33,7 @@
                     <div class="mb-1">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                         <div class="relative">
-                            <input type="Email" id="Email" name="Email" placeholder="Email" readonly
+                            <input type="Email" id="Email" name="Email" placeholder="<?= $user['email'] ?>" readonly
                                 class="w-full bg-white px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                     <div class="mb-1">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Jurusan</label>
                         <div class="relative">
-                            <input type="Text" id="Jurusan" name="Jurusan" placeholder="Jurusan" readonly
+                            <input type="Text" id="Jurusan" name="Jurusan" placeholder="<?= $user['jurusan_unit'] ?>" readonly
                                 class="w-full bg-white px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
                         </div>
                     </div>
@@ -49,7 +49,7 @@
                     <div class="mb-1">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Daftar</label>
                         <div class="relative">
-                            <input type="Date" id="TanggalDaftar" name="Tanggal Daftar" placeholder="Tanggal Daftar" readonly
+                            <input type="Date" id="TanggalDaftar" name="Tanggal Daftar" placeholder="<?= date('j F Y', strtotime($user['created_at'])) ?>" readonly
                                 class="w-full bg-white px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
                         </div>
                     </div>
@@ -57,7 +57,7 @@
                     <div class="mb-1">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Jumlah Suspend</label>
                         <div class="relative">
-                            <input type="Number" id="JumlahSuspend" name="Jumlah Suspend" placeholder="Jumlah Suspend" readonly
+                            <input type="Number" id="JumlahSuspend" name="Jumlah Suspend" placeholder="<?= $user['suspend_count'] ?>" readonly
                                 class="w-full bg-white px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
                         </div>
                     </div>
