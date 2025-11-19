@@ -6,6 +6,7 @@ class s_20251119_03_userSeeder extends Seeder{
     {
         $passwordUser = password_hash('user123', PASSWORD_DEFAULT);
         $passwordAdmin = password_hash('admin123', PASSWORD_DEFAULT);
+        $expired = date('Y-m-d H:i:s', strtotime("-1 years"));
 
         $sql = "INSERT IGNORE INTO users ( id_user,
             id_role, username, password, email,
@@ -18,7 +19,8 @@ class s_20251119_03_userSeeder extends Seeder{
             (2, 2, 'admin', '$passwordAdmin', 'admin@example.com', '19877654', 'Admin', NULL, 'active', 0, 1, NULL, NULL, NULL, NULL, NOW(), NOW()),
             (3, 3, 'anton', '$passwordUser', 'anton@example.com', '22110033', 'TIK', 'Teknik Informatika dan Komputer', 'active', 0, 1, NULL, NULL, NULL, NULL, NOW(), NOW()),
             (4, 4, 'dosen', '$passwordUser', 'dosen@example.com', '55667788', 'Administrasi', 'Sekretariat', 'active', 0, 1, NULL, NULL, NULL, NULL, NOW(), NOW()),
-            (5, 5, 'staff', '$passwordUser', 'staff@example.com', '55667789', 'Staff', 'Sekretariat', 'active', 0, 1, NULL, NULL, NULL, NULL, NOW(), NOW())
+            (5, 5, 'staff', '$passwordUser', 'staff@example.com', '55667789', 'Staff', 'Sekretariat', 'active', 0, 1, NULL, NULL, NULL, NULL, NOW(), NOW()),
+            (6, 3, 'antin', '$passwordUser', 'expired@example.com', '556677891', 'TIK', 'Teknik Multimedia', 'active', 0, 1, NULL, NULL, NULL, '$expired' , NOW(), NOW())
             ";
 
     $this->db->query($sql);
