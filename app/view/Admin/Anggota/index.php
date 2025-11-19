@@ -78,56 +78,33 @@
                         <th class="px-4 py-3 text-center font-semibold text-dark-overlay/70 rounded-tr-xl">Aksi</th>
                     </tr>
                 </thead>
+
                 <tbody class="divide-y divide-gray-200">
 
                     <?php if ($tab === 'semua'): ?>
+                        <?php $i = 1 ?>
+                        <?php foreach($users as $user) : ?>
+    
                         <!-- ========== TAB SEMUA – DATA HTML ========== -->
                         <tr class="bg-white hover:bg-gray-50">
-                            <td class="px-4 py-3 text-center text-sm">1</td>
-                            <td class="px-4 py-3 text-center text-sm">Naqib Zuhair Al-Hudri</td>
-                            <td class="px-4 py-3 text-center text-sm">2407411042</td>
-                            <td class="px-4 py-3 text-center text-sm">Teknik Informatika & Komputer</td>
-                            <td class="px-4 py-3 text-center text-sm">5 November 2025</td>
+                            <td class="px-4 py-3 text-center text-sm"><?= $i ?></td>
+                            <td class="px-4 py-3 text-center text-sm"><?= $user['username'] ?></td>
+                            <td class="px-4 py-3 text-center text-sm"><?= $user['nomor_induk'] ?></td>
+                            <td class="px-4 py-3 text-center text-sm"><?= $user['jurusan_unit'] ?></td>
+                            <td class="px-4 py-3 text-center text-sm"><?= date('j F Y', strtotime($user['created_at'])) ?></td>
                             <td class="px-4 py-3 text-center">
-                                <a href="/Admin/detailAnggota?tab=semua"
+                                <form>
+                                <a href="/Admin/detailAnggota/<?= $user['id_user'] ?>"
                                 class="inline-flex items-center justify-center px-5 py-2 rounded-sm text-xs font-semibold
                                         bg-[linear-gradient(0deg,rgba(30,104,251,0.03)_0%,rgba(30,104,251,0.03)_100%),#FAFAFA]
                                         border border-[rgba(23,30,41,0.50)] shadow-md hover:bg-gray-100 transition">
                                     Lihat Detail
                                 </a>
+                                </form>
                             </td>
                         </tr>
-                        <tr class="bg-white hover:bg-gray-50">
-                            <td class="px-4 py-3 text-center text-sm">1</td>
-                            <td class="px-4 py-3 text-center text-sm">Naqib Zuhair Al-Hudri</td>
-                            <td class="px-4 py-3 text-center text-sm">2407411042</td>
-                            <td class="px-4 py-3 text-center text-sm">Teknik Informatika & Komputer</td>
-                            <td class="px-4 py-3 text-center text-sm">5 November 2025</td>
-                            <td class="px-4 py-3 text-center">
-                                <a href="/Admin/detailAnggota?tab=semua"
-                                class="inline-flex items-center justify-center px-5 py-2 rounded-sm text-xs font-semibold
-                                        bg-[linear-gradient(0deg,rgba(30,104,251,0.03)_0%,rgba(30,104,251,0.03)_100%),#FAFAFA]
-                                        border border-[rgba(23,30,41,0.50)] shadow-md hover:bg-gray-100 transition">
-                                    Lihat Detail
-                                </a>
-                            </td>
-                        </tr>
-                        <tr class="bg-white hover:bg-gray-50">
-                            <td class="px-4 py-3 text-center text-sm">1</td>
-                            <td class="px-4 py-3 text-center text-sm">Naqib Zuhair Al-Hudri</td>
-                            <td class="px-4 py-3 text-center text-sm">2407411042</td>
-                            <td class="px-4 py-3 text-center text-sm">Teknik Informatika & Komputer</td>
-                            <td class="px-4 py-3 text-center text-sm">5 November 2025</td>
-                            <td class="px-4 py-3 text-center">
-                                <a href="/Admin/detailAnggota?tab=semua"
-                                class="inline-flex items-center justify-center px-5 py-2 rounded-sm text-xs font-semibold
-                                        bg-[linear-gradient(0deg,rgba(30,104,251,0.03)_0%,rgba(30,104,251,0.03)_100%),#FAFAFA]
-                                        border border-[rgba(23,30,41,0.50)] shadow-md hover:bg-gray-100 transition">
-                                    Lihat Detail
-                                </a>
-                            </td>
-                        </tr>
-
+                        <?php $i += 1 ?>
+                        <?php endforeach ?>
                     <?php else: ?>
                         <!-- ========== TAB APPROVAL – DATA HTML ========== -->
                         <tr class="bg-white hover:bg-gray-50">

@@ -21,22 +21,27 @@ class UserModel {
     return $this->db->singleSet();
     }
 
-    public function findUserByEmailorNomor_Induk($email, $nomor_induk){
-        $this->db->query("SELECT * FROM users WHERE email = :email or nomor_induk = :nomor_induk");
-        $this->db->bind(':email', $email);
-        $this->db->bind(':nomor_induk', $nomor_induk);
-    }
-
     public function loginUserByEmailorNomor_Induk($input){
         $this->db->query("SELECT * FROM users WHERE email = :input or nomor_induk = :input LIMIT 1");
         $this->db->bind(':input', $input);
         return $this->db->singleSet();
     }
 
+    public function findUserAndRoleByEmail($email){
+        $this->db->query("SELECT u.*, r.role_name AS role FROM users u JOIN roles r ON u.id_role = r.id_role WHERE email = :email LIMIT 1 ");
+        $this->db->bind(':email', $email);
+        return $this->db->singleSet();
+    }
+
     public function getRole($id_role){
         $this->db->query("SELECT role_name AS role FROM roles where id_role = :id_role LIMIT 1" );
         $this->db->bind(':id_role', $id_role);
-        return $this->db->singleSet();
+        return $this->db->singleSet();  
+    }
+
+    public function getUserForAdmin(){
+        $this->db->query("SELECT id_user, username, nomor_induk, jurusan_unit, created_at FROM users WHERE id_role NOT IN (1,2)" );
+        return $this->db->resultSet();
     }
 
     public function createUser($data){

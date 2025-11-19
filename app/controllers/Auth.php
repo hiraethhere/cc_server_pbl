@@ -125,7 +125,7 @@ class Auth extends Controller {
             'email' => $_POST['email'],
             'password' => $_POST['password']
             ];
-        $user = $this->model('UserModel')->findUserByEmail($data['email']);
+        $user = $this->model('UserModel')->findUserAndRoleByEmail($data['email']);
 
         if (!$user) {
             throw new Exception('Email Salah');
@@ -143,25 +143,32 @@ class Auth extends Controller {
             throw new Exception('Akun anda sedang di suspend, silahkan hubungi admin!');
         }
 
-        $user['role'] = $this->model('UserModel')->getRole($user['id_role'])['role'];
+        if ($user['expired_at'] !== null) {
+            $now = new DateTime();
+            $expired = new DateTime($user['expired_at']);
+
+            if ($now > $expired) {
+                throw new Exception('Akun anda sudah expired, silahkan hubungi admin');
+            }
+        }
 
         $_SESSION['user'] = [
             'user_id' => $user['id_user'],
             'username' => $user['username'],
             'email' => $user['email'],
-            'jurusanUnit' => $user['jurusanUnit'],
+            'jurusan_unit' => $user['jurusan_unit'],
             'prodi' => $user['prodi'],
-            'foto_profil' => $user['foto_profil']
+            'profile_photo' => $user['profile_photo']
         ];
         $_SESSION['role'] = $user['role'];
 
         generateCsrf();
 
         Flasher::setFlash('Berhasil', 'login', 'success');
-        if ($user['role'] === 'admin') {
+        if ($user['role'] === 'Admin') {
             header('location: /admin');
             exit;
-        } else if ($user['role'] === 'superadmin'){
+        } else if ($user['role'] === 'Superadmin'){
             header('Location: /admin');
             exit;
         }

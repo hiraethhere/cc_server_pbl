@@ -18,6 +18,7 @@ class Dashboard extends controller
 
         $data['ruangan'] = $this->model('RuanganModel')->getRuanganForDashboard();
         $data['judul'] = 'Dashboard';
+        echo $_SESSION['role'];
         $this->view('Layout/Header', $data);
         $this->view('dashboard/index', $data);
         $this->view('Layout/Footer');

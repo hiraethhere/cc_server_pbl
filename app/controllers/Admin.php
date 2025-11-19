@@ -7,7 +7,7 @@ class Admin extends Controller {
             exit;
         }
 
-        if ($_SESSION['role'] !== 'admin' and $_SESSION['role'] !== 'superadmin'){ 
+        if ($_SESSION['role'] !== 'Admin' and $_SESSION['role'] !== 'Superadmin'){ 
             Flasher::setFlash('Akses ditolak', 'Anda bukan admin', 'danger');
             header('Location: /dashboard');
             exit;
@@ -21,13 +21,17 @@ class Admin extends Controller {
     }
     
     public function Anggota(){
+        $data['users'] = $this->model('UserModel')->getUserForAdmin();
         $data['judul'] = 'Data Anggota';
         $data['navbar'] = 'Anggota';
         $this->view('Layout/Sidebar', $data);
-        $this->view('Admin/Anggota/index');
+        $this->view('Admin/Anggota/index', $data);
     }
 
-    public function detailAnggota(){
+    public function detailAnggota($id = null){
+
+        $id = param_number($id, "ID user tidak valid");
+        $data['user'] = $this->model('UserModel')->getUserById($id);
         $data['judul'] = 'Detail Anggota';
         $data['navbar'] = 'Anggota';
         $this->view('Layout/Sidebar', $data);

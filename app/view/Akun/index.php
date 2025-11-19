@@ -29,21 +29,28 @@
         <div>
             <label class="block text-sm font-medium text-gray-600 mb-1">Nama</label>
             <div class="border-b border-gray-300 pb-2">
-                <p class="text-gray-800 font-medium"><?= $data['user']['username'] ?></p>
+                <p class="text-gray-800 font-medium"><?= $user['username'] ?></p>
             </div>
         </div>
 
         <div>
             <label class="block text-sm font-medium text-gray-600 mb-1">Email</label>
             <div class="border-b border-gray-300 pb-2">
-                <p class="text-gray-800"><?= $data['user']['email'] ?></p>
+                <p class="text-gray-800"><?= $user['email']?></p>
             </div>
         </div>
 
         <div>
             <label class="block text-sm font-medium text-gray-600 mb-1">Jurusan</label>
             <div class="border-b border-gray-300 pb-2">
-                <p class="text-gray-800"><?= $data['user']['jurusanUnit'] ?></p>
+                <p class="text-gray-800"><?= $user['jurusan_unit']?></p>
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Prodi</label>
+            <div class="border-b border-gray-300 pb-2">
+                <p class="text-gray-800"><?= $user['prodi']?></p>
             </div>
         </div>
     </div>
