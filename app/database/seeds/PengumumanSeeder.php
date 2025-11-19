@@ -16,11 +16,11 @@ class PengumumanSeeder extends AbstractSeed
      */
     public function run(): void
     {
-        $table = $this->table('pengumuman',['id' => 'id_pengumuman'] );
+        $table = $this->table('announcement',['id' => 'id_announcement'] );
         $pengumumanData = [
             [
-                'nama_pengumuman' => 'tata tertib',
-                'isi_pengumuman' =>
+                'announcement_name' => 'tata tertib',
+                'announcement_content' =>
                     "1. dilarang menjual minuman keras\n" .
                     "2. dilarang makan dan minum\n" .
                     "3. dilarang kencing di ruangan\n"

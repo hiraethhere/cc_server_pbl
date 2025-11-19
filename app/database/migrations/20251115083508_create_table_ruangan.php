@@ -20,8 +20,8 @@ final class CreateTableRuangan extends AbstractMigration
     public function change(): void
     {
         $table = $this->table('rooms', ['id' => 'id_room']);
-        $table->addColumn('id_pengumuman', 'integer', ['signed' => false, 'null' => true])
-                -> addForeignKey('id_pengumuman', 'pengumuman', 'id_pengumuman', [
+        $table->addColumn('id_announcement', 'integer', ['signed' => false, 'null' => true])
+                -> addForeignKey('id_announcement', 'announcement', 'id_announcement', [
                     'delete' => 'SET_NULL',
                     'update' => 'CASCADE'  
                 ])
