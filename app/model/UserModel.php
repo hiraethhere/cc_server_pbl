@@ -46,8 +46,8 @@ class UserModel {
 
     public function createUser($data){
         $this->db->query(
-            "INSERT INTO users (id_role, username, nomor_induk, email, password, jurusan_unit, prodi, suspend_count, email_verified kubaca_photo, profile_photo, expired_at created_at) 
-            VALUES (:id_role, :username, :nomor_induk, :email, :password, :jurusan_unit :prodi,:suspend_count, :email_verified, :kubaca_photo, profile_photo :expired_at, :now)"
+            "INSERT INTO users (id_role, username, nomor_induk, email, password, jurusan_unit, prodi, status, suspend_count, email_verified kubaca_photo, profile_photo, expired_at created_at) 
+            VALUES (:id_role, :username, :nomor_induk, :email, :password, :jurusan_unit :prodi, :status, :suspend_count, :email_verified, :kubaca_photo, profile_photo :expired_at, :now)"
         );
 
         $this->db->bind('id_role', $data['id_role']);
@@ -57,6 +57,7 @@ class UserModel {
         $this->db->bind(':nomor_induk', $data['nomor_induk']);
         $this->db->bind(':jurusan_unit', $data['jurusan_unit']);
         $this->db->bind(':prodi', $data['prodi']);
+        $this->db->bind(':status', 'active' );
         $this->db->bind('suspend_count', $data['suspend_count']);
         $this->db->bind(':email_verified', $data['email_verified']);
         $this->db->bind(':kubaca_photo', $data['kubaca_photo']);

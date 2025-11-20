@@ -88,7 +88,7 @@ class Auth extends Controller {
                 throw new Exception('Mohon upload files');
             }
 
-            if ($_SESSION['roleRegis'] === '3') {
+            if ($_SESSION['regisRole'] === '3') {
                 if (!validateEmail($_POST['email'])) {
                     throw new Exception('email tidak valid');
                 }
@@ -103,7 +103,7 @@ class Auth extends Controller {
                 'password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
                 'nomor_induk' => $_POST['nomor_induk'],
                 'email' => $_POST['email'],
-                'jurusan' => $_POST['jurusan'],
+                'jurusan' => $_POST['jurusan_unit'],
                 'prodi' => $_POST['prodi'] ?? NULL,
                 'kubaca_photo' => $buktiKubaca ?? NULL,
                 'profile_photo' => 'DefaultProfilePicture.jpg',

@@ -15,7 +15,7 @@
              background-color: rgba(139, 92, 113, 0.7); background-blend-mode: multiply;">
 
 
-        <div class="bg-[#F3F5FA] rounded-2xl shadow-2xl p-8 w-full max-w-xl">
+        <div class="bg-[#F3F5FA] rounded-2xl shadow-2xl p-8 w-full max-w-xl my-10">
             <!-- Header -->
             <div class="mb-6">
                 <form action="" method="post">
@@ -60,7 +60,7 @@
                     <!-- Jurusan -->
                     <div class="col-span-2 sm:col-span-1">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Jurusan</label>
-                        <select name="jurusan" id="jurusan"
+                        <select name="jurusan_unit" id="jurusan"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="" disabled selected hidden>Jurusan</option>
                             <option value="Teknik Informatika">Teknik Informatika</option>
@@ -106,20 +106,40 @@
                         </div>
                     </div>
                 </div>
+<div class="mt-6">
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+            Upload foto bukti akun KubacaPNJ (Halaman profil)
+        </label>
 
-                <!-- Upload Foto -->
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition duration-200 relative bg-gray-50 hover:bg-blue-50">
+            
+            <input type="file" 
+                   name="buktiKubaca" 
+                   id="buktiKubaca" 
+                   accept="image/*" 
+                   class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+    
+        </div>
+
+                <!-- Upload Foto
                 <div class="mt-6">
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Upload foto bukti akun KubacaPNJ (Halaman profil)
                     </label>
-                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition duration-200 cursor-pointer">
-                        <input type="file" name="buktiKubaca" id="buktiKubaca" accept="image/*" class="hidden" onchange="previewFile()">
-                        <label for="buktiKubaca" class="cursor-pointer">
-                            <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
-                            <p class="text-sm text-gray-600" id="fileName">Upload foto bukti kubaca</p>
-                        </label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition duration-200 cursor-pointer relative">
+            
+                    <input type="file" name="buktiKubaca" id="buktiKubaca" accept="image/*" class="hidden" onchange="previewFile()">
+            
+                    <label for="buktiKubaca" class="cursor-pointer flex flex-col items-center justify-center w-full h-full">
+                    <img id="imgPreview" class="hidden max-h-48 mb-2 rounded" />
+                
+                <div id="iconText">
+                    <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+                    <p class="text-sm text-gray-600" id="fileName">Klik untuk upload foto bukti</p>
                     </div>
-                </div>
+                </label>
+            </div>
+        </div> -->
 
                 
 
