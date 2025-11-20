@@ -13,59 +13,50 @@ const flashMsg = document.getElementById("flash-message");
     }, 3000);
 
 
-    // js/popup.js
-class ModalManager {
-    constructor() {
-        this.modals = new Map();
-        this.init();
+    document.addEventListener("DOMContentLoaded", function () {
+
+    const modal = document.getElementById("successModal");
+
+    // Pastikan modal ada di halaman
+    if (!modal) return;
+
+    // ──────────────────────────────────────────────
+    // Fungsi buka modal
+    // ──────────────────────────────────────────────
+    window.showModal = function () {
+        modal.classList.remove("hidden");
+        document.body.style.overflow = "hidden"; // biar tidak scroll saat modal muncul
+    };
+
+    // ──────────────────────────────────────────────
+    // Fungsi tutup modal
+    // ──────────────────────────────────────────────
+    window.hideModal = function () {
+        modal.classList.add("hidden");
+        document.body.style.overflow = ""; // kembalikan scroll
+    };
+
+    // Tombol "Batalkan" (onclick="hideModal()" di HTML kamu)
+    const btnBatal = modal.querySelector("button[onclick='hideModal()']");
+    if (btnBatal) {
+        // tetap biarkan onclick di HTML berfungsi,
+        // tapi kita tambahkan event listener juga (opsional, lebih aman)
+        btnBatal.addEventListener("click", hideModal);
     }
 
-    init() {
-        document.querySelectorAll('[data-modal]').forEach(trigger => {
-            const targetId = trigger.dataset.modal;
-            trigger.addEventListener('click', () => this.show(targetId));
-        });
-
-        this.bindAllModals();
-    }
-
-    bindAllModals() {
-        document.querySelectorAll('.modal').forEach(modal => {
-            const id = modal.id;
-            this.modals.set(id, modal);
-
-            // Close button
-            modal.querySelectorAll('[data-dismiss="modal"]').forEach(btn => {
-                btn.addEventListener('click', () => this.hide(id));
-            });
-
-            // Overlay click
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) this.hide(id);
-            });
-        });
-    }
-
-    show(id) {
-        const modal = this.modals.get(id);
-        if (modal) {
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            document.body.classList.add('modal-open'); // cegah scroll
+    // Tutup modal kalau klik di luar kotak putih (backdrop)
+    modal.addEventListener("click", function (e) {
+        // Jika yang diklik adalah backdrop (bukan konten modal)
+        if (e.target === modal) {
+            hideModal();
         }
-    }
+    });
 
-    hide(id) {
-        const modal = this.modals.get(id);
-        if (modal) {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            document.body.classList.remove('modal-open');
+    // Tutup modal dengan tombol ESC
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && !modal.classList.contains("hidden")) {
+            hideModal();
         }
-    }
-}
+    });
 
-// Inisialisasi otomatis
-document.addEventListener('DOMContentLoaded', () => {
-    window.modal = new ModalManager();
 });
