@@ -100,7 +100,7 @@
         <!-- **************************************************
         INI UNTUK BAGIAN KETIGA YANG UNTUK MENGISI PASSWORD BARU
         ******************************************************* -->
-        <div class="bg-[#F3F5FA] rounded-2xl shadow-2xl p-8 w-full max-w-md md:h-full sm:h-full mb-5 mt-10 ">
+        <div class="bg-[#F3F5FA] rounded-2xl shadow-2xl p-8 w-full max-w-md md:h-full sm:h-full mb-5 mt-10">
             <!-- Logo & Header -->
             <div class="text-center mb-6">
                 <div class="flex items-start justify-start mb-1">
@@ -119,7 +119,7 @@
                         <input type="password" id="passwordBaru" name="passwordBaru" placeholder="••••••••"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
-                            <i class="fas fa-eye hover:cursor-pointer" id="toggleIcon"></i>
+                            <img src="/icon/eye-on.svg" alt="eye-on" id="toggleIcon" class="w-5 h-5 hover:cursor-pointer">
                         </button>
                     </div>
                 </div>
@@ -131,7 +131,7 @@
                         <input type="password" id="password" name="password" placeholder="••••••••"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
-                            <i class="fas fa-eye hover:cursor-pointer" id="toggleIcon"></i>
+                            <img src="/icon/eye-on.svg" alt="eye-on" id="toggleIcon" class="w-5 h-5 hover:cursor-pointer">
                         </button>
                     </div>
                 </div>
@@ -161,17 +161,4 @@
     </div>
 
 
-    <!-- JavaScript -->
-    <script>
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const toggleIcon = document.getElementById('toggleIcon');
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                toggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                toggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
-            }
-        }
-    </script>
+    <script src="/js/togglePassword.js" defer></script>

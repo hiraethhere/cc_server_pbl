@@ -2,9 +2,11 @@
 ?>
 
 <main class="container mx-auto px-6 py-8">
-    <nav class="mb-6 text-sm text-dark-overlay/60">
+    <nav class="mb-6 text-sm text-dark-overlay/60 flex items-center">
         <a href="/Dashboard" class="text-gray-900 hover:text-[#1E68FB]">Ruangan</a>
-        <span class="mx-2">></span>
+        <span class="mx-2">
+            <img src="/icon/arrow.svg" alt="arrowRight" class="inline w-4 h-4">
+        </span>
         <span class="text-dark-overlay/60 font-medium hover:cursor-pointer">Booking Ruangan</span>
     </nav>
 

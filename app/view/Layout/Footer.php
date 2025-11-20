@@ -15,7 +15,7 @@
                         </div>
 
                         <!-- Contact Info -->
-                        <div class="space-y-2 text-[#171E29] items-center">
+                        <div class="space-y-2 text-[#171E29] items-center w-full">
                             <div class="flex items-center space-x-2">
                                 <i class="fas fa-phone"></i>
                                 <span>+62 87886260131</span>
