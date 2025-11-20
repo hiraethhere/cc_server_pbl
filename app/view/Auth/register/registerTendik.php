@@ -16,12 +16,15 @@
 
         <div class="bg-[#F3F5FA] rounded-2xl shadow-2xl p-8 w-full max-w-xl">
         
+         <form action="" method="post">
         <div>
-            <a class="flex items-center space-x-2 text-[#1E68FB] hover:underline mb-4 hover:cursor-pointer text-sm" href="/auth/registerForm">
+            <input type="hidden" name="backToRole" value="anton">
+            <button type="submit" class="flex items-center space-x-2 text-[#1E68FB] hover:underline mb-4 hover:cursor-pointer text-sm" href="/auth/registerForms">
                 <img src="/icon/back.svg" alt="Back to Home" width="20" height="20">
                 <span>Kembali pilih role</span>
-            </a>
+            </button>
         </div>
+        </form>
 
             <!-- Header -->
             <div class="mb-6 mt-6">

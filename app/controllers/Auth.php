@@ -7,30 +7,72 @@ class Auth extends Controller {
         if(isset($_SESSION['user'])){
             header('location: /dashboard');
             exit;
-        } 
+        }
+        unset($_SESSION['regisRole']);
         $this->view('Auth/login');
         $this->view('Layout/Footer');
     }
 
-    public function registerForm(){
-        $this->view('Auth/register/index');
-        $this->view('Layout/Footer');
+    // public function registerForm(){
+    //     $this->view('Auth/register/index');
+    //     $this->view('Layout/Footer');
+    // }
+
+    public function registerForms(){
+
+        if(isset($_SESSION['user'])){
+            header('location: /dashboard');
+            exit;
+        }
+
+        if (isset($_POST['backToRole'])) {
+            unset($_SESSION['regisRole']);
+        }
+
+        if (isset($_POST['role'])) {
+            $_SESSION['regisRole'] = $_POST['role'];
+        }
+
+        $forms = $_SESSION['regisRole'] ?? null;
+
+        switch ($forms) {
+            case "3":
+                $data['dataProdi'] = getProdi();
+                $this->view('Auth/register/registerMahasiswa', $data);
+
+                break;
+            case "4":
+                $this->view('Auth/register/registerDosen');
+
+                break;
+            case "5":
+                $this->view('Auth/register/registerTendik');
+        
+                break;
+            default:
+                $this->view('Auth/register/index');
+            
+                break;
+            }
+            $this->view('Layout/Footer');
     }
 
-    public function registerMahasiswa(){
-        $this->view('Auth/register/registerMahasiswa');
-        $this->view('Layout/Footer');
-    }
+    // public function 
 
-    public function registerDosen(){
-        $this->view('Auth/register/registerDosen');
-        $this->view('Layout/Footer');
-    }
+    // public function registerMahasiswa(){
+    //     $this->view('Auth/register/registerMahasiswa');
+    //     $this->view('Layout/Footer');
+    // }
 
-    public function registerTendik(){
-        $this->view('Auth/register/registerTendik');
-        $this->view('Layout/Footer');
-    }
+    // public function registerDosen(){
+    //     $this->view('Auth/register/registerDosen');
+    //     $this->view('Layout/Footer');
+    // }
+
+    // public function registerTendik(){
+    //     $this->view('Auth/register/registerTendik');
+    //     $this->view('Layout/Footer');
+    // }
 
     //belum bisa jangan dipake
     public function handleRegister(){
@@ -46,14 +88,28 @@ class Auth extends Controller {
                 throw new Exception('Mohon upload files');
             }
 
+            if ($_SESSION['regisRole'] === '3') {
+                if (!validateEmail($_POST['email'])) {
+                    throw new Exception('email tidak valid');
+                }
+                $expiredDate = countExpiredAt($_POST['email'], $_POST['prodi']);
+            } else{
+                $expiredDate = NULL;
+            }
+
             $data = [
+                'id_role' => $_SESSION['roleRegis'],
                 'username' => $_POST['username'],
                 'password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
                 'nomor_induk' => $_POST['nomor_induk'],
                 'email' => $_POST['email'],
-                'jurusan' => $_POST['jurusan'],
-                'fotobukti' => $buktiKubaca,
+                'jurusan' => $_POST['jurusan_unit'],
+                'prodi' => $_POST['prodi'] ?? NULL,
+                'kubaca_photo' => $buktiKubaca ?? NULL,
+                'profile_photo' => 'DefaultProfilePicture.jpg',
                 'suspend_count' => 0,
+                'email_verified' => true,
+                'expired_at' => $expiredDate,
                 'now' => date('Y-m-d H:i:s')
             ];
 
@@ -84,7 +140,7 @@ class Auth extends Controller {
             'email' => $_POST['email'],
             'password' => $_POST['password']
             ];
-        $user = $this->model('UserModel')->findUserByEmail($data['email']);
+        $user = $this->model('UserModel')->findUserAndRoleByEmail($data['email']);
 
         if (!$user) {
             throw new Exception('Email Salah');
@@ -102,25 +158,32 @@ class Auth extends Controller {
             throw new Exception('Akun anda sedang di suspend, silahkan hubungi admin!');
         }
 
-        $user['role'] = $this->model('UserModel')->getRole($user['id_role'])['role'];
+        if ($user['expired_at'] !== null) {
+            $now = new DateTime();
+            $expired = new DateTime($user['expired_at']);
+
+            if ($now > $expired) {
+                throw new Exception('Akun anda sudah expired, silahkan hubungi admin');
+            }
+        }
 
         $_SESSION['user'] = [
             'user_id' => $user['id_user'],
             'username' => $user['username'],
             'email' => $user['email'],
-            'jurusanUnit' => $user['jurusanUnit'],
+            'jurusan_unit' => $user['jurusan_unit'],
             'prodi' => $user['prodi'],
-            'foto_profil' => $user['foto_profil']
+            'profile_photo' => $user['profile_photo']
         ];
         $_SESSION['role'] = $user['role'];
 
         generateCsrf();
 
         Flasher::setFlash('Berhasil', 'login', 'success');
-        if ($user['role'] === 'admin') {
+        if ($user['role'] === 'Admin') {
             header('location: /admin');
             exit;
-        } else if ($user['role'] === 'superadmin'){
+        } else if ($user['role'] === 'Superadmin'){
             header('Location: /admin');
             exit;
         }

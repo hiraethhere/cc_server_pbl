@@ -2,6 +2,7 @@
 
 class RuanganModel {
 
+    private $table = 'rooms';
     private $db;
 
     public function __construct(){
@@ -9,14 +10,14 @@ class RuanganModel {
     }
 
     public function getRuanganForDashboard(){
-        $this->db->query("SELECT id_ruangan, nama_ruangan, img_ruangan, deskripsi_singkat, lantai, jumlah_maksimal, jumlah_minimal, status FROM ruangan");
+        $this->db->query("SELECT id_room, room_name, img_room, short_description, floor, max_capacity, min_capacity, status FROM ". $this->table);
         $this->db->execute();
         return $this->db->resultSet();
     }
 
-    public function getRuanganById($id_ruangan){
-        $this->db->query("SELECT * FROM ruangan WHERE id_ruangan = :id_ruangan");
-        $this->db->bind(':id_ruangan', $id_ruangan);
+    public function getRuanganById($id_room){
+        $this->db->query("SELECT * FROM  " .  $this->table . " WHERE id_room = :id_room");
+        $this->db->bind(':id_room', $id_room);
         $this->db->execute();
         return $this->db->singleSet();
     }

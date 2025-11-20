@@ -10,14 +10,14 @@
             <div>
                 <label class="block text-sm font-medium text-gray-600 mb-1">Nama</label>
                 <div class="border-b border-gray-300 pb-2">
-                    <p class="text-gray-800 font-medium">Muhammad Reza Arifin</p>
+                    <p class="text-gray-800 font-medium"><?= $_SESSION['user']['username']?></p>
                 </div>
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-600 mb-1">Email</label>
                 <div class="border-b border-gray-300 pb-2">
-                    <p class="text-gray-800">Reza@example.com</p>
+                    <p class="text-gray-800"><?= $_SESSION['user']['email'] ?></p>
                 </div>
             </div>
 
@@ -34,7 +34,7 @@
                 </a>
             </div>
 
-            <a href="Auth/handleLogout" id="logout-btn"
+            <a href="/Auth/handleLogout" id="logout-btn"
                class="block w-full bg-[#C90B0B] text-white text-center py-2 rounded-lg
                       hover:bg-red-700 transition duration-200">
                 Logout

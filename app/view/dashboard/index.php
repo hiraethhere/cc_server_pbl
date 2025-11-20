@@ -31,13 +31,13 @@
 
             <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
                 <div class="relative h-48 from-gray-300 to-gray-400">
-                    <img src="/img/<?= $r['img_ruangan'] ?>" 
+                    <img src="/img/<?= $r['img_room'] ?>" 
                         alt="Ruang Lentera Edukasi" class="w-full h-full object-cover">
                 </div>
                 <div class="grid grid-rows-[2fr_1fr] p-5">
                     <div>
-                        <h3 class="font-bold text-lg text-[#1A1A1A] mb-2"><?= $r['nama_ruangan'] ?></h3>
-                        <p class="text-dark-overlay/80 mb-4 text-justify text-sm"><?= $r['deskripsi_singkat'] ?></p>
+                        <h3 class="font-bold text-lg text-[#1A1A1A] mb-2"><?= $r['room_name'] ?></h3>
+                        <p class="text-dark-overlay/80 mb-4 text-justify text-sm"><?= $r['short_description'] ?></p>
                         <hr class="border-t border-[#171E29] mb-4">
                     </div>
                     <div class="grid grid-cols-2 items-center text-sm text-gray-600">
@@ -52,7 +52,7 @@
                                         stroke-linejoin="round"/>
                                 </svg>
                                 <span class="inline-flex items-center lg:flex-row flex-col">
-                                    Lt <?= $r['lantai'] ?>
+                                    Lt <?= $r['floor'] ?>
                                 </span>
                             </div>
                             <div class="flex md:flex-col lg:flex-row flex-col justify-center items-center">                            
@@ -64,10 +64,10 @@
                                         stroke-linecap="round" 
                                         stroke-linejoin="round"/>
                                 </svg>
-                                <span class="inline-flex items-center lg:flex-row flex-col"><?= $r['jumlah_minimal'] . '-' . $r['jumlah_maksimal']  ?> orang </span>
+                                <span class="inline-flex items-center lg:flex-row flex-col"><?= $r['min_capacity'] . '-' . $r['max_capacity']  ?> orang </span>
                             </div>                          
                         </div>
-                        <a href="/Dashboard/Booking/<?= $r['id_ruangan'] ?>"
+                        <a href="/Dashboard/Booking/<?= $r['id_room'] ?>"
                             class="flex items-center justify-center w-full bg-[#1E68FB] text-white text-center rounded-xl font-semibold text-sm hover:bg-[#38C55C] transition duration-200 mr-2 p-3">
                             Booking Sekarang
                         </a>

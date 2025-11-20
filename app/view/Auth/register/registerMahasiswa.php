@@ -14,12 +14,23 @@
          style="background-image: url('/img/Background 1.png'); 
              background-color: rgba(139, 92, 113, 0.7); background-blend-mode: multiply;">
 
-        <div class="bg-[#F3F5FA] rounded-2xl shadow-2xl p-8 w-full max-w-xl">
+
+        <div class="bg-[#F3F5FA] rounded-2xl shadow-2xl p-8 w-full max-w-xl my-10">
             <!-- Header -->
             <div class="mb-6">
+                <form action="" method="post">
+                    <div>
+                    <input type="hidden" name="backToRole" value="anton">
+                    <button type="submit" class="flex items-center space-x-2 text-[#1E68FB] hover:underline mb-4 hover:cursor-pointer text-sm" href="/auth/registerForms">
+                    <img src="/icon/back.svg" alt="Back to Home" width="20" height="20">
+                    <span>Kembali pilih role</span>
+                    </button>
+                    </div>
+                </form>
                 <h1 class="text-3xl font-bold text-[#171E29] mb-2">Registrasi Akun</h1>
                 <p class="text-sm text-gray-600">Pinjam ruangan perpustakaan dengan mudah, praktis, dan cepat.</p>
             </div>
+            
 
             <!-- Form -->
             <form action="/auth/handleRegister" method="POST" enctype="multipart/form-data">
@@ -49,7 +60,7 @@
                     <!-- Jurusan -->
                     <div class="col-span-2 sm:col-span-1">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Jurusan</label>
-                        <select name="jurusan" 
+                        <select name="jurusan_unit" id="jurusan"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="" disabled selected hidden>Jurusan</option>
                             <option value="Teknik Informatika">Teknik Informatika</option>
@@ -63,14 +74,9 @@
                     <!-- Prodi -->
                     <div class="col-span-2 sm:col-span-1">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Prodi</label>
-                        <select name="Prodi" 
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <select name="prodi" id="prodi" disabled
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 select-none ">
                             <option value="" disabled selected hidden>Prodi</option>
-                            <option value="Ini isi otomatis">Ini isi otomatis</option>
-                            <option value="Ini isi otomatis">Ini isi otomatis</option>
-                            <option value="Ini isi otomatis">Ini isi otomatis</option>
-                            <option value="Ini isi otomatis">Ini isi otomatis</option>
-                            <option value="Ini isi otomatis">Ini isi otomatis</option>
                         </select>
                     </div>
 
@@ -100,20 +106,40 @@
                         </div>
                     </div>
                 </div>
+<div class="mt-6">
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+            Upload foto bukti akun KubacaPNJ (Halaman profil)
+        </label>
 
-                <!-- Upload Foto -->
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition duration-200 relative bg-gray-50 hover:bg-blue-50">
+            
+            <input type="file" 
+                   name="buktiKubaca" 
+                   id="buktiKubaca" 
+                   accept="image/*" 
+                   class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+    
+        </div>
+
+                <!-- Upload Foto
                 <div class="mt-6">
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Upload foto bukti akun KabacaPNJ (Halaman profil)
+                        Upload foto bukti akun KubacaPNJ (Halaman profil)
                     </label>
-                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition duration-200 cursor-pointer">
-                        <input type="file" name="buktiKubaca" id="buktiKubaca" accept="image/*" class="hidden" onchange="previewFile()">
-                        <label for="buktiKubaca" class="cursor-pointer">
-                            <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
-                            <p class="text-sm text-gray-600" id="fileName">Upload foto bukti kubaca</p>
-                        </label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition duration-200 cursor-pointer relative">
+            
+                    <input type="file" name="buktiKubaca" id="buktiKubaca" accept="image/*" class="hidden" onchange="previewFile()">
+            
+                    <label for="buktiKubaca" class="cursor-pointer flex flex-col items-center justify-center w-full h-full">
+                    <img id="imgPreview" class="hidden max-h-48 mb-2 rounded" />
+                
+                <div id="iconText">
+                    <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+                    <p class="text-sm text-gray-600" id="fileName">Klik untuk upload foto bukti</p>
                     </div>
-                </div>
+                </label>
+            </div>
+        </div> -->
 
                 
 
@@ -164,4 +190,34 @@
                 toggleIcon.classList.add('fa-eye');
             }
         }
+
+        // Ambil data dari PHP Helper, convert ke JSON biar bisa dibaca JS
+    const dataKampus = <?= json_encode($dataProdi); ?>; 
+
+    const jurusanSelect = document.getElementById('jurusan');
+    const prodiSelect = document.getElementById('prodi');
+
+    jurusanSelect.addEventListener('change', function() {
+        const selectedJurusan = this.value;
+        const listProdi = dataKampus[selectedJurusan]; // Ambil array prodi dari key jurusan
+
+        // Reset dropdown prodi
+        prodiSelect.innerHTML = '<option value="" disabled selected hidden>Pilih Prodi</option>';
+
+
+        if (listProdi) {
+            listProdi.forEach(function(prodiName) {
+                const option = document.createElement('option');
+                option.value = prodiName;
+                option.textContent = prodiName;
+                prodiSelect.appendChild(option);
+                prodiSelect.classList.remove('disabled:opacity-75')
+                prodiSelect.removeAttribute('disabled')
+            });
+        } else {
+            // KUNCI LAGI: Jika entah kenapa datanya kosong/error
+            prodiSelect.disabled = true;
+        }
+    });
+
     </script>
