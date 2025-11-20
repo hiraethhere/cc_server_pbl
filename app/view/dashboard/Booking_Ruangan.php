@@ -69,12 +69,13 @@ $formAction = '/Booking/handleBooking';
                     <div class="mb-8">
                         <label class="block text-sm font-semibold text-gray-700 mb-4 flex items-center">
                             Daftar Anggota <span class="text-red-500 ml-1">*</span>
-                            <span class="ml-2 text-xs text-gray-500 font-normal">(Minimal 2 orang)</span>
+                            <span class="ml-2 text-xs text-gray-500 font-normal">(Minimal <?=  $detailRuangan['min_capacity']?> orang)</span>
                         </label>
                         <div id="membersContainer" class="space-y-4">
+                            <?php for ($i= 0; $i < $detailRuangan['min_capacity'] ; $i++) :?>
                             <div class="member-card p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border border-blue-200">
                                 <div class="flex items-center mb-2">
-                                    <span class="inline-flex items-center justify-center w-7 h-7 bg-blue-600 text-white rounded-full text-xs font-bold">1</span>
+                                    <span class="inline-flex items-center justify-center w-7 h-7 bg-blue-600 text-white rounded-full text-xs font-bold"><?= $i + 1?></span>
                                     <span class="ml-2 font-medium text-sm text-blue-800">Penanggung Jawab</span>
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -84,20 +85,7 @@ $formAction = '/Booking/handleBooking';
                                         class="nama-input w-full px-4 py-2.5 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm">
                                 </div>
                             </div>
-                            <div class="member-card p-4 bg-gray-50 rounded-xl border border-gray-300">
-                                <div class="flex items-center justify-between mb-2">
-                                    <div class="flex items-center">
-                                        <span class="inline-flex items-center justify-center w-7 h-7 bg-gray-600 text-white rounded-full text-xs font-bold">2</span>
-                                        <span class="ml-2 font-medium text-sm text-gray-800">Anggota</span>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <input type="text" maxlength="10" placeholder="NIM/NIP Anggota *" name="nim[]" required
-                                        class="nim-input w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm">
-                                    <input type="text" placeholder="Nama Lengkap Anggota" name="nama[]" readonly
-                                        class="nama-input w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm">
-                                </div>
-                            </div>
+                            <?php endfor ?>
                         </div>
                         <button type="button" onclick="addMember()"
                                 class="mt-4 flex items-center text-blue-600 hover:text-blue-800 hover:cursor-pointer text-sm font-medium transition">

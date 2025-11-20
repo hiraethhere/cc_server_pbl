@@ -82,5 +82,5 @@ class UserModel {
     $this->db->execute(); 
     
     return $this->db->rowCount(); 
-}
+    }
 }
