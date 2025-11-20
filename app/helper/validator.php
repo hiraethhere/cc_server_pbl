@@ -60,7 +60,7 @@ function validateEmail($email){
         if (is_numeric($duaDigitTahun) && ctype_alpha($kodeProdi)) {
             return true;
         }
-
+        
         return false;
     }
 
