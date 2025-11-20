@@ -21,6 +21,13 @@ class UserModel {
     return $this->db->singleSet();
     }
 
+    public function findUserByEmailOrNomor_Induk($email, $nomor_induk){
+    $this->db->query("SELECT * FROM users WHERE email = :email OR nomor_induk = :nomor_induk");
+    $this->db->bind(':email', $email);
+    $this->db->bind(':nomor_induk', $nomor_induk);
+    return $this->db->singleSet();
+    }
+
     public function loginUserByEmailorNomor_Induk($input){
         $this->db->query("SELECT * FROM users WHERE email = :input or nomor_induk = :input LIMIT 1");
         $this->db->bind(':input', $input);
@@ -46,8 +53,8 @@ class UserModel {
 
     public function createUser($data){
         $this->db->query(
-            "INSERT INTO users (id_role, username, nomor_induk, email, password, jurusan_unit, prodi, status, suspend_count, email_verified kubaca_photo, profile_photo, expired_at created_at) 
-            VALUES (:id_role, :username, :nomor_induk, :email, :password, :jurusan_unit :prodi, :status, :suspend_count, :email_verified, :kubaca_photo, profile_photo :expired_at, :now)"
+            "INSERT INTO users (id_role, username, nomor_induk, email, password, jurusan_unit, prodi, status, suspend_count, email_verified, kubaca_photo, profile_photo, expired_at, created_at) 
+            VALUES (:id_role, :username, :nomor_induk, :email, :password, :jurusan_unit, :prodi, :status, :suspend_count, :email_verified, :kubaca_photo, :profile_photo, :expired_at, :now)"
         );
 
         $this->db->bind('id_role', $data['id_role']);

@@ -82,12 +82,6 @@ class Auth extends Controller {
                 throw new Exception('Password tidak sama');
             }
 
-            if (isset($_FILES['buktiKubaca'])) {
-                $buktiKubaca = uploadImage($_FILES['buktiKubaca'], 'storage/FotoBukti/');
-            } else {
-                throw new Exception('Mohon upload files');
-            }
-
             if ($_SESSION['regisRole'] === '3') {
                 if (!validateEmail($_POST['email'])) {
                     throw new Exception('email tidak valid');
@@ -97,13 +91,19 @@ class Auth extends Controller {
                 $expiredDate = NULL;
             }
 
+            if (isset($_FILES['buktiKubaca'])) {
+                $buktiKubaca = uploadImage($_FILES['buktiKubaca'], 'storage/FotoBukti/');
+            } else {
+                throw new Exception('Mohon upload files');
+            }
+
             $data = [
-                'id_role' => $_SESSION['roleRegis'],
+                'id_role' => $_SESSION['regisRole'],
                 'username' => $_POST['username'],
                 'password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
                 'nomor_induk' => $_POST['nomor_induk'],
                 'email' => $_POST['email'],
-                'jurusan' => $_POST['jurusan_unit'],
+                'jurusan_unit' => $_POST['jurusan_unit'],
                 'prodi' => $_POST['prodi'] ?? NULL,
                 'kubaca_photo' => $buktiKubaca ?? NULL,
                 'profile_photo' => 'DefaultProfilePicture.jpg',
