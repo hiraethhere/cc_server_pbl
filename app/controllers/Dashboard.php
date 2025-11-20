@@ -40,7 +40,7 @@ class Dashboard extends controller
         http_response_code(404);
         die("Ruangan tidak ditemukan");
     }
-
+        $data['user'] = $_SESSION['user'];
         $data['judul'] = 'Booking Ruangan';
         $this->view('Layout/Header', $data);
         $this->view('Dashboard/Booking_Ruangan', $data); 

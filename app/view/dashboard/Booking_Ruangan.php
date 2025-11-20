@@ -1,5 +1,4 @@
 <?php
-$formAction = '/Booking/handleBooking'; 
 ?>
 
 <main class="container mx-auto px-6 py-8">
@@ -14,7 +13,7 @@ $formAction = '/Booking/handleBooking';
     <div class="flex flex-col gap-8 lg:grid lg:grid-cols-3 lg:gap-8">
         <div class="order-2 lg:order-none lg:col-span-2">
             <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
-                <form id="bookingForm" action="<?php echo $formAction; ?>" method="POST">
+                <form id="bookingForm" action="/Booking/handleBooking" method="POST">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                         <div class="relative">
                             <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
@@ -72,22 +71,36 @@ $formAction = '/Booking/handleBooking';
                             <span class="ml-2 text-xs text-gray-500 font-normal">(Minimal <?=  $detailRuangan['min_capacity']?> orang)</span>
                         </label>
                         <div id="membersContainer" class="space-y-4">
-                            <?php for ($i= 0; $i < $detailRuangan['min_capacity'] ; $i++) :?>
                             <div class="member-card p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border border-blue-200">
                                 <div class="flex items-center mb-2">
-                                    <span class="inline-flex items-center justify-center w-7 h-7 bg-blue-600 text-white rounded-full text-xs font-bold"><?= $i + 1?></span>
+                                    <span class="inline-flex items-center justify-center w-7 h-7 bg-blue-600 text-white rounded-full text-xs font-bold">1</span>
                                     <span class="ml-2 font-medium text-sm text-blue-800">Penanggung Jawab</span>
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <input type="text" maxlength="10" max="10" placeholder="NIM/NIP Perwakilan *" name="nim[]" required
+                                    <input type="text" maxlength="10" max="10" placeholder="<?= $user['nomor_induk'] ?>" name="nim[]" readonly
                                         class="nim-input w-full px-4 py-2.5 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm">
-                                    <input type="text" placeholder="Nama Lengkap Perwakilan" name="nama[]" readonly
+                                    <input type="text" placeholder="<?= $user['username'] ?>" name="nama[]" readonly
                                         class="nama-input w-full px-4 py-2.5 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm">
+                                </div>
+                            </div>
+                            <?php for ($i= 0; $i < $detailRuangan['min_capacity'] - 1 ; $i++) :?>
+                             <div class="member-card p-4 bg-gray-50 rounded-xl border border-gray-300">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <span class="inline-flex items-center justify-center w-7 h-7 bg-gray-600 text-white rounded-full text-xs font-bold"><?= $i + 2?></span>
+                                        <span class="ml-2 font-medium text-sm text-gray-800">Anggota</span>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <input type="text" maxlength="10" placeholder="NIM/NIP Anggota *" name="nim[]" required
+                                        class="nim-input w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm">
+                                    <input type="text" placeholder="Nama Lengkap Anggota" name="nama[]" readonly
+                                        class="nama-input w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm">
                                 </div>
                             </div>
                             <?php endfor ?>
                         </div>
-                        <button type="button" onclick="addMember()"
+                        <button type="button" id="addMember" onclick="addMember()"
                                 class="mt-4 flex items-center text-blue-600 hover:text-blue-800 hover:cursor-pointer text-sm font-medium transition">
                             <i class="fas fa-plus mr-1"></i> Tambah Anggota
                         </button>
@@ -220,8 +233,11 @@ JS DIGUNAKAN UNTUK MENAMBAH & MENGHAPUS MEMBER
 ******************************************************* -->
 <script>
     // Add member (WAJIB JS)
-    let memberCount = 2;
+    const addButton = document.getElementById('addMember');
+    addButton.addEventListener('click', addMember)
+    let memberCount = <?= $i + 1?>;
     function addMember() {
+
         memberCount++;
         const container = document.getElementById('membersContainer');
         const newCard = document.createElement('div');
@@ -247,6 +263,10 @@ JS DIGUNAKAN UNTUK MENAMBAH & MENGHAPUS MEMBER
             </div>
         `;
         container.appendChild(newCard);
+        if (memberCount == <?= $detailRuangan['max_capacity'] ?>) {
+        addButton.classList.add('hidden'); // sembunyikan tombol
+        return; // hentikan eksekusi fungsi 
+        }
     }
 
     // Remove member (WAJIB JS)
@@ -262,5 +282,6 @@ JS DIGUNAKAN UNTUK MENAMBAH & MENGHAPUS MEMBER
             card.querySelector('span.rounded-full').textContent = i + 1;
         });
         memberCount = document.querySelectorAll('.member-card').length;
+        addButton.classList.remove('hidden')
     }
 </script>

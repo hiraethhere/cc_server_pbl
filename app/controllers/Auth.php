@@ -173,7 +173,8 @@ class Auth extends Controller {
             'email' => $user['email'],
             'jurusan_unit' => $user['jurusan_unit'],
             'prodi' => $user['prodi'],
-            'profile_photo' => $user['profile_photo']
+            'profile_photo' => $user['profile_photo'],
+            'nomor_induk' => $user['nomor_induk']
         ];
         $_SESSION['role'] = $user['role'];
 
