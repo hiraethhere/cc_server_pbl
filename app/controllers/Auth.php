@@ -83,18 +83,18 @@ class Auth extends Controller {
             }
 
             if ($_SESSION['regisRole'] === '3') {
-                if (!validateEmail($_POST['email'])) {
-                    throw new Exception('email tidak valid');
-                }
-                $expiredDate = countExpiredAt($_POST['email'], $_POST['prodi']);
-            } else{
-                $expiredDate = NULL;
+            // Validasi email hanya untuk mahasiswa
+            if (!validateEmail($_POST['email'])) {
+                throw new Exception('Email tidak valid');
             }
+                $expiredDate = countExpiredAt($_POST['email'], $_POST['prodi']);
 
-            if (isset($_FILES['buktiKubaca'])) {
-                $buktiKubaca = uploadImage($_FILES['buktiKubaca'], 'storage/FotoBukti/');
+            // Upload bukti hanya untuk mahasiswa
+            if (isset($_FILES['buktiKubaca']) && $_FILES['buktiKubaca']['error'] === 0) {
+            $buktiKubaca = uploadImage($_FILES['buktiKubaca'], 'storage/FotoBukti/');
             } else {
-                throw new Exception('Mohon upload files');
+                throw new Exception('Mohon upload file bukti');
+                }
             }
 
             $data = [
@@ -109,7 +109,7 @@ class Auth extends Controller {
                 'profile_photo' => 'DefaultProfilePicture.jpg',
                 'suspend_count' => 0,
                 'email_verified' => true,
-                'expired_at' => $expiredDate,
+                'expired_at' => $expiredDate ?? NULL,
                 'now' => date('Y-m-d H:i:s')
             ];
 
@@ -173,7 +173,8 @@ class Auth extends Controller {
             'email' => $user['email'],
             'jurusan_unit' => $user['jurusan_unit'],
             'prodi' => $user['prodi'],
-            'profile_photo' => $user['profile_photo']
+            'profile_photo' => $user['profile_photo'],
+            'nomor_induk' => $user['nomor_induk']
         ];
         $_SESSION['role'] = $user['role'];
 
