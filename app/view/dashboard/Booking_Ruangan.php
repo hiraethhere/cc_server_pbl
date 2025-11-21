@@ -16,6 +16,7 @@
         <div class="order-2 lg:order-none lg:col-span-2">
             <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
                 <form id="bookingForm" action="/Booking/handleBooking" method="POST">
+                    <input type="hidden" name="id_room" value="<?= $detailRuangan['id_room'] ?>">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                         <div class="relative">
                             <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
@@ -43,12 +44,8 @@
                             <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
                                 Jam Mulai <span class="text-red-500 ml-1">*</span>
                             </label>
-                            <select id="jamMulai" name="jamMulai" required class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white appearance-none text-sm">
+                            <select id="jamMulai" name="jamMulai" disabled required class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white appearance-none text-sm">
                                 <option value="" disabled selected hidden>Pilih jam mulai</option>
-                                <option>09:00</option><option>09:30</option><option>10:00</option><option>10:30</option>
-                                <option>11:00</option><option>11:30</option><option>12:00</option><option>12:30</option>
-                                <option>13:00</option><option>13:30</option><option>14:00</option><option>14:30</option>
-                                <option>15:00</option><option>15:30</option><option>16:00</option>
                             </select>
                             <i class="fas fa-clock absolute left-3 top-10 text-gray-400"></i>
                         </div>
@@ -56,12 +53,8 @@
                             <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
                                 Jam Selesai <span class="text-red-500 ml-1">*</span>
                             </label>
-                            <select id="jamSelesai" name="jamSelesai" required class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white appearance-none text-sm">
+                            <select id="jamSelesai" name="jamSelesai" disabled required class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white appearance-none text-sm">
                                 <option value="" disabled selected hidden>Pilih jam selesai</option>
-                                <option>09:00</option><option>09:30</option><option>10:00</option><option>10:30</option>
-                                <option>11:00</option><option>11:30</option><option>12:00</option><option>12:30</option>
-                                <option>13:00</option><option>13:30</option><option>14:00</option><option>14:30</option>
-                                <option>15:00</option><option>15:30</option><option>16:00</option>
                             </select>
                             <i class="fas fa-clock absolute left-3 top-10 text-gray-400"></i>
                         </div>
@@ -234,6 +227,158 @@ INI POP UP SUCCESS
 JS DIGUNAKAN UNTUK MENAMBAH & MENGHAPUS MEMBER
 ******************************************************* -->
 <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+        // 1. DEFINISI ID SESUAI HTML KAMU
+        const tanggalPinjam = document.getElementById('tanggalPinjam');
+        const jamMulai = document.getElementById('jamMulai');
+        const jamSelesai = document.getElementById('jamSelesai');
+        const durasiText = document.getElementById('durasiText'); // Span di dalam #totalTime
+        const roomIdInput = document.getElementById('id_room');
+
+    // Fallback jika roomId tidak ada
+    const roomId = roomIdInput ? roomIdInput.value : 1;
+
+    // 2. KONFIGURASI WAKTU
+    const operationalStart = 7 * 60; // 07:00
+    const operationalEnd = 17 * 60;  // 17:00
+    const interval = 30;             // 30 menit
+    const maxDuration = 180;         // 3 jam (180 menit)
+
+    let todaysBookings = [];
+
+    // --- EVENT 1: SAAT TANGGAL DIPILIH ---
+    tanggalPinjam.addEventListener('change', async function() {
+        const date = this.value;
+        if (!date) return;
+        
+        jamMulai.removeAttribute('disabled')
+
+        // Reset form
+        resetSelect(jamMulai, 'Pilih jam mulai');
+        resetSelect(jamSelesai, 'Pilih jam selesai');
+        updateTotalTime(0);
+
+        try {
+            // Fetch ke Controller Bookings yang sudah kita buat
+            const response = await fetch('http://localhost:8082/Booking/cekJadwal', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ room_id: roomId, date: date })
+            });
+            
+            // const data = await response.json();
+            const data = await response.text();
+            console.log("RAW RESPONSE NICHHHH", data)
+
+            // Format data booking menjadi menit
+            todaysBookings = data.map(b => ({
+                start: timeToMinutes(b.start_time),
+                end: timeToMinutes(b.end_time)
+            }));
+
+            populateJamMulai();
+
+        } catch (error) {
+            console.error('Gagal mengambil jadwal:', error);
+        }
+    });
+
+    // --- LOGIC: ISI JAM MULAI ---
+    function populateJamMulai() {
+        jamMulai.innerHTML = '<option value="" disabled selected hidden>Pilih jam mulai</option>';
+        
+        for (let time = operationalStart; time < operationalEnd; time += interval) {
+            // Cek apakah jam ini bentrok dengan booking orang lain
+            const isConflict = todaysBookings.some(booking => {
+                return time >= booking.start && time < booking.end;
+            });
+
+            if (!isConflict) {
+                addOption(jamMulai, time);
+            }
+        }
+    }
+
+    // --- EVENT 2: SAAT JAM MULAI DIPILIH ---
+jamMulai.addEventListener('change', function() {
+        const startVal = this.value;
+        resetSelect(jamSelesaiSelect, 'Pilih jam selesai');
+        updateTotalTime(0);
+
+        if (!startVal) return;
+
+        const startTime = timeToMinutes(startVal);
+        
+        // Hitung batas akhir (Max 3 jam atau Jam Tutup)
+        let limitTime = Math.min(operationalEnd, startTime + maxDuration);
+
+        // Cek booking terdekat di depan user ini
+        const nextBooking = todaysBookings
+            .filter(b => b.start > startTime)
+            .sort((a, b) => a.start - b.start)[0];
+
+        if (nextBooking) {
+            limitTime = Math.min(limitTime, nextBooking.start);
+        }
+
+        // Isi dropdown jam selesai
+        for (let time = startTime + interval; time <= limitTime; time += interval) {
+            addOption(jamSelesaiSelect, time);
+        }
+    });
+
+    // --- EVENT 3: SAAT JAM SELESAI DIPILIH (HITUNG DURASI) ---
+    jamSelesaiSelect.addEventListener('change', function() {
+        const startVal = jamMulai.value;
+        const endVal = this.value;
+
+        if (startVal && endVal) {
+            const start = timeToMinutes(startVal);
+            const end = timeToMinutes(endVal);
+            updateTotalTime(end - start);
+        }
+    });
+
+    // --- HELPER FUNCTIONS ---
+    
+    // Update tampilan "0 Jam 0 Menit"
+    function updateTotalTime(minutes) {
+        const h = Math.floor(minutes / 60);
+        const m = minutes % 60;
+        if (durasiText) {
+            durasiText.textContent = `${h} Jam ${m} Menit`;
+        }
+    }
+
+    // Konversi String/Datetime ke Menit
+    function timeToMinutes(timeStr) {
+        let timePart = timeStr;
+        if (timeStr.includes(' ')) timePart = timeStr.split(' ')[1];
+        const [h, m] = timePart.split(':').map(Number);
+        return (h * 60) + m;
+    }
+
+    // Konversi Menit ke "HH:mm"
+    function minutesToTime(totalMinutes) {
+        const h = Math.floor(totalMinutes / 60);
+        const m = totalMinutes % 60;
+        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+    }
+
+    function addOption(select, timeInMinutes) {
+        const timeStr = minutesToTime(timeInMinutes);
+        const option = document.createElement('option');
+        option.value = timeStr + ":00"; 
+        option.textContent = timeStr;
+        select.appendChild(option);
+    }
+
+    function resetSelect(el, text) {
+        el.innerHTML = `<option value="" disabled selected hidden>${text}</option>`;
+    }
+});
+
     // Add member (WAJIB JS)
     const addButton = document.getElementById('addMember');
     addButton.addEventListener('click', addMember)
@@ -286,133 +431,6 @@ JS DIGUNAKAN UNTUK MENAMBAH & MENGHAPUS MEMBER
         memberCount = document.querySelectorAll('.member-card').length;
         addButton.classList.remove('hidden')
     }
-document.addEventListener('DOMContentLoaded', function() {
-    const tanggalInput = document.getElementById('tanggal');
-    const jamMulaiSelect = document.getElementById('jam_mulai');
-    const jamSelesaiSelect = document.getElementById('jam_selesai');
-    
-    // Pastikan ID element ini ada di HTML kamu (bisa type="hidden")
-    const roomIdInput = document.getElementById('room_id'); 
-    // Fallback jika element tidak ketemu, pakai default '1' atau handle error
-    const roomId = roomIdInput ? roomIdInput.value : 1; 
-
-    // --- KONFIGURASI ---
-    const operationalStart = 7 * 60; // 07:00 (menit)
-    const operationalEnd = 17 * 60;  // 17:00 (menit)
-    const interval = 30;             // 30 menit
-    const maxDuration = 180;         // 3 jam (180 menit)
-
-    let todaysBookings = [];
-
-    // 1. Event Ganti Tanggal
-    tanggalInput.addEventListener('change', async function() {
-        const date = this.value;
-        if (!date) return;
-
-        resetSelect(jamMulaiSelect, 'Pilih Jam Mulai');
-        resetSelect(jamSelesaiSelect, 'Pilih Jam Selesai');
-
-        try {
-            // UPDATE URL DI SINI: Mengarah ke Controller Bookings
-            const response = await fetch('localhost:8082/Bookings/cekJadwal', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ room_id: roomId, date: date })
-            });
-
-            if (!response.ok) throw new Error('Network response was not ok');
-    
-            const data = await response.json();
-            
-            // Konversi waktu booking DB ke menit (integer)
-            todaysBookings = data.map(b => ({
-                start: timeToMinutes(b.start_time),
-                end: timeToMinutes(b.end_time)
-            }));
-            
-            populateJamMulai();
-
-        } catch (error) {
-            console.error('Error:', error);
-            // Optional: tampilkan pesan error ke user
-        }
-    });
-
-    // 2. Isi Jam Mulai (Interval 30 menit)
-    function populateJamMulai() {
-        jamMulaiSelect.innerHTML = '<option value="">Pilih Jam Mulai</option>';
-        
-        for (let time = operationalStart; time < operationalEnd; time += interval) {
-            // Cek bentrok
-            const isConflict = todaysBookings.some(booking => {
-                // Waktu yang dicek tidak boleh berada DI DALAM booking orang lain
-                // (Mulai tepat saat orang lain selesai itu boleh)
-                return time >= booking.start && time < booking.end;
-            });
-
-            if (!isConflict) {
-                addOption(jamMulaiSelect, time);
-            }
-        }
-    }
-
-    // 3. Event Pilih Jam Mulai -> Hitung Jam Selesai
-    jamMulaiSelect.addEventListener('change', function() {
-        const startVal = this.value;
-        resetSelect(jamSelesaiSelect, 'Pilih Jam Selesai');
-        
-        if (!startVal) return;
-
-        const startTime = timeToMinutes(startVal);
-        
-        // Batas awal: 3 jam ke depan atau jam tutup
-        let limitTime = Math.min(operationalEnd, startTime + maxDuration);
-
-        // Cek booking terdekat di depan (agar tidak menabrak jadwal orang)
-        const nextBooking = todaysBookings
-            .filter(b => b.start > startTime)
-            .sort((a, b) => a.start - b.start)[0];
-
-        if (nextBooking) {
-            // Jika ada booking di depan, batas max kita dipotong sampai booking itu mulai
-            limitTime = Math.min(limitTime, nextBooking.start);
-        }
-
-        // Loop isi jam selesai
-        for (let time = startTime + interval; time <= limitTime; time += interval) {
-            addOption(jamSelesaiSelect, time);
-        }
-    });
-
-    // --- Helpers ---
-    function timeToMinutes(timeStr) {
-        // Handle format H:i:s atau H:i
-        const parts = timeStr.split(':');
-        return (parseInt(parts[0]) * 60) + parseInt(parts[1]);
-    }
-
-    function minutesToTime(totalMinutes) {
-        const hours = Math.floor(totalMinutes / 60);
-        const mins = totalMinutes % 60;
-        return `${pad(hours)}:${pad(mins)}`;
-    }
-
-    function pad(num) {
-        return num.toString().padStart(2, '0');
-    }
-
-    function addOption(select, timeInMinutes) {
-        const timeStr = minutesToTime(timeInMinutes);
-        const option = document.createElement('option');
-        option.value = timeStr + ":00"; 
-        option.textContent = timeStr;
-        select.appendChild(option);
-    }
-
-    function resetSelect(el, text) {
-        el.innerHTML = `<option value="">${text}</option>`;
-    }
-});
     </script>
 
             

@@ -12,9 +12,7 @@ class BookingModel {
     // Mengambil jadwal yang sudah ter-booking berdasarkan ruangan dan tanggal
     public function getBookingsByRoomAndDate($roomId, $date)
     {
-    // $date formatnya 'YYYY-MM-DD'
-    // DATE(start_time) akan mengambil tanggalnya saja dari datetime 'YYYY-MM-DD HH:mm:ss'
-    
+        
     $query = "SELECT start_time, end_time 
               FROM " . $this->table . " 
               WHERE room_id = :room_id 

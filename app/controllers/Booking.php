@@ -1,6 +1,6 @@
 <?php
 
-class Bookings extends Controller {
+class Booking extends Controller {
     
     // Endpoint untuk mengecek jadwal (dipanggil via fetch/AJAX)
     public function cekJadwal()
@@ -24,5 +24,10 @@ class Bookings extends Controller {
         header('Content-Type: application/json');
         echo json_encode($bookedSlots);
         exit;
+    }
+
+    public function storeBooking(){
+
+
     }
 }
