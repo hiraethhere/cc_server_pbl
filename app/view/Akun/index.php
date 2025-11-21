@@ -139,20 +139,3 @@
         </div>
     </div>
 </div> -->
-
-<script>
-    // Fungsi untuk menampilkan modal logout
-    function showModal() {
-        document.getElementById('successModal').classList.remove('hidden');
-    }
-
-    // Fungsi untuk menyembunyikan modal logout
-    function hideModal() {
-        document.getElementById('successModal').classList.add('hidden');
-    }
-
-    // Tambahkan event listener pada tombol batalkan
-    document.querySelector('#successModal button:first-of-type').addEventListener('click', hideModal);
-
-
-</script>
