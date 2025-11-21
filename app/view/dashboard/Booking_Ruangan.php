@@ -223,10 +223,10 @@ INI POP UP SUCCESS
 </div>
 
 
-<!-- **************************************************
-JS DIGUNAKAN UNTUK MENAMBAH & MENGHAPUS MEMBER
-******************************************************* -->
+
 <script>
+
+        const BASEURL = "<?= BASEURL ?>";
 
         document.addEventListener('DOMContentLoaded', function() {
         // 1. DEFINISI ID SESUAI HTML KAMU
@@ -237,13 +237,16 @@ JS DIGUNAKAN UNTUK MENAMBAH & MENGHAPUS MEMBER
         const roomIdInput = document.getElementById('id_room');
 
     // Fallback jika roomId tidak ada
-    const roomId = roomIdInput ? roomIdInput.value : 1;
+        const roomId = roomIdInput ? roomIdInput.value : 1;
 
     // 2. KONFIGURASI WAKTU
     const operationalStart = 7 * 60; // 07:00
     const operationalEnd = 17 * 60;  // 17:00
     const interval = 30;             // 30 menit
     const maxDuration = 180;         // 3 jam (180 menit)
+    const today = new Date();
+    const maxDate = new Date();
+    maxDate.setDate(today.getDate() + 7);
 
     let todaysBookings = [];
 
@@ -261,15 +264,14 @@ JS DIGUNAKAN UNTUK MENAMBAH & MENGHAPUS MEMBER
 
         try {
             // Fetch ke Controller Bookings yang sudah kita buat
-            const response = await fetch('http://localhost:8082/Booking/cekJadwal', {
+            const response = await fetch('<?= BASEURL ?>/Booking/cekJadwal', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ room_id: roomId, date: date })
             });
             
-            // const data = await response.json();
-            const data = await response.text();
-            console.log("RAW RESPONSE NICHHHH", data)
+            const data = await response.json();
+            console.log("succes dapet data", data)
 
             // Format data booking menjadi menit
             todaysBookings = data.map(b => ({
@@ -303,8 +305,10 @@ JS DIGUNAKAN UNTUK MENAMBAH & MENGHAPUS MEMBER
     // --- EVENT 2: SAAT JAM MULAI DIPILIH ---
 jamMulai.addEventListener('change', function() {
         const startVal = this.value;
-        resetSelect(jamSelesaiSelect, 'Pilih jam selesai');
+        resetSelect(jamSelesai, 'Pilih jam selesai');
         updateTotalTime(0);
+
+        jamSelesai.removeAttribute('disabled')
 
         if (!startVal) return;
 
@@ -314,9 +318,7 @@ jamMulai.addEventListener('change', function() {
         let limitTime = Math.min(operationalEnd, startTime + maxDuration);
 
         // Cek booking terdekat di depan user ini
-        const nextBooking = todaysBookings
-            .filter(b => b.start > startTime)
-            .sort((a, b) => a.start - b.start)[0];
+        const nextBooking = todaysBookings.filter(b => b.start > startTime).sort((a, b) => a.start - b.start)[0];
 
         if (nextBooking) {
             limitTime = Math.min(limitTime, nextBooking.start);
@@ -324,12 +326,12 @@ jamMulai.addEventListener('change', function() {
 
         // Isi dropdown jam selesai
         for (let time = startTime + interval; time <= limitTime; time += interval) {
-            addOption(jamSelesaiSelect, time);
+            addOption(jamSelesai, time);
         }
     });
 
     // --- EVENT 3: SAAT JAM SELESAI DIPILIH (HITUNG DURASI) ---
-    jamSelesaiSelect.addEventListener('change', function() {
+    jamSelesai.addEventListener('change', function() {
         const startVal = jamMulai.value;
         const endVal = this.value;
 
@@ -376,6 +378,74 @@ jamMulai.addEventListener('change', function() {
 
     function resetSelect(el, text) {
         el.innerHTML = `<option value="" disabled selected hidden>${text}</option>`;
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    
+    // 1. Definisi Fungsi Debounce (Mencegah spam request)
+    function debounce(func, delay) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    // 2. Fungsi Utama Fetch Data
+    // Kita pisahkan logikanya agar bersih
+    const fetchUserData = debounce(async (inputElement) => {
+        const nim = inputElement.value.trim();
+        // Cari field nama pasangannya (sibling dalam satu grid)
+        const row = inputElement.closest('.grid'); 
+        const namaField = row.querySelector(".nama-input");
+
+        // Reset jika kosong atau terlalu pendek
+        if (nim.length < 5) {
+            namaField.value = "";
+            return;
+        }
+
+        // Tanda sedang loading (Opsional, UX lebih baik)
+        namaField.placeholder = "Mencari...";
+
+        try {
+            const response = await fetch("http://localhost:8082/Booking/cariAnggota", { 
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nim: nim })
+            });
+
+            if (!response.ok) throw new Error("Network response was not ok");
+
+            const data = await response.json();
+            console.log("Dapet data:", data);
+
+            if (data && data.nama) {
+                namaField.value = data.nama;
+            } else {
+                namaField.value = ""; // Kosongkan jika tidak ketemu
+                namaField.placeholder = "Data tidak ditemukan";
+            }
+
+        } catch (err) {
+            console.error("Fetch error:", err);
+            namaField.value = "";
+            namaField.placeholder = "Gagal memuat data";
+        }
+    }, 500); // Delay 500ms
+
+    // 3. EVENT DELEGATION (Kunci agar input dinamis bisa jalan)
+    // Kita pasang listener di container pembungkus utama, bukan di masing-masing input
+    const membersContainer = document.getElementById('membersContainer');
+
+    if (membersContainer) {
+        membersContainer.addEventListener('input', function(e) {
+            // Cek apakah yang diketik adalah elemen dengan class 'nim-input'
+            if (e.target && e.target.classList.contains('nim-input')) {
+                fetchUserData(e.target);
+            }
+        });
     }
 });
 

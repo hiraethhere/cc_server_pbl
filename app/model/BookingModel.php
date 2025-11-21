@@ -12,16 +12,17 @@ class BookingModel {
     // Mengambil jadwal yang sudah ter-booking berdasarkan ruangan dan tanggal
     public function getBookingsByRoomAndDate($roomId, $date)
     {
-        
+
     $query = "SELECT start_time, end_time 
               FROM " . $this->table . " 
-              WHERE room_id = :room_id 
+              WHERE id_room = :id_room 
               AND DATE(start_time) = :date";
     
     $this->db->query($query);
-    $this->db->bind('room_id', $roomId);
+    $this->db->bind('id_room', $roomId);
     $this->db->bind('date', $date);
     
     return $this->db->resultSet();
     }
+
 }
