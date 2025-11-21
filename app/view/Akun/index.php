@@ -76,7 +76,7 @@
     <div id="successModal" class="fixed inset-0 flex items-center justify-center z-50 hidden ">
         <div class="bg-white rounded-2xl p-8 w-full max-w-sm mx-4 text-center border border-[#8E97A6]">
             <div class="mb-4">
-                <i class="fas fa-sign-out-alt text-[#C90B0B] text-5xl"></i>
+                <img src="/icon/logoutDashboard.svg" alt="Logout Icon" class="w-12 h-12 mx-auto">
             </div>
             <h3 class="text-xl font-bold text-gray-800 mb-2">Logout</h3>
             <p class="text-sm text-gray-600 mb-6">Apakah anda yakin ingin logout?</p>
