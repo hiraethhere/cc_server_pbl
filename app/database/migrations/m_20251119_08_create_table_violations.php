@@ -4,7 +4,7 @@ class m_20251119_08_create_table_violations extends Migration{
 
     public function up()
     {
-        $query = "CREATE TABLE violations (
+        $query = "CREATE TABLE IF NOT EXISTS violations (
             id_violation INT AUTO_INCREMENT PRIMARY KEY,
             id_user INT NOT NULL,
             id_booking INT NOT NULL,

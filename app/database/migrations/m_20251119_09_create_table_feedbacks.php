@@ -3,7 +3,7 @@
 class m_20251119_09_create_table_feedbacks extends Migration{
     public function up()
     {
-        $query = "CREATE TABLE feedback (
+        $query = "CREATE TABLE IF NOT EXISTS feedback (
         id_feedback INT AUTO_INCREMENT PRIMARY KEY,
         id_user INT NOT NULL,
         id_booking INT NOT NULL,

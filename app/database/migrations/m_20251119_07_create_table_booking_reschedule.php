@@ -4,7 +4,7 @@ class m_20251119_07_create_table_booking_reschedule extends Migration{
 
     public function up()
     {
-        $query = "CREATE TABLE booking_reschedule (
+        $query = "CREATE TABLE IF NOT EXISTS booking_reschedule (
                 id_reschedule INT AUTO_INCREMENT PRIMARY KEY,
                 id_booking INT NOT NULL,
                 reschedule_reason VARCHAR(255),

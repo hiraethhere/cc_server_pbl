@@ -284,4 +284,133 @@ JS DIGUNAKAN UNTUK MENAMBAH & MENGHAPUS MEMBER
         memberCount = document.querySelectorAll('.member-card').length;
         addButton.classList.remove('hidden')
     }
-</script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tanggalInput = document.getElementById('tanggal');
+    const jamMulaiSelect = document.getElementById('jam_mulai');
+    const jamSelesaiSelect = document.getElementById('jam_selesai');
+    
+    // Pastikan ID element ini ada di HTML kamu (bisa type="hidden")
+    const roomIdInput = document.getElementById('room_id'); 
+    // Fallback jika element tidak ketemu, pakai default '1' atau handle error
+    const roomId = roomIdInput ? roomIdInput.value : 1; 
+
+    // --- KONFIGURASI ---
+    const operationalStart = 7 * 60; // 07:00 (menit)
+    const operationalEnd = 17 * 60;  // 17:00 (menit)
+    const interval = 30;             // 30 menit
+    const maxDuration = 180;         // 3 jam (180 menit)
+
+    let todaysBookings = [];
+
+    // 1. Event Ganti Tanggal
+    tanggalInput.addEventListener('change', async function() {
+        const date = this.value;
+        if (!date) return;
+
+        resetSelect(jamMulaiSelect, 'Pilih Jam Mulai');
+        resetSelect(jamSelesaiSelect, 'Pilih Jam Selesai');
+
+        try {
+            // UPDATE URL DI SINI: Mengarah ke Controller Bookings
+            const response = await fetch('localhost:8082/Bookings/cekJadwal', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ room_id: roomId, date: date })
+            });
+
+            if (!response.ok) throw new Error('Network response was not ok');
+    
+            const data = await response.json();
+            
+            // Konversi waktu booking DB ke menit (integer)
+            todaysBookings = data.map(b => ({
+                start: timeToMinutes(b.start_time),
+                end: timeToMinutes(b.end_time)
+            }));
+            
+            populateJamMulai();
+
+        } catch (error) {
+            console.error('Error:', error);
+            // Optional: tampilkan pesan error ke user
+        }
+    });
+
+    // 2. Isi Jam Mulai (Interval 30 menit)
+    function populateJamMulai() {
+        jamMulaiSelect.innerHTML = '<option value="">Pilih Jam Mulai</option>';
+        
+        for (let time = operationalStart; time < operationalEnd; time += interval) {
+            // Cek bentrok
+            const isConflict = todaysBookings.some(booking => {
+                // Waktu yang dicek tidak boleh berada DI DALAM booking orang lain
+                // (Mulai tepat saat orang lain selesai itu boleh)
+                return time >= booking.start && time < booking.end;
+            });
+
+            if (!isConflict) {
+                addOption(jamMulaiSelect, time);
+            }
+        }
+    }
+
+    // 3. Event Pilih Jam Mulai -> Hitung Jam Selesai
+    jamMulaiSelect.addEventListener('change', function() {
+        const startVal = this.value;
+        resetSelect(jamSelesaiSelect, 'Pilih Jam Selesai');
+        
+        if (!startVal) return;
+
+        const startTime = timeToMinutes(startVal);
+        
+        // Batas awal: 3 jam ke depan atau jam tutup
+        let limitTime = Math.min(operationalEnd, startTime + maxDuration);
+
+        // Cek booking terdekat di depan (agar tidak menabrak jadwal orang)
+        const nextBooking = todaysBookings
+            .filter(b => b.start > startTime)
+            .sort((a, b) => a.start - b.start)[0];
+
+        if (nextBooking) {
+            // Jika ada booking di depan, batas max kita dipotong sampai booking itu mulai
+            limitTime = Math.min(limitTime, nextBooking.start);
+        }
+
+        // Loop isi jam selesai
+        for (let time = startTime + interval; time <= limitTime; time += interval) {
+            addOption(jamSelesaiSelect, time);
+        }
+    });
+
+    // --- Helpers ---
+    function timeToMinutes(timeStr) {
+        // Handle format H:i:s atau H:i
+        const parts = timeStr.split(':');
+        return (parseInt(parts[0]) * 60) + parseInt(parts[1]);
+    }
+
+    function minutesToTime(totalMinutes) {
+        const hours = Math.floor(totalMinutes / 60);
+        const mins = totalMinutes % 60;
+        return `${pad(hours)}:${pad(mins)}`;
+    }
+
+    function pad(num) {
+        return num.toString().padStart(2, '0');
+    }
+
+    function addOption(select, timeInMinutes) {
+        const timeStr = minutesToTime(timeInMinutes);
+        const option = document.createElement('option');
+        option.value = timeStr + ":00"; 
+        option.textContent = timeStr;
+        select.appendChild(option);
+    }
+
+    function resetSelect(el, text) {
+        el.innerHTML = `<option value="">${text}</option>`;
+    }
+});
+    </script>
+
+            

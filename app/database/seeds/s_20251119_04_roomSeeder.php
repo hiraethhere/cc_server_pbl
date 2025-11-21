@@ -10,11 +10,11 @@ class s_20251119_04_roomSeeder extends Seeder {
             status, min_capacity, max_capacity,
             created_at, updated_at
             ) VALUES
-            (1, 1, 'Ruang Rapat Utama', 'DefaultRuangan.jpg','Ruang besar untuk rapat tingkat institusi. Dilengkapi projector dan AC.','Ruang rapat besar', 1, 'active', 10, 30, NOW(), NOW()),
-            (2, 1, 'Ruang Dosen Lantai 2', 'DefaultRuangan.jpg','Ruang khusus dosen untuk diskusi internal dan bimbingan mahasiswa.', 'Ruang dosen', 2, 'active', 5, 15, NOW(), NOW()),
-            (3, 1, 'Ruang Seminar', 'DefaultRuangan.jpg','Ruang seminar untuk presentasi dan workshop kapasitas menengah.','Ruang seminar', 1, 'active', 20, 50, NOW(), NOW()),
-            (4, NULL, 'Ruang Meeting Kecil', 'DefaultRuangan.jpg','Ruang kecil untuk rapat internal singkat.','Meeting kecil', 1, 'active', 4, 8, NOW(), NOW()),
-            (5, NULL, 'Ruang Duta', 'DefaultRuangan.jpg','Ruangan besar khusus untuk para duta PNJ. Kapasitas hingga 10 orang.','Hidup Duta PNJ', 3, 'active', 5, 10, NOW(), NOW());
+            (1, 1, 'Ruang Rapat Utama', 'DefaultRuangan.jpg','Ruang besar untuk rapat tingkat institusi. Dilengkapi projector dan AC.','Ruang rapat besar', 1, 'active', 2, 4, NOW(), NOW()),
+            (2, NULL, 'Ruang Dosen Jurusan', 'DefaultRuangan.jpg','Ruang khusus dosen untuk diskusi internal dan bimbingan mahasiswa.', 'Ruang dosen', 2, 'active', 5, 7, NOW(), NOW()),
+            (3, 1, 'Ruang Himpunan TIK', 'DefaultRuangan.jpg','Ruang Himpunan untuk presentasi dan workshop kapasitas menengah.','Ruang seminar', 1, 'active', 4, 6, NOW(), NOW()),
+            (4, 1, 'Ruang Eksekutif Mahasiswa', 'DefaultRuangan.jpg','Ruang kecil untuk rapat Eksekutif Mahasiswa.','Hidup BEM PNJ, Hidup Perlawanan!', 1, 'active', 3, 5, NOW(), NOW()),
+            (5, 1, 'Ruang Duta', 'DefaultRuangan.jpg','Ruangan besar khusus untuk para duta PNJ. Kapasitas hingga 10 orang.','Hidup Duta PNJ! Hidup Duta PNJ!', 3, 'active', 5, 10, NOW(), NOW());
             ";
         $this->db->query($sql);
         $this->db->execute();
