@@ -2,11 +2,6 @@
 // Logika untuk menentukan Controller/Halaman aktif
 $url = isset($_GET['url']) ? $_GET['url'] : '';
 $urlSegments = explode('/', rtrim(filter_var($url, FILTER_SANITIZE_URL), '/'));
-// $lastSegment = end($urlSegments);
-
-// Ambil segmen pertama sebagai nama Controller
-// Jika kosong, default ke 'Home' atau 'Dashboard' tergantung flow aplikasi
-// Di sini kita asumsikan Controller aktif adalah segmen pertama, dikapitalisasi
 $activeController = !empty($urlSegments[0]) ? ucfirst($urlSegments[0]) : 'Dashboard';
 
 // Definisikan kelas CSS untuk link aktif dan tidak aktif (desktop)
@@ -45,11 +40,29 @@ $inactiveClassMobile = 'text-gray-600 hover:text-gray-800 font-medium px-4 py-2 
                     <a href="/Dashboard" class="<?php echo ($activeController == 'Dashboard') ? $activeClass : $inactiveClass; ?>">
                         Ruangan
                     </a>
+                    <a href="#" class="<?php echo ($activeController == 'bookingAnda') ? $activeClass : $inactiveClass; ?>">
+                        Booking Anda
+                    </a>
                     <a href="/History" class="<?php echo ($activeController == 'History') ? $activeClass : $inactiveClass; ?>">
                         Histori
                     </a>
-                    <a href="/Akun" class="<?php echo ($activeController == 'Akun') ? $activeClass : $inactiveClass; ?>">
-                        Akun
+                    <a href="#" class="<?php echo ($activeController == 'Panduan') ? $activeClass : $inactiveClass; ?>">
+                        Panduan
+                    </a>
+                </div>
+
+                <div class="flex items-center flex-row gap-5">
+                    <!-- Tombol Akun -->
+                    <a href="/Akun" class="<?php echo ($activeController == 'Akun') ? $activeClass : $inactiveClass; ?> flex items-center gap-2 px-4 py-2 rounded-full transition">
+                        <img src="/icon/userDashboard.svg" alt="User Icon" class="w-6 h-6 transition-all <?php echo ($activeController == 'Akun') ? 'brightness-0 invert' : ''; ?>">
+                        <span class="font-medium">Akun</span>
+                    </a>
+
+                    <!-- Tombol Logout -->
+                    <a href="#" onclick="showModal()" 
+                        class="flex items-center gap-2 text-[#C90B0B] hover:bg-red-50 px-4 py-2 rounded-full transition font-medium hover:cursor-pointer">
+                        <img src="/icon/logoutDashboard.svg" alt="Logout Icon" class="w-5 h-5">
+                        <span>Logout</span>
                     </a>
                 </div>
 
