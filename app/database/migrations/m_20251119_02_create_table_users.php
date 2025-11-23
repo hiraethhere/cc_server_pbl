@@ -5,7 +5,7 @@ class m_20251119_02_create_table_users extends Migration{
 
     public function up()
     {
-        $query = "CREATE TABLE users (
+        $query = "CREATE TABLE IF NOT EXISTS users (
                 id_user INT AUTO_INCREMENT PRIMARY KEY,
                 id_role INT,
                 username VARCHAR(255),

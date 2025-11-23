@@ -1,7 +1,5 @@
 <?php
-// cli.php
-
-// 1. Load dependency dasar
+// shidqi migration gaming
 require_once 'app/core/Database.php';
 require_once 'app/core/Migration.php';
 require_once 'app/core/Seeder.php';
@@ -11,18 +9,26 @@ $command = $argv[1] ?? null;
 
 if ($command === 'migrate') {
     runMigrations();
+} elseif ($command === 'migrate:fresh') {
+    // INI PERINTAH BARUNYA
+    echo "!!! PERINGATAN: Database akan dikosongkan !!!\n";
+    dropAllTables(); // Hapus semua tabel
+    echo "--------------------------------------\n";
+    echo "Memulai migrasi ulang...\n";
+    runMigrations(); // Jalankan migrasi dari nol
 } elseif ($command === 'seed') {
     runSeeders();
 } else {
     echo "Perintah tidak dikenal. Gunakan: \n";
     echo "php cli.php migrate \n";
+    echo "php cli.php migrate:fresh  (Reset total database) \n"; 
     echo "php cli.php seed \n";
 }
 
 function runMigrations() {
     $db = new Database();
     
-    // 1. Buat tabel pelacak migrasi jika belum ada
+    //tabel pelacak migrasi
     $query = "CREATE TABLE IF NOT EXISTS migrations (
         id INT AUTO_INCREMENT PRIMARY KEY,
         migration VARCHAR(255),
@@ -31,12 +37,12 @@ function runMigrations() {
     $db->query($query);
     $db->execute();
 
-    // 2. Ambil daftar migrasi yang sudah pernah jalan
+    //Ambil daftar migrasi yang sudah pernah jalan
     $db->query("SELECT migration FROM migrations");
     $existing = $db->resultSet();
     $executedMigrations = array_column($existing, 'migration');
 
-    // 3. Scan folder migrasi
+    //Scan folder migrasi
     $files = scandir(__DIR__ . '/app/database/migrations');
     $files = array_filter($files, function($file) {
         return pathinfo($file, PATHINFO_EXTENSION) === 'php';
@@ -54,15 +60,6 @@ function runMigrations() {
         // Atau kita bisa sepakat nama class di dalam file harus 'Migration_{Timestamp}'
         // TAPI, cara termudah: kita baca isi file atau samakan nama class dengan nama file tanpa .php
         $className = pathinfo($file, PATHINFO_FILENAME);
-        
-        // Perbaiki nama class jika mengandung angka di depan (PHP tidak boleh nama class angka di depan)
-        // Saran: Ubah nama file migrasi kamu menjadi format Huruf di depan, misal: m_2025...
-        // Tapi jika nama class di dalam file sudah benar, kita bisa instansiasi manual.
-        
-        // Mari kita asumsikan nama class di dalam file SAMA dengan nama file.
-        // JIKA nama file: 20251115012353_create_table_users.php
-        // MAKA nama class harus: CreateTableUsers (sesuai konvensi Phinx lama kamu)
-        // Kita butuh fungsi helper sedikit untuk convert nama file ke nama class Phinx style
         $className = convertToClassName($file);
 
         if (class_exists($className)) {
@@ -109,4 +106,34 @@ function runSeeders() {
 function convertToClassName($filename) {
     // Hanya mengambil nama file tanpa ekstensi .php
     return pathinfo($filename, PATHINFO_FILENAME);
+}
+
+function dropAllTables() {
+    $db = new Database();
+    
+    echo "Sedang menghapus semua tabel...\n";
+
+    // 1. Matikan Foreign Key Check biar tidak error constraint
+    $db->query("SET FOREIGN_KEY_CHECKS = 0");
+    $db->execute();
+
+    // 2. Ambil semua nama tabel di database
+    $db->query("SHOW TABLES");
+    $tables = $db->resultSet(); 
+
+    foreach ($tables as $t) {
+        // Trik mengambil value pertama dari array/object tanpa tahu nama key-nya
+        // Biasanya key-nya 'Tables_in_nama_db'
+        $tableName = array_values((array)$t)[0];
+
+        $db->query("DROP TABLE IF EXISTS $tableName");
+        $db->execute();
+        echo "   -> DROPPED: $tableName\n";
+    }
+
+    // 3. Nyalakan lagi Foreign Key Check
+    $db->query("SET FOREIGN_KEY_CHECKS = 1");
+    $db->execute();
+    
+    echo "Database bersih.\n";
 }

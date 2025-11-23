@@ -16,6 +16,7 @@
         <div class="order-2 lg:order-none lg:col-span-2">
             <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
                 <form id="bookingForm" action="/Booking/handleBooking" method="POST">
+                    <input type="hidden" name="id_room" value="<?= $detailRuangan['id_room'] ?>">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                         <div class="relative">
                             <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
@@ -43,12 +44,8 @@
                             <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
                                 Jam Mulai <span class="text-red-500 ml-1">*</span>
                             </label>
-                            <select id="jamMulai" name="jamMulai" required class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white appearance-none text-sm">
+                            <select id="jamMulai" name="jamMulai" disabled required class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white appearance-none text-sm">
                                 <option value="" disabled selected hidden>Pilih jam mulai</option>
-                                <option>09:00</option><option>09:30</option><option>10:00</option><option>10:30</option>
-                                <option>11:00</option><option>11:30</option><option>12:00</option><option>12:30</option>
-                                <option>13:00</option><option>13:30</option><option>14:00</option><option>14:30</option>
-                                <option>15:00</option><option>15:30</option><option>16:00</option>
                             </select>
                             <i class="fas fa-clock absolute left-3 top-10 text-gray-400"></i>
                         </div>
@@ -56,12 +53,8 @@
                             <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
                                 Jam Selesai <span class="text-red-500 ml-1">*</span>
                             </label>
-                            <select id="jamSelesai" name="jamSelesai" required class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white appearance-none text-sm">
+                            <select id="jamSelesai" name="jamSelesai" disabled required class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white appearance-none text-sm">
                                 <option value="" disabled selected hidden>Pilih jam selesai</option>
-                                <option>09:00</option><option>09:30</option><option>10:00</option><option>10:30</option>
-                                <option>11:00</option><option>11:30</option><option>12:00</option><option>12:30</option>
-                                <option>13:00</option><option>13:30</option><option>14:00</option><option>14:30</option>
-                                <option>15:00</option><option>15:30</option><option>16:00</option>
                             </select>
                             <i class="fas fa-clock absolute left-3 top-10 text-gray-400"></i>
                         </div>
@@ -79,7 +72,7 @@
                                     <span class="ml-2 font-medium text-sm text-blue-800">Penanggung Jawab</span>
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <input type="text" maxlength="10" max="10" placeholder="<?= $user['nomor_induk'] ?>" name="nim[]" readonly
+                                    <input type="text" maxlength="10" max="10" placeholder="<?= $user['nomor_induk'] ?>" name="nim[]" value="<?= $user['nomor_induk'] ?>" readonly
                                         class="nim-input w-full px-4 py-2.5 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm">
                                     <input type="text" placeholder="<?= $user['username'] ?>" name="nama[]" readonly
                                         class="nama-input w-full px-4 py-2.5 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm">
@@ -230,10 +223,103 @@ INI POP UP SUCCESS
 </div>
 
 
-<!-- **************************************************
-JS DIGUNAKAN UNTUK MENAMBAH & MENGHAPUS MEMBER
-******************************************************* -->
+<script>const BASEURL = "<?= BASEURL ?>";</script>
+<script src="/js/bookingRoom.js"></script>
+<script src="/js/bookingRoom.js"></script>
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+    
+   //Fungsi Debounce (Mencegah spam request)
+    function debounce(func, delay) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    // 2. Fungsi Utama Fetch Data
+    // Kita pisahkan logikanya agar bersih
+    const fetchUserData = debounce(async (inputElement) => {
+        const nim = inputElement.value.trim();
+        // Cari field nama pasangannya (sibling dalam satu grid)
+        const row = inputElement.closest('.grid'); 
+        const namaField = row.querySelector(".nama-input");
+        const allNimInputs = document.querySelectorAll('[name="nim[]"]');
+
+        let isDuplicate = false;
+
+        allNimInputs.forEach((input) => {
+            // Jangan cek input dengan dirinya sendiri
+            if (input === inputElement) return;
+            
+            // Cek jika value-nya sama (dan tidak kosong)
+            // Pastikan HTML Penanggung Jawab sudah ada attribute value="..."
+            if (input.value.trim() !== "" && input.value.trim() === nim) {
+                isDuplicate = true;
+            }
+        });
+
+        if (isDuplicate) {
+            namaField.value = "";
+            namaField.placeholder = "NIM sudah terdaftar di form ini!";
+            // Tambahkan alert visual kecil atau border merah agar user sadar
+            inputElement.classList.add('border-red-500', 'text-red-500');
+            return; // Hentikan proses, jangan fetch ke database
+        } else {
+            // Hapus indikator error jika sudah benar
+            inputElement.classList.remove('border-red-500', 'text-red-500');
+        }
+
+        // Reset jika kosong atau terlalu pendek
+        if (nim.length < 5) {
+            namaField.value = "";
+            return;
+        }
+
+        // Tanda sedang loading (Opsional, UX lebih baik)
+        namaField.placeholder = "Mencari...";
+
+        try {
+            const response = await fetch(`${BASEURL}/Booking/cariAnggota`, { 
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nim: nim })
+            });
+
+            if (!response.ok) throw new Error("Network response was not ok");
+
+            const data = await response.json();
+            console.log("Dapet data:", data);
+
+            if (data && data.nama) {
+                namaField.value = data.nama;
+            } else {
+                namaField.value = ""; // Kosongkan jika tidak ketemu
+                namaField.placeholder = "Data tidak ditemukan";
+            }
+
+        } catch (err) {
+            console.error("Fetch error:", err);
+            namaField.value = "";
+            namaField.placeholder = "Gagal memuat data";
+        }
+    }, 500); // Delay 500ms
+
+    // 3. EVENT DELEGATION (Kunci agar input dinamis bisa jalan)
+    // Kita pasang listener di container pembungkus utama, bukan di masing-masing input
+    const membersContainer = document.getElementById('membersContainer');
+
+    if (membersContainer) {
+        membersContainer.addEventListener('input', function(e) {
+            // Cek apakah yang diketik adalah elemen dengan class 'nim-input'
+            if (e.target && e.target.classList.contains('nim-input')) {
+                fetchUserData(e.target);
+            }
+        });
+    }
+});
+
     // Add member (WAJIB JS)
     const addButton = document.getElementById('addMember');
     addButton.addEventListener('click', addMember)
@@ -286,4 +372,6 @@ JS DIGUNAKAN UNTUK MENAMBAH & MENGHAPUS MEMBER
         memberCount = document.querySelectorAll('.member-card').length;
         addButton.classList.remove('hidden')
     }
-</script>
+    </script>
+
+            

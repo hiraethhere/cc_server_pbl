@@ -4,9 +4,25 @@
 class Auth extends Controller {
 
     public function index(){
-        if(isset($_SESSION['user'])){
-            header('location: /dashboard');
-            exit;
+        //biar ga bisa back
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
+
+        if (isset($_SESSION['role'])) {
+            $role = $_SESSION['role'];
+
+            switch ($role) {
+                case 'Superadmin':
+                    header('location: /admin');
+                    break;
+                case 'Admin':
+                    header('location: /admin');
+                    break;
+                default:
+                    header('location: /dashboard');
+                    break;
+            }
         }
         unset($_SESSION['regisRole']);
         $this->view('Auth/login');

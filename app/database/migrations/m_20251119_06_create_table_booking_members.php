@@ -4,7 +4,7 @@ class m_20251119_06_create_table_booking_members extends Migration{
 
     public function up()
     {
-        $query = "CREATE TABLE booking_members (
+        $query = "CREATE TABLE IF NOT EXISTS booking_members (
                 id_booking INT NOT NULL,
                 id_user INT NOT NULL,
                 PRIMARY KEY (id_booking, id_user),
