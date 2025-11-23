@@ -25,8 +25,8 @@
                     <span>Kembali pilih role</span>
                     </button>
                     </div>
-
                 </form>
+                
                 <h1 class="text-3xl font-bold text-[#171E29] mb-1">Registrasi Akun</h1>
                 <p class="text-sm text-gray-600">Pinjam ruangan perpustakaan dengan mudah, praktis, dan cepat.</p>
             </div>

@@ -1,9 +1,9 @@
-const logoutModal = document.getElementById("logoutModal");
+// const logoutModal = document.getElementById("logoutModal");
 
-function showModal(){
-    logoutModal.classList.remove('hidden');
-}
+// function showModal(){
+//     logoutModal.classList.remove('hidden');
+// }
 
-function hideModal(){
-    logoutModal.classList.add('hidden');
-}
+// function hideModal(){
+//     logoutModal.classList.add('hidden');
+// }

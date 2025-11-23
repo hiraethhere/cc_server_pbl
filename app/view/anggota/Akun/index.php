@@ -61,38 +61,14 @@
            class="bg-[#1E68FB] text-white hover:from-blue-600 hover:to-blue-700 text-center py-3 rounded-lg font-semibold transition duration-200">
             Ganti Password
         </a>
-        <a href="#" onclick="showModal()"
+        <a href="#" onclick="konfirmasiLogout()"
             class="block w-full bg-[#C90B0B] text-white hover:bg-red-700 text-center py-3 rounded-lg font-semibold transition duration-200">
             Logout
         </a>
     </div>
 
-    <!-- Logout Button -->
-    
-
-    <!-- **************************************************
-    INI POP UP KONFIRMASI LOGOUT
-    ******************************************************* -->
-    <div id="successModal" class="fixed inset-0 flex items-center justify-center z-50 hidden ">
-        <div class="bg-white rounded-2xl p-8 w-full max-w-sm mx-4 text-center border border-[#8E97A6]">
-            <div class="mb-4">
-                <img src="/icon/logoutDashboard.svg" alt="Logout Icon" class="w-12 h-12 mx-auto">
-            </div>
-            <h3 class="text-xl font-bold text-gray-800 mb-2">Logout</h3>
-            <p class="text-sm text-gray-600 mb-6">Apakah anda yakin ingin logout?</p>
-            <div class="flex justify-center space-x-4">
-                <button onclick="hideModal()"
-                        class="w-full px-6 py-1 bg-white text-sm text-black rounded-lg border border-gray-500 font-semibold hover:bg-gray-100 transition hover:cursor-pointer">
-                    Batalkan
-                </button>   
-                <a href="/auth/handleLogout"
-                        class="w-full px-6 py-1 bg-[#C90B0B] text-sm text-white rounded-lg font-semibold hover:bg-red-800 transition hover:cursor-pointer">
-                    Logout
-                </a>
-            </div>
-        </div>
-    </div>
-</main>
+</main> 
+<?php include __DIR__ . '/../template/modal.php'; ?>
 
 <!-- Modal Ganti Avatar -->
 <!-- <div id="avatarModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
@@ -139,3 +115,22 @@
         </div>
     </div>
 </div> -->
+
+<script src="/js/modal.js" defer></script>
+<script>
+function konfirmasiLogout() {
+    Modal.confirm(
+        'Logout',
+        'Apakah anda yakin ingin logout?',
+        function() {
+            window.location.href = '/auth/handleLogout';
+        },
+        {
+            icon: '/icon/logoutDashboard.svg',
+            confirmText: 'Logout',
+            confirmClass: 'w-full px-6 py-2 bg-[#C90B0B] text-white rounded-lg font-semibold hover:bg-red-800 transition',
+            cancelText: 'Batalkan'
+        }
+    );
+}
+</script>
