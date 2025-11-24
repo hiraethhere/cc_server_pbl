@@ -16,31 +16,31 @@
          style="background-image: url('/img/Background 1.png');">   
 
         <div class="flex items-center justify-center h-fit max-w-lg w-full my-8"> 
-            <div class="bg-[#F3F5FA] rounded-2xl shadow-2xl p-8 w-lg h-fit max-w-lg md:h-fit sm:h-full mb-5 mt-1">
+            <div class="bg-[#F9FAFC] rounded-2xl shadow-2xl p-8 w-lg h-fit max-w-lg md:h-fit sm:h-full mb-5 mt-1">
                 <!-- Logo & Header -->
                 <div class="text-center mb-5">
                     <div class="flex items-start justify-start mb-3">
                         <img src="/img/LOGO PNJ FIX 1.png" alt="Logo" class="w-auto h-10 mr-2">
                         <h1 class="text-4xl font-bold text-gray-800">ruanginPNJ</h1>
                     </div>
-                    <p class="text-xs text-left  text-gray-600">Temukan, pinjam, dan nikmati fasilitas favortimu dengan mudah.</p>
+                    <p class="text-sm text-left  text-gray-600">Temukan, pinjam, dan nikmati fasilitas favortimu dengan mudah.</p>
                 </div>
 
                 <!-- Form -->
                 <form id="loginForm" method="POST" action="/auth/handleLogin">
                     <!-- Email -->
                     <div class="mb-5">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <label class="block text-xs font-medium text-gray-700 mb-2">Email</label>
                         <input type="email" id="email" name="email" placeholder="Input email" 
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-xs">
                     </div>
 
                     <!-- Password -->
                     <div class="mb-5" data-toggle-password>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <label class="block text-xs font-medium text-gray-700 mb-2">Password</label>
                         <div class="relative">
                             <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="new-password"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-xs">
                             <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
                                 <img src="/icon/eye-on.svg" alt="Show Password" class="w-5 h-5 hover:cursor-pointer">
                             </button>
@@ -48,7 +48,7 @@
                     </div>
 
                     <!-- Links Row -->
-                    <div class="flex items-center justify-between mb-4 text-sm">
+                    <div class="flex items-center justify-between mb-4 text-xs">
                         <div>
                             <span class="text-gray-600">Belum punya akun? </span>
                             <a href="/auth/registerForms" class="text-blue-600 hover:underline font-medium">Registrasi</a>
@@ -60,12 +60,12 @@
                     <div class="mb-6">
                         <label class="flex items-center">
                             <input type="checkbox" name="remember" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                            <span class="ml-2 text-sm text-gray-700">Ingat Saya</span>
+                            <span class="ml-2 text-xs text-gray-700">Ingat Saya</span>
                         </label>
                     </div>
 
                     <!-- Submit Button -->
-                    <button type="submit" class="w-full bg-[#38C55C] text-white py-3 text-sm rounded-lg font-semibold hover:bg-green-600 transition duration-200 hover:cursor-pointer mb-2">
+                    <button type="submit" class="w-full bg-[#38C55C] text-white py-3 text-sm rounded-lg font-medium hover:bg-green-600 transition duration-200 hover:cursor-pointer mb-2">
                         Login - Explore Ruangan Sekarang
                     </button>
 
