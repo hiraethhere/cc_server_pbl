@@ -11,7 +11,7 @@
 <body class="bg-gray-50 font-sf-pro flex min-h-screen">
 
     <!-- SIDEBAR -->
-    <aside class="w-48 bg-[linear-gradient(0deg,rgba(30,104,251,0.02)0%,rgba(30,104,251,0.02)100%),#FFF] shadow-lg flex flex-col">
+    <aside class="w-48 bg-[#FBFCFF] shadow-lg flex flex-col z-20">
         
         <!-- Logo -->
         <div class="px-6 py-5 border-b border-gray-200">
@@ -85,7 +85,7 @@
 
         <!-- Logout -->
         <div class="px-4 py-4 border-t border-gray-200">
-            <a href="/auth/handleLogout" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition text-xs font-medium">
+            <a href="#" onclick="konfirmasiLogout()" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition text-xs font-medium">
                 <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
                 <polyline points="16 17 21 12 16 7"/>
@@ -96,4 +96,22 @@
         </div>
     </aside>
 
-    
+    <?php include __DIR__ . '/../template/modal.php'; ?>
+    <script src="/js/modal.js"></script>
+    <script>
+    function konfirmasiLogout() {
+        Modal.confirm(
+            'Logout',
+            'Apakah anda yakin ingin logout?',
+            function() {
+                window.location.href = '/auth/handleLogout';
+            },
+            {
+                icon: '/icon/logoutDashboard.svg',
+                confirmText: 'Logout',
+                confirmClass: 'w-full px-6 py-2 bg-[#C90B0B] text-white rounded-lg font-semibold hover:bg-red-800 transition',
+                cancelText: 'Batalkan'
+            }
+        );
+    }
+    </script>
