@@ -68,7 +68,6 @@
     </div>
 
 </main> 
-<?php include __DIR__ . '/../template/modal.php'; ?>
 
 <!-- Modal Ganti Avatar -->
 <!-- <div id="avatarModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">

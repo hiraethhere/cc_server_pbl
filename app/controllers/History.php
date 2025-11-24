@@ -16,7 +16,7 @@ class History extends Controller{
         
         $data['judul'] = 'History';
         $this->view('Layout/Header', $data);
-        $this->view('History/index', $data); 
+        $this->view('anggota/History/index', $data); 
         $this->view('Layout/Footer');
     }
 

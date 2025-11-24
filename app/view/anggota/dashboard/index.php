@@ -1,6 +1,4 @@
 
-?>
-
     <!-- Main Content -->
     <main class="container mx-auto px-6 py-8">
         <h2 class="text-3xl font-bold text-black mb-8 text-center">Ruangan Yang Bisa Dipinjam</h2>
