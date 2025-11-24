@@ -1,4 +1,5 @@
 <?php Flasher::Flash() ?>
+<?php Flasher::modalInfo(); ?>
 
 <!DOCTYPE html>
 <html lang="en">

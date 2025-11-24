@@ -40,13 +40,13 @@ $inactiveClassMobile = 'text-gray-600 hover:text-gray-800 font-medium px-4 py-2 
                     <a href="/Dashboard" class="<?php echo ($activeController == 'Dashboard') ? $activeClass : $inactiveClass; ?>">
                         Ruangan
                     </a>
-                    <a href="#" class="<?php echo ($activeController == 'bookingAnda') ? $activeClass : $inactiveClass; ?>">
+                    <a href="/Dashboard" class="<?php echo ($activeController == 'bookingAnda') ? $activeClass : $inactiveClass; ?>">
                         Booking Anda
                     </a>
                     <a href="/History" class="<?php echo ($activeController == 'History') ? $activeClass : $inactiveClass; ?>">
                         Histori
                     </a>
-                    <a href="#" class="<?php echo ($activeController == 'Panduan') ? $activeClass : $inactiveClass; ?>">
+                    <a href="/Dashboard" class="<?php echo ($activeController == 'Panduan') ? $activeClass : $inactiveClass; ?>">
                         Panduan
                     </a>
                 </div>
@@ -59,7 +59,7 @@ $inactiveClassMobile = 'text-gray-600 hover:text-gray-800 font-medium px-4 py-2 
                     </a>
 
                     <!-- Tombol Logout -->
-                    <a href="#" onclick="konfirmasiLogout()" 
+                    <a href="javascript:void(0)" onclick="konfirmasiLogout()" 
                         class="flex items-center gap-2 text-[#C90B0B] hover:bg-red-50 px-4 py-2 rounded-full transition font-medium hover:cursor-pointer">
                         <img src="/icon/logoutDashboard.svg" alt="Logout Icon" class="w-5 h-5">
                         <span>Logout</span>
@@ -90,6 +90,7 @@ $inactiveClassMobile = 'text-gray-600 hover:text-gray-800 font-medium px-4 py-2 
     </nav>
 
     <?php Flasher::Flash(); ?>
+    <?php Flasher::modalInfo(); ?>
 
 
     <?php include __DIR__ . '/../template/modal.php'; ?>
@@ -111,9 +112,6 @@ function konfirmasiLogout() {
         }
     );
 }
-</script>
-<script src="/js/header.js"></script>
-<script>
     const hamburgerBtn = document.getElementById('hamburger-btn');
     const mobileMenu = document.getElementById('mobile-menu');
 

@@ -1,18 +1,24 @@
 <?php
 
 class Admin extends Controller {
-    public function index(){
+
+    public function __construct()
+    {
         if (!isset($_SESSION['user'])){
+
             header('Location: /auth/formLogin');
+            Flasher::setModalInfo('kamu belum login', 'silahkan login dulu', 'error');
             exit;
         }
 
         if ($_SESSION['role'] !== 'Admin' and $_SESSION['role'] !== 'Superadmin'){ 
-            Flasher::setFlash('Akses ditolak', 'Anda bukan admin', 'danger');
+            Flasher::setModalInfo('Akses ditolak', 'anda bukan admin', 'error');
             header('Location: /dashboard');
             exit;
         }
+    }
 
+    public function index(){
         $data['judul'] = 'Dashboard Admin';
         $data['navbar'] = 'dashboard';
         $this->view('layout/sidebar', $data);

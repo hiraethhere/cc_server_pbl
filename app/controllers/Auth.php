@@ -3,11 +3,18 @@
 
 class Auth extends Controller {
 
+    public function __construct()
+    {
+        $this->preventCache();
+    }
+
     public function index(){
         //biar ga bisa back
-        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-        header("Cache-Control: post-check=0, pre-check=0", false);
-        header("Pragma: no-cache");
+
+        // if(isset($_SESSION['user'])){
+        //     header('location: /dashboard');
+        //     exit;
+        // }
 
         if (isset($_SESSION['role'])) {
             $role = $_SESSION['role'];
@@ -35,11 +42,6 @@ class Auth extends Controller {
     // }
 
     public function registerForms(){
-
-        if(isset($_SESSION['user'])){
-            header('location: /dashboard');
-            exit;
-        }
 
         if (isset($_POST['backToRole'])) {
             unset($_SESSION['regisRole']);
@@ -143,8 +145,7 @@ class Auth extends Controller {
             exit;
 
         } catch (\Exception $e ) {
-            $error = $e->getMessage();
-            Flasher::setFlash($error, 'Gagal Registrasi', 'danger');
+            Flasher::setFlash($e->getMessage(), 'Gagal Registrasi', 'danger');
             header('Location: /auth/registerForm');
             exit;
         }
@@ -209,7 +210,7 @@ class Auth extends Controller {
         }
         exit;
         } catch(\Exception $e) {
-             Flasher::setFlash($e->getMessage(), 'Gagal login', 'danger');
+            Flasher::setModalInfo($e->getMessage(), 'gagal login', 'error');;
             header('Location: /auth/formLogin');
             exit;
         }
@@ -325,9 +326,10 @@ class Auth extends Controller {
     }
 
     public function handleLogout(){
+
         session_unset();
         session_destroy();
-        header('location: /auth/formLogin');
+        header('location: /auth/');
         exit;
     }
 
