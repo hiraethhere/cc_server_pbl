@@ -21,6 +21,12 @@ class UserModel {
         return $this->db->singleSet();
     }
 
+    public function getPasswordByEmail($email){
+        $this->db->query("SELECT password FROM  users WHERE email = :email");
+        $this->db->bind(':email', $email);
+        return $this->db->singleSet();
+    }
+
     public function findUserByEmail($email){
     $this->db->query("SELECT * FROM users WHERE email = :email");
     $this->db->bind(':email', $email);

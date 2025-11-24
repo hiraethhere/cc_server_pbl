@@ -26,7 +26,7 @@ class Flasher {
             };
     
             echo '
-            <div class="fixed top-0 left-0 right-0 flex justify-center z-[99999] mt-6 pointer-events-none">
+            <div class="fixed top-0 left-0 right-0 flex justify-center z-99999 mt-6 pointer-events-none">
                 <div id="flash-message" 
                     class="pointer-events-auto px-6 py-3 rounded-lg shadow-lg ' . $color . ' flex items-center gap-3 transition-all duration-300 transform hover:scale-105">
                     <span class="text-xl">⚡</span>
