@@ -53,6 +53,7 @@ class Admin extends Controller {
     }
 
     public function dataRuangan(){
+        // $data['ruangan'] = $this->model('RuanganModel')->getAllRooms 
         $data['judul'] = 'Detail Ruangan';
         $data['navbar'] = 'Ruangan';
         $this->view('Layout/Sidebar', $data);

@@ -13,7 +13,7 @@ class Flasher {
         if (isset($_SESSION['flash'])) {
             $flash = $_SESSION['flash'];
             
-            // Tentukan warna
+            // Tentukan warna dan tipe
             $color = match($flash['tipe']) {
                 'success' => 'bg-green-500 text-white',
                 'danger'  => 'bg-red-500 text-white',
