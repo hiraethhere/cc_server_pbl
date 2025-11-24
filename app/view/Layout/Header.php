@@ -26,9 +26,9 @@ $inactiveClassMobile = 'text-gray-600 hover:text-gray-800 font-medium px-4 py-2 
     <link href="/css/output.css" rel="stylesheet">
     <script src="/js/script.js"></script>
 </head>
-<body class="bg-[#F3F5FA] min-h-screen font-sf-pro">
+<body class="bg-[#F9FAFC] min-h-screen font-sf-pro">
 
-    <nav class="bg-[#F3F5FA] shadow-sm sticky top-0 z-50">
+    <nav class="bg-[#F9FAFC] shadow-sm sticky top-0 z-50">
         <div class="mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-0.5 mx-5">
@@ -40,7 +40,7 @@ $inactiveClassMobile = 'text-gray-600 hover:text-gray-800 font-medium px-4 py-2 
                     <a href="/Dashboard" class="<?php echo ($activeController == 'Dashboard') ? $activeClass : $inactiveClass; ?>">
                         Ruangan
                     </a>
-                    <a href="/Dashboard" class="<?php echo ($activeController == 'bookingAnda') ? $activeClass : $inactiveClass; ?>">
+                    <a href="/History/Peminjaman" class="<?php echo ($activeController == 'bookingAnda') ? $activeClass : $inactiveClass; ?>">
                         Booking Anda
                     </a>
                     <a href="/History" class="<?php echo ($activeController == 'History') ? $activeClass : $inactiveClass; ?>">
