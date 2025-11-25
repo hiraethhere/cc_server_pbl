@@ -74,6 +74,8 @@ class Booking extends Controller {
         $range_start = date('Y-m-d 00:00:00', strtotime('monday this week', $ts));
         $range_end   = date('Y-m-d 23:59:59', strtotime('sunday this week', $ts));
 
+        $bookingCode = generateBookingCode(8);
+
         $bookingModel = $this->model('BookingModel');
         $userModel = $this->model('UserModel');
 
@@ -126,6 +128,7 @@ class Booking extends Controller {
                         'id_room' => $id_room,
                         'id_user' => $id_ketua,
                         'total_person' => $total_person,
+                        'booking_code' => $bookingCode,
                         'start_time' => $start_datetime,
                         'end_time' => $end_datetime
                     ];

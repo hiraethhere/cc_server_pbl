@@ -13,7 +13,7 @@ class m_20251119_05_create_table_bookings extends Migration{
                 institution_name VARCHAR(255) NULL,
                 start_time DATETIME,
                 end_time DATETIME,
-                booking_code VARCHAR(6),
+                booking_code VARCHAR(10),
                 status ENUM('pending','active','ongoing','done','rejected') DEFAULT 'active',
                 reject_reason VARCHAR(255) NULL,
                 cancel_by ENUM('user','system','admin') NULL,

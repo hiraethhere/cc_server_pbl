@@ -46,6 +46,12 @@
                             <h2 class="text-lg font-semibold"><?= htmlspecialchars($activeBooking['total_person'] ?? '-') ?></h2>     
                         </div>
                         <div class="border-t border-dark-overlay/70 py-4">         
+                            <p class="text-gray-900 text-sm">Kode Booking</p>
+                            <div class="max-w-1/6">
+                                <h2 class="text-sm inline-block font-semibold py-2 px-5 bg-[#8D9198] text-white rounded-lg mt-2"><?= htmlspecialchars($activeBooking['booking_code'] ?? '')?></h2>
+                            </div>           
+                        </div>
+                        <div class="border-t border-dark-overlay/70 py-4">         
                             <p class="text-gray-900 text-sm">Status</p>
                             <div class="max-w-1/6">
                                 <h2 class="text-sm inline-block font-semibold py-2 px-5 bg-[#8D9198] text-white rounded-lg mt-2"><?= htmlspecialchars($status) ?></h2>

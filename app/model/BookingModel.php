@@ -56,13 +56,14 @@ class BookingModel {
 
     public function createBooking($data){
 
-        $query = "INSERT INTO bookings (id_room, id_user,total_person, start_time, end_time, status, created_at) 
-                  VALUES (:id_room, :id_user, :total_person, :start, :end, 'active', NOW())";
+        $query = "INSERT INTO bookings (id_room, id_user,total_person, booking_code, start_time, end_time, status, created_at) 
+                  VALUES (:id_room, :id_user, :total_person, :booking_code, :start, :end, 'active', NOW())";
         
         $this->db->query($query);
         $this->db->bind('id_room', $data['id_room']);
         $this->db->bind('id_user', $data['id_user']); // penanggung jawab
         $this->db->bind('total_person', $data['total_person']);
+        $this->db->bind('booking_code', $data['booking_code']);
         $this->db->bind('start', $data['start_time'], PDO::PARAM_STR);
         $this->db->bind('end', $data['end_time'], PDO::PARAM_STR);
         $this->db->execute();
@@ -87,8 +88,8 @@ class BookingModel {
 }
 
     public function getActiveBookingJoinRoom($id_booking){
-        $query = "SELECT b.id_booking, b.start_time, b.status, b.end_time, b.total_person, r.room_name, r.short_description
-                FROM bookings b JOIN rooms r ON b.id_room = r.id_room 
+        $query = "SELECT b.id_booking, b.start_time, b.status, b.end_time, b.total_person, b.booking_code, r.room_name, r.short_description
+                FROM bookings b JOIN rooms r ON b.id_room = r.id_room
                 WHERE b.status IN ('pending', 'active', 'ongoing') AND b.id_booking = :id_booking";
         $this->db->query($query);
         $this->db->bind('id_booking', $id_booking);
