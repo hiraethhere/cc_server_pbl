@@ -24,13 +24,29 @@
         tanggalPinjam.addEventListener('change', async function() {
             const date = this.value;
             if (!date) return;
-        
-            jamMulai.removeAttribute('disabled')
 
+            const dateObj = new Date(date)
+            const day = dateObj.getDay();
+
+            if (day === 0 || day === 6) {
+            // 1. Tampilkan Pesan Error
+            alert("Maaf, tidak bisa melakukan booking di hari Sabtu & Minggu (Hari Libur).");
+            
+            // 2. Kosongkan Input Tanggal
+            this.value = '';
+            
             // Reset form
-            resetSelect(jamMulai, 'Pilih jam mulai');
-            resetSelect(jamSelesai, 'Pilih jam selesai');
-            updateTotalTime(0);
+                resetSelect(jamMulai, 'Pilih jam mulai');
+                resetSelect(jamSelesai, 'Pilih jam selesai');
+                jamMulai.setAttribute('disabled', true);
+                jamSelesai.setAttribute('disabled', true);
+                updateTotalTime(0);
+                return;
+            }
+                resetSelect(jamMulai, 'Pilih jam mulai');
+                resetSelect(jamSelesai, 'Pilih jam selesai');
+                updateTotalTime(0);
+                jamMulai.removeAttribute('disabled')
 
             try {
                 // Fetch ke Controller Bookings yang sudah kita buat

@@ -91,6 +91,7 @@
                                         class="nim-input w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm">
                                     <input type="text" placeholder="Nama Lengkap Anggota" name="nama[]" readonly
                                         class="nama-input w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm">
+                                        
                                 </div>
                             </div>
                             <?php endfor ?>
@@ -225,7 +226,6 @@ INI POP UP SUCCESS
 
 <script>const BASEURL = "<?= BASEURL ?>";</script>
 <script src="/js/bookingRoom.js"></script>
-<script src="/js/bookingRoom.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     
@@ -264,11 +264,13 @@ document.addEventListener("DOMContentLoaded", function() {
             namaField.value = "";
             namaField.placeholder = "NIM sudah terdaftar di form ini!";
             // Tambahkan alert visual kecil atau border merah agar user sadar
+            namaField.classList.add('text-red-500')
             inputElement.classList.add('border-red-500', 'text-red-500');
             return; // Hentikan proses, jangan fetch ke database
         } else {
             // Hapus indikator error jika sudah benar
             inputElement.classList.remove('border-red-500', 'text-red-500');
+            namaField.classList.remove('text-red-500')
         }
 
         // Reset jika kosong atau terlalu pendek
