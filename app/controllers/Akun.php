@@ -63,8 +63,11 @@ class Akun extends Controller{
             header('location: /akun/gantiPassword');
         }
         
-
-        $result = $this->model('UserModel')->updatePassword($_POST['passwordbaru']);
+        $data = [
+            'password' => password_hash($_POST['passwordBaru'], PASSWORD_DEFAULT),
+            'email' => $_SESSION['user']['email']
+        ];
+        $result = $this->model('UserModel')->updatePassword($data);
 
         if ($result === 0){
             Flasher::setModalInfo('Password sama dengan yang dulu', 'Gagal update atau Password sama', 'error');
