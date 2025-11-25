@@ -105,7 +105,7 @@
                             <span></span>
                         </div>
 
-                        <button type="button"
+                        <button type="submit"
                                 class="w-full py-3 hover:cursor-pointer bg-[#38C55C] text-white font-bold rounded-xl hover:bg-emerald-600 transition shadow-sm text-base">
                             Booking Ruangan Ini
                         </button>

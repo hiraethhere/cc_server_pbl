@@ -27,7 +27,6 @@ class Booking extends Controller {
     }
 
     public function cariAnggota(){
-
     // Ambil data JSON dari fetch
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
@@ -50,15 +49,26 @@ class Booking extends Controller {
     }
 
     public function handleBooking(){
+        Flasher::modalInfo();
+
         $id_room = $_POST['id_room'];
         $bookingDate = $_POST['tanggalPinjam'];
         $startTime = $_POST['jamMulai'];
         $endTime = $_POST['jamSelesai'];
-        $nomorIndukKetua = $_POST['NIM'][0];
-        $list_nim_anggota = array_slice($_POST['NIM'], 1); 
 
-        $start_datetime = "$bookingDate $startTime:00";
-        $end_datetime   = "$bookingDate $endTime:00";
+        if (!isset($_POST['nim']) || !is_array($_POST['nim'])) {
+            // Handle jika tidak ada input NIM sama sekali
+            Flasher::setModalInfo('Gagal!', 'Data anggota tidak valid', 'error');
+            header("Location: /dashboard");
+            exit;
+        }
+
+        $nomorIndukKetua = $_POST['nim'][0];
+        $list_nim_anggota = array_slice($_POST['nim'], 1); 
+
+        
+        $start_datetime = "$bookingDate $startTime";
+        $end_datetime   = "$bookingDate $endTime";
 
         $ts = strtotime($bookingDate);
         $range_start = date('Y-m-d 00:00:00', strtotime('monday this week', $ts));
@@ -110,23 +120,32 @@ class Booking extends Controller {
                 $validatedUsers[] = $userAnggota['id_user'];
             }
 
-            $newBookingId = $bookingModel->createBooking([
-            'id_room' => $id_room,
-            'id_user' => $id_ketua, // <--- Ketua Masuk Sini
-            'start_time' => $start_datetime,
-            'end_time' => $end_datetime
-        ]);
+            $total_person = 1 + count($validatedUsers);
+
+            $dataBooking = [
+                        'id_room' => $id_room,
+                        'id_user' => $id_ketua,
+                        'total_person' => $total_person,
+                        'start_time' => $start_datetime,
+                        'end_time' => $end_datetime
+                    ];
+
+            $newBookingId = $bookingModel->createBooking($dataBooking);
 
             foreach($validatedUsers as $id_member){
-                $bookingModel->insertBookingMember($newBookingId, $id_member);
+                $bookingModel->insertBookingMember((int)$newBookingId, $id_member);
             }
 
         $bookingModel->commit();
-        Flasher::setModalInfo('Booking gagal!', 'Jangan telat yaa','success');
+        Flasher::setModalInfo('Booking Berhasil', 'Booking berhasil dibuat. Jangan telat yaa','success');
         header("Location: /dashboard");
+        exit;
 
         } catch (\Throwable $e) {
+            $bookingModel->rollBack();
             Flasher::setModalInfo('Booking gagal!', $e->getMessage(),'error');
+            header('location: /dashboard');
+            exit();
         }
 
     }

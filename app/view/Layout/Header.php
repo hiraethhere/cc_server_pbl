@@ -1,8 +1,8 @@
 <?php
-// Logika untuk menentukan Controller/Halaman aktif
-$url = isset($_GET['url']) ? $_GET['url'] : '';
-$urlSegments = explode('/', rtrim(filter_var($url, FILTER_SANITIZE_URL), '/'));
-$activeController = !empty($urlSegments[0]) ? ucfirst($urlSegments[0]) : 'Dashboard';
+// // Logika untuk menentukan Controller/Halaman aktif
+// $url = isset($_GET['url']) ? $_GET['url'] : '';
+// $urlSegments = explode('/', rtrim(filter_var($url, FILTER_SANITIZE_URL), '/'));
+// $activeController = !empty($urlSegments[0]) ? ucfirst($urlSegments[0]) : 'Dashboard';
 
 // Definisikan kelas CSS untuk link aktif dan tidak aktif (desktop)
 $activeClass = 'bg-[#1E68FB] text-white px-6 py-1.5 rounded-full font-medium hover:bg-blue-700 transition duration-200';
@@ -11,6 +11,7 @@ $inactiveClass = 'text-[#171E29] hover:text-gray-800 font-medium';
 // Definisikan kelas CSS untuk link aktif dan tidak aktif (mobile)
 $activeClassMobile = 'bg-[#1E68FB] text-white px-4 py-2 rounded-lg font-medium text-center hover:bg-blue-700 transition duration-200';
 $inactiveClassMobile = 'text-gray-600 hover:text-gray-800 font-medium px-4 py-2 hover:bg-gray-100 rounded-lg text-center';
+
 
 ?>
 
@@ -37,16 +38,16 @@ $inactiveClassMobile = 'text-gray-600 hover:text-gray-800 font-medium px-4 py-2 
                 </div>
 
                 <div class="hidden md:flex items-center space-x-20 mx-10">
-                    <a href="/Dashboard" class="<?php echo ($activeController == 'Dashboard') ? $activeClass : $inactiveClass; ?>">
+                    <a href="/Dashboard" class="<?php echo ($navbar == 'Dashboard') ? $activeClass : $inactiveClass; ?>">
                         Ruangan
                     </a>
-                    <a href="/History/Peminjaman" class="<?php echo ($activeController == 'bookingAnda') ? $activeClass : $inactiveClass; ?>">
+                    <a href="/History/Peminjaman" class="<?php echo ($navbar == 'bookingAnda') ? $activeClass : $inactiveClass; ?>">
                         Booking Anda
                     </a>
-                    <a href="/History" class="<?php echo ($activeController == 'History') ? $activeClass : $inactiveClass; ?>">
+                    <a href="/History" class="<?php echo ($navbar == 'History') ? $activeClass : $inactiveClass; ?>">
                         Histori
                     </a>
-                    <a href="/Dashboard" class="<?php echo ($activeController == 'Panduan') ? $activeClass : $inactiveClass; ?>">
+                    <a href="/Dashboard" class="<?php echo ($navbar == 'Panduan') ? $activeClass : $inactiveClass; ?>">
                         Panduan
                     </a>
                 </div>

@@ -9,7 +9,7 @@
     // Fallback jika roomId tidak ada
         const roomId = roomIdInput ? roomIdInput.value : 1;
 
-    // 2. KONFIGURASI WAKTU
+    // config waktu, atur aja
     const operationalStart = 7 * 60; // 07:00
     const operationalEnd = 17 * 60;  // 17:00
     const interval = 30;             // 30 menit
@@ -17,22 +17,37 @@
     const today = new Date();
     const maxDate = new Date();
     maxDate.setDate(today.getDate() + 7);
+    const maxDateString = maxDate.toISOString().split('T')[0];
+    tanggalPinjam.max = maxDateString;
 
     let todaysBookings = [];
 
-    // --- EVENT 1: SAAT TANGGAL DIPILIH ---
+    // async saat tanggal dpilih
         tanggalPinjam.addEventListener('change', async function() {
             const date = this.value;
             if (!date) return;
 
-            const dateObj = new Date(date)
+            today.setHours(0,0,0,0);
+            const dateObj = new Date(date);
+            dateObj.setHours(0,0,0,0);
             const day = dateObj.getDay();
 
+            if (today > dateObj) {
+                alert("Tanggal tidak boleh sebelum hari ini");
+                this.value = '';
+                resetSelect(jamMulai, 'Pilih jam mulai');
+                resetSelect(jamSelesai, 'Pilih jam selesai');
+                jamMulai.setAttribute('disabled', true);
+                jamSelesai.setAttribute('disabled', true);
+                updateTotalTime(0);
+                return;
+            }
+
             if (day === 0 || day === 6) {
-            // 1. Tampilkan Pesan Error
+            //Tampilkan Pesan Error
             alert("Maaf, tidak bisa melakukan booking di hari Sabtu & Minggu (Hari Libur).");
             
-            // 2. Kosongkan Input Tanggal
+            //Kosongkan Input Tanggal
             this.value = '';
             
             // Reset form

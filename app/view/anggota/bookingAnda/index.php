@@ -26,29 +26,29 @@
                     <div class="">
                         <div class="mb-4">
                             <p class="text-gray-600 text-sm">Nama Ruangan</p>
-                            <h2 class="text-3xl font-semibold">Ruang Lentera Edukasi</h2>
-                            <p class="text-gray-600 text-sm">Ruang bersih, tenang, dilengkapi wifi, cocok untuk belajar, rapat, dan aktivitas produktif.</p>
+                            <h2 class="text-3xl font-semibold"><?= htmlspecialchars($activeBooking['room_name'] ?? '-')?></h2>
+                            <p class="text-gray-600 text-sm"><?= htmlspecialchars($activeBooking['short_description'] ?? '-') ?></p>
                         </div>
                         <div class="border-t border-dark-overlay/70 py-4">         
-                            <p class="text-gray-900 text-sm">Tanggal Peminjaman</p>
+                            <p class="text-gray-900 text-sm"></p>
                             <div class="max-w-1/6">
-                                <h2 class="text-sm inline-block font-semibold px-2 1y-1 bg-black text-white rounded-lg mt-2">8 November 2025</h2>
+                                <h2 class="text-sm inline-block font-semibold px-2 1y-1 bg-black text-white rounded-lg mt-2"><?= htmlspecialchars($bookingDate) ?></h2>
                             </div>           
                         </div>
                         <div class="border-t border-dark-overlay/70 py-4">         
                             <p class="text-gray-900 text-sm">Jam Peminjaman</p>
                             <div class="max-w-1/6">
-                                <h2 class="text-sm inline-block font-semibold px-2 1y-1 bg-black text-white rounded-lg mt-2">09:00 - 12:00</h2>
+                                <h2 class="text-sm inline-block font-semibold px-2 1y-1 bg-black text-white rounded-lg mt-2"><?= htmlspecialchars($start_time) . '-' . htmlspecialchars($end_time) ?> </h2>
                             </div>           
                         </div>
                         <div class="border-t border-dark-overlay/70 py-4">
                             <p class="text-gray-900 text-sm">Jumlah Orang</p>
-                            <h2 class="text-lg font-semibold">6 Orang</h2>     
+                            <h2 class="text-lg font-semibold"><?= htmlspecialchars($activeBooking['total_person'] ?? '-') ?></h2>     
                         </div>
                         <div class="border-t border-dark-overlay/70 py-4">         
                             <p class="text-gray-900 text-sm">Status</p>
                             <div class="max-w-1/6">
-                                <h2 class="text-sm inline-block font-semibold py-2 px-5 bg-[#8D9198] text-white rounded-lg mt-2">Menunggu</h2>
+                                <h2 class="text-sm inline-block font-semibold py-2 px-5 bg-[#8D9198] text-white rounded-lg mt-2"><?= htmlspecialchars($status) ?></h2>
                             </div>           
                         </div>
                         <div class="flex space-x-4 border-t border-dark-overlay/70 py-4">

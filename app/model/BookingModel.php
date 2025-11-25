@@ -48,30 +48,58 @@ class BookingModel {
 
         $this->db->query($query);
         $this->db->bind('id_room', $id_room);
-        $this->db->bind('end_req', $end_req);
-        $this->db->bind('start_req', $start_req);
+        $this->db->bind('end_req', $end_req, PDO::PARAM_STR);
+        $this->db->bind('start_req', $start_req, PDO::PARAM_STR);
 
         return $this->db->singleSet();
     }
 
     public function createBooking($data){
 
-        $query = "INSERT INTO bookings (id_room, id_user, start_time, end_time, status, created_at) 
-                  VALUES (:id_room, :id_user, :start, :end, 'pending', NOW())";
+        $query = "INSERT INTO bookings (id_room, id_user,total_person, start_time, end_time, status, created_at) 
+                  VALUES (:id_room, :id_user, :total_person, :start, :end, 'active', NOW())";
         
         $this->db->query($query);
         $this->db->bind('id_room', $data['id_room']);
         $this->db->bind('id_user', $data['id_user']); // penanggung jawab
-        $this->db->bind('start', $data['start_time']);
-        $this->db->bind('end', $data['end_time']);
-
+        $this->db->bind('total_person', $data['total_person']);
+        $this->db->bind('start', $data['start_time'], PDO::PARAM_STR);
+        $this->db->bind('end', $data['end_time'], PDO::PARAM_STR);
         $this->db->execute();
         return $this->db->lastInsertId();  
     }
 
-    public function insertBookingMember($id_user, $id_booking){
+    public function getActiveBookingByUser($id_user)
+{
+    // Kita gunakan DISTINCT supaya jika ada join yang berulang, data booking tetap muncul sekali saja.
+    // Kita pakai LEFT JOIN ke booking_members agar booking dimana dia jadi Ketua (dan mungkin tidak ada anggota) tetap termuat.
+    
+    $query = "SELECT DISTINCT b.id_booking, b.start_time FROM bookings b
+              LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
+              WHERE (b.id_user = :uid OR bm.id_user = :uid)
+              AND b.status IN ('pending', 'active', 'ongoing')
+              ORDER BY b.start_time DESC LIMIT 1";
+
+    $this->db->query($query);
+    $this->db->bind('uid', $id_user);
+    
+    return $this->db->singleSet();
+}
+
+    public function getActiveBookingJoinRoom($id_booking){
+        $query = "SELECT b.id_booking, b.start_time, b.status, b.end_time, b.total_person, r.room_name, r.short_description
+                FROM bookings b JOIN rooms r ON b.id_room = r.id_room 
+                WHERE b.status IN ('pending', 'active', 'ongoing') AND b.id_booking = :id_booking";
+        $this->db->query($query);
+        $this->db->bind('id_booking', $id_booking);
+        $this->db->execute();
+        return $this->db->singleSet();
+    }
+
+    public function insertBookingMember($id_booking, $id_user){
         $query = "INSERT INTO booking_members (id_booking, id_user)
                     VALUES (:id_booking, :id_user)";
+        $this->db->query($query);
         $this->db->bind('id_booking', $id_booking);
         $this->db->bind('id_user', $id_user); 
         $this->db->execute();
@@ -82,7 +110,7 @@ class BookingModel {
         // Cek tabel bookings apakah user pernah booking sebagai ketua?
         $query1 = "SELECT COUNT(*) as total FROM bookings 
                 WHERE id_user = :uid 
-                AND status IN ('pending', 'approved', 'ongoing')
+                AND status IN ('pending', 'active', 'ongoing')
                 AND start_time BETWEEN :range_start AND :range_end";
         
         $this->db->query($query1);
@@ -110,7 +138,4 @@ class BookingModel {
 
         return true; // user tidak memiliki booking
     }
-
-
-
 }
