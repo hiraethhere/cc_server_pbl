@@ -4,37 +4,50 @@
 
     <!-- Time Filters -->
     <div class="flex md:flex-row flex-col md:justify-between mb-6">
-        <div class="flex flex-wrap gap-3 left-align mb-6 order-2 md:order-1">
-            <button onclick="filterTime('all')" id="filter-all"
-                class="filter-btn px-6 py-2.5 rounded-full font-medium text-sm transition-all duration-200
-                shadow-sm bg-[#1E68FB] text-white hover:bg-blue-600 hover:cursor-pointer">Semua</button>
-            <button onclick="filterTime('thisMonth')" id="filter-thisMonth" 
-                class="filter-btn px-6 py-2.5 rounded-full font-medium text-sm transition-all duration-200
-                shadow-sm bg-white text-gray-800 hover:bg-gray-300 hover:cursor-pointer">Bulan Ini</button>
-            <button onclick="filterTime('last3Months')" id="filter-last3Months" 
-                class="filter-btn px-6 py-2.5 rounded-full font-medium text-sm transition-all duration-200
-                shadow-sm bg-white text-gray-800 hover:bg-gray-300 hover:cursor-pointer">3 Bulan Terakhir</button>
+        <div class="flex flex-wrap gap-3 left-align order-2 md:order-1">
+            <?php 
+                // Anggap Anda sudah mendefinisikan array $jenis_anggota_options, dsb.
+                // Di sini Anda memuat komponen:
+                $filter_id = 'Ruangan'; 
+                $label = 'Ruangan'; 
+                $options = ['Ruang Duta' => 'Ruang Duta', 'Ruang Rapat Kecil' => 'Ruang Rapat Kecil']; 
+                $current_values = $_GET[$filter_id] ?? ''; 
+                include __DIR__ . '/../../template/filterDropDown.php';
+            ?>
+
+            <?php 
+                // Anggap Anda sudah mendefinisikan array $jenis_anggota_options, dsb.
+                // Di sini Anda memuat komponen:
+                $filter_id = 'Status'; 
+                $label = 'Status'; 
+                $options = ['Selesai' => 'Selesai', 'Ditolak' => 'Ditolak']; 
+                $current_values = $_GET[$filter_id] ?? ''; 
+                include __DIR__ . '/../../template/filterDropDown.php';
+            ?>
+
+            <button type="button" 
+                    class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition border border-gray-300 bg-white"
+                    onclick="document.getElementById('jenis_anggota').value=''; document.getElementById('jurusan').value=''; document.getElementById('status').value=''; document.getElementById('filterForm').submit();">
+                <img src="/icon/crossRed.svg" alt="clear" class="w-4 h-4">
+            </button>
         </div>
 
-        <!-- Lihat Bookingan Anda -->
-        <div class="flex justify-end mb-6 order-1 md:order-2">
-            <a href="/History/Peminjaman" class="text-white bg-[#1E68FB] font-medium flex items-center text-sm transition px-4 py-2 rounded-full hover:from-blue-600 hover:to-blue-700">
-                Lihat Bookingan Anda 
-                <div class="text-white"> 
-                    <svg class="w-5 h-5 fill-current ml-2" 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        viewBox="0 0 24 24" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        stroke-width="2" 
-                        stroke-linecap="round" 
-                        stroke-linejoin="round">
-                        
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
+        <!-- Search Bar -->
+        <div class="order-1 md:order-2">
+            <div class="relative max-w-md ml-auto">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <img src="/icon/search.svg" alt="search" class="w-5 h-5">
                 </div>
-            </a>
+                <input type="text" id="search-input" placeholder="Cari..."
+                    class="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg 
+                            bg-white text-gray-900 placeholder-gray-400 text-sm
+                            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                            transition duration-150">
+                <button type="button" id="clear-search" 
+                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
+                    <img src="/icon/silang.svg" alt="clear" classs="w-4 h-4">
+                </button>
+            </div>
         </div>
     </div>
     
@@ -300,3 +313,21 @@
         </div>
     </div>
 </div>
+
+<script src="js/filterDropDown.js" defer></script>
+<script>
+const searchInput = document.getElementById('search-input');
+const clearBtn = document.getElementById('clear-search');
+
+if (searchInput && clearBtn) {
+    searchInput.addEventListener('input', () => {
+        clearBtn.classList.toggle('hidden', searchInput.value === '');
+    });
+
+    clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        searchInput.focus();
+        clearBtn.classList.add('hidden');
+    });
+}
+</script>

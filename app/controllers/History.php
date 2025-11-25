@@ -22,9 +22,9 @@ class History extends Controller{
 
     public function Peminjaman(){
         
-        $data['judul'] = 'History Peminjaman';
+        $data['judul'] = 'Booking Anda';
         $this->view('Layout/Header', $data);
-        $this->view('History/Peminjaman', $data); 
+        $this->view('anggota/bookingAnda/index', $data); 
         $this->view('Layout/Footer');
     }
 
