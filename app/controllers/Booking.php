@@ -96,7 +96,7 @@ class Booking extends Controller {
                 $userAnggota = $userModel->getUserByNomor_Induk($nim);
                 if(!$userAnggota) throw new Exception("NIM Anggota ($nim) tidak ditemukan.");
 
-                // Cek apakah Anggota ini malah jadi Ketua? (Opsional, validasi biar ga input diri sendiri)
+            // Cek apakah Anggota ini malah jadi Ketua? (Opsional, validasi biar ga input diri sendiri)
                 if($userAnggota['id_user'] == $id_ketua) {
                      throw new Exception("Ketua tidak perlu dimasukkan lagi sebagai anggota.");
                 }
@@ -117,11 +117,9 @@ class Booking extends Controller {
             'end_time' => $end_datetime
         ]);
 
-        // Insert Anggota ke booking_members (Loop array validMembers)
-        foreach ($validatedUsers as $id_member) {
-            // Panggil addMember TANPA role
-            $bookingModel->addMember($newBookingId, $id_member); 
-        }
+            foreach($validatedUsers as $id_member){
+                $bookingModel->insertBookingMember($newBookingId, $id_member);
+            }
 
         $bookingModel->commit();
         Flasher::setModalInfo('Booking gagal!', 'Jangan telat yaa','success');
