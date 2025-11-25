@@ -1,8 +1,4 @@
 <?php
-// // Logika untuk menentukan Controller/Halaman aktif
-// $url = isset($_GET['url']) ? $_GET['url'] : '';
-// $urlSegments = explode('/', rtrim(filter_var($url, FILTER_SANITIZE_URL), '/'));
-// $activeController = !empty($urlSegments[0]) ? ucfirst($urlSegments[0]) : 'Dashboard';
 
 // Definisikan kelas CSS untuk link aktif dan tidak aktif (desktop)
 $activeClass = 'bg-[#1E68FB] text-white px-6 py-1.5 rounded-full font-medium hover:bg-blue-700 transition duration-200';

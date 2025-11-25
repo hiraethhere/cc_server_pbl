@@ -1,10 +1,10 @@
 <?php
 // Hanya untuk logika tab (tidak pakai database)
-$tab = $_GET['tab'] ?? 'semua';
+$tab = $_GET['tab'] ?? 'approval';
 $tab = strtolower($tab);
 $valid_tabs = ['semua', 'approval'];
 if (!in_array($tab, $valid_tabs)) {
-    $tab = 'semua';
+    $tab = 'approval';
 }
 
 function isActive($current, $check) {
@@ -12,25 +12,6 @@ function isActive($current, $check) {
 }
 ?>
 
-<?php
-// ... Logika PHP awal dan fungsi isActive tetap sama ...
-
-// Data dummy untuk filter options
-$jenis_anggota_options = [
-    'Mahasiswa' => 'Mahasiswa',
-    'Dosen' => 'Dosen',
-    'Tendik' => 'Tendik',
-];
-$jurusan_options = [
-    'Teknik Informatika & Komputer' => 'Teknik Informatika & Komputer',
-    'Teknik Elektro' => 'Teknik Elektro',
-];
-$status_options = [
-    'Aktif' => 'Aktif',
-    'Belum Aktif' => 'Belum Aktif',
-    'NonAktif' => 'NonAktif',
-];
-?>
 
 <main class="flex-1 p-8 overflow-y-auto bg-[#F9FAFC]">
     <!-- Breadcrumb -->
@@ -263,13 +244,13 @@ $status_options = [
                                 <td class="px-6 py-4 text-sm text-gray-900">1</td>
                                 <td class="px-6 py-4 text-sm font-medium text-gray-900">Naqib Zuhair Al-Hudri</td>
                                 <td class="px-6 py-4">
-                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700">
+                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm bg-[#B9D0FE] text-[#1E68FB]">
                                         Mahasiswa
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-700">Teknik Informatika & Komputer</td>
                                 <td class="px-6 py-4">
-                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-700">
+                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm bg-[#C90B0B] text-[#FBFCFF]">
                                         Belum Aktif
                                     </span>
                                 </td>
@@ -284,14 +265,14 @@ $status_options = [
                                 <td class="px-6 py-4 text-sm text-gray-900">2</td>
                                 <td class="px-6 py-4 text-sm font-medium text-gray-900">Ahmad Saputra</td>
                                 <td class="px-6 py-4">
-                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-700">
+                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm bg-[#FBBAD3] text-[#FB1E6B]">
                                         Dosen
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-700">Teknik Elektro</td>
                                 <td class="px-6 py-4">
-                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-700">
-                                        Belum Aktif
+                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm bg-[#38C55C] text-[#FBFCFF]">
+                                        Aktif
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-center">
@@ -305,13 +286,13 @@ $status_options = [
                                 <td class="px-6 py-4 text-sm text-gray-900">3</td>
                                 <td class="px-6 py-4 text-sm font-medium text-gray-900">Siti Nurhaliza</td>
                                 <td class="px-6 py-4">
-                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-orange-100 text-orange-700">
+                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm bg-[#EECBB7] text-[#CF570D]">
                                         Tendik
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-700">Administrasi Umum</td>
                                 <td class="px-6 py-4">
-                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-700">
+                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm bg-[#1E68FB] text-white">
                                         Belum Aktif
                                     </span>
                                 </td>
