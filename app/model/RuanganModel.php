@@ -21,4 +21,6 @@ class RuanganModel {
         $this->db->execute();
         return $this->db->singleSet();
     }
+
+    
 }
