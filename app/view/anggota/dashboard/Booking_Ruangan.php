@@ -72,7 +72,7 @@
                                     <span class="ml-2 font-medium text-sm text-blue-800">Penanggung Jawab</span>
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <input type="text" maxlength="10" max="10" placeholder="<?= $user['nomor_induk'] ?>" name="nim[]" readonly
+                                    <input type="text" maxlength="10" max="10" placeholder="<?= $user['nomor_induk'] ?>" name="nim[]" value="<?= $user['nomor_induk'] ?>" readonly
                                         class="nim-input w-full px-4 py-2.5 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm">
                                     <input type="text" placeholder="<?= $user['username'] ?>" name="nama[]" readonly
                                         class="nama-input w-full px-4 py-2.5 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm">
@@ -223,159 +223,100 @@ INI POP UP SUCCESS
 </div>
 
 
-<!-- **************************************************
-JS DIGUNAKAN UNTUK MENAMBAH & MENGHAPUS MEMBER
-******************************************************* -->
+<script>const BASEURL = "<?= BASEURL ?>";</script>
+<script src="/js/bookingRoom.js"></script>
+<script src="/js/bookingRoom.js"></script>
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+    
+   //Fungsi Debounce (Mencegah spam request)
+    function debounce(func, delay) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
 
-        document.addEventListener('DOMContentLoaded', function() {
-        // 1. DEFINISI ID SESUAI HTML KAMU
-        const tanggalPinjam = document.getElementById('tanggalPinjam');
-        const jamMulai = document.getElementById('jamMulai');
-        const jamSelesai = document.getElementById('jamSelesai');
-        const durasiText = document.getElementById('durasiText'); // Span di dalam #totalTime
-        const roomIdInput = document.getElementById('id_room');
+    // 2. Fungsi Utama Fetch Data
+    // Kita pisahkan logikanya agar bersih
+    const fetchUserData = debounce(async (inputElement) => {
+        const nim = inputElement.value.trim();
+        // Cari field nama pasangannya (sibling dalam satu grid)
+        const row = inputElement.closest('.grid'); 
+        const namaField = row.querySelector(".nama-input");
+        const allNimInputs = document.querySelectorAll('[name="nim[]"]');
 
-    // Fallback jika roomId tidak ada
-    const roomId = roomIdInput ? roomIdInput.value : 1;
+        let isDuplicate = false;
 
-    // 2. KONFIGURASI WAKTU
-    const operationalStart = 7 * 60; // 07:00
-    const operationalEnd = 17 * 60;  // 17:00
-    const interval = 30;             // 30 menit
-    const maxDuration = 180;         // 3 jam (180 menit)
+        allNimInputs.forEach((input) => {
+            // Jangan cek input dengan dirinya sendiri
+            if (input === inputElement) return;
+            
+            // Cek jika value-nya sama (dan tidak kosong)
+            // Pastikan HTML Penanggung Jawab sudah ada attribute value="..."
+            if (input.value.trim() !== "" && input.value.trim() === nim) {
+                isDuplicate = true;
+            }
+        });
 
-    let todaysBookings = [];
+        if (isDuplicate) {
+            namaField.value = "";
+            namaField.placeholder = "NIM sudah terdaftar di form ini!";
+            // Tambahkan alert visual kecil atau border merah agar user sadar
+            inputElement.classList.add('border-red-500', 'text-red-500');
+            return; // Hentikan proses, jangan fetch ke database
+        } else {
+            // Hapus indikator error jika sudah benar
+            inputElement.classList.remove('border-red-500', 'text-red-500');
+        }
 
-    // --- EVENT 1: SAAT TANGGAL DIPILIH ---
-    tanggalPinjam.addEventListener('change', async function() {
-        const date = this.value;
-        if (!date) return;
-        
-        jamMulai.removeAttribute('disabled')
+        // Reset jika kosong atau terlalu pendek
+        if (nim.length < 5) {
+            namaField.value = "";
+            return;
+        }
 
-        // Reset form
-        resetSelect(jamMulai, 'Pilih jam mulai');
-        resetSelect(jamSelesai, 'Pilih jam selesai');
-        updateTotalTime(0);
+        // Tanda sedang loading (Opsional, UX lebih baik)
+        namaField.placeholder = "Mencari...";
 
         try {
-            // Fetch ke Controller Bookings yang sudah kita buat
-            const response = await fetch('http://localhost:8082/Booking/cekJadwal', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ room_id: roomId, date: date })
-            });
-            
-            // const data = await response.json();
-            const data = await response.text();
-            console.log("RAW RESPONSE NICHHHH", data)
-
-            // Format data booking menjadi menit
-            todaysBookings = data.map(b => ({
-                start: timeToMinutes(b.start_time),
-                end: timeToMinutes(b.end_time)
-            }));
-
-            populateJamMulai();
-
-        } catch (error) {
-            console.error('Gagal mengambil jadwal:', error);
-        }
-    });
-
-    // --- LOGIC: ISI JAM MULAI ---
-    function populateJamMulai() {
-        jamMulai.innerHTML = '<option value="" disabled selected hidden>Pilih jam mulai</option>';
-        
-        for (let time = operationalStart; time < operationalEnd; time += interval) {
-            // Cek apakah jam ini bentrok dengan booking orang lain
-            const isConflict = todaysBookings.some(booking => {
-                return time >= booking.start && time < booking.end;
+            const response = await fetch(`${BASEURL}/Booking/cariAnggota`, { 
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nim: nim })
             });
 
-            if (!isConflict) {
-                addOption(jamMulai, time);
+            if (!response.ok) throw new Error("Network response was not ok");
+
+            const data = await response.json();
+            console.log("Dapet data:", data);
+
+            if (data && data.nama) {
+                namaField.value = data.nama;
+            } else {
+                namaField.value = ""; // Kosongkan jika tidak ketemu
+                namaField.placeholder = "Data tidak ditemukan";
             }
+
+        } catch (err) {
+            console.error("Fetch error:", err);
+            namaField.value = "";
+            namaField.placeholder = "Gagal memuat data";
         }
-    }
+    }, 500); // Delay 500ms
 
-    // --- EVENT 2: SAAT JAM MULAI DIPILIH ---
-jamMulai.addEventListener('change', function() {
-        const startVal = this.value;
-        resetSelect(jamSelesaiSelect, 'Pilih jam selesai');
-        updateTotalTime(0);
+    // 3. EVENT DELEGATION (Kunci agar input dinamis bisa jalan)
+    // Kita pasang listener di container pembungkus utama, bukan di masing-masing input
+    const membersContainer = document.getElementById('membersContainer');
 
-        if (!startVal) return;
-
-        const startTime = timeToMinutes(startVal);
-        
-        // Hitung batas akhir (Max 3 jam atau Jam Tutup)
-        let limitTime = Math.min(operationalEnd, startTime + maxDuration);
-
-        // Cek booking terdekat di depan user ini
-        const nextBooking = todaysBookings
-            .filter(b => b.start > startTime)
-            .sort((a, b) => a.start - b.start)[0];
-
-        if (nextBooking) {
-            limitTime = Math.min(limitTime, nextBooking.start);
-        }
-
-        // Isi dropdown jam selesai
-        for (let time = startTime + interval; time <= limitTime; time += interval) {
-            addOption(jamSelesaiSelect, time);
-        }
-    });
-
-    // --- EVENT 3: SAAT JAM SELESAI DIPILIH (HITUNG DURASI) ---
-    jamSelesaiSelect.addEventListener('change', function() {
-        const startVal = jamMulai.value;
-        const endVal = this.value;
-
-        if (startVal && endVal) {
-            const start = timeToMinutes(startVal);
-            const end = timeToMinutes(endVal);
-            updateTotalTime(end - start);
-        }
-    });
-
-    // --- HELPER FUNCTIONS ---
-    
-    // Update tampilan "0 Jam 0 Menit"
-    function updateTotalTime(minutes) {
-        const h = Math.floor(minutes / 60);
-        const m = minutes % 60;
-        if (durasiText) {
-            durasiText.textContent = `${h} Jam ${m} Menit`;
-        }
-    }
-
-    // Konversi String/Datetime ke Menit
-    function timeToMinutes(timeStr) {
-        let timePart = timeStr;
-        if (timeStr.includes(' ')) timePart = timeStr.split(' ')[1];
-        const [h, m] = timePart.split(':').map(Number);
-        return (h * 60) + m;
-    }
-
-    // Konversi Menit ke "HH:mm"
-    function minutesToTime(totalMinutes) {
-        const h = Math.floor(totalMinutes / 60);
-        const m = totalMinutes % 60;
-        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
-    }
-
-    function addOption(select, timeInMinutes) {
-        const timeStr = minutesToTime(timeInMinutes);
-        const option = document.createElement('option');
-        option.value = timeStr + ":00"; 
-        option.textContent = timeStr;
-        select.appendChild(option);
-    }
-
-    function resetSelect(el, text) {
-        el.innerHTML = `<option value="" disabled selected hidden>${text}</option>`;
+    if (membersContainer) {
+        membersContainer.addEventListener('input', function(e) {
+            // Cek apakah yang diketik adalah elemen dengan class 'nim-input'
+            if (e.target && e.target.classList.contains('nim-input')) {
+                fetchUserData(e.target);
+            }
+        });
     }
 });
 

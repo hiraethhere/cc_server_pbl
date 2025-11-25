@@ -26,8 +26,32 @@ class Booking extends Controller {
         exit;
     }
 
-    public function storeBooking(){
+    public function cariAnggota(){
 
+    // Ambil data JSON dari fetch
+    $json = file_get_contents('php://input');
+    $data = json_decode($json, true);
+    $nomor_induk = $data['nim'] ?? '';
+    if (empty($nomor_induk)) {
+        echo json_encode(['error' => 'NIM kosong']);
+        return;
+    }
+
+    // Panggil Model untuk cari user
+    $user = $this->model('UserModel')->getUserByNomor_Induk($nomor_induk);
+
+    // Kembalikan JSON
+        header('Content-Type: application/json');
+        if ($user) {
+            echo json_encode(['nama' => $user['username']]);
+        } else {
+            echo json_encode(['nama' => null]);
+        }
+    }
+
+    public function storeBooking(){
+        
 
     }
+
 }

@@ -1,6 +1,3 @@
-<?php Flasher::Flash();
-
-?>
 
     <!-- Main Content -->
     <main class="container mx-auto px-6 py-8">

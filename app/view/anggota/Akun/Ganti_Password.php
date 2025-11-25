@@ -17,7 +17,7 @@
         </div> -->
 
         <!-- Form -->
-        <form action="" method="POST" enctype="multipart/form-data">
+        <form action="<?= BASEURL ?>/akun/handlePasswordChange" method="POST" enctype="multipart/form-data">
             <div class="grid gap-4">
                 <!-- Password -->
                 <div class="mb-4">
@@ -35,7 +35,7 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Password Baru</label>
                     <div class="relative">
-                        <input type="password" id="password" name="password Baru" placeholder="••••••••"
+                        <input type="password" id="password" name="passwordBaru" placeholder="••••••••"
                             class="w-full bg-white px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
                             <i class="fas fa-eye hover:cursor-pointer" id="toggleIcon"></i>
@@ -47,7 +47,7 @@
                 <div class="mb-1">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Password Baru</label>
                     <div class="relative">
-                        <input type="password" id="password" name="passwordBaru" placeholder="••••••••"
+                        <input type="password" id="password" name="passwordBaruConfirm" placeholder="••••••••"
                             class="w-full bg-white px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
                             <i class="fas fa-eye hover:cursor-pointer" id="toggleIcon"></i>
@@ -60,45 +60,16 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
-                    <button class="px-4 py-3 bg-white text-gray-800 rounded-lg font-medium hover:bg-gray-100 border border-gray-400 transition hover:cursor-pointer">Batal</button>
+                    <a  href="/akun" type="button" class="px-4 py-3 bg-white text-gray-800 rounded-lg font-medium hover:bg-gray-100 border border-gray-400 transition hover:cursor-pointer">Batal</a>
                     <button class="px-4 py-3 bg-[#1E68FB] text-white rounded-lg font-medium hover:bg-blue-700 transition shadow-sm hover:cursor-pointer">Konfirmasi</button>
                 </div>
             </div>
         </form>
         
     </div>
-
-    <!-- **************************************************
-        INI POPUP MODAL GANTI PASSWORD BERHASIL
-        ******************************************************* -->
-    <div id="successModal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-2xl p-8 w-full max-w-sm mx-4 text-center border border-[#8E97A6]">
-            <div class="mb-4">
-                <i class="fas fa-check-circle text-[#38C55C] text-5xl"></i>
-            </div>
-            <h3 class="text-xl font-bold text-gray-800 mb-2">Ganti Password Berhasil</h3>
-            <p class="text-sm text-gray-600 mb-6">Kamu berhasil mengganti password!</p>
-            <button onclick="window.location.href = '/Akun';" 
-                    class="w-full px-6 py-3 bg-[#38C55C] text-white rounded-lg font-semibold hover:bg-green-600 transition hover:cursor-pointer">
-                OK
-            </button>
-        </div>
-    </div>
-    
 </main>
 
 
 <!-- JavaScript -->
-<script>
-    function togglePassword() {
-        const passwordInput = document.getElementById('password');
-        const toggleIcon = document.getElementById('toggleIcon');
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            toggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
-        } else {
-            passwordInput.type = 'password';
-            toggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
-        }
-    }
-</script>
+
+<script src="/js/togglePassword.js"></script>

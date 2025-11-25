@@ -1,32 +1,36 @@
 <?php
 
-class Dashboard extends controller
+class Dashboard extends Controller
 {
 
     public function __construct()
         {
-            parent::__construct();
+            $this->preventCache();
+
              if (!isset($_SESSION['user'])) {
             // Jika 'user_id' tidak ada di session (artinya belum login)
-            Flasher::setFlash('Anda harus login', 'untuk mengakses halaman ini.', 'danger');
+            Flasher::setModalInfo('kamu belum login', 'kamu belum login', 'error');
             header('Location: /auth/formLogin'); // Redirect ke halaman login
             exit; //Hentikan eksekusi script
             }
 
         }
     public function index(){
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
 
         $data['ruangan'] = $this->model('RuanganModel')->getRuanganForDashboard();
         $data['judul'] = 'Dashboard';
-        echo $_SESSION['role'];
+        // var_dump($data['ruangan']);
         $this->view('Layout/Header', $data);
-        $this->view('dashboard/index', $data);
+        $this->view('anggota/dashboard/index', $data);
         $this->view('Layout/Footer');
     }
     public function History(){
         $data['judul'] = 'Riwayat Peminjaman';
         $this->view('Layout/Header', $data);
-        $this->view('History/index', $data); 
+        $this->view('anggota/History/index', $data); 
         $this->view('Layout/Footer');
     }
 
@@ -43,7 +47,7 @@ class Dashboard extends controller
         $data['user'] = $_SESSION['user'];
         $data['judul'] = 'Booking Ruangan';
         $this->view('Layout/Header', $data);
-        $this->view('Dashboard/Booking_Ruangan', $data); 
+        $this->view('anggota/Dashboard/Booking_Ruangan', $data); 
         $this->view('Layout/Footer');
     }
 
