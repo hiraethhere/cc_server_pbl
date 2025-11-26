@@ -16,27 +16,28 @@ class Dashboard extends Controller
 
         }
     public function index(){
-        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-        header("Cache-Control: post-check=0, pre-check=0", false);
-        header("Pragma: no-cache");
+        // header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        // header("Cache-Control: post-check=0, pre-check=0", false);
+        // header("Pragma: no-cache");
 
         $data['ruangan'] = $this->model('RuanganModel')->getRuanganForDashboard();
         $data['judul'] = 'Dashboard';
+        $data['navbar'] = 'Dashboard';
         // var_dump($data['ruangan']);
         $this->view('Layout/Header', $data);
         $this->view('anggota/dashboard/index', $data);
         $this->view('Layout/Footer');
-    }
-    public function History(){
-        $data['judul'] = 'Riwayat Peminjaman';
-        $this->view('Layout/Header', $data);
-        $this->view('anggota/History/index', $data); 
-        $this->view('Layout/Footer');
-    }
+    } 
 
     public function Booking($id = null){
 
         $id = param_number($id, "ID ruangan tidak valid");
+
+        if ($id === false || $id < 1) {
+            // Flasher::setModalInfo('Parameter Salah', 'hayooo ubah-ubah parameter yaa?', 'error');
+            header('Location: /dashboard'); // Redirect ke halaman login
+            exit;
+        }
 
         $data['detailRuangan'] = $this->model('RuanganModel')->getRuanganById($id);
 
@@ -49,6 +50,10 @@ class Dashboard extends Controller
         $this->view('Layout/Header', $data);
         $this->view('anggota/Dashboard/Booking_Ruangan', $data); 
         $this->view('Layout/Footer');
+    }
+
+    public function Panduan(){
+        //panduan disini aja qib
     }
 
 

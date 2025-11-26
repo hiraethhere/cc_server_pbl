@@ -233,7 +233,7 @@ class Auth extends Controller {
             $_SESSION['otp_expire'] = time() + 600;
 
             try{
-            sendEmail($_SESSION['reset_email'], $_SESSION['name'], 'hidup jokowi, ini otp lu', $_SESSION['otp']);
+            sendEmail($_SESSION['reset_email'], $_SESSION['name'], 'Silahkan ini otp anda, jangan bagikan ke siapapun', $_SESSION['otp']);
             header('location: /auth/verifyPassword');
             exit;   
             } catch(Exception $e){

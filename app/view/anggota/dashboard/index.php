@@ -31,43 +31,31 @@
                     <img src="/img/<?= $r['img_room'] ?>" 
                         alt="Ruang Lentera Edukasi" class="w-full h-full object-cover">
                 </div>
-                <div class="grid grid-rows-[2fr_1fr] p-5">
+                <div class="grid grid-rows-[2fr_1fr] px-5 pt-5 pb-3">
                     <div>
                         <h3 class="font-bold text-lg text-[#1A1A1A] mb-2"><?= $r['room_name'] ?></h3>
                         <p class="text-dark-overlay/80 mb-4 text-justify text-sm"><?= $r['short_description'] ?></p>
                         <hr class="border-t border-[#171E29] mb-4">
                     </div>
                     <div class="grid grid-cols-2 items-center text-sm text-gray-600">
-                        <div class="grid grid-cols-2 justify-items-start mb-2 mr-6 md:text-md text-xs">
+                        <div class="grid grid-cols-2 gap-1 justify-items-start mb-2 md:text-md text-xs">
                             <div class="flex md:flex-col lg:flex-row flex-col justify-center items-center md:mr-2">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" 
-                                        fill="none" 
-                                        stroke="currentColor" 
-                                        stroke-width="1.5" 
-                                        stroke-linecap="round" 
-                                        stroke-linejoin="round"/>
-                                </svg>
-                                <span class="inline-flex items-center lg:flex-row flex-col">
-                                    Lt <?= $r['floor'] ?>
+                                <img src="/icon/location.svg" alt="lantai ruangan" class="w-6 h-6">
+                                <span class="inline-flex items-center lg:flex-row flex-col text-[#1E1E1E]">
+                                    Lantai <?= $r['floor'] ?>
                                 </span>
                             </div>
-                            <div class="flex md:flex-col lg:flex-row flex-col justify-center items-center">                            
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" 
-                                        fill="none" 
-                                        stroke="currentColor" 
-                                        stroke-width="1.5"  
-                                        stroke-linecap="round" 
-                                        stroke-linejoin="round"/>
-                                </svg>
+                            <div class="flex md:flex-col lg:flex-row flex-col justify-center items-center text-[#1E1E1E]">                            
+                                <img src="/icon/userOutline.svg" alt="Jumlah Orang" class="w-6 h-6">
                                 <span class="inline-flex items-center lg:flex-row flex-col"><?= $r['min_capacity'] . '-' . $r['max_capacity']  ?> orang </span>
                             </div>                          
                         </div>
-                        <a href="/Dashboard/Booking/<?= $r['id_room'] ?>"
-                            class="flex items-center justify-center w-full bg-[#1E68FB] text-white text-center rounded-xl font-semibold text-sm hover:bg-[#38C55C] transition duration-200 mr-2 p-3">
-                            Booking Sekarang
-                        </a>
+                        <div class="w-full flex justify-end">
+                            <a href="/Dashboard/Booking/<?= $r['id_room'] ?>"
+                                class="flex items-center justify-center w-5/6 bg-[#1E68FB] text-white text-center rounded-xl font-semibold text-xs hover:bg-[#38C55C] transition duration-200 py-3">
+                                Booking Sekarang
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

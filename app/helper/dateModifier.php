@@ -32,3 +32,32 @@ function countExpiredAt($email, $namaProdi) {
     //Susun Format Tanggal MySQL (YYYY-MM-DD HH:MM:SS)
     return "$tahunLulus-08-01 23:59:59";
 }
+
+function tanggal_indonesia($datetime) {
+    $bulan = [
+        1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+             'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+
+    $timestamp = strtotime($datetime);
+    $day = date('j', $timestamp);
+    $month = $bulan[(int)date('n', $timestamp)];
+    $year = date('Y', $timestamp);
+
+    return "$day $month $year";
+}
+
+function translateStatus($status): string
+{
+    $lookup = [
+        'active'   => 'Menunggu',
+        'ongoing'  => 'Sedang berlangsung',
+        'done'     => 'Selesai',
+        'canceled' => 'Dibatalkan',
+        'expired'  => 'Kadaluarsa'
+    ];
+
+    return $lookup[$status] ?? 'Status tidak dikenal';
+}
+
+

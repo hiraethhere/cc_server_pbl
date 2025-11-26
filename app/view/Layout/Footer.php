@@ -3,7 +3,7 @@
        
        </section>
         
-        <footer class="bg-white border-t border-gray-200 py-8 shadow-xl">
+        <footer class="bg-[#FBFCFF] border-t border-gray-200 py-8 shadow-xl">
             <div class="mx-8 px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 gap-5 text-sm">
 
@@ -18,7 +18,7 @@
                         </div>
 
                         <!-- Contact Info -->
-                        <div class="space-y-2 text-[#171E29] flex flex-col items-end justify-end">
+                        <div class="space-y-2 text-[#171E29] flex flex-col md:items-end items-start justify-end w-full">
                             <div class="flex items-center space-x-2">
                                 <img src="/icon/phone.svg" alt="Phone Icon" class="w-4 h-4">
                                 <span>+62 87886260131</span>
