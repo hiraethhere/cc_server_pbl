@@ -1,9 +1,14 @@
 <main class="flex-1 p-8 overflow-y-auto bg-[#F9FAFC]">
     <!-- Breadcrumb -->
-    <nav class="mb-6 text-sm">
+    <nav class="mb-6 text-sm flex">
         <a href="/Admin/Peminjaman" class="text-[#1E68FB] hover:text-blue-700">Data Peminjaman Ruangan</a>
-        <span class="mx-2 text-gray-400">></span>
+        <span class="mx-2 text-gray-400">
+            <img src="/icon/arrow.svg" class="w-5 h-5">
+        </span>
         <a href="Admin/Peminjaman" class="font-medium text-gray-900">Hari ini</a>
+        <span class="mx-2 text-gray-400">
+            <img src="/icon/arrow.svg" class="w-5 h-5">
+        </span>
         <span class="font-medium text-gray-900">Detail Booking</span>
     </nav>
 
@@ -198,12 +203,19 @@
                     </div>
 
                     <div class="mb-3 w-full">
-                        <p class="block text-sm font-medium text-gray-700 mb-2">Status</p>
-                        <span 
-                            class="px-4 py-2 bg-[#38C55C25] text-[#38C55C] rounded-lg font-semibold">
-                            <img src="/icon/circleGreen.svg" alt="Accepted" class="w-5 h-5">
-                            Diterima
-                        </span>
+                        <p class="text-sm font-medium text-gray-700 mb-2">Status</p>
+                        <a class="flex flex-row flex-wrap justify-center items-center px-3 py-2 bg-[#38C55C25] text-[#38C55C] rounded-lg font-semibold max-w-1/3">           
+                            <svg 
+                                width="20" 
+                                height="20" 
+                                class="mr-3"
+                                viewBox="0 0 24 24">
+                                <path 
+                                fill="currentcolor" 
+                                d="M12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22"/>
+                            </svg>
+                            <p>Diterima</p>
+                        </a>
                     </div>
                 </div>
             </div>
