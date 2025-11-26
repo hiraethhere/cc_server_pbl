@@ -74,19 +74,11 @@
                                 </div>
                             </div>
                         </div>
-<<<<<<< HEAD
-                        <div class="flex space-x-4 border-t border-dark-overlay/70 py-4">
+                        <div class="flex space-x-4 py-4">
                             <button type="button" id="buttonCancel" class="bg-[#C90B0B] text-white px-6 py-2 rounded-sm text-sm hover:bg-red-700 hover:cursor-pointer">
                                 Cancel Booking
                             </button>
-                            <a href="#" class="bg-[#1E68FB] text-white px-6 py-2 rounded-sm text-sm hover:bg-blue-700 hover:cursor-pointer">
-=======
-                        <div class="flex space-x-4 py-4">
-                            <button class="bg-[#C90B0B] text-white px-6 py-2 rounded-sm text-sm hover:bg-red-700 hover:cursor-pointer">
-                                Cancel Booking
-                            </button>
                             <a href="Booking/Reschedule" class="bg-[#1E68FB] text-white px-6 py-2 rounded-sm text-sm hover:bg-blue-700 hover:cursor-pointer">
->>>>>>> Frontend
                                 Reschedule
                             </a>
                         </div>
