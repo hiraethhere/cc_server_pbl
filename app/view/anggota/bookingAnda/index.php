@@ -47,7 +47,7 @@
                                 <div class="border-dark-overlay/70 py-4">         
                                     <p class="text-gray-600 text-sm">Tanggal Peminjaman</p>
                                     <div class="max-w-1/6">
-                                        <h2 class="text-sm inline-block font-semibold px-2 1y-1 bg-black text-[#171E29] rounded-lg mt-2"><?= htmlspecialchars($bookingDate) ?></h2>
+                                        <h2 class="text-sm inline-block font-semibold px-2 1y-1 bg-black text-[#ffffff] rounded-lg mt-2"><?= htmlspecialchars($bookingDate) ?></h2>
                                     </div>           
                                 </div>
                                 <div class="border-dark-overlay/70 py-4">
@@ -59,14 +59,14 @@
                                 <div class="border-dark-overlay/70 py-4">         
                                     <p class="text-gray-600 text-sm">Jam Peminjaman</p>
                                     <div class="max-w-1/6">
-                                        <h2 class="text-sm inline-block font-semibold px-2 1y-1 text-white rounded-lg mt-2"><?= htmlspecialchars($start_time) . '-' . htmlspecialchars($end_time) ?> </h2>
+                                        <h2 class="text-sm inline-block font-semibold px-2 1y-1 text-[#171E29] rounded-lg mt-2"><?= htmlspecialchars($start_time)?> </h2>
                                     </div>           
                                 </div>
 
                                 <div class="border-dark-overlay/70 py-4">         
                                     <p class="text-gray-600 text-sm">Jam Peminjaman</p>
                                     <div class="max-w-1/6">
-                                        <h2 class="text-sm inline-block font-semibold px-2 1y-1 text-[#171E29] rounded-lg mt-2"><?= htmlspecialchars($start_time) . '-' . htmlspecialchars($end_time) ?> </h2>
+                                        <h2 class="text-sm inline-block font-semibold px-2 1y-1 text-[#171E29] rounded-lg mt-2"><?= htmlspecialchars($end_time) ?> </h2>
                                     </div>           
                                 </div>
                             </div>
