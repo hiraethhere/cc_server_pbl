@@ -58,6 +58,13 @@ class Admin extends Controller {
         $this->view('admin/peminjaman/index');
     }
 
+    public function hariIni(){
+        $data['judul'] = 'Detail Peminjaman Hari Ini';
+        $data['navbar'] = 'Peminjaman';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/peminjaman/detailHariIni');
+    }
+
     public function Ruangan(){
         $data['judul'] = 'Data Ruangan';
         $data['navbar'] = 'Ruangan';
