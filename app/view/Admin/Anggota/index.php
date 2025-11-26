@@ -150,7 +150,7 @@ function isActive($current, $check) {
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    <a href="/Admin/detailAnggota/<?= $user['id_user'] ?>"
+                                    <a href="/Admin/selesaikan"
                                        class="inline-flex items-center px-4 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-150 shadow-md">
                                         Selesaikan
                                     </a>

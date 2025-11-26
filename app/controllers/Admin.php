@@ -50,6 +50,13 @@ class Admin extends Controller {
         $this->view('layout/sidebar', $data);
         $this->view('admin/anggota/selesaikan');
     }
+    
+    public function peminjaman(){
+        $data['judul'] = 'Peminjaman';
+        $data['navbar'] = 'Peminjaman';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/peminjaman/index');
+    }
 
     public function Ruangan(){
         $data['judul'] = 'Data Ruangan';
