@@ -20,6 +20,17 @@ function generateCsrf(){
     return $_SESSION['csrf_token'];
 }
 
+function generateBookingCode($length = 8){
+    $characters = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    $maxIndex = strlen($characters) - 1;
+
+    $code = '';
+    for ($i = 0; $i < $length; $i++) {
+        $code .= $characters[random_int(0, $maxIndex)];
+    }
+    return $code;
+}
+
 function csrf_token(){
     return $_SESSION['csrf_token'];
 }
