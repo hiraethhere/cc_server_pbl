@@ -72,17 +72,19 @@
                             </div>
                         </div>
                         <div class="flex space-x-4 border-t border-dark-overlay/70 py-4">
-                            <button class="bg-[#C90B0B] text-white px-6 py-2 rounded-sm text-sm hover:bg-red-700 hover:cursor-pointer">
+                            <button type="button" id="buttonCancel" class="bg-[#C90B0B] text-white px-6 py-2 rounded-sm text-sm hover:bg-red-700 hover:cursor-pointer">
                                 Cancel Booking
                             </button>
-                            <button class="bg-[#1E68FB] text-white px-6 py-2 rounded-sm text-sm hover:bg-blue-700 hover:cursor-pointer">
+                            <a href="#" class="bg-[#1E68FB] text-white px-6 py-2 rounded-sm text-sm hover:bg-blue-700 hover:cursor-pointer">
                                 Reschedule
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
-
-
+                
+                <form id="cancelForm" action="<?= BASEURL ?>/Booking/cancelBooking" method="post">
+                    <input type="hidden" value="<?= $activeBooking['id_booking'] ?? '' ?>" name="id_booking">
+                </form>
 
                 <?php else: ?>
 
@@ -162,3 +164,28 @@
         </div>
     </div>
 </main>
+
+<script>
+    const buttonCancel = document.getElementById('buttonCancel')
+
+
+    function openCancelBookingModal(){
+        Modal.confirm(
+            'Cancel Booking?',
+            'Apakah anda yakin ingin membatalkan booking? Anda akan mendapatkan suspend. Lihat panduan untuk informasi lebih lanjut',
+            function() {
+                document.getElementById("cancelForm").submit();
+            },
+            {
+                icon: '/icon/cross-circle.svg',
+                confirmText: 'Ya',
+                confirmClass: 'w-full px-6 py-2 bg-[#C90B0B] text-white rounded-lg font-semibold hover:bg-red-800 transition',
+                cancelText: 'Tidak'
+            }
+        );
+
+    }
+
+    buttonCancel.addEventListener('click', openCancelBookingModal)
+
+</script>

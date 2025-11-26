@@ -45,6 +45,7 @@ class Dashboard extends Controller
         http_response_code(404);
         die("Ruangan tidak ditemukan");
     }
+        $data['navbar'] = 'Dashboard';
         $data['user'] = $_SESSION['user'];
         $data['judul'] = 'Booking Ruangan';
         $this->view('Layout/Header', $data);

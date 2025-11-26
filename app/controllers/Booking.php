@@ -98,7 +98,7 @@ class Booking extends Controller {
                 throw new Exception("Ruangan sudah di booking pada jam itu!");
             }
 
-        $validatedUsers = [];
+            $validatedUsers = [];
 
             foreach ($list_nim_anggota as $nim) {
                 $nim = trim($nim);
@@ -151,6 +151,31 @@ class Booking extends Controller {
             exit();
         }
 
+    }
+
+    public function cancelBooking(){
+
+        try{
+            if (empty($_POST['id_booking']) || empty($_SESSION['user']['user_id'])) {
+                throw new Exception("id_booking tidak valid", 1);
+            }
+
+        $result = $this->model('BookingModel')->cancelBooking($_POST['id_booking']);
+        $suspend = $this->model('UserModel')->addSuspendCount($_SESSION['user']['user_id']);
+
+            if ($result <= 0 || $suspend <= 0 ) {
+                throw new Exception("internal server error", 1);
+            }
+
+        Flasher::setModalInfo('Cancel Peminjaman Berhasil', 'Peminjaman berhasil dibatalkan', 'success');
+        header('location: /dashboard');
+        exit();
+
+        }catch(Throwable $e){
+            Flasher::setModalInfo('Gagal cancel', $e->getMessage(), 'error');
+            header('location: /dashboard');
+            exit();
+    }
     }
 
 }

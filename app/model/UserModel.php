@@ -88,11 +88,20 @@ class UserModel {
     }
 
     public function updatePassword($data){
-    $this->db->query("UPDATE users SET password = :password WHERE email = :email");
-    $this->db->bind(':password', $data['password']);
-    $this->db->bind(':email', $data['email']);
-    $this->db->execute(); 
+        $this->db->query("UPDATE users SET password = :password WHERE email = :email");
+        $this->db->bind(':password', $data['password']);
+        $this->db->bind(':email', $data['email']);
+        $this->db->execute(); 
     
-    return $this->db->rowCount(); 
+        return $this->db->rowCount(); 
+    }
+
+    public function addSuspendCount($id_user){
+        $this->db->query("UPDATE users SET suspend_count = suspend_count + 1 WHERE id_user = :id_user");
+        $this->db->bind(':id_user',$id_user);
+        $this->db->execute(); 
+    
+        return $this->db->rowCount(); 
+
     }
 }

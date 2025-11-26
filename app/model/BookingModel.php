@@ -139,4 +139,13 @@ class BookingModel {
 
         return true; // user tidak memiliki booking
     }
+
+
+    public function cancelBooking($id_booking){
+        $query = "UPDATE bookings SET status = 'cancelled', cancel_by = 'user' WHERE id_booking = :id_booking";
+        $this->db->query($query);
+        $this->db->bind('id_booking', $id_booking);
+        $this->db->execute();
+        return $this->db->rowCount();
+    }
 }
