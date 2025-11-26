@@ -54,7 +54,10 @@ class Dashboard extends Controller
     }
 
     public function Panduan(){
-        //panduan disini aja qib
+        $data['judul'] = 'Panduan pakai RuanginPNJ';
+        $this->view('Layout/Header', $data);
+        $this->view('anggota/panduan/index', $data); 
+        $this->view('Layout/Footer');
     }
 
 

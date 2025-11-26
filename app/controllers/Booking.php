@@ -175,7 +175,13 @@ class Booking extends Controller {
             Flasher::setModalInfo('Gagal cancel', $e->getMessage(), 'error');
             header('location: /dashboard');
             exit();
-    }
+        }
     }
 
+    public function Reschedule() {
+        $data['judul'] = 'Reschedule';
+        $this->view('Layout/Header', $data);
+        $this->view('anggota/bookingAnda/reschedule', $data); 
+        $this->view('Layout/Footer');
+    }
 }
