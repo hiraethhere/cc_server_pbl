@@ -102,16 +102,16 @@ class Auth extends Controller {
 
             if ($_SESSION['regisRole'] === '3') {
             // Validasi email hanya untuk mahasiswa
-            if (!validateEmail($_POST['email'])) {
-                throw new Exception('Email tidak valid');
-            }
+                if (!validateEmail($_POST['email'])) {
+                    throw new Exception('Email tidak valid');
+                }
                 $expiredDate = countExpiredAt($_POST['email'], $_POST['prodi']);
 
-            // Upload bukti hanya untuk mahasiswa
-            if (isset($_FILES['buktiKubaca']) && $_FILES['buktiKubaca']['error'] === 0) {
-            $buktiKubaca = uploadImage($_FILES['buktiKubaca'], 'storage/FotoBukti/');
-            } else {
-                throw new Exception('Mohon upload file bukti');
+                // Upload bukti hanya untuk mahasiswa
+                if (isset($_FILES['buktiKubaca']) && $_FILES['buktiKubaca']['error'] === 0) {
+                    $buktiKubaca = uploadImage($_FILES['buktiKubaca'], 'storage/FotoBukti/');
+                } else {
+                    throw new Exception('Mohon upload file bukti');
                 }
             }
 
@@ -123,6 +123,7 @@ class Auth extends Controller {
                 'email' => $_POST['email'],
                 'jurusan_unit' => $_POST['jurusan_unit'],
                 'prodi' => $_POST['prodi'] ?? NULL,
+                'status' => 'pending',
                 'kubaca_photo' => $buktiKubaca ?? NULL,
                 'profile_photo' => 'DefaultProfilePicture.jpg',
                 'suspend_count' => 0,
