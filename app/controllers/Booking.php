@@ -153,4 +153,11 @@ class Booking extends Controller {
 
     }
 
+    public function Reschedule() {
+        $data['judul'] = 'Reschedule';
+        $this->view('Layout/Header', $data);
+        $this->view('anggota/bookingAnda/reschedule', $data); 
+        $this->view('Layout/Footer');
+    }
+
 }

@@ -43,7 +43,7 @@ $inactiveClassMobile = 'text-gray-600 hover:text-gray-800 font-medium px-4 py-2 
                     <a href="/History" class="<?php echo ($navbar == 'History') ? $activeClass : $inactiveClass; ?>">
                         Histori
                     </a>
-                    <a href="/Dashboard" class="<?php echo ($navbar == 'Panduan') ? $activeClass : $inactiveClass; ?>">
+                    <a href="/Dashboard/Panduan" class="<?php echo ($navbar == 'Panduan') ? $activeClass : $inactiveClass; ?>">
                         Panduan
                     </a>
                 </div>
