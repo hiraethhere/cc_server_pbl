@@ -261,9 +261,9 @@ function isActive($current, $check) {
                                         <?= htmlspecialchars($user['role_name'] ?? '-') ?>
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-700">Teknik Informatika & Komputer</td>
+                                <td class="px-6 py-4 text-sm text-gray-700"><?= $user['jurusan_unit'] ?></td>
                                 <td class="px-6 py-4">
-                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm bg-[#C90B0B] text-[#FBFCFF]">
+                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm <?= $user['statusStyle'] ?> text-[#FBFCFF]">
                                         <?= htmlspecialchars($user['status'] ?? '-') ?>
                                     </span>
                                 </td>

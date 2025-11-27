@@ -59,7 +59,7 @@ class UserModel {
     }
 
     public function getUserForAdmin(){
-        $this->db->query("SELECT u.id_user, u.username,r.role_name, u.nomor_induk, u.jurusan_unit, u.created_at 
+        $this->db->query("SELECT u.id_user, u.status , u.username,r.role_name, u.nomor_induk, u.jurusan_unit, u.created_at 
                         FROM users u JOIN roles r ON u.id_role = r.id_role WHERE u.id_role NOT IN (1,2) AND status = 'pending'" );
         return $this->db->resultSet();
     }
@@ -110,11 +110,28 @@ class UserModel {
         return $this->db->resultSet();
     }
 
+    public function rejectUser($id_user, $reason = null){
+        $this->db->query("UPDATE users SET status = 'rejected', reject_reason = :reason WHERE id_user = :id_user");
+        $this->db->bind('reason', $reason);
+        $this->db->bind('id_user', $id_user);
+        $this->db->execute();
+        return $this->db->rowCount();
+    }
+
     public function activateUser($id_user){
         $this->db->query("UPDATE users SET status = 'active' WHERE id_user = :id_user");
         $this->db->bind('id_user', $id_user);
         $this->db->execute();
         return $this->db->rowCount();
+    }
+
+    public function getUserJoinRoleById($id_user){
+        $this->db->query("SELECT u.*, r.role_name 
+                          FROM users u 
+                          JOIN roles r ON u.id_role = r.id_role 
+                          WHERE u.id_user = :id_user LIMIT 1");
+        $this->db->bind(':id_user', $id_user);
+        return $this->db->singleSet();
     }
 
     public function getUserForAdminPaginated($limit, $start)

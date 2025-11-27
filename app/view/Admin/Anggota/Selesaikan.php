@@ -15,8 +15,6 @@
 
         <div class="flex flex-row gap-16">
             <div class="bg-[#F3F5FA] rounded-2xl w-full">
-                <!-- Form -->
-                <form action="" method="POST" enctype="multipart/form-data">
                     <div class="grid gap-4">
                         <div class="mb-1">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Nama</label>
@@ -27,7 +25,15 @@
                         </div>
 
                         <div class="mb-1">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">NIM</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
+                            <div class="relative">
+                                <input type="Text" id="Jurusan" name="Jurusan" placeholder="<?= htmlspecialchars($user['role_name']?? '-')   ?>" readonly
+                                    class="w-full bg-white px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+                            </div>
+                        </div>
+
+                        <div class="mb-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">NIM/NIP/apapun itu</label>
                             <div class="relative">
                                 <input type="Text" id="NIM" name="NIM" placeholder="<?= htmlspecialchars($user['nomor_induk']) ?? '-'?>" readonly
                                     class="w-full bg-white px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
@@ -58,30 +64,26 @@
                             </div>
                         </div>
 
-                        <!-- Buttons -->
-                        <div class="grid grid-cols-2 gap-4 mt-4">
-                            <button type="button" id="buttonDecline" 
-                                    class="w-full px-4 py-2 bg-[#C90B0B] text-white rounded-lg font-medium hover:bg-red-800 transition">
-                                Decline
-                            </button>
-                            <button type="button" id="buttonApprove"
-                                    class="w-full px-4 py-2 bg-[#38C55C] text-white rounded-lg font-medium hover:bg-green-600 transition">
-                                Approve
-                            </button>
+                        <div class="grid grid-cols-2 gap-12 mt-2">
+                            <button type="button" id="buttonDecline" class="px-4 py-2 bg-[#C90B0B] text-white rounded-lg font-medium hover:bg-red-800 transition hover:cursor-pointer">Decline</button>
+                            <button type="button" id="buttonApprove" class="px-4 py-2 bg-[#38C55C] text-white rounded-lg font-medium hover:bg-green-600 transition hover:cursor-pointer">Approve</button>
                         </div>
 
                         <!-- Form Decline (Hidden) -->
                         <form id="declineForm" action="<?= BASEURL ?>Admin/handleDecline" method="POST" class="hidden">
-                            <input type="hidden" name="id_user" value="<?= $user['id_user'] ?>">
+                            <input type="hidden" name="id_user" value="<?= $user['id_user'] ?>" >
+                            <input type="hidden" name="email" value="<?= $user['email'] ?>" >
+                            <input type="hidden" name="username" value="<?= $user['username'] ?>" >
                             <!-- Alasan akan ditambahkan via JavaScript -->
                         </form>
 
                         <!-- Form Approve (Hidden) -->
                         <form id="approveForm" action="<?= BASEURL ?>Admin/handleApprove" method="POST" class="hidden">
-                            <input type="hidden" name="id_user" value="<?= $user['id_user'] ?>">
+                            <input type="hidden" name="id_user" value="<?= $user['id_user'] ?>" >
+                            <input type="hidden" name="email" value="<?= $user['email'] ?>" >
+                            <input type="hidden" name="username" value="<?= $user['username'] ?>" >
                         </form>
                     </div>
-                </form>
             </div>
 
 
@@ -100,10 +102,28 @@
     <script src="/js/modal.js" defer></script>
     <script>
     const buttonDecline = document.getElementById('buttonDecline');
+    const buttonApprove = document.getElementById('buttonApprove');
+
+    function openApproveModal() {
+        Modal.confirm(
+            'Approve User?',
+            'Anda yakin ingin menyetujui user ini',
+            function() {
+                // Callback ketika tombol konfirmasi ditekan
+                document.getElementById('approveForm').submit();
+            },
+            {
+                icon: '/icon/check.svg',
+                confirmText: 'Ya',
+                confirmClass: 'w-full px-6 py-2 bg-[#38C55C] text-white rounded-lg font-semibold hover:bg-green-600 transition',
+                cancelText: 'Batalkan'
+            }
+        );
+    }
     
     function openDeclineRescheduleModal() {
         Modal.prompt(
-            'Decline Reschedule?',
+            'Decline User?',
             'Anda yakin ingin menolak permintaan reschedule',
             function(alasan) {
                 // Callback dengan nilai input
@@ -137,5 +157,8 @@
     
     if(buttonDecline) {
         buttonDecline.addEventListener('click', openDeclineRescheduleModal);
+    }
+    if(buttonApprove) {
+        buttonApprove.addEventListener('click', openApproveModal);
     }
 </script>
