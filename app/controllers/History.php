@@ -14,9 +14,12 @@ class History extends Controller{
 
     public function index(){
 
-
-        $bookingId = $this->model('BookingModel')->getAllBookingByUser($_SESSION['user']['user_id']);
-        $data['bookings'] = $this->model('BookingModel')->get;
+        $data['bookings'] = $this->model('BookingModel')->getAllBookingByUser($_SESSION['user']['user_id']);
+        foreach($data['bookings'] as $book){
+            $data['start_time'] = date('H:i', strtotime($book['start_time']));
+            $data['end_time']   = date('H:i', strtotime($book['end_time']));
+        }
+        unset($book); // best practice
         $data['judul'] = 'History';
         $data['navbar'] = 'History';
         $this->view('Layout/Header', $data);
