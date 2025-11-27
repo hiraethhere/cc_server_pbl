@@ -16,7 +16,7 @@
         <div id="modalContent" class="text-sm text-gray-600 mb-6 text-center"></div>
         
         <!-- Buttons -->
-        <div id="modalButtons" class="flex justify-center space-x-4">
+        <div id="modalButtons" class="flex justify-center space-x-4 hover:cursor-pointer">
             <!-- Buttons akan di-generate oleh JavaScript -->
         </div>
     </div>

@@ -1,6 +1,6 @@
 <?php
 
-$base_url = $_ENV['BASE_URL'] ?? 'http://localhost:8082';
+$base_url = $_ENV['BASE_URL'] ?? 'http://localhost:8082/';
 
 
 define('BASEURL', $base_url);

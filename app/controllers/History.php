@@ -13,7 +13,10 @@ class History extends Controller{
         }
 
     public function index(){
-        
+
+
+        $bookingId = $this->model('BookingModel')->getAllBookingByUser($_SESSION['user']['user_id']);
+        $data['bookings'] = $this->model('BookingModel')->get;
         $data['judul'] = 'History';
         $data['navbar'] = 'History';
         $this->view('Layout/Header', $data);
