@@ -59,7 +59,8 @@ class UserModel {
     }
 
     public function getUserForAdmin(){
-        $this->db->query("SELECT id_user, username, nomor_induk, jurusan_unit, created_at FROM users WHERE id_role NOT IN (1,2)" );
+        $this->db->query("SELECT u.id_user, u.username,r.role_name, u.nomor_induk, u.jurusan_unit, u.created_at 
+                        FROM users u JOIN roles r ON u.id_role = r.id_role WHERE u.id_role NOT IN (1,2) AND status = 'pending'" );
         return $this->db->resultSet();
     }
 
@@ -76,7 +77,7 @@ class UserModel {
         $this->db->bind(':nomor_induk', $data['nomor_induk']);
         $this->db->bind(':jurusan_unit', $data['jurusan_unit']);
         $this->db->bind(':prodi', $data['prodi']);
-        $this->db->bind(':status', 'active' );
+        $this->db->bind(':status', $data['status'] );
         $this->db->bind('suspend_count', $data['suspend_count']);
         $this->db->bind(':email_verified', $data['email_verified']);
         $this->db->bind(':kubaca_photo', $data['kubaca_photo']);
@@ -88,11 +89,86 @@ class UserModel {
     }
 
     public function updatePassword($data){
-    $this->db->query("UPDATE users SET password = :password WHERE email = :email");
-    $this->db->bind(':password', $data['password']);
-    $this->db->bind(':email', $data['email']);
-    $this->db->execute(); 
+        $this->db->query("UPDATE users SET password = :password WHERE email = :email");
+        $this->db->bind(':password', $data['password']);
+        $this->db->bind(':email', $data['email']);
+        $this->db->execute(); 
     
-    return $this->db->rowCount(); 
+        return $this->db->rowCount(); 
+    }
+
+    public function addSuspendCount($id_user){
+        $this->db->query("UPDATE users SET suspend_count = suspend_count + 1 WHERE id_user = :id_user");
+        $this->db->bind(':id_user',$id_user);
+        $this->db->execute(); 
+    
+        return $this->db->rowCount(); 
+    }
+
+    public function getPendingUser(){
+        $this->db->query("SELECT * FROM users WHERE status = 'pending' AND id_role NOT IN (1,2)" );
+        return $this->db->resultSet();
+    }
+
+    public function activateUser($id_user){
+        $this->db->query("UPDATE users SET status = 'active' WHERE id_user = :id_user");
+        $this->db->bind('id_user', $id_user);
+        $this->db->execute();
+        return $this->db->rowCount();
+    }
+
+    public function getUserForAdminPaginated($limit, $start)
+    {
+        $query = "SELECT u.id_user, u.username, r.role_name, u.nomor_induk, u.jurusan_unit, u.created_at 
+                  FROM users u 
+                  JOIN roles r ON u.id_role = r.id_role 
+                  WHERE u.id_role NOT IN (1,2) 
+                  AND u.status = 'pending'
+                  ORDER BY u.created_at ASC 
+                  LIMIT :limit OFFSET :start";
+        
+        $this->db->query($query);
+        $this->db->bind(':limit', $limit);
+        $this->db->bind(':start', $start);
+        
+        return $this->db->resultSet();
+    }
+
+    public function getAllUsersPaginated($limit, $start){
+        $query = "SELECT u.*, r.role_name 
+                  FROM users u
+                  JOIN roles r ON u.id_role = r.id_role 
+                  WHERE u.id_role NOT IN (1, 2) 
+                  ORDER BY u.created_at DESC 
+                  LIMIT :limit OFFSET :start";
+        
+        $this->db->query($query);
+        $this->db->bind(':limit', $limit);
+        $this->db->bind(':start', $start);
+        
+        return $this->db->resultSet();
+    }
+
+    public function countAllUsers()
+    {
+        // Tidak perlu JOIN untuk hitung total, cukup filter tabel users saja biar cepat
+        $query = "SELECT COUNT(*) as total 
+                  FROM users 
+                  WHERE id_role NOT IN (1,2)";
+                  
+        $this->db->query($query);
+        return $this->db->singleSet();
+    }
+
+    public function countPendingUsers()
+    {
+        // Tidak perlu JOIN untuk hitung total, cukup filter tabel users saja biar cepat
+        $query = "SELECT COUNT(*) as total 
+                  FROM users 
+                  WHERE id_role NOT IN (1,2) 
+                  AND status = 'pending'";
+                  
+        $this->db->query($query);
+        return $this->db->singleSet();
     }
 }

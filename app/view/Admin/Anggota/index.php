@@ -1,10 +1,10 @@
 <?php
 // Hanya untuk logika tab (tidak pakai database)
-$tab = $_GET['tab'] ?? 'semua';
+$tab = $_GET['tab'] ?? 'approval';
 $tab = strtolower($tab);
 $valid_tabs = ['semua', 'approval'];
 if (!in_array($tab, $valid_tabs)) {
-    $tab = 'semua';
+    $tab = 'approval';
 }
 
 function isActive($current, $check) {
@@ -12,25 +12,6 @@ function isActive($current, $check) {
 }
 ?>
 
-<?php
-// ... Logika PHP awal dan fungsi isActive tetap sama ...
-
-// Data dummy untuk filter options
-$jenis_anggota_options = [
-    'Mahasiswa' => 'Mahasiswa',
-    'Dosen' => 'Dosen',
-    'Tendik' => 'Tendik',
-];
-$jurusan_options = [
-    'Teknik Informatika & Komputer' => 'Teknik Informatika & Komputer',
-    'Teknik Elektro' => 'Teknik Elektro',
-];
-$status_options = [
-    'Aktif' => 'Aktif',
-    'Belum Aktif' => 'Belum Aktif',
-    'NonAktif' => 'NonAktif',
-];
-?>
 
 <main class="flex-1 p-8 overflow-y-auto bg-[#F9FAFC]">
     <!-- Breadcrumb -->
@@ -156,20 +137,20 @@ $status_options = [
                             <?php foreach($users as $user) : ?>
                             <tr class="hover:bg-gray-50 transition-colors duration-150">
                                 <td class="px-6 py-4 text-sm text-gray-900"><?= $i ?></td>
-                                <td class="px-6 py-4 text-sm font-medium text-gray-900"><?= $user['username'] ?></td>
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900"><?= htmlspecialchars($user['username'] ?? '-') ?></td>
                                 <td class="px-6 py-4">
                                     <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm bg-blue-100 text-blue-700">
-                                        Mahasiswa
+                                        <?= htmlspecialchars($user['role_name']) ?>
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-700"><?= $user['jurusan_unit'] ?></td>
+                                <td class="px-6 py-4 text-sm text-gray-700"><?= htmlspecialchars($user['jurusan_unit'] ?? '-') ?></td>
                                 <td class="px-6 py-4">
                                     <span class="inline-flex px-3 py-1 text-xs font-medium rounded-full">
-                                        5 November 2025
+                                        <?= htmlspecialchars($user['createdDate'] ?? '-') ?>
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    <a href="/Admin/detailAnggota/<?= $user['id_user'] ?>"
+                                    <a href="/Admin/selesaikan/<?= $user['id_user'] ?>"
                                        class="inline-flex items-center px-4 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-150 shadow-md">
                                         Selesaikan
                                     </a>
@@ -259,18 +240,20 @@ $status_options = [
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
+                            <?php $c = 1 ?>
+                            <?php foreach($users as $user) : ?>
                             <tr class="hover:bg-gray-50 transition-colors duration-150">
-                                <td class="px-6 py-4 text-sm text-gray-900">1</td>
-                                <td class="px-6 py-4 text-sm font-medium text-gray-900">Naqib Zuhair Al-Hudri</td>
+                                <td class="px-6 py-4 text-sm text-gray-900"><?= $c ?></td>
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900"><?= htmlspecialchars($user['username'] ?? '-') ?></td>
                                 <td class="px-6 py-4">
-                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700">
-                                        Mahasiswa
+                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm bg-[#B9D0FE] text-[#1E68FB]">
+                                        <?= htmlspecialchars($user['role_name'] ?? '-') ?>
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-700">Teknik Informatika & Komputer</td>
                                 <td class="px-6 py-4">
-                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-700">
-                                        Belum Aktif
+                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm bg-[#C90B0B] text-[#FBFCFF]">
+                                        <?= htmlspecialchars($user['status'] ?? '-') ?>
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-center">
@@ -280,48 +263,8 @@ $status_options = [
                                     </a>
                                 </td>
                             </tr>
-                            <tr class="hover:bg-gray-50 transition-colors duration-150">
-                                <td class="px-6 py-4 text-sm text-gray-900">2</td>
-                                <td class="px-6 py-4 text-sm font-medium text-gray-900">Ahmad Saputra</td>
-                                <td class="px-6 py-4">
-                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-700">
-                                        Dosen
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-700">Teknik Elektro</td>
-                                <td class="px-6 py-4">
-                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-700">
-                                        Belum Aktif
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-center">
-                                    <a href="/Admin/Selesaikan"
-                                       class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-150">
-                                        Selesaikan
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-gray-50 transition-colors duration-150">
-                                <td class="px-6 py-4 text-sm text-gray-900">3</td>
-                                <td class="px-6 py-4 text-sm font-medium text-gray-900">Siti Nurhaliza</td>
-                                <td class="px-6 py-4">
-                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-orange-100 text-orange-700">
-                                        Tendik
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-700">Administrasi Umum</td>
-                                <td class="px-6 py-4">
-                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-700">
-                                        Belum Aktif
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-center">
-                                    <a href="/Admin/Selesaikan"
-                                       class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-150">
-                                        Selesaikan
-                                    </a>
-                                </td>
-                            </tr>
+                            <?php $c += 1 ?>
+                            <?php endforeach ?>
                         </tbody>
                     </table>
                 </div>

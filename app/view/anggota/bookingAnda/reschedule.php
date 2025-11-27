@@ -4,14 +4,14 @@
 <main class="container mx-auto px-6 py-8">
     <div class="mx-5">
         <nav class="mb-6 text-sm text-dark-overlay/60 flex items-center">
-            <a href="/Dashboard" class="text-[#1E68FB] hover:text-blue-700">Ruangan</a>
+            <a href="/Dashboard" class="text-[#1E68FB] hover:text-blue-700">Bookingan Anda</a>
             <span class="mx-2">
                 <img src="/icon/arrow.svg" alt="arrowRight" class="inline w-4 h-4">
             </span>
-            <span class="text-dark-overlay/60 font-medium hover:cursor-pointer">Booking Ruangan</span>
+            <span class="text-dark-overlay/60 font-medium hover:cursor-pointer">Reschedule</span>
         </nav>
 
-        <h2 class="text-3xl font-bold text-[#1A1A1A] mb-6">Booking Ruangan</h2>
+        <h2 class="text-3xl font-bold text-[#1A1A1A] mb-6">Reschedule</h2>
 
         <div class="flex flex-col gap-8 lg:grid lg:grid-cols-3 lg:gap-8">
             <div class="order-2 lg:order-none lg:col-span-2">

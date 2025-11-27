@@ -34,7 +34,7 @@ class Dashboard extends Controller
         $id = param_number($id, "ID ruangan tidak valid");
 
         if ($id === false || $id < 1) {
-            // Flasher::setModalInfo('Parameter Salah', 'hayooo ubah-ubah parameter yaa?', 'error');
+            Flasher::setModalInfo('Parameter Salah', 'hayooo ubah-ubah parameter yaa?', 'error');
             header('Location: /dashboard'); // Redirect ke halaman login
             exit;
         }
@@ -45,6 +45,7 @@ class Dashboard extends Controller
         http_response_code(404);
         die("Ruangan tidak ditemukan");
     }
+        $data['navbar'] = 'Dashboard';
         $data['user'] = $_SESSION['user'];
         $data['judul'] = 'Booking Ruangan';
         $this->view('Layout/Header', $data);
@@ -53,7 +54,10 @@ class Dashboard extends Controller
     }
 
     public function Panduan(){
-        //panduan disini aja qib
+        $data['judul'] = 'Panduan pakai RuanginPNJ';
+        $this->view('Layout/Header', $data);
+        $this->view('anggota/panduan/index', $data); 
+        $this->view('Layout/Footer');
     }
 
 

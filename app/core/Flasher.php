@@ -85,18 +85,18 @@ class Flasher {
             echo '
             <div id="info-modal-overlay" class="fixed inset-0 z-[99999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 fade-in">
                 
-                <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-lg p-6 text-center relative transform transition-all scale-100">
-                    <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full mb-6">
+                <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 text-center relative transform transition-all scale-100">
+                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full mb-6">
                         <img src="' . $config['icon_src'] . '" class="w-full h-full object-contain filter z-[-100]">
                     </div>
-                    <h2 class="text-3xl font-extrabold text-gray-900 mb-2 tracking-tight">
+                    <h2 class="text-xl font-extrabold text-gray-900 mb-2 tracking-tight">
                         ' . htmlspecialchars($data['title']) . '
                     </h2>
-                    <p class="text-gray-500 text-lg mb-8 leading-relaxed">
+                    <p class="text-gray-500 text-sm mb-8 leading-relaxed">
                         ' . htmlspecialchars($data['message']) . '
                     </p>
                     <button onclick="' . $onclickAction . '" 
-                        class="w-full py-2 rounded-xl text-white font-bold text-lg shadow-md transition-transform transform active:scale-95 ' . $config['btn_bg'] . ' hover:cursor-pointer">
+                        class="w-5/6 py-2 rounded-xl text-white font-bold text-lg shadow-md transition-transform transform active:scale-95 ' . $config['btn_bg'] . ' hover:cursor-pointer">
                         OK
                     </button>
 
