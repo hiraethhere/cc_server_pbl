@@ -1,9 +1,13 @@
     <main class="flex-1 p-8 overflow-y-auto bg-[#F3F5FA]">
         <nav class="mb-6 text-sm text-dark-overlay/60">
             <a href="/Admin/Anggota" class="text-gray-900 hover:text-[#1E68FB]">Data Anggota</a>
-            <span class="mx-2">></span>
+            <span class="mx-2">
+                <img src="/icon/arrow.svg" class="w-5 h-5">
+            </span>
             <a href="/Admin/Anggota" class="text-gray-900 hover:text-[#1E68FB]">Daftar Anggota</a>
-            <span class="mx-2">></span>
+            <span class="mx-2">
+                <img src="/icon/arrow.svg" class="w-5 h-5">
+            </span>
             <span class="text-dark-overlay/60 font-medium hover:cursor-pointer">Detail Data</span>
         </nav>
 
