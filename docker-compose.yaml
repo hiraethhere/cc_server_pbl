@@ -17,6 +17,7 @@ services:
       - DB_DATABASE=${DB_DATABASE}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
+      - TZ=Asia/Jakarta
 
   # Service 2: Database (MySQL)
   db:

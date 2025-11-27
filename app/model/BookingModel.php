@@ -174,4 +174,15 @@ class BookingModel {
         return $this->db->rowCount();
     }
 
+    public function getBookingTodayjoinRoom() {
+        $this->db->query("SELECT b.id_booking, b.start_time, b.end_time, b.booking_code, b.booker_name, b.status, r.room_name
+                        FROM bookings b JOIN rooms r ON b.id_room = r.id_room
+                        WHERE DATE(start_time) = CURDATE() ORDER BY start_time DESC");
+        return $this->db->resultSet();
+    }
+
+    public function getAllBookingPaginated(){
+        $this->db->query("SELECT * FROM bookings ORDER BY start_time DESC LIMIT :limit OFFSET :offset;");
+    }
+
 }

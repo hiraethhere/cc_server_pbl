@@ -32,8 +32,10 @@ class Admin extends Controller {
 
         if ($activeTab == 'approval') {
             $data['users'] = $this->model('UserModel')->getUserForAdmin();
+           $data['link'] = 'selesaikan';
         } else {
             $data['users'] = $this->model('UserModel')->getAllUsersPaginated(10, 0);
+            $data['link'] = 'detailAnggota';
         }
 
         foreach ($data['users'] as &$user) {
@@ -41,21 +43,22 @@ class Admin extends Controller {
             $user['statusStyle'] = getStyleStatus($user['status']);
             $user['status'] = translateStatus($user['status']);
         }
+        
         $data['judul'] = 'Data Anggota';
         $data['navbar'] = 'Anggota';
         $this->view('layout/sidebar', $data);
         $this->view('admin/anggota/index', $data);
     }
 
-    // public function detailAnggota($id = null){
+    public function detailAnggota($id = null){
 
-    //     $id = param_number($id, "ID user tidak valid");
-    //     $data['user'] = $this->model('UserModel')->getUserById($id);
-    //     $data['judul'] = 'Detail Anggota';
-    //     $data['navbar'] = 'Anggota';
-    //     $this->view('layout/sidebar', $data);
-    //     $this->view('admin/anggota/detail', $data);
-    // }
+        $id = param_number($id, "ID user tidak valid");
+        $data['user'] = $this->model('UserModel')->getUserById($id);
+        $data['judul'] = 'Detail Anggota';
+        $data['navbar'] = 'Anggota';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/anggota/detail', $data);
+    }
 
     public function Selesaikan($id_user = null){
 
@@ -76,10 +79,32 @@ class Admin extends Controller {
     }
     
     public function peminjaman(){
+
+        $tab = isset($_GET['tab']) ? $_GET['tab'] : 'hariIni';
+
+        switch ($tab) {
+            case 'hariIni':
+                $data['bookings'] = $this->model('BookingModel')->getBookingTodayJoinRoom();
+                break;
+            case 'berlangsung':
+                $data['bookings'] = $this->model('BookingModel')->getBookingTodayJoinRoom();
+                break;
+            case 'reschedule':
+                $data['bookings'] = $this->model('BookingModel')->getBookingTodayJoinRoom();
+                break;
+            case 'riwayat':
+                $data['bookings'] = $this->model('BookingModel')->getBookingTodayJoinRoom();
+                break;
+            default:
+                Flasher::setModalInfo('Tab tidak diketahui', 'hayoo ubah ubah parameter yaa', 'error');
+                header('location: /admin/peminjaman');
+                break;
+        }
+
         $data['judul'] = 'Peminjaman';
         $data['navbar'] = 'Peminjaman';
         $this->view('layout/sidebar', $data);
-        $this->view('admin/peminjaman/index');
+        $this->view('admin/peminjaman/index', $data);
     }
 
     public function hariIni(){
