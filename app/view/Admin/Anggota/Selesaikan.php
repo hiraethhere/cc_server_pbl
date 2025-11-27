@@ -63,12 +63,12 @@
                         </div>
 
                         <div class="grid grid-cols-2 gap-12 mt-2">
-                            <form action="<?= BASEURL ?>Admin/handleDecline" method="post">
+                            <!-- <form action="<?= BASEURL ?>Admin/handleDecline" method="post">
                                 <input type="hidden" name="id_user" value="<?= $user['id_user'] ?>" >
                                 <input type="hidden" name="email" value="<?= $user['email'] ?>" >
-                                <input type="hidden" name="username" value="<?= $user['username'] ?>" >
+                                <input type="hidden" name="username" value="<?= $user['username'] ?>" > -->
                             <button type="submit" class="px-4 py-2 bg-[#C90B0B] text-white rounded-lg font-medium hover:bg-red-800 transition hover:cursor-pointer">Decline</button>
-                            </form>
+                            <!-- </form> -->
                             <form action="<?= BASEURL ?>Admin/handleApprove" method="post">
                                 <input type="hidden" name="id_user" value="<?= $user['id_user'] ?>" >
                                 <input type="hidden" name="email" value="<?= $user['email'] ?>" >
