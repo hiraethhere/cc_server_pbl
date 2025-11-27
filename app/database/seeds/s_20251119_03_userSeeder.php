@@ -20,7 +20,10 @@ class s_20251119_03_userSeeder extends Seeder{
             (3, 3, 'anton', '$passwordUser', 'anton@example.com', '22110033', 'TIK', 'Teknik Informatika dan Komputer', 'active', 0, 1, NULL, NULL, NULL, NULL, NOW(), NOW()),
             (4, 4, 'dosen', '$passwordUser', 'dosen@example.com', '55667788', 'Administrasi', 'Sekretariat', 'active', 0, 1, NULL, NULL, NULL, NULL, NOW(), NOW()),
             (5, 5, 'staff', '$passwordUser', 'staff@example.com', '55667789', 'Staff', 'Sekretariat', 'active', 0, 1, NULL, NULL, NULL, NULL, NOW(), NOW()),
-            (6, 3, 'antin', '$passwordUser', 'expired@example.com', '556677891', 'TIK', 'Teknik Multimedia', 'active', 0, 1, NULL, NULL, NULL, '$expired' , NOW(), NOW())
+            (6, 3, 'Shidqi Athallah Bahri', '$passwordUser', 'shidqi.tik24@stu.pnj.ac.id', '2407411038', 'TIK', 'D4 Teknik Informatika', 'active', 0, 1, NULL, NULL, NULL, NULL , NOW(), NOW()),
+            (7, 4, 'Nadiva Mecca Rimanda', '$passwordUser', 'mecca.tik24@stu.pnj.ac.id', '2407411037', 'TIK', NULL, 'active', 0, 1, NULL, NULL, NULL, NULL , NOW(), NOW()),
+            (8, 5, 'Naqib Zuhair Al-Hudri', '$passwordUser', 'naqib.tik24@stu.pnj.ac.id', '2407411039', 'Perpustakaan', NULL, 'active', 0, 1, NULL, NULL, NULL, NULL , NOW(), NOW()),
+            (9, 3, 'antin', '$passwordUser', 'expired@example.com', '556677891', 'TIK', 'Teknik Multimedia', 'active', 0, 1, NULL, NULL, NULL, '$expired' , NOW(), NOW())
             ";
 
     $this->db->query($sql);
