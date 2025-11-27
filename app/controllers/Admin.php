@@ -101,6 +101,20 @@ class Admin extends Controller {
         $this->view('admin/ruangan/index');
     }
 
+    public function tambahDataRuangan(){
+        $data['judul'] = 'Tambah Data Ruangan';
+        $data['navbar'] = 'Ruangan';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/ruangan/tambahRuangan');
+    }
+
+    public function EditDataRuangan(){
+        $data['judul'] = 'Edit Data Ruangan';
+        $data['navbar'] = 'Ruangan';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/ruangan/editDataRuangan');
+    }
+
     public function dataRuangan(){
         // $data['ruangan'] = $this->model('RuanganModel')->getAllRooms 
         $data['judul'] = 'Detail Ruangan';
