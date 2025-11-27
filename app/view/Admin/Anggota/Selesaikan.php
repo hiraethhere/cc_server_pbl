@@ -23,7 +23,15 @@
                         </div>
 
                         <div class="mb-1">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">NIM</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
+                            <div class="relative">
+                                <input type="Text" id="Jurusan" name="Jurusan" placeholder="<?= htmlspecialchars($user['role_name']) ?? '-' ?>" readonly
+                                    class="w-full bg-white px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+                            </div>
+                        </div>
+
+                        <div class="mb-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">NIM/NIP/apapun itu</label>
                             <div class="relative">
                                 <input type="Text" id="NIM" name="NIM" placeholder="<?= htmlspecialchars($user['nomor_induk']) ?? '-'?>" readonly
                                     class="w-full bg-white px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
@@ -58,10 +66,14 @@
                         <div class="grid grid-cols-2 gap-12 mt-2">
                             <form action="<?= BASEURL ?>Admin/handleDecline" method="post">
                                 <input type="hidden" name="id_user" value="<?= $user['id_user'] ?>" >
+                                <input type="hidden" name="email" value="<?= $user['email'] ?>" >
+                                <input type="hidden" name="username" value="<?= $user['username'] ?>" >
                             <button type="submit" class="px-4 py-2 bg-[#C90B0B] text-white rounded-lg font-medium hover:bg-red-800 transition hover:cursor-pointer">Decline</button>
                             </form>
                             <form action="<?= BASEURL ?>Admin/handleApprove" method="post">
                                 <input type="hidden" name="id_user" value="<?= $user['id_user'] ?>" >
+                                <input type="hidden" name="email" value="<?= $user['email'] ?>" >
+                                <input type="hidden" name="username" value="<?= $user['username'] ?>" >
                             <button type="submit" class="px-4 py-2 bg-[#38C55C] text-white rounded-lg font-medium hover:bg-green-600 transition hover:cursor-pointer">Approve</button>
                             </form>
                         </div>

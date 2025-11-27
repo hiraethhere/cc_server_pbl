@@ -38,6 +38,8 @@ class Admin extends Controller {
 
         foreach ($data['users'] as &$user) {
             $user['createdDate'] = tanggal_indonesia($user['created_at']);
+            $user['statusStyle'] = getStyleStatus($user['status']);
+            $user['status'] = translateStatus($user['status']);
         }
         $data['judul'] = 'Data Anggota';
         $data['navbar'] = 'Anggota';
@@ -65,7 +67,7 @@ class Admin extends Controller {
             exit;
         }
 
-        $data['user'] = $this->model('userModel')->getUserById($id_user);
+        $data['user'] = $this->model('userModel')->getUserJoinRoleById($id_user);
         $data['createdDate'] = tanggal_indonesia($data['user']['created_at']);
         $data['judul'] = 'Selesaikan Peminjaman';
         $data['navbar'] = 'Anggota';
@@ -143,7 +145,7 @@ class Admin extends Controller {
         if ($result === 0 ) {
             throw new Exception('internal sql error');
         }
-
+        sendEmail($_POST['email'], $_POST['username'], "SELAMAT AKUN ANDA TELAH AKTIF", "anda sekarang bisa login ke ruanginPNJ" );
         Flasher::setModalInfo('Berhasil Approve Anggota', 'Akun anggota sudah bisa digunakan');
         header('location: /admin/anggota');
         exit();
@@ -153,6 +155,32 @@ class Admin extends Controller {
             header('location: /admin/anggota');
             exit();
         }
+    }
+
+    public function handleDecline(){
+        
+        try{
+
+        if (empty($_POST['id_user']) || empty($_POST['email'])|| empty(['username'])) {
+            throw new Exception('Error id_user tidak ada');
+        }
+
+        $result = $this->model('UserModel')->activateUser($_POST['id_user']);
+        if ($result === 0 ) {
+            throw new Exception('internal sql error');
+        }
+
+        sendEmail($_POST['email'], $_POST['username'], "SELAMAT AKUN ANDA TELAH AKTIF", "anda sekarang bisa login ke ruanginPNJ" );
+        Flasher::setModalInfo('Berhasil Approve Anggota', 'Akun anggota sudah bisa digunakan');
+        header('location: /admin/anggota');
+        exit();
+
+        }catch(Throwable $e){
+            Flasher::setModalInfo('Gagal Aktivasi User', $e->getMessage());
+            header('location: /admin/anggota');
+            exit();
+        }
+
     }
 
     public function changePassword(){

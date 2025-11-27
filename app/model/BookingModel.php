@@ -101,32 +101,26 @@ class BookingModel {
     return $this->db->resultSet();
     }
 
-    public function getBookingByUser($id_user){
+    public function getAllBookingByUser($id_user){
     // Kita select f.id_feedback juga untuk logika tombol di View nanti
         $query = "SELECT DISTINCT 
                 b.id_booking, 
-                b.tanggal,      -- Pastikan kolom ini ada untuk tampilan
                 b.start_time, 
                 b.end_time,
-                b.ruangan,
-                b.status, -- KUNCI: Akan NULL jika belum feedback, terisi jika sudah
+                r.room_name,
+                b.status, 
               FROM bookings b
               
-              -- Join 1: Cek Anggota (agar kita bisa filter user ini anggota atau bukan)
               LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
               
-              -- Join 2: Cek Feedback (agar tombol bisa berubah jadi abu-abu/biru)
-            --   LEFT JOIN feedbacks f ON b.id_booking = f.id_booking
+              
               
               WHERE (b.id_user = :uid OR bm.id_user = :uid)
               
-              ORDER BY b.tanggal DESC"; // Biasakan urutkan dari yang terbaru
+              ORDER BY b.tanggal DESC";
 
         $this->db->query($query);
         $this->db->bind('uid', $id_user);
-    
-    // PENTING: Gunakan resultSet() (fetchAll), bukan singleSet()
-    // Karena satu user pasti punya banyak riwayat booking, bukan cuma satu.
         return $this->db->resultSet(); 
     }
 
