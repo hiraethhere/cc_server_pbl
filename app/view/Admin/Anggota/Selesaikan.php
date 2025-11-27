@@ -53,18 +53,29 @@
                                     class="w-full bg-white px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
                             </div>
                         </div>
-                        <?php var_dump(BASEURL)?>
 
-                        <div class="grid grid-cols-2 gap-12 mt-2">
-                            <form action="<?= BASEURL ?>Admin/handleDecline" method="post">
-                                <input type="hidden" name="id_user" value="<?= $user['id_user'] ?>" >
-                            <button type="submit" class="px-4 py-2 bg-[#C90B0B] text-white rounded-lg font-medium hover:bg-red-800 transition hover:cursor-pointer">Decline</button>
-                            </form>
-                            <form action="<?= BASEURL ?>Admin/handleApprove" method="post">
-                                <input type="hidden" name="id_user" value="<?= $user['id_user'] ?>" >
-                            <button type="submit" class="px-4 py-2 bg-[#38C55C] text-white rounded-lg font-medium hover:bg-green-600 transition hover:cursor-pointer">Approve</button>
-                            </form>
+                        <!-- Buttons -->
+                        <div class="grid grid-cols-2 gap-4 mt-4">
+                            <button type="button" id="buttonDecline" 
+                                    class="w-full px-4 py-2 bg-[#C90B0B] text-white rounded-lg font-medium hover:bg-red-800 transition">
+                                Decline
+                            </button>
+                            <button type="button" id="buttonApprove"
+                                    class="w-full px-4 py-2 bg-[#38C55C] text-white rounded-lg font-medium hover:bg-green-600 transition">
+                                Approve
+                            </button>
                         </div>
+
+                        <!-- Form Decline (Hidden) -->
+                        <form id="declineForm" action="<?= BASEURL ?>Admin/handleDecline" method="POST" class="hidden">
+                            <input type="hidden" name="id_user" value="<?= $user['id_user'] ?>">
+                            <!-- Alasan akan ditambahkan via JavaScript -->
+                        </form>
+
+                        <!-- Form Approve (Hidden) -->
+                        <form id="approveForm" action="<?= BASEURL ?>Admin/handleApprove" method="POST" class="hidden">
+                            <input type="hidden" name="id_user" value="<?= $user['id_user'] ?>">
+                        </form>
                     </div>
                 </form>
             </div>
@@ -80,3 +91,47 @@
             </div>
         </div>
     </main>
+
+    <?php include __DIR__ . '/../../template/modal.php'; ?>
+    <script src="/js/modal.js" defer></script>
+    <script>
+    const buttonDecline = document.getElementById('buttonDecline');
+    
+    function openDeclineRescheduleModal() {
+        Modal.prompt(
+            'Decline Reschedule?',
+            'Anda yakin ingin menolak permintaan reschedule',
+            function(alasan) {
+                // Callback dengan nilai input
+                console.log('Alasan decline:', alasan);
+                
+                // Submit form dengan alasan
+                const form = document.getElementById('declineForm');
+                
+                // Buat hidden input untuk alasan
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'alasan';
+                hiddenInput.value = alasan;
+                form.appendChild(hiddenInput);
+                
+                // Submit form
+                form.submit();
+            },
+            {
+                icon: '/icon/cross-circle.svg',
+                label: 'Alasan',
+                placeholder: 'Tulis alasan disini',
+                rows: 4,
+                required: true, // Wajib diisi
+                confirmText: 'Ya',
+                confirmClass: 'w-full px-6 py-2 bg-[#C90B0B] text-white rounded-lg font-semibold hover:bg-red-800 transition',
+                cancelText: 'Batalkan'
+            }
+        );
+    }
+    
+    if(buttonDecline) {
+        buttonDecline.addEventListener('click', openDeclineRescheduleModal);
+    }
+</script>

@@ -123,6 +123,54 @@ const Modal = {
                 }
             ]
         });
+    },
+
+    // Method untuk modal dengan input field (seperti decline reschedule)
+    prompt: function(title, message, onSubmit, options) {
+        options = options || {};
+        
+        const promptContent = `
+            <p class="text-sm text-gray-600 mb-4">${message}</p>
+            
+            <div class="text-left mb-4">
+                <label class="block text-sm font-semibold text-gray-800 mb-2">${options.label || 'Alasan'}</label>
+                <textarea id="promptInput" 
+                          placeholder="${options.placeholder || 'Tulis alasan disini'}" 
+                          class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" 
+                          rows="${options.rows || 4}"
+                          ${options.required ? 'required' : ''}></textarea>
+            </div>
+        `;
+        
+        this.open({
+            title: title,
+            content: promptContent,
+            icon: options.icon,
+            buttons: [
+                {
+                    text: options.cancelText || 'Batalkan',
+                    className: 'w-full px-6 py-2 bg-white text-[#171E29] rounded-lg font-medium hover:bg-gray-200 border border-gray-500 transition',
+                    onclick: Modal.close
+                },
+                {
+                    text: options.confirmText || 'Ya',
+                    className: options.confirmClass || 'w-full px-6 py-2 bg-[#C90B0B] text-white rounded-lg font-semibold hover:bg-red-800 transition',
+                    onclick: function() {
+                        const inputValue = document.getElementById('promptInput').value.trim();
+                        
+                        if (options.required && !inputValue) {
+                            alert('Harap isi alasan terlebih dahulu');
+                            return;
+                        }
+                        
+                        Modal.close();
+                        if (onSubmit) {
+                            onSubmit(inputValue);
+                        }
+                    }
+                }
+            ]
+        });
     }
 };
 
