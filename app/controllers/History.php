@@ -13,26 +13,15 @@ class History extends Controller{
         }
 
     public function index(){
-        
+
+
+        $bookingId = $this->model('BookingModel')->getAllBookingByUser($_SESSION['user']['user_id']);
+        $data['bookings'] = $this->model('BookingModel')->get;
         $data['judul'] = 'History';
+        $data['navbar'] = 'History';
         $this->view('Layout/Header', $data);
-        $this->view('History/index', $data); 
+        $this->view('anggota/History/index', $data); 
         $this->view('Layout/Footer');
     }
 
-    public function Peminjaman(){
-        
-        $data['judul'] = 'History Peminjaman';
-        $this->view('Layout/Header', $data);
-        $this->view('History/Peminjaman', $data); 
-        $this->view('Layout/Footer');
-    }
-
-    public function Reschedule(){
-        
-        $data['judul'] = 'Reschedule Room';
-        $this->view('Layout/Header', $data);
-        $this->view('History/Reschedule', $data); 
-        $this->view('Layout/Footer');
-    }
 }

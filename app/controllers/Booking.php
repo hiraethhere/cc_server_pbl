@@ -1,0 +1,236 @@
+<?php
+
+class Booking extends Controller {
+
+    public function __construct()
+        {
+            parent::__construct();
+            if (!isset($_SESSION['user'])) {
+            // Jika 'user_id' tidak ada di session (artinya belum login)
+            Flasher::setModalInfo('Anda harus login', 'untuk mengakses halaman ini.', 'error');
+            header('Location: /auth/formLogin'); // Redirect ke halaman login
+            exit; //Hentikan eksekusi script
+            }
+        }
+
+    // public function index(){
+        
+    //     $data['judul'] = 'History';
+    //     $data['navbar'] = 'History';
+    //     $this->view('Layout/Header', $data);
+    //     $this->view('anggota/History/index', $data); 
+    //     $this->view('Layout/Footer');
+    // }
+
+    public function index(){
+
+        // ?: katanya bisa nangkep false coy
+
+        $data['booking'] = $this->model('BookingModel')->getActiveBookingByUser($_SESSION['user']['user_id']) ?: [];
+        $bookingId = $data['booking']['id_booking'] ?? null;
+        $data['activeBooking'] = $bookingId ? $this->model('BookingModel')->getActiveBookingJoinRoom($bookingId): [];
+
+        if ($data['activeBooking']){
+        $data['bookingDate'] = tanggal_indonesia($data['activeBooking']['start_time']);
+        $data['start_time'] = date('H:i', strtotime($data['activeBooking']['start_time']));
+        $data['end_time'] = date('H:i', strtotime($data['activeBooking']['end_time']));
+        $data['status'] = translateStatus($data['activeBooking']['status']);
+        } else {
+        $data['bookingDate'] = '';
+        $data['start_time'] = '';
+        $data['end_time'] = '';
+        $data['status'] = '';
+        }
+        $data['judul'] = 'Booking Anda';
+        $data['navbar'] = 'bookingAnda';
+        $this->view('Layout/Header', $data);
+        $this->view('anggota/bookingAnda/index', $data); 
+        $this->view('Layout/Footer');
+    }
+
+    
+    
+    // Endpoint untuk mengecek jadwal (dipanggil via fetch/AJAX)
+    public function cekJadwal()
+    {
+        // Mengambil data JSON dari request body
+        $input = json_decode(file_get_contents('php://input'), true);
+        
+        if (!isset($input['room_id']) || !isset($input['date'])) {
+            http_response_code(400); // Bad Request
+            echo json_encode(['error' => 'Parameter tidak lengkap']);
+            exit;
+        }
+
+        $roomId = $input['room_id'];
+        $date = $input['date'];
+
+        // Panggil BookingModel yang baru kita buat
+        $bookedSlots = $this->model('BookingModel')->getBookingsByRoomAndDate($roomId, $date);
+
+        // Kembalikan data sebagai JSON
+        header('Content-Type: application/json');
+        echo json_encode($bookedSlots);
+        exit;
+    }
+
+    public function cariAnggota(){
+    // Ambil data JSON dari fetch
+    $json = file_get_contents('php://input');
+    $data = json_decode($json, true);
+    $nomor_induk = $data['nim'] ?? '';
+    if (empty($nomor_induk)) {
+        echo json_encode(['error' => 'NIM kosong']);
+        return;
+    }
+
+    // Panggil Model untuk cari user
+    $user = $this->model('UserModel')->getUserByNomor_Induk($nomor_induk);
+
+    // Kembalikan JSON
+        header('Content-Type: application/json');
+        if ($user) {
+            echo json_encode(['nama' => $user['username']]);
+        } else {
+            echo json_encode(['nama' => null]);
+        }
+    }
+
+    public function handleBooking(){
+        Flasher::modalInfo();
+
+        $id_room = $_POST['id_room'];
+        $bookingDate = $_POST['tanggalPinjam'];
+        $startTime = $_POST['jamMulai'];
+        $endTime = $_POST['jamSelesai'];
+
+        if (!isset($_POST['nim']) || !is_array($_POST['nim'])) {
+            // Handle jika tidak ada input NIM sama sekali
+            Flasher::setModalInfo('Gagal!', 'Data anggota tidak valid', 'error');
+            header("Location: /dashboard");
+            exit;
+        }
+
+        $nomorIndukKetua = $_POST['nim'][0];
+        $list_nim_anggota = array_slice($_POST['nim'], 1); 
+
+        
+        $start_datetime = "$bookingDate $startTime";
+        $end_datetime   = "$bookingDate $endTime";
+
+        $ts = strtotime($bookingDate);
+        $range_start = date('Y-m-d 00:00:00', strtotime('monday this week', $ts));
+        $range_end   = date('Y-m-d 23:59:59', strtotime('sunday this week', $ts));
+
+        $bookingCode = generateBookingCode(8);
+
+        $bookingModel = $this->model('BookingModel');
+        $userModel = $this->model('UserModel');
+
+
+        try {
+                $bookingModel->beginTransaction();
+                $userKetua = $userModel->getUserByNomor_Induk($nomorIndukKetua);
+            if (!$userKetua) {
+                throw new Exception('Nomor Induk ketua tidak ditemukan');
+            }
+
+            if (!$bookingModel->checkUserQuota($userKetua['id_user'], $range_start, $range_end)) {
+                throw new Exception('Ketua sudah ada booking');
+            }
+
+            $id_ketua = $userKetua['id_user'];
+
+                $cekRoom = $bookingModel->roomCheck($id_room, $end_datetime, $start_datetime);
+            if ($cekRoom['total'] > 0) {
+                throw new Exception("Ruangan sudah di booking pada jam itu!");
+            }
+
+            $validatedUsers = [];
+
+            foreach ($list_nim_anggota as $nim) {
+                $nim = trim($nim);
+                if (empty($nim)) continue; // Skip jika kosong
+
+            // Cek User
+                $userAnggota = $userModel->getUserByNomor_Induk($nim);
+                if(!$userAnggota) throw new Exception("NIM Anggota ($nim) tidak ditemukan.");
+
+            // Cek apakah Anggota ini malah jadi Ketua? (Opsional, validasi biar ga input diri sendiri)
+                if($userAnggota['id_user'] == $id_ketua) {
+                     throw new Exception("Ketua tidak perlu dimasukkan lagi sebagai anggota.");
+                }
+
+            // Cek Kuota Anggota
+                if (!$bookingModel->checkUserQuota($userAnggota['id_user'], $range_start, $range_end)) {
+                    throw new Exception("Anggota (" . $userAnggota['username'] . ") sudah ada jadwal minggu ini.");
+                }
+
+            // Simpan ID anggota yang valid
+                $validatedUsers[] = $userAnggota['id_user'];
+            }
+
+            $total_person = 1 + count($validatedUsers);
+
+            $dataBooking = [
+                        'id_room' => $id_room,
+                        'id_user' => $id_ketua,
+                        'total_person' => $total_person,
+                        'booking_code' => $bookingCode,
+                        'start_time' => $start_datetime,
+                        'end_time' => $end_datetime
+                    ];
+
+            $newBookingId = $bookingModel->createBooking($dataBooking);
+
+            foreach($validatedUsers as $id_member){
+                $bookingModel->insertBookingMember((int)$newBookingId, $id_member);
+            }
+
+        $bookingModel->commit();
+        Flasher::setModalInfo('Booking Berhasil', 'Booking berhasil dibuat. Jangan telat yaa','success');
+        header("Location: /dashboard");
+        exit;
+
+        } catch (\Throwable $e) {
+            $bookingModel->rollBack();
+            Flasher::setModalInfo('Booking gagal!', $e->getMessage(),'error');
+            header('location: /dashboard');
+            exit();
+        }
+
+    }
+
+    public function cancelBooking(){
+
+        try{
+            if (empty($_POST['id_booking']) || empty($_SESSION['user']['user_id'])) {
+                throw new Exception("id_booking tidak valid", 1);
+            }
+
+        $result = $this->model('BookingModel')->cancelBooking($_POST['id_booking']);
+        $suspend = $this->model('UserModel')->addSuspendCount($_SESSION['user']['user_id']);
+
+            if ($result <= 0 || $suspend <= 0 ) {
+                throw new Exception("internal server error", 1);
+            }
+
+        Flasher::setModalInfo('Cancel Peminjaman Berhasil', 'Peminjaman berhasil dibatalkan', 'success');
+        header('location: /dashboard');
+        exit();
+
+        }catch(Throwable $e){
+            Flasher::setModalInfo('Gagal cancel', $e->getMessage(), 'error');
+            header('location: /dashboard');
+            exit();
+        }
+    }
+
+    public function Reschedule() {
+        $data['navbar'] = 'bookingAnda';
+        $data['judul'] = 'Reschedule';
+        $this->view('Layout/Header', $data);
+        $this->view('anggota/bookingAnda/reschedule', $data); 
+        $this->view('Layout/Footer');
+    }
+}

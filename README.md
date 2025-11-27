@@ -1,3 +1,12 @@
 1. aku pusing semangatin pls
 2. kehidupan harus tetap berjalan
-3. minggu depan dapet 1 miliad dari Allah melalui duta intelegensia pnj
+
+MIGRATE DATABASE
+docker exec -it ruanginPNJ_server bash
+php cli.php migrate:fresh
+
+php cli.php seed
+
+
+MERGE
+git checkout Frontend

@@ -1,13 +1,4 @@
-<?php Flasher::Flash();
-// Logika untuk menentukan Controller/Halaman aktif
-$url = isset($_GET['url']) ? $_GET['url'] : '';
-$urlSegments = explode('/', rtrim(filter_var($url, FILTER_SANITIZE_URL), '/'));
-// $lastSegment = end($urlSegments);
-
-// Ambil segmen pertama sebagai nama Controller
-// Jika kosong, default ke 'Home' atau 'Dashboard' tergantung flow aplikasi
-// Di sini kita asumsikan Controller aktif adalah segmen pertama, dikapitalisasi
-$activeController = !empty($urlSegments[0]) ? ucfirst($urlSegments[0]) : 'Dashboard';
+<?php
 
 // Definisikan kelas CSS untuk link aktif dan tidak aktif (desktop)
 $activeClass = 'bg-[#1E68FB] text-white px-6 py-1.5 rounded-full font-medium hover:bg-blue-700 transition duration-200';
@@ -16,6 +7,7 @@ $inactiveClass = 'text-[#171E29] hover:text-gray-800 font-medium';
 // Definisikan kelas CSS untuk link aktif dan tidak aktif (mobile)
 $activeClassMobile = 'bg-[#1E68FB] text-white px-4 py-2 rounded-lg font-medium text-center hover:bg-blue-700 transition duration-200';
 $inactiveClassMobile = 'text-gray-600 hover:text-gray-800 font-medium px-4 py-2 hover:bg-gray-100 rounded-lg text-center';
+
 
 ?>
 
@@ -29,10 +21,11 @@ $inactiveClassMobile = 'text-gray-600 hover:text-gray-800 font-medium px-4 py-2 
     <link rel="icon" type="image/png" href="/img/LOGO PNJ FIX 1.png">
     <title>RuanginPNJ - <?= $judul; ?></title>
     <link href="/css/output.css" rel="stylesheet">
+    <script src="/js/script.js"></script>
 </head>
-<body class="bg-[#F3F5FA] min-h-screen font-sf-pro">
+<body class="bg-[#F9FAFC] min-h-screen font-sf-pro">
 
-    <nav class="bg-[#F3F5FA] shadow-sm sticky top-0 z-50">
+    <nav class="bg-[#F9FAFC] shadow-sm sticky top-0 z-50">
         <div class="mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-0.5 mx-5">
@@ -41,14 +34,32 @@ $inactiveClassMobile = 'text-gray-600 hover:text-gray-800 font-medium px-4 py-2 
                 </div>
 
                 <div class="hidden md:flex items-center space-x-20 mx-10">
-                    <a href="/Dashboard" class="<?php echo ($activeController == 'Dashboard') ? $activeClass : $inactiveClass; ?>">
+                    <a href="/Dashboard" class="<?php echo ($navbar == 'Dashboard') ? $activeClass : $inactiveClass; ?>">
                         Ruangan
                     </a>
-                    <a href="/History" class="<?php echo ($activeController == 'History') ? $activeClass : $inactiveClass; ?>">
+                    <a href="/Booking" class="<?php echo ($navbar == 'bookingAnda') ? $activeClass : $inactiveClass; ?>">
+                        Booking Anda
+                    </a>
+                    <a href="/History" class="<?php echo ($navbar == 'History') ? $activeClass : $inactiveClass; ?>">
                         Histori
                     </a>
-                    <a href="/Akun" class="<?php echo ($activeController == 'Akun') ? $activeClass : $inactiveClass; ?>">
-                        Akun
+                    <a href="/Dashboard/Panduan" class="<?php echo ($navbar == 'Panduan') ? $activeClass : $inactiveClass; ?>">
+                        Panduan
+                    </a>
+                </div>
+
+                <div class="flex items-center flex-row gap-5">
+                    <!-- Tombol Akun -->
+                    <a href="/Akun" class="<?php echo ($activeController == 'Akun') ? $activeClass : $inactiveClass; ?> flex items-center gap-2 px-4 py-2 rounded-full transition">
+                        <img src="/icon/userDashboard.svg" alt="User Icon" class="w-6 h-6 transition-all <?php echo ($activeController == 'Akun') ? 'brightness-0 invert' : ''; ?>">
+                        <span class="font-medium">Akun</span>
+                    </a>
+
+                    <!-- Tombol Logout -->
+                    <a href="javascript:void(0)" onclick="konfirmasiLogout()" 
+                        class="flex items-center gap-2 text-[#C90B0B] hover:bg-red-50 px-4 py-2 rounded-full transition font-medium hover:cursor-pointer">
+                        <img src="/icon/logoutDashboard.svg" alt="Logout Icon" class="w-5 h-5">
+                        <span>Logout</span>
                     </a>
                 </div>
 
@@ -75,7 +86,29 @@ $inactiveClassMobile = 'text-gray-600 hover:text-gray-800 font-medium px-4 py-2 
         </div>
     </nav>
 
+    <?php Flasher::Flash(); ?>
+    <?php Flasher::modalInfo(); ?>
+
+
+    <?php include __DIR__ . '/../template/modal.php'; ?>
+
+<script src="/js/modal.js" defer></script>
 <script>
+function konfirmasiLogout() {
+    Modal.confirm(
+        'Logout',
+        'Apakah anda yakin ingin logout?',
+        function() {
+            window.location.href = '/auth/handleLogout';
+        },
+        {
+            icon: '/icon/logoutDashboard.svg',
+            confirmText: 'Logout',
+            confirmClass: 'w-full px-6 py-2 bg-[#C90B0B] text-white rounded-lg font-semibold hover:bg-red-800 transition',
+            cancelText: 'Batalkan'
+        }
+    );
+}
     const hamburgerBtn = document.getElementById('hamburger-btn');
     const mobileMenu = document.getElementById('mobile-menu');
 

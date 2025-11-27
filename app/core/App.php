@@ -1,7 +1,7 @@
 <?php
 class App {
     // Properti untuk menyimpan Controller, Method, dan Parameter default
-    protected $controller = 'Home'; // Controller default
+    protected $controller = 'auth'; // Controller default
     protected $method = 'index';     // Method default
     protected $params = [];          // Parameter default
 
@@ -28,13 +28,11 @@ class App {
             }
         }
 
-        // --- 3. Mengurus PARAMETER ---
         // $url sisanya adalah parameter
         if (!empty($url)) {
             $this->params = array_values($url);
         }
 
-        // --- 4. JALANKAN! ---
         // Panggil method di controller dengan parameter yang ada
         call_user_func_array([$this->controller, $this->method], $this->params);
     }

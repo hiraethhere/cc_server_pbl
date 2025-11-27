@@ -1,11 +1,14 @@
-        </section>
+<?php Flasher::Flash() ?>
+<?php Flasher::modalInfo(); ?>
+       
+       </section>
         
-        <footer class="bg-white border-t border-gray-200 py-8 shadow-xl">
+        <footer class="bg-[#FBFCFF] border-t border-gray-200 py-8 shadow-xl">
             <div class="mx-8 px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 gap-5 text-sm">
 
                     <!-- Logo & Tagline -->
-                    <div class="flex flex-col lg:flex-row items-center justify-between">
+                    <div class="flex flex-col lg:flex-row items-center justify-between w-full">
                         <div class="flex flex-col items-center space-x-2">
                             <div class="w-full flex items-center space-x-2 mb-1 px-2">
                                 <img src="/img/LOGO PNJ FIX 1.png" alt="Logo" class="w-auto h-7">
@@ -15,18 +18,18 @@
                         </div>
 
                         <!-- Contact Info -->
-                        <div class="space-y-2 text-[#171E29] items-center">
+                        <div class="space-y-2 text-[#171E29] flex flex-col md:items-end items-start justify-end w-full">
                             <div class="flex items-center space-x-2">
-                                <i class="fas fa-phone"></i>
+                                <img src="/icon/phone.svg" alt="Phone Icon" class="w-4 h-4">
                                 <span>+62 87886260131</span>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <i class="fas fa-envelope"></i>
-                                <a href="mailto:emailperpus@gmail.com" class="hover:text-teal-600 transition">emailperpus@gmail.com</a>
+                                <img src="/icon/instagram.svg" alt="Email Icon" class="w-4 h-4">
+                                <a href="#" class="hover:text-teal-600 transition">@instagramperpus</a>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <i class="fab fa-instagram"></i>
-                                <a href="#" class="hover:text-teal-600 transition">@instagramperpus</a>
+                                <img src="/icon/email.svg" alt="Email Icon" class="w-4 h-4">
+                                <a href="mailto:emailperpus@gmail.com" class="hover:text-teal-600 transition">emailperpus@gmail.com</a>
                             </div>
                         </div>
                     </div>
