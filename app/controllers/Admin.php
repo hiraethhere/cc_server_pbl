@@ -159,7 +159,7 @@ class Admin extends Controller {
         if ($result === 0 ) {
             throw new Exception('internal sql error');
         }
-        sendEmail($_POST['email'], $_POST['username'], "SELAMAT AKUN ANDA TELAH AKTIF", "anda sekarang bisa login ke ruanginPNJ" );
+        sendEmail($_POST['email'] ?? 'email user', $_POST['username' ?? 'user'], "SELAMAT AKUN ANDA TELAH AKTIF", "anda sekarang bisa login ke ruanginPNJ" );
         Flasher::setModalInfo('Berhasil Approve Anggota', 'Akun anggota sudah bisa digunakan');
         header('location: /admin/anggota');
         exit();
@@ -175,30 +175,26 @@ class Admin extends Controller {
         
         try{
 
-        if (empty($_POST['id_user']) || empty($_POST['email'])|| empty(['username'])) {
+        if (empty($_POST['id_user']) || empty($_POST['email'])|| empty($_POST['username'])) {
             throw new Exception('Error id_user tidak ada');
         }
 
-        $result = $this->model('UserModel')->activateUser($_POST['id_user']);
+        $result = $this->model('UserModel')->rejectUser($_POST['id_user']);
         if ($result === 0 ) {
             throw new Exception('internal sql error');
         }
 
-        sendEmail($_POST['email'], $_POST['username'], "SELAMAT AKUN ANDA TELAH AKTIF", "anda sekarang bisa login ke ruanginPNJ" );
-        Flasher::setModalInfo('Berhasil Approve Anggota', 'Akun anggota sudah bisa digunakan');
+        sendEmail($_POST['email'], $_POST['username'], "Mohon Maaf akun anda ditolak", "alasannya: " . ($_POST['alasan'] ?? 'tidak ada alasan spesifik') );
+        Flasher::setModalInfo('Berhasil Tolak Anggota', 'Akun anggota sudah ditolak');
         header('location: /admin/anggota');
         exit();
 
         }catch(Throwable $e){
-            Flasher::setModalInfo('Gagal Aktivasi User', $e->getMessage());
+            Flasher::setModalInfo('Gagal Decline user', $e->getMessage(), 'error');
             header('location: /admin/anggota');
             exit();
         }
 
-    }
-
-    public function changePassword(){
-        
     }
 
 }

@@ -110,6 +110,14 @@ class UserModel {
         return $this->db->resultSet();
     }
 
+    public function rejectUser($id_user, $reason = null){
+        $this->db->query("UPDATE users SET status = 'rejected', reject_reason = :reason WHERE id_user = :id_user");
+        $this->db->bind('reason', $reason);
+        $this->db->bind('id_user', $id_user);
+        $this->db->execute();
+        return $this->db->rowCount();
+    }
+
     public function activateUser($id_user){
         $this->db->query("UPDATE users SET status = 'active' WHERE id_user = :id_user");
         $this->db->bind('id_user', $id_user);
