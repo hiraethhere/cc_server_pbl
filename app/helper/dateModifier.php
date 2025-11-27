@@ -47,17 +47,4 @@ function tanggal_indonesia($datetime) {
     return "$day $month $year";
 }
 
-function translateStatus($status): string
-{
-    $lookup = [
-        'active'   => 'Menunggu',
-        'ongoing'  => 'Sedang berlangsung',
-        'done'     => 'Selesai',
-        'canceled' => 'Dibatalkan',
-        'expired'  => 'Kadaluarsa'
-    ];
-
-    return $lookup[$status] ?? 'Status tidak dikenal';
-}
-
 
