@@ -274,46 +274,6 @@
         </div>
 </main>
 
-<!-- Feedback Modal -->
-<div id="feedbackModal" class="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50 px-4 min-w-1/3 hidden">
-    <div class="bg-[#FBFCFF] rounded-2xl p-6 w-full max-w-lg shadow-2xl">
-        <h3 class="text-md font-bold text-[#171E29] mb-1 text-center">Bagaimana pengalamanmu memakai ruangan kami?</h3>
-        <p class="text-sm text-dark-overlay/70 mb-6 text-center">Input kamu sangat berharga dalam meningkatkan kualitas ruangan di perpustakaan kami.</p>
-        
-        <div class="flex justify-around gap-4 mb-6">
-            <button class="hover:scale-110 transition p-1 hover:cursor-pointer">
-                <div class="text-4xl w-9 h-9 flex items-center justify-center">😥</div>
-                <p class="text-[10px] mt-0.5">Sedih</p>
-            </button>
-            <button class="hover:scale-110 transition p-1 hover:cursor-pointer">
-                <div class="text-4xl w-9 h-9 flex items-center justify-center">🙁</div>
-                <p class="text-[10px] mt-0.5">Kecewa</p>
-            </button>
-            <button class="hover:scale-110 transition p-1 hover:cursor-pointer">
-                <div class="text-4xl w-9 h-9 flex items-center justify-center">😐</div>
-                <p class="text-[10px] mt-0.5">Biasa aja</p>
-            </button>
-            <button class="hover:scale-110 transition p-1 hover:cursor-pointer">
-                <div class="text-4xl w-9 h-9 flex items-center justify-center">😄</div>
-                <p class="text-[10px] mt-0.5">Senang</p>
-            </button>
-            <button class="hover:scale-110 transition p-1 hover:cursor-pointer">
-                <div class="text-4xl w-9 h-9 flex items-center justify-center">🤩</div>
-                <p class="text-[10px] mt-0.5">Luar Biasa</p>
-            </button>
-        </div>
-
-        <textarea id="feedbackComment" placeholder="Tulis komentar (opsional)" 
-                  class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-5 resize-none" 
-                  rows="5"></textarea>
-
-        <div class="grid grid-cols-2 gap-3">
-            <button class="px-4 py-3 bg-white text-[#171E29] rounded-lg font-medium hover:bg-gray-200 border border-gray-500 transition hover:cursor-pointer">Batalkan</button>
-            <button class="px-4 py-3 bg-[#38C55C] text-white rounded-lg font-medium hover:bg-green-600 transition hover:cursor-pointer shadow-sm">Kirim</button>
-        </div>
-    </div>
-</div>
-
 <script src="js/filterDropDown.js" defer></script>
 <script>
 const searchInput = document.getElementById('search-input');
