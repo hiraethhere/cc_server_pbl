@@ -34,7 +34,7 @@ class Dashboard extends Controller
         $id = param_number($id, "ID ruangan tidak valid");
 
         if ($id === false || $id < 1) {
-            // Flasher::setModalInfo('Parameter Salah', 'hayooo ubah-ubah parameter yaa?', 'error');
+            Flasher::setModalInfo('Parameter Salah', 'hayooo ubah-ubah parameter yaa?', 'error');
             header('Location: /dashboard'); // Redirect ke halaman login
             exit;
         }

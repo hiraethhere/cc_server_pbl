@@ -32,7 +32,7 @@ class BookingModel {
     $query = "SELECT start_time, end_time 
               FROM " . $this->table . " 
               WHERE id_room = :id_room 
-              AND DATE(start_time) = :date";
+              AND DATE(start_time) = :date AND status NOT IN ('ongoing', 'cancelled')";
     
     $this->db->query($query);
     $this->db->bind('id_room', $roomId);
