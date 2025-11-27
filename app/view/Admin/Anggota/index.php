@@ -240,10 +240,10 @@ function isActive($current, $check) {
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
-                            <?php $i = 1 ?>
+                            <?php $c = 1 ?>
                             <?php foreach($users as $user) : ?>
                             <tr class="hover:bg-gray-50 transition-colors duration-150">
-                                <td class="px-6 py-4 text-sm text-gray-900">1</td>
+                                <td class="px-6 py-4 text-sm text-gray-900"><?= $c ?></td>
                                 <td class="px-6 py-4 text-sm font-medium text-gray-900"><?= htmlspecialchars($user['username'] ?? '-') ?></td>
                                 <td class="px-6 py-4">
                                     <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm bg-[#B9D0FE] text-[#1E68FB]">
@@ -263,7 +263,7 @@ function isActive($current, $check) {
                                     </a>
                                 </td>
                             </tr>
-                            <?php $i += 1 ?>
+                            <?php $c += 1 ?>
                             <?php endforeach ?>
                         </tbody>
                     </table>

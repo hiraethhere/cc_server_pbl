@@ -155,4 +155,8 @@ class Admin extends Controller {
         }
     }
 
+    public function changePassword(){
+        
+    }
+
 }

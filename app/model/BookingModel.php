@@ -70,8 +70,7 @@ class BookingModel {
         return $this->db->lastInsertId();  
     }
 
-    public function getActiveBookingByUser($id_user)
-{
+    public function getActiveBookingByUser($id_user){
     // Kita gunakan DISTINCT supaya jika ada join yang berulang, data booking tetap muncul sekali saja.
     // Kita pakai LEFT JOIN ke booking_members agar booking dimana dia jadi Ketua (dan mungkin tidak ada anggota) tetap termuat.
     
@@ -85,7 +84,21 @@ class BookingModel {
     $this->db->bind('uid', $id_user);
     
     return $this->db->singleSet();
-}
+    }
+
+    public function getBookingByUser($id_user){
+    // Kita gunakan DISTINCT supaya jika ada join yang berulang, data booking tetap muncul sekali saja.
+    // Kita pakai LEFT JOIN ke booking_members agar booking dimana dia jadi Ketua (dan mungkin tidak ada anggota) tetap termuat.
+    
+    $query = "SELECT DISTINCT b.id_booking, b.start_time FROM bookings b
+              LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
+              WHERE (b.id_user = :uid OR bm.id_user = :uid)";
+
+    $this->db->query($query);
+    $this->db->bind('uid', $id_user);
+    
+    return $this->db->singleSet();
+    }
 
     public function getActiveBookingJoinRoom($id_booking){
         $query = "SELECT b.id_booking, b.start_time, b.status, b.end_time, b.total_person, b.booking_code, r.room_name, r.short_description
