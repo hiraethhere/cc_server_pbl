@@ -6,3 +6,7 @@ docker exec -it ruanginPNJ_server bash
 php cli.php migrate:fresh
 
 php cli.php seed
+
+
+MERGE
+git checkout Frontend

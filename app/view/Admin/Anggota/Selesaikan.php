@@ -53,13 +53,14 @@
                                     class="w-full bg-white px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
                             </div>
                         </div>
-               
+                        <?php var_dump(BASEURL)?>
+
                         <div class="grid grid-cols-2 gap-12 mt-2">
-                            <form action="<?= BASEURL ?>admin/handleDecline" method="post">
+                            <form action="<?= BASEURL ?>Admin/handleDecline" method="post">
                                 <input type="hidden" name="id_user" value="<?= $user['id_user'] ?>" >
                             <button type="submit" class="px-4 py-2 bg-[#C90B0B] text-white rounded-lg font-medium hover:bg-red-800 transition hover:cursor-pointer">Decline</button>
                             </form>
-                            <form action="<?= BASEURL ?>admin/handleApprove" method="post">
+                            <form action="<?= BASEURL ?>Admin/handleApprove" method="post">
                                 <input type="hidden" name="id_user" value="<?= $user['id_user'] ?>" >
                             <button type="submit" class="px-4 py-2 bg-[#38C55C] text-white rounded-lg font-medium hover:bg-green-600 transition hover:cursor-pointer">Approve</button>
                             </form>

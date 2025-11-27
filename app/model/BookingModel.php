@@ -86,18 +86,48 @@ class BookingModel {
     return $this->db->singleSet();
     }
 
-    public function getBookingByUser($id_user){
+    public function getBookingIdByUser($id_user){
     // Kita gunakan DISTINCT supaya jika ada join yang berulang, data booking tetap muncul sekali saja.
     // Kita pakai LEFT JOIN ke booking_members agar booking dimana dia jadi Ketua (dan mungkin tidak ada anggota) tetap termuat.
     
     $query = "SELECT DISTINCT b.id_booking, b.start_time FROM bookings b
               LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
-              WHERE (b.id_user = :uid OR bm.id_user = :uid)";
+              WHERE (b.id_user = :uid OR bm.id_user = :uid)
+              ORDER BY b.start_time DESC";
 
     $this->db->query($query);
     $this->db->bind('uid', $id_user);
     
-    return $this->db->singleSet();
+    return $this->db->resultSet();
+    }
+
+    public function getBookingByUser($id_user){
+    // Kita select f.id_feedback juga untuk logika tombol di View nanti
+        $query = "SELECT DISTINCT 
+                b.id_booking, 
+                b.tanggal,      -- Pastikan kolom ini ada untuk tampilan
+                b.start_time, 
+                b.end_time,
+                b.ruangan,
+                b.status, -- KUNCI: Akan NULL jika belum feedback, terisi jika sudah
+              FROM bookings b
+              
+              -- Join 1: Cek Anggota (agar kita bisa filter user ini anggota atau bukan)
+              LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
+              
+              -- Join 2: Cek Feedback (agar tombol bisa berubah jadi abu-abu/biru)
+            --   LEFT JOIN feedbacks f ON b.id_booking = f.id_booking
+              
+              WHERE (b.id_user = :uid OR bm.id_user = :uid)
+              
+              ORDER BY b.tanggal DESC"; // Biasakan urutkan dari yang terbaru
+
+        $this->db->query($query);
+        $this->db->bind('uid', $id_user);
+    
+    // PENTING: Gunakan resultSet() (fetchAll), bukan singleSet()
+    // Karena satu user pasti punya banyak riwayat booking, bukan cuma satu.
+        return $this->db->resultSet(); 
     }
 
     public function getActiveBookingJoinRoom($id_booking){

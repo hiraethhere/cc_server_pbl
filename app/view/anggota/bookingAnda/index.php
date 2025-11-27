@@ -20,74 +20,91 @@
                 </a>
             </div>
                 <?php if ($tab === 'booking'): ?>
-                <!-- Booking Details -->
-                <div class="w-full mx-auto bg-[#FBFCFF] rounded-b-xl shadow-xl p-12">
-                    <div class="">
-                        <div class="relative h-96 from-gray-300 to-gray-400">
-                            <img src="/img/DefaultRuangan.jpg" 
-                                alt="Ruang Lentera Edukasi" class="w-full h-full object-cover rounded-xl">
-                        </div>
-                        <div class="grid grid-cols-2 justify-center items-center border border-[#5C616A] mt-6 p-3 rounded-md">
-                            <div class="">
-                                <p class="text-gray-600 text-sm">Nama Ruangan</p>
-                                <h2 class="text-3xl font-semibold"><?= htmlspecialchars($activeBooking['room_name'] ?? '-')?></h2>
-                                <!-- <p class="text-gray-600 text-sm"><?= htmlspecialchars($activeBooking['short_description'] ?? '-') ?></p> -->
+                    <?php if (!empty($activeBooking)): ?>
+                    <!-- Booking Details -->
+                    <div class="w-full mx-auto bg-[#FBFCFF] rounded-b-xl shadow-xl p-12">
+                        <div class="">
+                            <div class="relative h-96 from-gray-300 to-gray-400">
+                                <img src="/img/DefaultRuangan.jpg" 
+                                    alt="Ruang Lentera Edukasi" class="w-full h-full object-cover rounded-xl">
                             </div>
-
-                            <div class="">         
-                                <p class="text-gray-600 text-sm">Status</p>
-                                <div class="max-w-1/4">
-                                    <a class="bg-[#1E68FB25] flex flex-row flex-wrap py-2 px-4 justify-between text-white rounded-md mt-2 w-5/6">
-                                        <img src="/icon/circle.svg" alt="Status" class="h-5 w-5">
-                                        <h2 class="text-sm inline-block font-semibold text-[#1E68FB]"><?= htmlspecialchars($status) ?></h2>
-                                    </a>
-                                </div>           
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 justify-center items-center border border-[#5C616A] mt-6 p-3 rounded-md">
-                            <div>
-                                <div class="border-dark-overlay/70 py-4">         
-                                    <p class="text-gray-600 text-sm">Tanggal Peminjaman</p>
-                                    <div class="max-w-3/6">
-                                        <h2 class="text-sm inline-block font-semibold pr-2 1y-1 text-[#171E29] rounded-lg mt-2"><?= htmlspecialchars($bookingDate) ?></h2>
-                                    </div>           
-                                </div>
-                                <div class="border-dark-overlay/70 py-4">
-                                    <p class="text-gray-600 text-sm">Jumlah Orang</p>
-                                    <h2 class="text-sm font-semibold"><?= htmlspecialchars($activeBooking['total_person'] ?? '-') ?></h2>     
-                                </div>
-                            </div>
-                            <div class="grid grid-rows-2">
-                                <div class="border-dark-overlay/70 py-4">         
-                                    <p class="text-gray-600 text-sm">Jam Peminjaman</p>
-                                    <div class="max-w-3/6">
-                                        <h2 class="text-sm inline-block font-semibold pr-2 1y-1 text-[#171E29] rounded-lg mt-2"><?= htmlspecialchars($start_time)?> -  <?= htmlspecialchars($end_time) ?></h2>
-                                    </div>           
+                            <div class="grid grid-cols-2 justify-center items-center border border-[#5C616A] mt-6 p-3 rounded-md">
+                                <div class="">
+                                    <p class="text-gray-600 text-sm">Nama Ruangan</p>
+                                    <h2 class="text-3xl font-semibold"><?= htmlspecialchars($activeBooking['room_name'] ?? '-')?></h2>
+                                    <!-- <p class="text-gray-600 text-sm"><?= htmlspecialchars($activeBooking['short_description'] ?? '-') ?></p> -->
                                 </div>
 
-                                <div class="border-dark-overlay/70 py-4">         
-                                    <p class="text-gray-600 text-sm">Kode Booking</p>
-                                    <div class="max-w-3/6">
-                                        <h2 class="text-sm inline-block font-semibold pr-2 1y-1 text-[#171E29] rounded-lg mt-2"><?= htmlspecialchars($activeBooking['booking_code'] ?? '-')?></h2>
+                                <div class="">         
+                                    <p class="text-gray-600 text-sm">Status</p>
+                                    <div class="max-w-1/4">
+                                        <a class="bg-[#1E68FB25] flex flex-row flex-wrap py-2 px-4 justify-between text-white rounded-md mt-2 w-5/6">
+                                            <img src="/icon/circle.svg" alt="Status" class="h-5 w-5">
+                                            <h2 class="text-sm inline-block font-semibold text-[#1E68FB]"><?= htmlspecialchars($status) ?></h2>
+                                        </a>
                                     </div>           
                                 </div>
                             </div>
-                        </div>
-                        <div class="flex space-x-4 py-4">
-                            <button type="button" id="buttonCancel" class="bg-[#C90B0B] text-white px-6 py-2 rounded-sm text-sm hover:bg-red-700 hover:cursor-pointer">
-                                Cancel Booking
-                            </button>
-                            <a href="Booking/Reschedule/<?= $activeBooking['id_booking'] ?? '' ?>" class="bg-[#1E68FB] text-white px-6 py-2 rounded-sm text-sm hover:bg-blue-700 hover:cursor-pointer">
-                                Reschedule
-                            </a>
+
+                            <div class="grid grid-cols-2 justify-center items-center border border-[#5C616A] mt-6 p-3 rounded-md">
+                                <div>
+                                    <div class="border-dark-overlay/70 py-4">         
+                                        <p class="text-gray-600 text-sm">Tanggal Peminjaman</p>
+                                        <div class="max-w-3/6">
+                                            <h2 class="text-sm inline-block font-semibold pr-2 1y-1 text-[#171E29] rounded-lg mt-2"><?= htmlspecialchars($bookingDate) ?></h2>
+                                        </div>           
+                                    </div>
+                                    <div class="border-dark-overlay/70 py-4">
+                                        <p class="text-gray-600 text-sm">Jumlah Orang</p>
+                                        <h2 class="text-sm font-semibold"><?= htmlspecialchars($activeBooking['total_person'] ?? '-') ?></h2>     
+                                    </div>
+                                </div>
+                                <div class="grid grid-rows-2">
+                                    <div class="border-dark-overlay/70 py-4">         
+                                        <p class="text-gray-600 text-sm">Jam Peminjaman</p>
+                                        <div class="max-w-3/6">
+                                            <h2 class="text-sm inline-block font-semibold pr-2 1y-1 text-[#171E29] rounded-lg mt-2"><?= htmlspecialchars($start_time)?> -  <?= htmlspecialchars($end_time) ?></h2>
+                                        </div>           
+                                    </div>
+
+                                    <div class="border-dark-overlay/70 py-4">         
+                                        <p class="text-gray-600 text-sm">Kode Booking</p>
+                                        <div class="max-w-3/6">
+                                            <h2 class="text-sm inline-block font-semibold pr-2 1y-1 text-[#171E29] rounded-lg mt-2"><?= htmlspecialchars($activeBooking['booking_code'] ?? '-')?></h2>
+                                        </div>           
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex space-x-4 py-4">
+                                <button type="button" id="buttonCancel" class="bg-[#C90B0B] text-white px-6 py-2 rounded-sm text-sm hover:bg-red-700 hover:cursor-pointer">
+                                    Cancel Booking
+                                </button>
+                                <a href="Booking/Reschedule" class="bg-[#1E68FB] text-white px-6 py-2 rounded-sm text-sm hover:bg-blue-700 hover:cursor-pointer">
+                                    Reschedule
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <form id="cancelForm" action="<?= BASEURL ?>/Booking/cancelBooking" method="post">
-                    <input type="hidden" value="<?= $activeBooking['id_booking'] ?? '' ?>" name="id_booking">
-                </form>
+                    
+                    <form id="cancelForm" action="<?= BASEURL ?>/Booking/cancelBooking" method="post">
+                        <input type="hidden" value="<?= $activeBooking['id_booking'] ?? '' ?>" name="id_booking">
+                    </form>
+
+                    <?php else: ?>
+                        <!-- Empty State untuk Booking -->
+                        <div class="w-full mx-auto bg-[#FBFCFF] rounded-b-xl shadow-xl p-12">
+                            <div class="flex flex-col items-center justify-center py-16">
+                                <svg class="w-24 h-24 text-gray-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                                <h3 class="text-xl font-semibold text-gray-700 mb-2">Belum Ada Booking Aktif</h3>
+                                <p class="text-gray-500 text-center mb-6">Anda belum memiliki booking yang sedang aktif saat ini</p>
+                                <a href="/Dashboard" class="bg-[#1E68FB] text-white px-6 py-2 rounded-md text-sm hover:bg-blue-700 transition">
+                                    Booking Ruangan Sekarang
+                                </a>
+                            </div>
+                        </div>
+                    <?php endif; ?>
 
                 <?php else: ?>
 

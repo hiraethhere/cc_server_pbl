@@ -1,190 +1,154 @@
-    <main class="flex-1 p-8 overflow-y-auto bg-[#F3F5FA]">
+<main class="flex-1 p-8 overflow-y-auto bg-[#F9FAFC]">
+    <!-- Breadcrumb -->
+    <nav class="mb-6 text-sm">
+        <a href="/Admin/Ruangan" class="text-[#1E68FB] hover:text-blue-700">Data Ruangan</a>
+    </nav>
 
-        <nav class="text-sm text-dark-overlay/60 w-full mb-6">
-            <a href="/Admin/Ruangan" class="text-gray-900 hover:text-[#1E68FB]">Data Peminjaman Ruangan</a>
-            <span class="mx-2">></span>
-            <span class="text-dark-overlay/60 font-medium hover:cursor-pointer">Hari Ini</span>
-        </nav>
-        <h2 class="text-xl font-bold text-[rgba(23,30,41,0.70)] mb-6">Data Peminjaman Ruangan</h2>
+    <!-- Header dengan Title dan Button -->
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-[#171E29]">Data Ruangan</h2>
+        <a href=""
+           class="flex items-center gap-2 px-3 py-1.5 bg-[#1E68FB] hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm hover:shadow-md transition duration-200">
+            Tambah Ruangan
+            <img src="/icon/plus.svg" alt="Tambah Anggota" class="w-4 h-4">
+        </a>
+    </div>
 
-        <div class="flex justify-between mb-6 space-x-4 items-center">
-            <div>
-                <button 
-                        class="px-4 py-2 mr-5 bg-[rgba(30,104,251,0.90)] text-white rounded-full font-medium text-sm hover:bg-blue-600 transition duration-200 hover:cursor-pointer">
-                    Hari Ini
-                </button>
-                <button 
-                        class="px-4 py-2 mr-5 bg-white text-[#171E29] rounded-full font-medium text-sm hover:bg-gray-300 transition duration-200 hover:cursor-pointer">
-                    On Process
-                </button>
-                <button 
-                        class="px-4 py-2 mr-5 bg-white text-[#171E29] rounded-full font-medium text-sm hover:bg-gray-300 transition duration-200 hover:cursor-pointer">
-                    Request
-                </button>
-                <button 
-                        class="px-4 py-2 mr-5 bg-white text-[#171E29] rounded-full font-medium text-sm hover:bg-gray-300 transition duration-200 hover:cursor-pointer">
-                    History
+    <div class="flex justify-between items-center">
+        <form method="POST" id="filterForm">
+            <input type="hidden" name="tab" value="<?= $tab ?>">
+
+            <div class="flex items-center gap-3 pt-6 pb-2 bg-gray-50 ">
+                <?php 
+                $filter_id = 'status'; 
+                $label = 'status'; 
+                $options = ['Tersedia' => 'Tersedia', 'Tidak Tersedia' => 'Tidak Tersedia']; 
+                $current_values = $_GET[$filter_id] ?? ''; 
+                include __DIR__ . '/../../template/filterDropDown.php';
+                ?>
+                <button type="button" 
+                        class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition border border-gray-300 bg-white"
+                        onclick="document.getElementById('jenis_anggota').value=''; document.getElementById('jurusan').value=''; document.getElementById('status').value=''; document.getElementById('filterForm').submit();">
+                    <img src="/icon/crossRed.svg" alt="clear" class="w-4 h-4">
                 </button>
             </div>
+        </form>
 
-            <div class="relative max-w-sm w-full">
+        <!-- Search Bar -->
+        <div class="pt-6 pb-2">
+            <div class="relative max-w-md ml-auto">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
+                    <img src="/icon/search.svg" alt="search" class="w-5 h-5">
                 </div>
-                <input type="text" id="search-input" placeholder="Cari Anggota"
-                    class="block w-full pl-10 pr-10 py-2.5 border border-[rgba(23,30,41,0.50)] rounded-lg 
-                            bg-white text-gray-900 placeholder-gray-500 
-                            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
-                            transition duration-150 ease-in-out text-sm">
+                <input type="text" id="search-input" placeholder="Cari"
+                    class="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg 
+                            bg-white text-gray-900 placeholder-gray-400 text-sm
+                            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
+                            transition duration-150">
                 <button type="button" id="clear-search" 
                         class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                            d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
+                    <img src="/icon/silang.svg" alt="clear" classs="w-4 h-4">
                 </button>
             </div>
+        </div>
+    </div>
 
-
-            <div class="flex justify-center order-1 md:order-2 items-center">
-                <a href="/Admin/dataRuangan" class="text-white bg-[#1E68FB] font-medium flex items-center text-sm transition px-4 py-2 rounded-full hover:from-blue-600 hover:to-blue-700">
-                    Lihat Data Ruangan
-                    <div class="text-white"> 
-                        <svg class="w-5 h-5 fill-current ml-2" 
-                            xmlns="http://www.w3.org/2000/svg" 
-                            viewBox="0 0 24 24" 
-                            fill="none" 
-                            stroke="currentColor" 
-                            stroke-width="2" 
-                            stroke-linecap="round" 
-                            stroke-linejoin="round">
-                            
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
+    <!-- Rooms Grid -->
+    <div id="rooms-container" class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 md:grid-cols-2 mb-8 mt-6 md:gap-10 lg:gap-12 gap-5">
+        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
+            <div class="relative h-48 from-gray-300 to-gray-400">
+                <img src="/img/DefaultRuangan.jpg" 
+                    alt="Ruang Lentera Edukasi" class="w-full h-full object-cover">
+            </div>
+            <div class="grid grid-rows-[2fr_1fr] px-5 pt-5 pb-3">
+                <div>
+                    <h3 class="font-bold text-lg text-[#1A1A1A] mb-2">Ruang Perancis</h3>
+                    <p class="text-dark-overlay/80 mb-4 text-justify text-sm">Ruang bersih, tenang, dilengkapi wifi, cocok untuk belajar, rapat, dan aktivitas produktif.</p>
+                    <hr class="border-t border-[#171E2950] mb-4">
+                </div>
+                <div class="flex items-center justify-between mb-2 md:text-md text-xs">
+                    <div class="flex items-center justify-start w-full">
+                        <img src="/icon/userOutline.svg" alt="Jumlah Orang" class="w-6 h-6 mr-2">
+                        <span class="inline-flex items-center justify-center lg:flex-row flex-col">3-4 orang </span>
                     </div>
-                </a>
+                    <div class="flex items-center justify-end w-full">
+                        <a class="bg-[#38C55C40] flex flex-row flex-wrap py-2 px-4 justify-between text-white rounded-md mt-2 w-2/3">
+                            <img src="/icon/circleGreen.svg" alt="Status" class="h-5 w-5">
+                            <h2 class="text-sm inline-block font-semibold text-[#38C55C]">Tersedia</h2>
+                        </a>
+                    </div>           
+                </div>
+                <div class="w-full flex justify-end">
+                    <a href="#"
+                        class="flex items-center justify-center w-full bg-[#1E68FB] text-white text-center rounded-xl font-semibold text-sm hover:bg-[#38C55C] transition duration-200 py-2">
+                        Edit Ruangan
+                    </a>
+                </div>
             </div>
         </div>
 
-
-        <div class="overflow-x-auto rounded-t-xl border border-[#8E97A6]">
-            <table class="w-full text-sm">
-                <thead class="bg-[rgba(30,104,251,0.10)]">
-                    <tr>
-                        <th class="px-4 py-3 text-center font-semibold text-dark-overlay/70 rounded-tl-xl">No.</th>
-                        <th class="px-4 py-3 text-center font-semibold text-dark-overlay/70">Tanggal</th>
-                        <th class="px-4 py-3 text-center font-semibold text-dark-overlay/70">Ruangan</th>
-                        <th class="px-4 py-3 text-center font-semibold text-dark-overlay/70">Jam</th>
-                        <th class="px-4 py-3 text-center font-semibold text-dark-overlay/70">Penanggung Jawab</th>
-                        <th class="px-4 py-3 text-center font-semibold text-dark-overlay/70">Jumlah Orang</th>
-                        <th class="px-4 py-3 text-center font-semibold text-dark-overlay/70 rounded-tr-xl">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-
-                    <!-- ========== TAB SEMUA – DATA HTML ========== -->
-                    <tr class="bg-white hover:bg-gray-50">
-                        <td class="px-4 py-3 text-center text-sm">1</td>
-                        <td class="px-4 py-3 text-center text-sm">5 November 2025</td>
-                        <td class="px-4 py-3 text-center text-sm">Ruang Lentera Edukasi</td>
-                        <td class="px-4 py-3 text-center text-sm">12:00 - 14:00</td>
-                        <td class="px-4 py-3 text-center text-sm">Muhammad Reza Arifin</td>
-                        <td class="px-4 py-3 text-center text-sm">6 Orang</td>
-                        <td class="px-4 py-3 text-center">
-                            <a href="#"
-                            class="inline-flex items-center justify-center px-5 py-2 rounded-sm text-xs font-semibold
-                                    bg-[linear-gradient(0deg,rgba(30,104,251,0.03)_0%,rgba(30,104,251,0.03)_100%),#FAFAFA]
-                                    border border-[rgba(23,30,41,0.50)] shadow-md hover:bg-gray-100 transition">
-                                Lihat Detail
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="bg-white hover:bg-gray-50">
-                        <td class="px-4 py-3 text-center text-sm">1</td>
-                        <td class="px-4 py-3 text-center text-sm">5 November 2025</td>
-                        <td class="px-4 py-3 text-center text-sm">Ruang Lentera Edukasi</td>
-                        <td class="px-4 py-3 text-center text-sm">12:00 - 14:00</td>
-                        <td class="px-4 py-3 text-center text-sm">Muhammad Reza Arifin</td>
-                        <td class="px-4 py-3 text-center text-sm">6 Orang</td>
-                        <td class="px-4 py-3 text-center">
-                            <a href="#"
-                            class="inline-flex items-center justify-center px-5 py-2 rounded-sm text-xs font-semibold
-                                    bg-[linear-gradient(0deg,rgba(30,104,251,0.03)_0%,rgba(30,104,251,0.03)_100%),#FAFAFA]
-                                    border border-[rgba(23,30,41,0.50)] shadow-md hover:bg-gray-100 transition">
-                                Lihat Detail
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="bg-white hover:bg-gray-50">
-                        <td class="px-4 py-3 text-center text-sm">1</td>
-                        <td class="px-4 py-3 text-center text-sm">5 November 2025</td>
-                        <td class="px-4 py-3 text-center text-sm">Ruang Lentera Edukasi</td>
-                        <td class="px-4 py-3 text-center text-sm">12:00 - 14:00</td>
-                        <td class="px-4 py-3 text-center text-sm">Muhammad Reza Arifin</td>
-                        <td class="px-4 py-3 text-center text-sm">6 Orang</td>
-                        <td class="px-4 py-3 text-center">
-                            <a href="#"
-                            class="inline-flex items-center justify-center px-5 py-2 rounded-sm text-xs font-semibold
-                                    bg-[linear-gradient(0deg,rgba(30,104,251,0.03)_0%,rgba(30,104,251,0.03)_100%),#FAFAFA]
-                                    border border-[rgba(23,30,41,0.50)] shadow-md hover:bg-gray-100 transition">
-                                Lihat Detail
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="bg-white hover:bg-gray-50">
-                        <td class="px-4 py-3 text-center text-sm">1</td>
-                        <td class="px-4 py-3 text-center text-sm">5 November 2025</td>
-                        <td class="px-4 py-3 text-center text-sm">Ruang Lentera Edukasi</td>
-                        <td class="px-4 py-3 text-center text-sm">12:00 - 14:00</td>
-                        <td class="px-4 py-3 text-center text-sm">Muhammad Reza Arifin</td>
-                        <td class="px-4 py-3 text-center text-sm">6 Orang</td>
-                        <td class="px-4 py-3 text-center">
-                            <a href="#"
-                            class="inline-flex items-center justify-center px-5 py-2 rounded-sm text-xs font-semibold
-                                    bg-[linear-gradient(0deg,rgba(30,104,251,0.03)_0%,rgba(30,104,251,0.03)_100%),#FAFAFA]
-                                    border border-[rgba(23,30,41,0.50)] shadow-md hover:bg-gray-100 transition">
-                                Lihat Detail
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="bg-white hover:bg-gray-50">
-                        <td class="px-4 py-3 text-center text-sm">1</td>
-                        <td class="px-4 py-3 text-center text-sm">5 November 2025</td>
-                        <td class="px-4 py-3 text-center text-sm">Ruang Lentera Edukasi</td>
-                        <td class="px-4 py-3 text-center text-sm">12:00 - 14:00</td>
-                        <td class="px-4 py-3 text-center text-sm">Muhammad Reza Arifin</td>
-                        <td class="px-4 py-3 text-center text-sm">6 Orang</td>
-                        <td class="px-4 py-3 text-center">
-                            <a href="#"
-                            class="inline-flex items-center justify-center px-5 py-2 rounded-sm text-xs font-semibold
-                                    bg-[linear-gradient(0deg,rgba(30,104,251,0.03)_0%,rgba(30,104,251,0.03)_100%),#FAFAFA]
-                                    border border-[rgba(23,30,41,0.50)] shadow-md hover:bg-gray-100 transition">
-                                Lihat Detail
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
+            <div class="relative h-48 from-gray-300 to-gray-400">
+                <img src="/img/DefaultRuangan.jpg" 
+                    alt="Ruang Lentera Edukasi" class="w-full h-full object-cover">
+            </div>
+            <div class="grid grid-rows-[2fr_1fr] px-5 pt-5 pb-3">
+                <div>
+                    <h3 class="font-bold text-lg text-[#1A1A1A] mb-2">Ruang Perancis</h3>
+                    <p class="text-dark-overlay/80 mb-4 text-justify text-sm">Ruang bersih, tenang, dilengkapi wifi, cocok untuk belajar, rapat, dan aktivitas produktif.</p>
+                    <hr class="border-t border-[#171E2950] mb-4">
+                </div>
+                <div class="flex items-center justify-between mb-2 md:text-md text-xs">
+                    <div class="flex items-center justify-start w-full">
+                        <img src="/icon/userOutline.svg" alt="Jumlah Orang" class="w-6 h-6 mr-2">
+                        <span class="inline-flex items-center justify-center lg:flex-row flex-col">3-4 orang </span>
+                    </div>
+                    <div class="flex items-center justify-end w-full">
+                        <a class="bg-[#38C55C40] flex flex-row flex-wrap py-2 px-4 justify-between text-white rounded-md mt-2 w-2/3">
+                            <img src="/icon/circleGreen.svg" alt="Status" class="h-5 w-5">
+                            <h2 class="text-sm inline-block font-semibold text-[#38C55C]">Tersedia</h2>
+                        </a>
+                    </div>           
+                </div>
+                <div class="w-full flex justify-end">
+                    <a href="#"
+                        class="flex items-center justify-center w-full bg-[#1E68FB] text-white text-center rounded-xl font-semibold text-sm hover:bg-[#38C55C] transition duration-200 py-2">
+                        Edit Ruangan
+                    </a>
+                </div>
+            </div>
         </div>
 
-
-        <div class="flex justify-center items-center gap-2 py-6 text-sm text-gray-600">
-            <a href="?tab=<?= $tab ?>&page=1" class="px-3 py-1 border rounded hover:bg-gray-100">&lt;</a>
-            <a href="?tab=<?= $tab ?>&page=1" class="px-3 py-1 bg-blue-100 text-blue-600 rounded font-medium">1</a>
-            <a href="?tab=<?= $tab ?>&page=2" class="px-3 py-1 border rounded hover:bg-gray-100">2</a>
-            <a href="?tab=<?= $tab ?>&page=3" class="px-3 py-1 border rounded hover:bg-gray-100">3</a>
-            <span>...</span>
-            <a href="?tab=<?= $tab ?>&page=8" class="px-3 py-1 border rounded hover:bg-gray-100">8</a>
-            <a href="?tab=<?= $tab ?>&page=8" class="px-3 py-1 border rounded hover:bg-gray-100">&gt;</a>
-            <span class="ml-4">Go to</span>
-            <input type="text" class="w-12 mx-1 text-center border rounded" value="1">
-            <span>Page</span>
+        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
+            <div class="relative h-48 from-gray-300 to-gray-400">
+                <img src="/img/DefaultRuangan.jpg" 
+                    alt="Ruang Lentera Edukasi" class="w-full h-full object-cover">
+            </div>
+            <div class="grid grid-rows-[2fr_1fr] px-5 pt-5 pb-3">
+                <div>
+                    <h3 class="font-bold text-lg text-[#1A1A1A] mb-2">Ruang Perancis</h3>
+                    <p class="text-dark-overlay/80 mb-4 text-justify text-sm">Ruang bersih, tenang, dilengkapi wifi, cocok untuk belajar, rapat, dan aktivitas produktif.</p>
+                    <hr class="border-t border-[#171E2950] mb-4">
+                </div>
+                <div class="flex items-center justify-between mb-2 md:text-md text-xs">
+                    <div class="flex items-center justify-start w-full">
+                        <img src="/icon/userOutline.svg" alt="Jumlah Orang" class="w-6 h-6 mr-2">
+                        <span class="inline-flex items-center justify-center lg:flex-row flex-col">3-4 orang </span>
+                    </div>
+                    <div class="flex items-center justify-end w-full">
+                        <a class="bg-[#38C55C40] flex flex-row flex-wrap py-2 px-4 justify-between text-white rounded-md mt-2 w-2/3">
+                            <img src="/icon/circleGreen.svg" alt="Status" class="h-5 w-5">
+                            <h2 class="text-sm inline-block font-semibold text-[#38C55C]">Tersedia</h2>
+                        </a>
+                    </div>           
+                </div>
+                <div class="w-full flex justify-end">
+                    <a href="#"
+                        class="flex items-center justify-center w-full bg-[#1E68FB] text-white text-center rounded-xl font-semibold text-sm hover:bg-[#38C55C] transition duration-200 py-2">
+                        Edit Ruangan
+                    </a>
+                </div>
+            </div>
         </div>
-    </main>
-
-</body>
-</html>
+    </div>
+</main>
