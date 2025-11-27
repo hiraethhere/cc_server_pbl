@@ -53,7 +53,7 @@
                                     class="w-full bg-white px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
                             </div>
                         </div>
-
+               
                         <div class="grid grid-cols-2 gap-12 mt-2">
                             <form action="<?= BASEURL ?>admin/handleDecline" method="post">
                                 <input type="hidden" name="id_user" value="<?= $user['id_user'] ?>" >
