@@ -67,21 +67,24 @@
                             <th class="px-4 py-3 text-center font-semibold text-gray-700 rounded-tr-xl">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody id="" class="divide-y divide-gray-500">
 
+
+                    <tbody id="" class="divide-y divide-gray-500">
+                    <?php $i = 1 ?>
+                    <?php foreach($bookings as $booking) : ?>
                         <!-- **************************************************
                         INI Data pERTAMA
                         ******************************************************* -->
                         <tr class="hover:bg-gray-50 transition border-b border-gray-300">
-                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">1</td>
-                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">8 November 2025</td>
-                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">Ruang Lentera Edukasi</td>
-                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">09:00 - 12:00</td>
-                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">4 Orang</td>
+                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]"><?= $i ?></td>
+                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]"><?= tanggal_indonesia($booking['start_time']) ?></td>
+                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]"><?= $booking['room_name'] ?></td>
+                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]"><?= $start_time . '-' . $end_time ?></td>
+                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]"><?= $booking['total_person'] ?></td>
                             <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">
                                 <div
-                                        class="flex bg-[#38C55C] items-center justify-center text-white px-2 py-2 rounded-sm text-xs font-medium shadow-md min-w-1/2">
-                                    <span>Selesai</span>
+                                        class="flex <?= getStyleStatus($booking['status']) ?> items-center justify-center text-white px-2 py-2 rounded-sm text-xs font-medium shadow-md min-w-1/2">
+                                    <span><?= translateStatus($booking['status']) ?></span>
                                 </div>
                             </td>
                             <td class="px-4 py-3 text-center justify-center flex border-b border-[#8E97A6]">
@@ -99,66 +102,7 @@
                                 </button>
                             </td>
                         </tr>
-
-                        <!-- **************************************************
-                        INI Data KEDUA
-                        ******************************************************* -->
-                        <tr class="hover:bg-gray-50 transition border-b border-gray-300">
-                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">1</td>
-                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">8 November 2025</td>
-                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">Ruang Lentera Edukasi</td>
-                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">09:00 - 12:00</td>
-                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">4 Orang</td>
-                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">
-                                <div
-                                        class="flex bg-[#C90B0B] items-center justify-center text-white px-2 py-2 rounded-sm text-xs font-medium shadow-md min-w-1/2">
-                                    <span>Ditolak</span>
-                                </div>
-                            </td>
-                            <td class="px-4 py-3 text-center justify-center flex border-b border-[#8E97A6]">
-                                <button
-                                        class="flex bg-[#1E68FB] items-center text-white hover:bg-blue-600 hover:cursor-pointer px-5 py-2 rounded-sm text-xs font-medium transition shadow-md transform hover:scale-105">
-                                    <span>Feedback</span>
-                                    
-                                    <div class="bg-white p-1 rounded-xs ml-3"> 
-                                        <svg class="w-3 h-3 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                            
-                                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                                        </svg>
-                                    </div>
-                                </button>
-                            </td>
-                        </tr>
-
-                        <!-- **************************************************
-                        INI Data KETIGA
-                        ******************************************************* -->                        
-                        <tr class="hover:bg-gray-50 transition border-b border-gray-300">
-                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">1</td>
-                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">8 November 2025</td>
-                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">Ruang Lentera Edukasi</td>
-                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">09:00 - 12:00</td>
-                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">4 Orang</td>
-                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">
-                                <div
-                                        class="flex bg-[#38C55C] items-center justify-center text-white px-2 py-2 rounded-sm text-xs font-medium shadow-md min-w-1/2">
-                                    <span>Selesai</span>
-                                </div>
-                            </td>
-                            <td class="px-4 py-3 text-center justify-center flex border-b border-[#8E97A6]">
-                                <button
-                                        class="flex bg-[#8D9198] items-center text-dark-overlay/70 px-5 py-2 rounded-sm text-xs font-medium shadow-md">
-                                    <span>Feedback</span>
-                                    
-                                    <div class="bg-black/70 p-1 rounded-xs ml-3"> 
-                                        <svg class="w-3 h-3 text-[#8D9198]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                            <polyline points="20 6 9 17 4 12"></polyline>
-                                        </svg>
-                                    </div>
-                                </button>
-                            </td>
-                        </tr>
+                        <?php endforeach ?>
                     </tbody>
                 </table>
             </div>
@@ -273,46 +217,6 @@
             </div>
         </div>
 </main>
-
-<!-- Feedback Modal -->
-<div id="feedbackModal" class="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50 px-4 min-w-1/3 hidden">
-    <div class="bg-[#FBFCFF] rounded-2xl p-6 w-full max-w-lg shadow-2xl">
-        <h3 class="text-md font-bold text-[#171E29] mb-1 text-center">Bagaimana pengalamanmu memakai ruangan kami?</h3>
-        <p class="text-sm text-dark-overlay/70 mb-6 text-center">Input kamu sangat berharga dalam meningkatkan kualitas ruangan di perpustakaan kami.</p>
-        
-        <div class="flex justify-around gap-4 mb-6">
-            <button class="hover:scale-110 transition p-1 hover:cursor-pointer">
-                <div class="text-4xl w-9 h-9 flex items-center justify-center">😥</div>
-                <p class="text-[10px] mt-0.5">Sedih</p>
-            </button>
-            <button class="hover:scale-110 transition p-1 hover:cursor-pointer">
-                <div class="text-4xl w-9 h-9 flex items-center justify-center">🙁</div>
-                <p class="text-[10px] mt-0.5">Kecewa</p>
-            </button>
-            <button class="hover:scale-110 transition p-1 hover:cursor-pointer">
-                <div class="text-4xl w-9 h-9 flex items-center justify-center">😐</div>
-                <p class="text-[10px] mt-0.5">Biasa aja</p>
-            </button>
-            <button class="hover:scale-110 transition p-1 hover:cursor-pointer">
-                <div class="text-4xl w-9 h-9 flex items-center justify-center">😄</div>
-                <p class="text-[10px] mt-0.5">Senang</p>
-            </button>
-            <button class="hover:scale-110 transition p-1 hover:cursor-pointer">
-                <div class="text-4xl w-9 h-9 flex items-center justify-center">🤩</div>
-                <p class="text-[10px] mt-0.5">Luar Biasa</p>
-            </button>
-        </div>
-
-        <textarea id="feedbackComment" placeholder="Tulis komentar (opsional)" 
-                  class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-5 resize-none" 
-                  rows="5"></textarea>
-
-        <div class="grid grid-cols-2 gap-3">
-            <button class="px-4 py-3 bg-white text-[#171E29] rounded-lg font-medium hover:bg-gray-200 border border-gray-500 transition hover:cursor-pointer">Batalkan</button>
-            <button class="px-4 py-3 bg-[#38C55C] text-white rounded-lg font-medium hover:bg-green-600 transition hover:cursor-pointer shadow-sm">Kirim</button>
-        </div>
-    </div>
-</div>
 
 <script src="js/filterDropDown.js" defer></script>
 <script>

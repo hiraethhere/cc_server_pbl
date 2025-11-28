@@ -101,33 +101,15 @@ class BookingModel {
     return $this->db->resultSet();
     }
 
-    public function getBookingByUser($id_user){
-    // Kita select f.id_feedback juga untuk logika tombol di View nanti
-        $query = "SELECT DISTINCT 
-                b.id_booking, 
-                b.tanggal,      -- Pastikan kolom ini ada untuk tampilan
-                b.start_time, 
-                b.end_time,
-                b.ruangan,
-                b.status, -- KUNCI: Akan NULL jika belum feedback, terisi jika sudah
-              FROM bookings b
-              
-              -- Join 1: Cek Anggota (agar kita bisa filter user ini anggota atau bukan)
-              LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
-              
-              -- Join 2: Cek Feedback (agar tombol bisa berubah jadi abu-abu/biru)
-            --   LEFT JOIN feedbacks f ON b.id_booking = f.id_booking
-              
-              WHERE (b.id_user = :uid OR bm.id_user = :uid)
-              
-              ORDER BY b.tanggal DESC"; // Biasakan urutkan dari yang terbaru
-
-        $this->db->query($query);
-        $this->db->bind('uid', $id_user);
-    
-    // PENTING: Gunakan resultSet() (fetchAll), bukan singleSet()
-    // Karena satu user pasti punya banyak riwayat booking, bukan cuma satu.
-        return $this->db->resultSet(); 
+    public function getAllBookingByUser($id_user){
+        $this->db->query("SELECT DISTINCT b.id_booking, r.room_name, b.start_time, b.end_time, b.total_person, b.status, b.created_at 
+                            FROM bookings b
+                            JOIN  rooms r ON b.id_room = r.id_room
+                            LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking 
+                            WHERE b.id_user = :id_user OR bm.id_user = :id_user ORDER BY b.created_at DESC;");
+                
+        $this->db->bind('id_user', $id_user);
+        return $this->db->resultSet();
     }
 
     public function getActiveBookingJoinRoom($id_booking){
@@ -191,4 +173,16 @@ class BookingModel {
         $this->db->execute();
         return $this->db->rowCount();
     }
+
+    public function getBookingTodayjoinRoom() {
+        $this->db->query("SELECT b.id_booking, b.start_time, b.end_time, b.booking_code, b.booker_name, b.status, r.room_name
+                        FROM bookings b JOIN rooms r ON b.id_room = r.id_room
+                        WHERE DATE(start_time) = CURDATE() ORDER BY start_time DESC");
+        return $this->db->resultSet();
+    }
+
+    public function getAllBookingPaginated(){
+        $this->db->query("SELECT * FROM bookings ORDER BY start_time DESC LIMIT :limit OFFSET :offset;");
+    }
+
 }

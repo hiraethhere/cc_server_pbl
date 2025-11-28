@@ -32,28 +32,33 @@ class Admin extends Controller {
 
         if ($activeTab == 'approval') {
             $data['users'] = $this->model('UserModel')->getUserForAdmin();
+           $data['link'] = 'selesaikan';
         } else {
             $data['users'] = $this->model('UserModel')->getAllUsersPaginated(10, 0);
+            $data['link'] = 'detailAnggota';
         }
 
         foreach ($data['users'] as &$user) {
             $user['createdDate'] = tanggal_indonesia($user['created_at']);
+            $user['statusStyle'] = getStyleStatus($user['status']);
+            $user['status'] = translateStatus($user['status']);
         }
+        
         $data['judul'] = 'Data Anggota';
         $data['navbar'] = 'Anggota';
         $this->view('layout/sidebar', $data);
         $this->view('admin/anggota/index', $data);
     }
 
-    // public function detailAnggota($id = null){
+    public function detailAnggota($id = null){
 
-    //     $id = param_number($id, "ID user tidak valid");
-    //     $data['user'] = $this->model('UserModel')->getUserById($id);
-    //     $data['judul'] = 'Detail Anggota';
-    //     $data['navbar'] = 'Anggota';
-    //     $this->view('layout/sidebar', $data);
-    //     $this->view('admin/anggota/detail', $data);
-    // }
+        $id = param_number($id, "ID user tidak valid");
+        $data['user'] = $this->model('UserModel')->getUserById($id);
+        $data['judul'] = 'Detail Anggota';
+        $data['navbar'] = 'Anggota';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/anggota/detail', $data);
+    }
 
     public function Selesaikan($id_user = null){
 
@@ -65,7 +70,7 @@ class Admin extends Controller {
             exit;
         }
 
-        $data['user'] = $this->model('userModel')->getUserById($id_user);
+        $data['user'] = $this->model('userModel')->getUserJoinRoleById($id_user);
         $data['createdDate'] = tanggal_indonesia($data['user']['created_at']);
         $data['judul'] = 'Selesaikan Peminjaman';
         $data['navbar'] = 'Anggota';
@@ -74,10 +79,32 @@ class Admin extends Controller {
     }
     
     public function peminjaman(){
+
+        $tab = isset($_GET['tab']) ? $_GET['tab'] : 'hariIni';
+
+        switch ($tab) {
+            case 'hariIni':
+                $data['bookings'] = $this->model('BookingModel')->getBookingTodayJoinRoom();
+                break;
+            case 'berlangsung':
+                $data['bookings'] = $this->model('BookingModel')->getBookingTodayJoinRoom();
+                break;
+            case 'reschedule':
+                $data['bookings'] = $this->model('BookingModel')->getBookingTodayJoinRoom();
+                break;
+            case 'riwayat':
+                $data['bookings'] = $this->model('BookingModel')->getBookingTodayJoinRoom();
+                break;
+            default:
+                Flasher::setModalInfo('Tab tidak diketahui', 'hayoo ubah ubah parameter yaa', 'error');
+                header('location: /admin/peminjaman');
+                break;
+        }
+
         $data['judul'] = 'Peminjaman';
         $data['navbar'] = 'Peminjaman';
         $this->view('layout/sidebar', $data);
-        $this->view('admin/peminjaman/index');
+        $this->view('admin/peminjaman/index', $data);
     }
 
     public function hariIni(){
@@ -99,6 +126,20 @@ class Admin extends Controller {
         $data['navbar'] = 'Ruangan';
         $this->view('layout/sidebar', $data);
         $this->view('admin/ruangan/index');
+    }
+
+    public function tambahDataRuangan(){
+        $data['judul'] = 'Tambah Data Ruangan';
+        $data['navbar'] = 'Ruangan';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/ruangan/tambahRuangan');
+    }
+
+    public function EditDataRuangan(){
+        $data['judul'] = 'Edit Data Ruangan';
+        $data['navbar'] = 'Ruangan';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/ruangan/editDataRuangan');
     }
 
     public function dataRuangan(){
@@ -143,7 +184,7 @@ class Admin extends Controller {
         if ($result === 0 ) {
             throw new Exception('internal sql error');
         }
-
+        sendEmail($_POST['email'] ?? 'email user', $_POST['username' ?? 'user'], "SELAMAT AKUN ANDA TELAH AKTIF", "anda sekarang bisa login ke ruanginPNJ" );
         Flasher::setModalInfo('Berhasil Approve Anggota', 'Akun anggota sudah bisa digunakan');
         header('location: /admin/anggota');
         exit();
@@ -155,8 +196,30 @@ class Admin extends Controller {
         }
     }
 
-    public function changePassword(){
+    public function handleDecline(){
         
+        try{
+
+        if (empty($_POST['id_user']) || empty($_POST['email'])|| empty($_POST['username'])) {
+            throw new Exception('Error id_user tidak ada');
+        }
+
+        $result = $this->model('UserModel')->rejectUser($_POST['id_user']);
+        if ($result === 0 ) {
+            throw new Exception('internal sql error');
+        }
+
+        sendEmail($_POST['email'], $_POST['username'], "Mohon Maaf akun anda ditolak", "alasannya: " . ($_POST['alasan'] ?? 'tidak ada alasan spesifik') );
+        Flasher::setModalInfo('Berhasil Tolak Anggota', 'Akun anggota sudah ditolak');
+        header('location: /admin/anggota');
+        exit();
+
+        }catch(Throwable $e){
+            Flasher::setModalInfo('Gagal Decline user', $e->getMessage(), 'error');
+            header('location: /admin/anggota');
+            exit();
+        }
+
     }
 
 }

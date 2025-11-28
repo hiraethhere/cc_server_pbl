@@ -7,7 +7,7 @@
     <!-- Header dengan Title dan Button -->
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-[#171E29]">Data Ruangan</h2>
-        <a href=""
+        <a href="/Admin/tambahDataRuangan"
            class="flex items-center gap-2 px-3 py-1.5 bg-[#1E68FB] hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm hover:shadow-md transition duration-200">
             Tambah Ruangan
             <img src="/icon/plus.svg" alt="Tambah Anggota" class="w-4 h-4">
@@ -79,7 +79,7 @@
                     </div>           
                 </div>
                 <div class="w-full flex justify-end">
-                    <a href="#"
+                    <a href="/Admin/EditDataRuangan"
                         class="flex items-center justify-center w-full bg-[#1E68FB] text-white text-center rounded-xl font-semibold text-sm hover:bg-[#38C55C] transition duration-200 py-2">
                         Edit Ruangan
                     </a>
@@ -111,7 +111,7 @@
                     </div>           
                 </div>
                 <div class="w-full flex justify-end">
-                    <a href="#"
+                    <a href="/Admin/EditDataRuangan"
                         class="flex items-center justify-center w-full bg-[#1E68FB] text-white text-center rounded-xl font-semibold text-sm hover:bg-[#38C55C] transition duration-200 py-2">
                         Edit Ruangan
                     </a>
@@ -143,7 +143,7 @@
                     </div>           
                 </div>
                 <div class="w-full flex justify-end">
-                    <a href="#"
+                    <a href="/Admin/EditDataRuangan"
                         class="flex items-center justify-center w-full bg-[#1E68FB] text-white text-center rounded-xl font-semibold text-sm hover:bg-[#38C55C] transition duration-200 py-2">
                         Edit Ruangan
                     </a>

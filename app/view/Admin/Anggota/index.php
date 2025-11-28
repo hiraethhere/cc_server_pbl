@@ -261,14 +261,14 @@ function isActive($current, $check) {
                                         <?= htmlspecialchars($user['role_name'] ?? '-') ?>
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-700">Teknik Informatika & Komputer</td>
+                                <td class="px-6 py-4 text-sm text-gray-700"><?= $user['jurusan_unit'] ?></td>
                                 <td class="px-6 py-4">
-                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm bg-[#C90B0B] text-[#FBFCFF]">
+                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm <?= $user['statusStyle'] ?> text-[#FBFCFF]">
                                         <?= htmlspecialchars($user['status'] ?? '-') ?>
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    <a href="/Admin/Selesaikan"
+                                    <a href="<?= BASEURL . "admin/" . $link .'/' . $user['id_user']?>"
                                        class="inline-flex items-center px-4 py-2 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-150">
                                         Lihat Detail
                                     </a>
