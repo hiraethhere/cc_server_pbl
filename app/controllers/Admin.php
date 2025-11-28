@@ -75,6 +75,13 @@ class Admin extends Controller {
         $this->view('admin/anggota/selesaikan', $data);
     }
 
+    public function selesaikanDosen(){
+        $data['judul'] = 'Selesaikan Doses';
+        $data['navbar'] = 'Anggota';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/anggota/selesaikanDosen');
+    }
+
     public function detailAnggota(){
         $data['judul'] = 'Detail Anggota';
         $data['navbar'] = 'Anggota';
@@ -108,6 +115,13 @@ class Admin extends Controller {
         $data['navbar'] = 'Peminjaman';
         $this->view('layout/sidebar', $data);
         $this->view('admin/Peminjaman/buatBooking');
+    }
+
+    public function bookingRuangan(){
+        $data['judul'] = 'Buat Pinjaman Baru';
+        $data['navbar'] = 'Peminjaman';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/Peminjaman/bookingRuangan');
     }
 
     public function Ruangan(){

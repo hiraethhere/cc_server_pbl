@@ -113,7 +113,7 @@
                 document.getElementById('approveForm').submit();
             },
             {
-                icon: '/icon/check.svg',
+                icon: '/icon/user.svg',
                 confirmText: 'Ya',
                 confirmClass: 'w-full px-6 py-2 bg-[#38C55C] text-white rounded-lg font-semibold hover:bg-green-600 transition',
                 cancelText: 'Batalkan'
