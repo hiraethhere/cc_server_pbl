@@ -4,7 +4,7 @@ function translateStatus($status): string
 {
     $lookup = [
         'active'   => 'Aktif',
-        'ongoing'  => 'Sedang berlangsung',
+        'ongoing'  => 'Berlangsung',
         'done'     => 'Selesai',
         'rejected' => 'Ditolak',
         'cancelled' => 'Dibatalkan',

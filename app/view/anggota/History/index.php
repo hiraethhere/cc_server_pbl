@@ -79,7 +79,7 @@
                             <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]"><?= $i ?></td>
                             <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]"><?= tanggal_indonesia($booking['start_time']) ?></td>
                             <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]"><?= $booking['room_name'] ?></td>
-                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]"><?= $start_time . '-' . $end_time ?></td>
+                            <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]"><?= date('H:i', strtotime($booking['start_time'])) . '-' . date('H:i', strtotime($booking['end_time'])); ?></td>
                             <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]"><?= $booking['total_person'] ?></td>
                             <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">
                                 <div
