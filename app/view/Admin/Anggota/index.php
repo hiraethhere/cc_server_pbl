@@ -17,14 +17,16 @@ function isActive($current, $check) {
     <!-- Breadcrumb -->
     <nav class="mb-6 text-sm">
         <a href="/Admin/Anggota" class="text-[#1E68FB] hover:text-blue-700">Data Anggota</a>
-        <span class="mx-2 text-gray-400">></span>
+        <span class="mx-2 text-gray-400">
+            <img src="/icon/arrow.svg" class="w-5 h-5">
+        </span>
         <span class="font-medium text-gray-900">Daftar Anggota</span>
     </nav>
 
     <!-- Header dengan Title dan Button -->
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-[#171E29]">Daftar Anggota</h2>
-        <a href="/Admin/TambahAnggota"
+        <a href="/Admin/tambahAnggota"
            class="flex items-center gap-2 px-3 py-1.5 bg-[#1E68FB] hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm hover:shadow-md transition duration-200">
             Tambah Anggota
             <img src="/icon/plus.svg" alt="Tambah Anggota" class="w-4 h-4">
@@ -268,7 +270,7 @@ function isActive($current, $check) {
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    <a href="/Admin/Selesaikan"
+                                    <a href="/Admin/detailAnggota"
                                        class="inline-flex items-center px-4 py-2 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-150">
                                         Lihat Detail
                                     </a>
