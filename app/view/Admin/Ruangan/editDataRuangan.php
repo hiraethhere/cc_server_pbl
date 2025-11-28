@@ -123,10 +123,10 @@
 
         <!-- Tombol Aksi -->
         <div class="flex gap-8 pt-2">
-            <button class="flex-1 bg-[#C90B0B] hover:bg-red-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition transform hover:cursor-pointer">
+            <button onclick="konfirmasiHapus()" class="flex-1 bg-[#C90B0B] hover:bg-red-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition transform hover:cursor-pointer">
             Hapus Ruangan
             </button>
-            <button class="flex-1 bg-[#38C55C] hover:bg-green-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition transform hover:cursor-pointer">
+            <button onclick="konfirmasiEdit()" class="flex-1 bg-[#38C55C] hover:bg-green-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition transform hover:cursor-pointer">
             Edit Ruangan
             </button>
         </div>
@@ -135,3 +135,40 @@
     </div>
 
 </main>
+
+<?php include __DIR__ . '/../../template/modal.php'; ?>
+
+<script src="/js/modal.js" defer></script>
+<script>
+function konfirmasiEdit() {
+    Modal.confirm(
+        'Edit Ruangan?',
+        'Data ruangan akan terganti',
+        function() {
+            window.location.href = '#';
+        },
+        {
+            icon: '/icon/pencil.svg',
+            confirmText: 'Lanjut',
+            confirmClass: 'w-full px-6 py-2 bg-[#38C55C] text-white rounded-lg font-semibold hover:bg-red-800 transition',
+            cancelText: 'Batalkan'
+        }
+    );
+}
+
+function konfirmasiHapus() {
+    Modal.confirm(
+        'Hapus Ruangan?',
+        'Data ruangan akan terhapus untuk selamnaya dan tidak bisa dikembalikan',
+        function() {
+            window.location.href = '#';
+        },
+        {
+            icon: '/icon/trash.svg',
+            confirmText: 'Lanjut',
+            confirmClass: 'w-full px-6 py-2 bg-[#C90B0B] text-white rounded-lg font-semibold hover:bg-red-800 transition',
+            cancelText: 'Batalkan'
+        }
+    );
+}
+</script>

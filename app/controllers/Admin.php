@@ -77,6 +77,13 @@ class Admin extends Controller {
         $this->view('layout/sidebar', $data);
         $this->view('admin/anggota/selesaikan', $data);
     }
+
+    public function tambahAnggota(){
+        $data['judul'] = 'Tambah Anggota Baru';
+        $data['navbar'] = 'Anggota';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/anggota/tambahAnggota');
+    }
     
     public function peminjaman(){
 

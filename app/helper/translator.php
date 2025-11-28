@@ -4,11 +4,25 @@ function translateStatus($status): string
 {
     $lookup = [
         'active'   => 'Aktif',
-        'ongoing'  => 'Sedang berlangsung',
+        'ongoing'  => 'Berlangsung',
         'done'     => 'Selesai',
         'rejected' => 'Ditolak',
         'cancelled' => 'Dibatalkan',
         'expired'  => 'Kadaluarsa',
+        'pending'  => 'Menunggu'
+    ];
+
+    return $lookup[$status] ?? 'Status tidak dikenal';
+}
+
+function translateStatusUser($status): string
+{
+    $lookup = [
+        'active'   => 'Aktif',
+        'rejected' => 'Ditolak',
+        'cancelled' => 'Dibatalkan',
+        'expired'  => 'Kadaluarsa',
+        'suspended' => 'Suspended',
         'pending'  => 'Belum Aktif'
     ];
 
