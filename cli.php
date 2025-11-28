@@ -18,11 +18,14 @@ if ($command === 'migrate') {
     runMigrations(); // Jalankan migrasi dari nol
 } elseif ($command === 'seed') {
     runSeeders();
+} elseif ($command == 'bookings:autocancel') {
+    runAutoCancel();
 } else {
     echo "Perintah tidak dikenal. Gunakan: \n";
     echo "php cli.php migrate \n";
     echo "php cli.php migrate:fresh  (Reset total database) \n"; 
     echo "php cli.php seed \n";
+    echo "php cli.php bookings:autocancel (Membatalkan booking telat 10 menit) \n";
 }
 
 function runMigrations() {
@@ -136,4 +139,20 @@ function dropAllTables() {
     $db->execute();
     
     echo "Database bersih.\n";
+}
+
+function runAutoCancel() {
+    // Kita perlu load modelnya manual karena ini CLI (bukan lewat index.php/Controller)
+    require_once 'app/model/BookingModel.php';
+    
+    $bookingModel = new BookingModel();
+    echo "Mengecek booking yang telat lebih dari 10 menit...\n";
+    
+    $affected = $bookingModel->autoCancelLateBookings();
+    
+    if ($affected > 0) {
+        echo "Berhasil membatalkan $affected booking yang expired.\n";
+    } else {
+        echo "Tidak ada booking yang perlu dibatalkan saat ini.\n";
+    }
 }

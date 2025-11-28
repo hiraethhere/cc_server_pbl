@@ -233,4 +233,5 @@ class Booking extends Controller {
         $this->view('anggota/bookingAnda/reschedule', $data); 
         $this->view('Layout/Footer');
     }
+
 }
