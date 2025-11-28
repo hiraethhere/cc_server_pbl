@@ -270,7 +270,7 @@ function isActive($current, $check) {
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    <a href="/Admin/detailAnggota"
+                                    <a href="<?= BASEURL . "admin/" . $link .'/' . $user['id_user']?>"
                                        class="inline-flex items-center px-4 py-2 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-150">
                                         Lihat Detail
                                     </a>

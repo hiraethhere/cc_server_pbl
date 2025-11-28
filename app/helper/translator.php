@@ -4,10 +4,10 @@ function translateStatus($status): string
 {
     $lookup = [
         'active'   => 'Aktif',
-        'ongoing'  => 'Sedang berlangsung',
+        'ongoing'  => 'Berlangsung',
         'done'     => 'Selesai',
         'rejected' => 'Ditolak',
-        'canceled' => 'Dibatalkan',
+        'cancelled' => 'Dibatalkan',
         'expired'  => 'Kadaluarsa',
         'pending'  => 'Belum Aktif'
     ];
@@ -18,10 +18,11 @@ function translateStatus($status): string
 function getStyleStatus($status): string {
 
    $map = [
+        'pending'  => 'bg-blue-500',
         'active'   => 'bg-blue-500',
         'ongoing'  => 'bg-yellow-500',
         'done'     => 'bg-[#38C55C]',
-        'cancelled' => 'bg-red-500',
+        'cancelled' => 'bg-[#C90B0B]',
         'rejected' => 'bg-[#C90B0B]'
     ];
 

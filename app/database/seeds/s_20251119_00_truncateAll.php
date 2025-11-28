@@ -12,6 +12,9 @@ class s_20251119_00_truncateAll extends Seeder{
             'roles',
             'announcement',
             'rooms',
+            'bookings',
+            'booking_members'
+
         ];
 
         foreach ($tables as $table) {

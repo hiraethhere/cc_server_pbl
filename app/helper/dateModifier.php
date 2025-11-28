@@ -47,4 +47,24 @@ function tanggal_indonesia($datetime) {
     return "$day $month $year";
 }
 
+function tanggal_indonesia_jam($datetime) {
+    $bulan = [
+        1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+             'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+
+    $timestamp = strtotime($datetime);
+    $day = date('j', $timestamp);
+    $month = $bulan[(int)date('n', $timestamp)];
+    $year = date('Y', $timestamp);
+    $time = date('H:i', $timestamp);
+
+    return "$day $month $year, $time";
+}
+
+function waktu_indonesia($datetime) {
+    return date('H:i', strtotime($datetime));
+}
+
+
 

@@ -24,6 +24,7 @@ public function __construct() {
         ];
         try {
             $this->dbh = new PDO($dsn, $this->username, $this->password, $option);
+            $this->dbh->exec("SET time_zone = '+07:00';");
         } catch(PDOException $e) {
             die($e->getMessage());
         }
