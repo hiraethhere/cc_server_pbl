@@ -200,4 +200,18 @@ class BookingModel {
         return $this->db->rowCount();
     }
 
+    public function autoCompleteFinishedBookings()
+    {
+        //ini untuk mengubah status ke done saat dia masih ongoing
+        $query = "UPDATE " . $this->table . " 
+                  SET status = 'done' 
+                  WHERE status = 'ongoing' 
+                  AND NOW() > end_time";
+
+        $this->db->query($query);
+        $this->db->execute();
+        
+        return $this->db->rowCount();
+    }
+
 }

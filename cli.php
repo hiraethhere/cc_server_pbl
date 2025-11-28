@@ -20,12 +20,15 @@ if ($command === 'migrate') {
     runSeeders();
 } elseif ($command == 'bookings:autocancel') {
     runAutoCancel();
-} else {
+} elseif($command == 'bookings:autocomplete'){
+    runAutoComplete();
+}else {
     echo "Perintah tidak dikenal. Gunakan: \n";
     echo "php cli.php migrate \n";
     echo "php cli.php migrate:fresh  (Reset total database) \n"; 
     echo "php cli.php seed \n";
     echo "php cli.php bookings:autocancel (Membatalkan booking telat 10 menit) \n";
+    echo "php cli.php bookings:autocomplete (Membatalkan booking yang sudah lewat) \n";
 }
 
 function runMigrations() {
@@ -59,9 +62,7 @@ function runMigrations() {
 
         require_once __DIR__ . '/app/database/migrations/' . $file;
         
-        // Ambil nama class dari nama file (Asumsi: NamaFile.php -> class NamaFile)
-        // Atau kita bisa sepakat nama class di dalam file harus 'Migration_{Timestamp}'
-        // TAPI, cara termudah: kita baca isi file atau samakan nama class dengan nama file tanpa .php
+        //nama file migrasi ataupun seeder harus dengan format m_yyyymmdd_namatabel
         $className = pathinfo($file, PATHINFO_FILENAME);
         $className = convertToClassName($file);
 
@@ -116,11 +117,11 @@ function dropAllTables() {
     
     echo "Sedang menghapus semua tabel...\n";
 
-    // 1. Matikan Foreign Key Check biar tidak error constraint
+    //Matikan Foreign Key Check biar tidak error constraint
     $db->query("SET FOREIGN_KEY_CHECKS = 0");
     $db->execute();
 
-    // 2. Ambil semua nama tabel di database
+    //Ambil semua nama tabel di database
     $db->query("SHOW TABLES");
     $tables = $db->resultSet(); 
 
@@ -134,7 +135,6 @@ function dropAllTables() {
         echo "   -> DROPPED: $tableName\n";
     }
 
-    // 3. Nyalakan lagi Foreign Key Check
     $db->query("SET FOREIGN_KEY_CHECKS = 1");
     $db->execute();
     
@@ -154,5 +154,20 @@ function runAutoCancel() {
         echo "Berhasil membatalkan $affected booking yang expired.\n";
     } else {
         echo "Tidak ada booking yang perlu dibatalkan saat ini.\n";
+    }
+}
+
+function runAutoComplete() {
+    require_once 'app/model/BookingModel.php';
+    
+    $bookingModel = new BookingModel();
+    echo "Mengecek booking yang sudah selesai (lewat end_time)...\n";
+    
+    $affected = $bookingModel->autoCompleteFinishedBookings();
+    
+    if ($affected > 0) {
+        echo "Berhasil menandai $affected booking sebagai 'done'.\n";
+    } else {
+        echo "Tidak ada booking yang perlu diselesaikan saat ini.\n";
     }
 }
