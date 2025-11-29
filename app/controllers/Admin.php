@@ -85,13 +85,6 @@ class Admin extends Controller {
         $this->view('admin/anggota/selesaikanDosen');
     }
 
-    public function detailAnggota(){
-        $data['judul'] = 'Detail Anggota';
-        $data['navbar'] = 'Anggota';
-        $this->view('layout/sidebar', $data);
-        $this->view('admin/anggota/detail');
-    }
-
     public function tambahAnggota(){
         $data['judul'] = 'Tambah Anggota Baru';
         $data['navbar'] = 'Anggota';
@@ -135,6 +128,20 @@ class Admin extends Controller {
         $this->view('admin/peminjaman/detailHariIni');
     }
 
+    public function detailReschedule(){
+        $data['judul'] = 'Detail Reschedule';
+        $data['navbar'] = 'Peminjaman';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/peminjaman/detailReschedule');
+    }
+
+    public function detailRiwayat(){
+        $data['judul'] = 'Detail Riwayat Peminjaman';
+        $data['navbar'] = 'Peminjaman';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/peminjaman/detailRiwayat');
+    }
+
     public function buatBooking(){
         $data['judul'] = 'Buat Pinjaman Baru';
         $data['navbar'] = 'Peminjaman';
@@ -147,6 +154,13 @@ class Admin extends Controller {
         $data['navbar'] = 'Peminjaman';
         $this->view('layout/sidebar', $data);
         $this->view('admin/Peminjaman/bookingRuangan');
+    }
+
+    public function bookingRuangRapat(){
+        $data['judul'] = 'Buat Pinjaman Baru';
+        $data['navbar'] = 'Peminjaman';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/Peminjaman/bookingRuangRapat');
     }
 
     public function Ruangan(){
