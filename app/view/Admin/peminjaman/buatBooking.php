@@ -79,7 +79,7 @@
                     </div>           
                 </div>
                 <div class="w-full flex justify-end">
-                    <a href="#"
+                    <a href="/Admin/bookingRuangan"
                         class="flex items-center justify-center w-full bg-[#1E68FB] text-white text-center rounded-xl font-semibold text-sm hover:bg-[#38C55C] transition duration-200 py-2">
                         Booking
                     </a>
