@@ -64,7 +64,7 @@
 
                     <!-- Remember Me -->
                     <div class="mb-6">
-                        <label class="flex items-center">
+                        <label class="flex items-center" for="remember">
                             <input type="checkbox" name="remember" class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                             <span class="ml-2 text-xs text-gray-700">Ingat Saya</span>
                         </label>

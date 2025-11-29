@@ -187,6 +187,10 @@ class Auth extends Controller {
                 throw new Exception('Verifikasi keamanan gagal. Silakan coba lagi.');
             }
 
+            if (isset($_POST['remember'])) {
+                # code...
+            }
+
             $data = [
             'email' => $_POST['email'],
             'password' => $_POST['password']
@@ -228,6 +232,23 @@ class Auth extends Controller {
             'nomor_induk' => $user['nomor_induk']
         ];
         $_SESSION['role'] = $user['role'];
+
+        if (isset($_POST['remember'])) {
+            $email = $user['email'];
+            $expired_time = time() + 86400 * 7; // 7 hari dari sekarang
+            
+            // Buat Payload (Data yang mau disimpan)
+            // Kita gabung email dan waktu expire
+            $payload = $email . '|' . $expired_time;
+            
+            // Buat Tanda Tangan (Signature)
+            // Menggunakan HMAC-SHA256. Ini inti keamanannya.
+            $signature = hash_hmac('sha256', $payload, APP_KEY);
+            
+            $cookieValue = base64_encode($email) . ':' . $expired_time . ':' . $signature;
+            
+            setcookie('ruangin_login', $cookieValue, $expired_time, "/", "", false, true);
+        }
 
         generateCsrf();
 
