@@ -381,9 +381,10 @@ class Auth extends Controller {
     }
 
     public function handleLogout(){
-
+        // setcookie('ruangin_login', '', time() - 3600);
         session_unset();
         session_destroy();
+        setcookie('ruangin_login', '', time() - 3600, '/');
         header('location: /auth/');
         exit;
     }
