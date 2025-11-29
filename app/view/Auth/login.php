@@ -10,6 +10,7 @@
     <title>RuanginPNJ - Login</title>
     <link href="/css/output.css" rel="stylesheet">
 
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body class="font-sf-pro" >
     
@@ -55,6 +56,10 @@
                             <a href="/auth/registerForms" class="text-blue-600 hover:underline font-medium">Registrasi</a>
                         </div>
                         <a href="/Auth/ForgetPassword" class="text-blue-600 hover:underline font-medium">Lupa Password?</a>
+                    </div>
+
+                    <div class="mb-6 flex justify-center">
+                        <div class="cf-turnstile" data-sitekey="<?= TURNSTILE_SITE_KEY ?>"></div>
                     </div>
 
                     <!-- Remember Me -->
