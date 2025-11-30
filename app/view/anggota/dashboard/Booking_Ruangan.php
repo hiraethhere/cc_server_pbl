@@ -203,46 +203,6 @@
     </div>
 </main>
 
-<!-- **************************************************
-INI POP UP KONFIRMASI
-******************************************************* -->
-<div id="confirmModal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
-    <div class="bg-white rounded-2xl p-8 w-full max-w-sm mx-4 text-center">
-        <div class="mb-4">
-            <i class="fas fa-calendar-check text-green-500 text-5xl"></i>
-        </div>
-        <h3 class="text-xl font-bold text-gray-800 mb-2">Konfirmasi Booking</h3>
-        <p class="text-sm text-gray-600 mb-6">Data anggota akan tersimpan untuk selamanya dan tidak bisa diubah.</p>
-        <div class="grid grid-cols-2 gap-3">
-            <button type="button"
-                    class="px-6 py-2 bg-white text-[#171E29] rounded-lg border font-semibold hover:bg-gray-300 transition hover:cursor-pointer text-sm">
-                Batalkan
-            </button>
-            <button type="button" 
-                    class="px-6 py-2 bg-[#38C55C] text-white rounded-lg font-semibold hover:bg-green-600 transition hover:cursor-pointer text-sm">
-                Konfirmasi
-            </button>
-        </div>
-    </div>
-</div>
-
-<!-- **************************************************
-INI POP UP SUCCESS
-******************************************************* -->
-<div id="successModal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
-    <div class="bg-white rounded-2xl p-8 w-full max-w-sm mx-4 text-center border border-[#8E97A6]">
-        <div class="mb-4">
-            <i class="fas fa-check-circle text-green-500 text-5xl"></i>
-        </div>
-        <h3 class="text-xl font-bold text-gray-800 mb-2">Request Booking Berhasil</h3>
-        <p class="text-sm text-gray-600 mb-6">Tunggu approval dari admin</p>
-        <button
-                class="w-full px-6 py-2 bg-[#38C55C] text-white rounded-lg font-semibold hover:bg-green-600 transition hover:cursor-pointer">
-            OK
-        </button>
-    </div>
-</div>
-
 
 <script>const BASEURL = "<?= BASEURL ?>";</script>
 <script src="/js/bookingRoom.js"></script>
