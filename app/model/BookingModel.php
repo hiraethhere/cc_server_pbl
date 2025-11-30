@@ -185,4 +185,33 @@ class BookingModel {
         $this->db->query("SELECT * FROM bookings ORDER BY start_time DESC LIMIT :limit OFFSET :offset;");
     }
 
+    public function autoCancelLateBookings()
+    {
+        
+        $query = "UPDATE " . $this->table . " 
+                  SET status = 'cancelled', cancel_by = 'system' 
+                  WHERE status = 'pending' 
+                  AND NOW() > DATE_ADD(start_time, INTERVAL 10 MINUTE)";
+                  
+        $this->db->query($query);
+        $this->db->execute();
+        
+        // Mengembalikan jumlah baris yang di-update
+        return $this->db->rowCount();
+    }
+
+    public function autoCompleteFinishedBookings()
+    {
+        //ini untuk mengubah status ke done saat dia masih ongoing
+        $query = "UPDATE " . $this->table . " 
+                  SET status = 'done' 
+                  WHERE status = 'ongoing' 
+                  AND NOW() > end_time";
+
+        $this->db->query($query);
+        $this->db->execute();
+        
+        return $this->db->rowCount();
+    }
+
 }

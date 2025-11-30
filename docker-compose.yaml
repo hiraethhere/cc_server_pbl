@@ -18,6 +18,15 @@ services:
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
       - TZ=Asia/Jakarta
+    labels:
+      ofelia.enabled: "true"
+      # Nama job bebas, tetapi harus berbeda pada setiap job
+      # "@every 5m" artinya dijalankan setiap 5 menit
+      ofelia.job-exec.cancel-job.schedule: "@every 5m"
+      ofelia.job-exec.cancel-job.command: "php /var/www/html/cli.php bookings:autocancel"
+      # ini akan berjalan setiap 5 menit untuk mengecek apakah ada booking yang sudah selesai tapi statusnya belum berubah
+      ofelia.job-exec.complete-job.schedule: "@every 5m"
+      ofelia.job-exec.complete-job.command: "php /var/www/html/cli.php bookings:autocomplete"
 
   # Service 2: Database (MySQL)
   db:
@@ -42,6 +51,18 @@ services:
     environment:
       - MP_SMTP_AUTH_ACCEPT_ANY=true # Menerima login apapun
       - MP_SMTP_AUTH_ALLOW_INSECURE=true # Izinkan koneksi tanpa enkripsi
+
+  ofelia:
+    image: mcuadros/ofelia:latest
+    container_name: ruanginPNJ_scheduler
+    environment:
+      - TZ=Asia/Jakarta
+    depends_on:
+      - web
+    command: daemon --docker
+    volumes:
+      # Ofelia butuh akses ke docker socket untuk bisa mengontrol container lain
+      - /var/run/docker.sock:/var/run/docker.sock:ro
 
 volumes:
   db_data: # volume untuk data database agar permanen

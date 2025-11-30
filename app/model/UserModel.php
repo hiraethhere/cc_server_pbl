@@ -188,4 +188,19 @@ class UserModel {
         $this->db->query($query);
         return $this->db->singleSet();
     }
+
+    public function autoDeactivateExpiredUsers(){
+        // Ubah status jadi 'rejected' atau 'deleted' jika waktu sekarang melewati expired_at
+        // dan statusnya masih aktif/pending
+        $query = "UPDATE users 
+                  SET status = 'rejected', reject_reason = 'Account Expired (System Auto)'
+                  WHERE expired_at IS NOT NULL 
+                  AND NOW() > expired_at 
+                  AND status IN ('active', 'pending')";
+
+        $this->db->query($query);
+        $this->db->execute();
+        
+        return $this->db->rowCount();   
+    }
 }
