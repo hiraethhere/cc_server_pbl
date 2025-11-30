@@ -1,7 +1,4 @@
-<?php
-?>
-
-<main class="container mx-auto px-6 py-8">
+<main class="container mx-auto md:px-6 lg:px-6 px-1 py-8">
     <div class="mx-5">
         <nav class="mb-6 text-sm text-dark-overlay/60 flex items-center">
             <a href="/Dashboard" class="text-[#1E68FB] hover:text-blue-700">Ruangan</a>

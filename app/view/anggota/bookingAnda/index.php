@@ -1,9 +1,6 @@
 <?php $tab = $_GET['tab'] ?? 'booking'; ?>
 
-<main class="container mx-auto px-11 py-8 min-h-screen">
-    <nav class="text-sm text-blue-600 mb-4">
-        <a href="/History" class="hover:underline">History</a> > <span class="text-gray-800">Bookingan</span>
-    </nav>
+<main class="container mx-auto lg:px-11 md:px-9 px-6 py-8 min-h-screen">
 
     <h1 class="text-3xl font-bold text-center mb-12">Bookingan Anda</h1>
 
