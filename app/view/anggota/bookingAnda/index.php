@@ -16,7 +16,7 @@
                     Status Reschedule
                 </a>
             </div>
-                <?php if ($tab === 'booking'): ?>
+                <?php if ($tab === 'booking' || empty($tab)): ?>
                     <?php if (!empty($activeBooking)): ?>
                     <!-- Booking Details -->
                     <div class="w-full mx-auto bg-[#FBFCFF] rounded-b-xl shadow-xl p-12">
@@ -35,9 +35,9 @@
                                 <div class="">         
                                     <p class="text-gray-600 text-sm">Status</p>
                                     <div class="max-w-1/4">
-                                        <a class="bg-[#1E68FB25] flex flex-row flex-wrap py-2 px-4 justify-between text-white rounded-md mt-2 w-5/6">
+                                        <a class="<?= getStyleStatus($activeBooking['status']) ?> flex flex-row flex-wrap py-2 px-4 justify-between text-white rounded-md mt-2 w-5/6">
                                             <img src="/icon/circle.svg" alt="Status" class="h-5 w-5">
-                                            <h2 class="text-sm inline-block font-semibold text-[#1E68FB]"><?= htmlspecialchars($status) ?></h2>
+                                            <h2 class="text-sm inline-block font-semibold "><?= htmlspecialchars($status) ?></h2>
                                         </a>
                                     </div>           
                                 </div>
@@ -76,7 +76,7 @@
                                 <button type="button" id="buttonCancel" class="bg-[#C90B0B] text-white px-6 py-2 rounded-sm text-sm hover:bg-red-700 hover:cursor-pointer">
                                     Cancel Booking
                                 </button>
-                                <a href="Booking/Reschedule" class="bg-[#1E68FB] text-white px-6 py-2 rounded-sm text-sm hover:bg-blue-700 hover:cursor-pointer">
+                                <a href="Booking/Reschedule/<?= $booking['id_booking'] ?>" class="bg-[#1E68FB] text-white px-6 py-2 rounded-sm text-sm hover:bg-blue-700 hover:cursor-pointer">
                                     Reschedule
                                 </a>
                             </div>
@@ -103,9 +103,10 @@
                         </div>
                     <?php endif; ?>
 
-                <?php else: ?>
+            <?php elseif ($tab === 'reschedule'): ?>
 
                 <div id="desktop-table" class="md:block hidden overflow-x-auto bg-white rounded-t-xl p-12">
+                    <?php if (!empty($reschedules)): ?>
                     <table class="w-full text-sm border-separate border-spacing-0 border border-[#8E97A6] rounded-t-xl">
                         <thead class="bg-[rgba(30,104,251,0.10)] rounded-t-xl">
                             <tr>
@@ -118,9 +119,9 @@
                         </thead>
                         <tbody id="" class="divide-y divide-gray-500">
 
-                            <!-- **************************************************
-                            INI Data pERTAMA
-                            ******************************************************* -->
+
+
+                        <?php foreach($reschedules as $reschedule) ?>
                             <tr class="hover:bg-gray-50 transition border-b border-gray-300">
                                 <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">1</td>
                                 <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">8 November 2025</td>
@@ -134,11 +135,7 @@
                                 </td>
                             </tr>
 
-
-                            <!-- **************************************************
-                            INI Data KEDUA
-                            ******************************************************* -->
-                            <tr class="hover:bg-gray-50 transition border-b border-gray-300">
+                            <!-- <tr class="hover:bg-gray-50 transition border-b border-gray-300">
                                 <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">1</td>
                                 <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">8 November 2025</td>
                                 <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">Ruang Lentera Edukasi</td>
@@ -151,10 +148,6 @@
                                 </td>
                             </tr>
 
-
-                            <!-- **************************************************
-                            INI Data pERTAMA
-                            ******************************************************* -->
                             <tr class="hover:bg-gray-50 transition border-b border-gray-300">
                                 <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">1</td>
                                 <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">8 November 2025</td>
@@ -166,13 +159,18 @@
                                         <span>Ditolak</span>
                                     </div>
                                 </td>
-                            </tr>
-
+                            </tr> -->
 
                         </tbody>
                     </table>
-                </div>
-                <?php endif; ?>
+
+                    <?php else: ?>
+                        <div class="text-center py-8 text-gray-500">
+                        sepertinya kamu belum ada riwayat pengajuan reschedule.
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php endif; ?>
             </div>
 
             

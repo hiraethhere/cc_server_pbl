@@ -14,7 +14,8 @@ class s_20251127_06_bookingMembersSeeder extends Seeder {
                   (5, 4, NOW(), NOW()),
                   (5, 8, NOW(), NOW()), 
                   (6, 3, NOW(), NOW()),
-                  (6, 5, NOW(), NOW());";
+                  (6, 5, NOW(), NOW()),
+                  (7, 10, NOW(), NOW());";
 
         $this->db->query($query);
         $this->db->execute();

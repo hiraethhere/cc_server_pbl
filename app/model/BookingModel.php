@@ -32,7 +32,7 @@ class BookingModel {
     $query = "SELECT start_time, end_time 
               FROM " . $this->table . " 
               WHERE id_room = :id_room 
-              AND DATE(start_time) = :date AND status NOT IN ('ongoing', 'cancelled')";
+              AND DATE(start_time) = :date AND status NOT IN ('done', 'cancelled')";
     
     $this->db->query($query);
     $this->db->bind('id_room', $roomId);
@@ -101,12 +101,13 @@ class BookingModel {
     return $this->db->resultSet();
     }
 
+    //ini gua masi bingung mau pake created_at atau start_time kalo start_time itu dia gak asli
     public function getAllBookingByUser($id_user){
         $this->db->query("SELECT DISTINCT b.id_booking, r.room_name, b.start_time, b.end_time, b.total_person, b.status, b.created_at 
                             FROM bookings b
                             JOIN  rooms r ON b.id_room = r.id_room
                             LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking 
-                            WHERE b.id_user = :id_user OR bm.id_user = :id_user ORDER BY b.created_at DESC;");
+                            WHERE b.id_user = :id_user OR bm.id_user = :id_user ORDER BY b.start_time DESC;");
                 
         $this->db->bind('id_user', $id_user);
         return $this->db->resultSet();
@@ -122,6 +123,7 @@ class BookingModel {
         return $this->db->singleSet();
     }
 
+    //ini buat masukin anggota ke booking members
     public function BookingMember($id_booking, $id_user){
         $query = "INSERT INTO booking_members (id_booking, id_user)
                     VALUES (:id_booking, :id_user)";
@@ -130,6 +132,20 @@ class BookingModel {
         $this->db->bind('id_user', $id_user); 
         $this->db->execute();
         return $this->db->rowCount();
+    }
+
+    //ini buat ambil di reschedule
+    public function getBookingMembers($id_booking){
+    // Ambil NIM/NIP dan Nama dari tabel users lewat perantara booking_members
+        $query = "SELECT u.id_user, u.username, u.nomor_induk
+              FROM booking_members bm
+              JOIN users u ON bm.id_user = u.id_user
+              WHERE bm.id_booking = :id_booking";
+              
+        $this->db->query($query);
+        $this->db->bind('id_booking', $id_booking);
+    
+        return $this->db->resultSet();
     }
 
     public function checkUserQuota($id_user, $range_start, $range_end){
@@ -198,6 +214,22 @@ class BookingModel {
     public function getAllBookingPaginated(){
         $this->db->query("SELECT * FROM bookings ORDER BY start_time DESC LIMIT :limit OFFSET :offset;");
     }
+
+    // BookingModel.php
+    public function getBookingByIdAndUser($id_booking, $id_user){
+    // Ambil data booking DAN data ruangan sekaligus
+    $query = "SELECT b.*, r.room_name, r.min_capacity, max_capacity, r.description, r.img_room, r.floor
+              FROM bookings b
+              JOIN rooms r ON b.id_room = r.id_room
+              WHERE b.id_booking = :id_booking 
+              AND b.id_user = :id_user";
+              
+    $this->db->query($query);
+    $this->db->bind('id_booking', $id_booking);
+    $this->db->bind('id_user', $id_user);
+    
+    return $this->db->singleSet(); // Gunakan single() karena cuma mau 1 data
+}
 
     public function autoCancelLateBookings()
     {

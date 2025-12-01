@@ -32,9 +32,9 @@ function translateStatusUser($status): string
 function getStyleStatus($status): string {
 
    $map = [
-        'pending'  => 'bg-blue-500',
+        'pending'  => 'bg-blue-500/30 text-[#1E68FB]',
         'active'   => 'bg-[#38C55C]',
-        'ongoing'  => 'bg-yellow-500',
+        'ongoing'  => 'bg-yellow-500/30 text-yellow-600 ',
         'done'     => 'bg-[#38C55C]',
         'cancelled' => 'bg-[#C90B0B]',
         'rejected' => 'bg-[#C90B0B]'

@@ -17,14 +17,14 @@
             <div class="order-2 lg:order-none lg:col-span-2">
                 <div class="bg-[#FBFCFF] rounded-2xl shadow-lg p-6 md:p-8">
 
-                    <form id="bookingForm" action="/Booking/handleBooking" method="POST">
+                    <form id="rescheduleForm" action="<?= BASEURL ?>Booking/handleReschedule" method="POST">
                         <input type="hidden" name="id_room" value="<?= $detailRuangan['id_room'] ?>">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div class="relative">
                                 <label class="block text-sm font-semibold text-gray-700 mb-2 flex items-center">
                                     Tanggal Pinjam <span class="text-red-500 ml-1">*</span>
                                 </label>
-                                <input type="date" id="tanggalPinjam" name="tanggalPinjam" required
+                                <input type="date" id="tanggalPinjam" name="tanggalBaru" required
                                     class="w-full p-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition text-sm">
                             </div>
                             <div class="flex items-end">
@@ -76,7 +76,8 @@
                                             class="nama-input w-full px-4 py-2.5 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm">
                                     </div>
                                 </div>
-                                <?php for ($i= 0; $i < $detailRuangan['min_capacity'] - 1 ; $i++) :?>
+                                <?php $i = 0 ?>
+                                    <?php foreach($members as $member) :?>
                                 <div class="member-card p-4 bg-gray-50 rounded-xl border border-gray-300">
                                     <div class="flex items-center justify-between mb-2">
                                         <div class="flex items-center">
@@ -85,13 +86,14 @@
                                         </div>
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                        <input type="text" maxlength="10" placeholder="NIM/NIP Anggota *" name="nim[]" required
+                                        <input type="text" maxlength="10" placeholder="NIM/NIP Anggota *" name="nim[]" value="<?= $member['nomor_induk'] ?>" required
                                             class="nim-input w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm">
-                                        <input type="text" placeholder="Nama Lengkap Anggota" name="nama[]" readonly
+                                        <input type="text" placeholder="<?= $member['username'] ?>" name="nama[]" readonly
                                             class="nama-input w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-sm">
                                     </div>
                                 </div>
-                                <?php endfor ?>
+                                <?php $i++ ?>
+                                <?php endforeach ?>
                             </div>
                             <button type="button" id="addMember" onclick="addMember()"
                                     class="rounded-md mt-4 flex items-center bg-[#1E68FB10] text-[#1E68FB] hover:text-blue-700 hover:bg-blue-200 hover:cursor-pointer text-sm font-medium transition px-4 py-1">
@@ -107,6 +109,7 @@
 
                         <button type="submit"
                                 class="w-full py-3 hover:cursor-pointer bg-[#38C55C] text-white font-bold rounded-xl hover:bg-emerald-600 transition shadow-sm text-base">
+                                <input type="hidden" value="<?= $detailRuangan['id_booking'] ?>" name="id_booking" >
                             Booking Ruangan Ini
                         </button>
                     </form>
@@ -223,23 +226,6 @@ INI POP UP KONFIRMASI
                 Konfirmasi
             </button>
         </div>
-    </div>
-</div>
-
-<!-- **************************************************
-INI POP UP SUCCESS
-******************************************************* -->
-<div id="successModal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
-    <div class="bg-white rounded-2xl p-8 w-full max-w-sm mx-4 text-center border border-[#8E97A6]">
-        <div class="mb-4">
-            <i class="fas fa-check-circle text-green-500 text-5xl"></i>
-        </div>
-        <h3 class="text-xl font-bold text-gray-800 mb-2">Request Booking Berhasil</h3>
-        <p class="text-sm text-gray-600 mb-6">Tunggu approval dari admin</p>
-        <button
-                class="w-full px-6 py-2 bg-[#38C55C] text-white rounded-lg font-semibold hover:bg-green-600 transition hover:cursor-pointer">
-            OK
-        </button>
     </div>
 </div>
 
