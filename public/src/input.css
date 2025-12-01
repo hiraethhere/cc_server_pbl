@@ -26,7 +26,44 @@
 @theme {
   /* ... di sini Anda tambahkan konfigurasi font family Anda */
   --font-sf-pro: 'SF Pro Display';
-  --color-dark-overlay: 23 30 41;
-  --color-blue-overlay: 30 104 251;
-  --color-primary: #FFF
+
+  --color-background1: #F9FAFC;
+  --color-background2: #FBFCFF;
+
+  /* black */
+  --color-dark-overlay1: #171e291a;
+  --color-dark-overlay2: #171e2933;
+  --color-dark-overlay3: #171e294d;
+  --color-dark-overlay4: #171e2966;
+  --color-dark-overlay5: #171e2980;
+  --color-dark-overlay6: #171e2999;
+  --color-dark-overlay7: #171e29b3;
+  --color-dark-overlay8: #171e29cc;
+  --color-dark-overlay9: #171e29e6;
+  --color-dark-overlay: #171e29;
+
+  /* blue */
+  --color-blue-overlay: #1e68fb;
+  --color-blue-overlay1: #1e68fb1a;
+  --color-blue-overlay2: #1e68fb33;
+  --color-blue-overlay3: #1e68fb4d;
+  --color-blue-overlay4: #1e68fb66;
+  --color-blue-overlay5: #1e68fb80;
+  --color-blue-overlay6: #1e68fb99;
+  --color-blue-overlay7: #1e68fbb3;
+  --color-blue-overlay8: #1e68fbcc;
+  --color-blue-overlay9: #1e68fbe6;
+  
+
+  /* white */
+  --color-white1: #FCFCFC;
+
+  /* green */
+  --color-green1: #38C55C;
+
+  /* red */
+  --color-red1: #C90B0B;
+
+  /* yellow */
+  --color-yellow1: #FDDF30;
 }

@@ -99,10 +99,17 @@ class Booking extends Controller {
     public function handleBooking(){
         Flasher::modalInfo();
 
-        $id_room = $_POST['id_room'];
-        $bookingDate = $_POST['tanggalPinjam'];
-        $startTime = $_POST['jamMulai'];
-        $endTime = $_POST['jamSelesai'];
+        $id_room = $_POST['id_room'] ?? NULL;
+        $bookingDate = $_POST['tanggalPinjam']?? NULL;
+        $startTime = $_POST['jamMulai']?? NULL;
+        $endTime = $_POST['jamSelesai']?? NULL;
+
+        if (!$id_room || !$bookingDate || !$startTime || !$endTime) {
+            Flasher::setModalInfo('Gagal!', 'Semua field wajib diisi', 'error');
+            header("Location: /dashboard");
+        exit;
+        }
+
 
         if (!isset($_POST['nim']) || !is_array($_POST['nim'])) {
             // Handle jika tidak ada input NIM sama sekali

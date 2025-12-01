@@ -187,10 +187,6 @@ class Auth extends Controller {
                 throw new Exception('Verifikasi keamanan gagal. Silakan coba lagi.');
             }
 
-            if (isset($_POST['remember'])) {
-                # code...
-            }
-
             $data = [
             'email' => $_POST['email'],
             'password' => $_POST['password']

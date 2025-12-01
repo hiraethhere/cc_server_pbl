@@ -117,7 +117,6 @@ function isActive($current, $check) {
                     </div>
                 </div>
             </div>
-            <?php echo date('Y-m-d H:i:s', strtotime('+2 hours')) ?>
             <div class="rounded-lg shadow-sm border border-gray-200 overflow-hidden mx-8 mt-4">
                 <div class="overflow-x-auto">
                     <table class="w-full">
@@ -133,9 +132,10 @@ function isActive($current, $check) {
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
+                            <?php $i = 1 ?>
                             <?php foreach($bookings as $booking) : ?>
                             <tr class="hover:bg-gray-50 transition-colors duration-150">
-                                <td class="px-6 py-4 text-xs text-gray-900">1</td>
+                                <td class="px-6 py-4 text-xs text-gray-900"><?= $i ?></td>
                                 <td class="px-6 py-4 text-xs font-medium text-gray-900"><?= tanggal_indonesia($booking['start_time']) ?>
                                     <br>
                                     <span><?= waktu_indonesia($booking['start_time']) . '-' . waktu_indonesia($booking['end_time']) ?></span>
@@ -149,12 +149,13 @@ function isActive($current, $check) {
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    <a href="#"
+                                    <a href="<?= BASEURL . '/admin/' . $link ?>"
                                        class="inline-flex items-center px-4 py-2 text-xs font-medium text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-150">
                                         Lihat Detail
                                     </a>
                                 </td>
                             </tr>
+                            <?php $i++ ?>
                             <?php endforeach ?>
                         </tbody>
                     </table>

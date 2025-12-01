@@ -19,7 +19,7 @@
                 <p class="text-[#171E2990] mb-2 pb-2 leading-relaxed border-b border-[#171E29] text-sm">
                     Ruang bersih, tenang, dilengkapi wifi, cocok untuk belajar, rapat, dan aktivitas produktif.
                 </p>
-                <a href="#" class="w-full mt-1">
+                <a href="/Admin/bookingRuangRapat" class="w-full mt-1">
                     <button class="px-6 py-2 bg-[#1E68FB] hover:bg-blue-700 text-white font-semibold text-sm rounded-md shadow-md hover:shadow-lg transition hover:cursor-pointer w-full">
                         Booking
                     </button>
@@ -79,7 +79,7 @@
                     </div>           
                 </div>
                 <div class="w-full flex justify-end">
-                    <a href="#"
+                    <a href="/Admin/bookingRuangan"
                         class="flex items-center justify-center w-full bg-[#1E68FB] text-white text-center rounded-xl font-semibold text-sm hover:bg-[#38C55C] transition duration-200 py-2">
                         Booking
                     </a>

@@ -1,7 +1,7 @@
 
     <!-- Main Content -->
-    <main class="container mx-auto px-6 py-8">
-        <h2 class="text-3xl font-bold text-black mb-8 text-center">Ruangan Yang Bisa Dipinjam</h2>
+    <main class="container mx-auto md:px-6 lg:px-6 px-1 py-8">
+        <h2 class="lg:text-3xl md:text-2xl text-2xl font-bold text-black mb-8 text-center">Ruangan Yang Bisa Dipinjam</h2>
 
         <!-- Capacity Filters -->
         <div class="flex justify-start mb-6 space-x-4 mx-5">

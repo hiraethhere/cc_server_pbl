@@ -57,7 +57,7 @@ class BookingModel {
     public function createBooking($data){
 
         $query = "INSERT INTO bookings (id_room, id_user,total_person, booking_code, start_time, end_time, status, created_at) 
-                  VALUES (:id_room, :id_user, :total_person, :booking_code, :start, :end, 'active', NOW())";
+                  VALUES (:id_room, :id_user, :total_person, :booking_code, :start, :end, 'pending', NOW())";
         
         $this->db->query($query);
         $this->db->bind('id_room', $data['id_room']);
@@ -77,7 +77,7 @@ class BookingModel {
     $query = "SELECT DISTINCT b.id_booking, b.start_time FROM bookings b
               LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
               WHERE (b.id_user = :uid OR bm.id_user = :uid)
-              AND b.status IN ('pending', 'active', 'ongoing')
+              AND b.status IN ('pending', 'ongoing')
               ORDER BY b.start_time DESC LIMIT 1";
 
     $this->db->query($query);
@@ -122,7 +122,7 @@ class BookingModel {
         return $this->db->singleSet();
     }
 
-    public function insertBookingMember($id_booking, $id_user){
+    public function BookingMember($id_booking, $id_user){
         $query = "INSERT INTO booking_members (id_booking, id_user)
                     VALUES (:id_booking, :id_user)";
         $this->db->query($query);
@@ -174,10 +174,24 @@ class BookingModel {
         return $this->db->rowCount();
     }
 
-    public function getBookingTodayjoinRoom() {
+    public function getBookingTodayJoinRoom() {
         $this->db->query("SELECT b.id_booking, b.start_time, b.end_time, b.booking_code, b.booker_name, b.status, r.room_name
                         FROM bookings b JOIN rooms r ON b.id_room = r.id_room
                         WHERE DATE(start_time) = CURDATE() ORDER BY start_time DESC");
+        return $this->db->resultSet();
+    }
+
+    public function getBookingPendingjoinRoom() {
+        $this->db->query("SELECT b.id_booking, b.start_time, b.end_time, b.booking_code, b.booker_name, b.status, r.room_name
+                        FROM bookings b JOIN rooms r ON b.id_room = r.id_room
+                        WHERE b.status = 'pending' ORDER BY start_time DESC");
+        return $this->db->resultSet();
+    }
+
+    public function getBookingDoneAndCancelledjoinRoom() {
+        $this->db->query("SELECT b.id_booking, b.start_time, b.end_time, b.booking_code, b.booker_name, b.status, r.room_name
+                        FROM bookings b JOIN rooms r ON b.id_room = r.id_room
+                        WHERE b.status IN ('done', 'cancelled') ORDER BY start_time DESC");
         return $this->db->resultSet();
     }
 
