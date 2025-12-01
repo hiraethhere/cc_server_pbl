@@ -22,7 +22,7 @@
                 <p class="block text-sm font-medium text-gray-700 mb-2">Nama Ruangan</p>
                 <span 
                     class="block w-full px-4 py-2 bg-white border border-[#888D93] rounded-lg text-gray-800">
-                    Ruang Lentera Edukasi
+                    <?= htmlspecialchars($reschedule['room_name']) ?>
                 </span>
             </div>
 
@@ -34,21 +34,21 @@
                         <p class="mb-2">Tanggal</p>
                         <span
                             class="block w-full px-3 py-2 bg-white border border-[#888D93] rounded-lg text-left">
-                            5 September 2025
+                            <?= htmlspecialchars(tanggal_indonesia($reschedule['new_start_time'])) ?>
                         </span>
                     </div>
                     <div class="flex-1">
                         <p class="mb-2">Jam Mulai</p>
                         <span 
                             class="block w-full px-3 py-2 bg-white border border-[#888D93] rounded-lg text-left">
-                            13:00
+                            <?= htmlspecialchars(waktu_indonesia($reschedule['new_start_time']) ?? '-   ') ?>
                         </span>
                     </div>
                     <div class="flex-1">
                         <p class="mb-2">Jam Selesai</p>
                         <span 
                             class="block w-full px-3 py-2 bg-white border border-[#888D93] rounded-lg text-left">
-                            15:00
+                            <?= htmlspecialchars(waktu_indonesia($reschedule['new_end_time']) ?? '-') ?>
                         </span>
                     </div>
                 </div>
@@ -62,21 +62,21 @@
                         <p class="mb-2">Nama</p>
                         <span
                             class="block w-full px-3 py-2 bg-white border border-[#888D93] rounded-lg text-left">
-                            Muhammad Reza Arifin
+                            <?= htmlspecialchars($reschedule['username']) ?>
                         </span>
                     </div>
                     <div class="flex-1">
                         <p class="mb-2">NIM</p>
                         <span 
                             class="block w-full px-3 py-2 bg-white border border-[#888D93] rounded-lg text-left">
-                            2407411000
+                            <?= htmlspecialchars($reschedule['nomor_induk']) ?>
                         </span>
                     </div>
                     <div class="flex-1">
                         <p class="mb-2">Jurusan</p>
                         <span 
                             class="block w-full px-3 py-2 bg-white border border-[#888D93] rounded-lg text-left">
-                            Teknik Informatika dan Komputer
+                            <?= htmlspecialchars($reschedule['jurusan_unit']) ?>
                         </span>
                     </div>
                 </div>
@@ -86,24 +86,14 @@
             <div class="mb-5 w-full">
                 <p class="block text-sm font-medium text-gray-700 mb-2">Informasi Anggota</p>
                 <div class="flex flex-col justify-between gap-3 border border-[#5C616A] p-4 rounded-lg flex-wrap">
+                    <?php foreach($members as $member) :?>
                     <div class="flex-1">
                         <span
-                            class="block w-full px-3 py-2 bg-white border border-[#888D93] rounded-lg text-left">
-                            Muhammad Reza Arifin
+                            class="block w-full px-3 py-2 bg-whi    te border border-[#888D93] rounded-lg text-left">
+                            <?= htmlspecialchars($member['username']) ?>
                         </span>
                     </div>
-                    <div class="flex-1">
-                        <span 
-                            class="block w-full px-3 py-2 bg-white border border-[#888D93] rounded-lg text-left">
-                            Muhammad Reza Arifin
-                        </span>
-                    </div>
-                    <div class="flex-1">
-                        <span 
-                            class="block w-full px-3 py-2 bg-white border border-[#888D93] rounded-lg text-left">
-                            Muhammad Reza Arifin
-                        </span>
-                    </div>
+                    <?php endforeach ?>
                 </div>
             </div>
 
@@ -121,9 +111,9 @@
                 <button class="flex-1 bg-[#C90B0B] hover:bg-red-700 text-white font-medium py-2.5 rounded-lg transition hover:cursor-pointer">
                 Decline
                 </button>
-                <button class="flex-1 bg-[#38C55C] hover:bg-green-700 text-white font-medium py-2.5 rounded-lg transition hover:cursor-pointer">
+                <a href="/admin/approveReschedule/<?=  $reschedule['id_reschedule'] ?>" class="flex-1 bg-[#38C55C] hover:bg-green-700 text-white font-medium py-2.5 rounded-lg transition hover:cursor-pointer">
                 Approve
-                </button>
+                </a>
             </div>
         </div>
 
@@ -170,15 +160,15 @@
                 </div>
 
                     <div class="p-6">
-                        <h3 class="font-bold text-2xl text-gray-800 mb-4">Ruang Lentera Edukasi</h3>
+                        <h3 class="font-bold text-2xl text-gray-800 mb-4"><?= htmlspecialchars($reschedule['room_name']) ?></h3>
                         <div class="space-y-3 text-sm text-gray-600 mb-6">
                             <p class="flex items-center">
                                 <img src="/icon/location.svg" alt="Lantai" class="w-5 h-5 mr-3">
-                                lantai 2
+                                <?= 'lantai '.htmlspecialchars($reschedule['floor']) ?>
                             </p>
                             <p class="flex items-center">
                                 <img src="/icon/userOutline.svg" alt="Jumlah Orang" class="w-5 h-5 mr-3">
-                                4 - 8 orang
+                                <?= htmlspecialchars($reschedule['min_capacity']) . '-' . htmlspecialchars($reschedule['max_capacity']) ?>
                             </p>
                         </div>
                         <details class="text-gray-600">
@@ -187,7 +177,7 @@
                                 <img src="/icon/arrowDown.svg" alt="Deskripsi" class="w-4 h-4 ml-3">
                             </summary>
                             <p class="mt-3 text-sm leading-relaxed text-justify">
-                                Ruangan (...) dengan luas xx m² yang berada di lantai x Perpustakaan Politeknik Negeri Jakarta ini dirancang untuk memberikan kenyamanan dan fasilitas lengkap bagi penggunanya. Ruangan ini dapat Anda gunakan bersama dengan rekan Anda untuk berbagai keperluan, seperti diskusi kelompok, presentasi, atau kegiatan pembelajaran lainnya yang memerlukan suasana tenang dan fokus.
+                                <?= htmlspecialchars($reschedule['description']) ?>
                             </p>
                         </details>
                     </div>
@@ -198,7 +188,7 @@
                         <p class="block text-sm font-medium text-gray-700 mb-2">Kode Booking</p>
                         <span 
                             class="block w-full px-4 py-2 bg-white border border-[#888D93] rounded-lg text-gray-800">
-                            16HDQ89WRH
+                            <?= htmlspecialchars($reschedule['booking_code']) ?>
                         </span>
                     </div>
 
@@ -214,7 +204,7 @@
                                 fill="currentcolor" 
                                 d="M12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22"/>
                             </svg>
-                            <p>Diterima</p>
+                            <p><?= htmlspecialchars($reschedule['status_reschedule']) ?></p>
                         </a>
                     </div>
                 </div>

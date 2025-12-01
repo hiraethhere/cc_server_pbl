@@ -41,15 +41,22 @@ class BookingModel {
     return $this->db->resultSet();
     }
 
-    public function roomCheck($id_room, $end_req, $start_req){
+    //ini pengecekan apakah ada booking yang nabrak di rentang waktu segitu?
+    public function roomCheck($id_room, $end_req, $start_req, $exclude_id = NULL){
         $query = "SELECT COUNT(*) as total FROM bookings WHERE id_room = :id_room
                   AND STATUS NOT IN ('rejected', 'cancelled', 'done')
                   AND (start_time < :end_req AND end_time > :start_req)";
+        if ($exclude_id != NULL) {
+        $query .= " AND id_booking != :exclude_id"; 
+        }
 
         $this->db->query($query);
         $this->db->bind('id_room', $id_room);
         $this->db->bind('end_req', $end_req, PDO::PARAM_STR);
         $this->db->bind('start_req', $start_req, PDO::PARAM_STR);
+        if ($exclude_id != NULL) {
+        $this->db->bind('exclude_id', $exclude_id);
+        }
 
         return $this->db->singleSet();
     }
@@ -152,7 +159,7 @@ class BookingModel {
         // Cek tabel bookings apakah user pernah booking sebagai ketua?
         $query1 = "SELECT COUNT(*) as total FROM bookings 
                 WHERE id_user = :uid 
-                AND status IN ('pending', 'active', 'ongoing')
+                AND status IN ('pending', 'ongoing')
                 AND start_time BETWEEN :range_start AND :range_end";
         
         $this->db->query($query1);
@@ -181,6 +188,36 @@ class BookingModel {
         return true; // user tidak memiliki booking
     }
 
+    //ini untuk reschedule dimana dia update total person dan juga schedulenya di tabel bookings
+    public function updateScheduleAndTotalPerson($id_booking, $start, $end, $total){
+        $query = "UPDATE bookings SET start_time = :start, end_time = :end, total_person = :total_person WHERE id_booking = :id_booking";
+        $this->db->query($query);
+        $this->db->bind('start', $start);
+        $this->db->bind('end', $end);
+        $this->db->bind('total_person', $total);
+        $this->db->bind('id_booking', $id_booking);
+        $this->db->execute();
+        return $this->db->rowCount();
+    }
+
+    public function clearBookingMembers($id_booking) {
+        $query = "DELETE FROM booking_members WHERE id_booking = :id";
+        $this->db->query($query);
+        $this->db->bind('id', $id_booking);
+        $this->db->execute();
+    }
+
+    public function importMembersFromReschedule($id_booking, $id_reschedule) {
+        $query = "INSERT INTO booking_members (id_booking, id_user)
+                  SELECT :id_booking, id_user 
+                  FROM reschedule_members 
+                  WHERE id_reschedule = :id_res";
+        $this->db->query($query);
+        $this->db->bind('id_booking', $id_booking);
+        $this->db->bind('id_res', $id_reschedule);
+        $this->db->execute();
+    }
+
 
     public function cancelBooking($id_booking){
         $query = "UPDATE bookings SET status = 'cancelled', cancel_by = 'user' WHERE id_booking = :id_booking";
@@ -190,23 +227,26 @@ class BookingModel {
         return $this->db->rowCount();
     }
 
-    public function getBookingTodayJoinRoom() {
-        $this->db->query("SELECT b.id_booking, b.start_time, b.end_time, b.booking_code, b.booker_name, b.status, r.room_name
+    public function getBookingTodayJoinRoomAndUser() {
+        $this->db->query("SELECT b.id_booking, u.username, b.start_time, b.end_time, b.booking_code, b.booker_name, b.status, r.room_name
                         FROM bookings b JOIN rooms r ON b.id_room = r.id_room
+                        JOIN users u ON b.id_user = u.id_user
                         WHERE DATE(start_time) = CURDATE() ORDER BY start_time DESC");
         return $this->db->resultSet();
     }
 
     public function getBookingPendingjoinRoom() {
-        $this->db->query("SELECT b.id_booking, b.start_time, b.end_time, b.booking_code, b.booker_name, b.status, r.room_name
+        $this->db->query("SELECT b.id_booking, u.username, b.start_time, b.end_time, b.booking_code, b.booker_name, b.status, r.room_name
                         FROM bookings b JOIN rooms r ON b.id_room = r.id_room
+                        JOIN users u ON b.id_user = u.id_user
                         WHERE b.status = 'pending' ORDER BY start_time DESC");
         return $this->db->resultSet();
     }
 
     public function getBookingDoneAndCancelledjoinRoom() {
-        $this->db->query("SELECT b.id_booking, b.start_time, b.end_time, b.booking_code, b.booker_name, b.status, r.room_name
+        $this->db->query("SELECT b.id_booking, u.username, b.start_time, b.end_time, b.booking_code, b.booker_name, b.status, r.room_name
                         FROM bookings b JOIN rooms r ON b.id_room = r.id_room
+                        JOIN users u ON b.id_user = u.id_user
                         WHERE b.status IN ('done', 'cancelled') ORDER BY start_time DESC");
         return $this->db->resultSet();
     }
@@ -215,21 +255,22 @@ class BookingModel {
         $this->db->query("SELECT * FROM bookings ORDER BY start_time DESC LIMIT :limit OFFSET :offset;");
     }
 
-    // BookingModel.php
     public function getBookingByIdAndUser($id_booking, $id_user){
-    // Ambil data booking DAN data ruangan sekaligus
-    $query = "SELECT b.*, r.room_name, r.min_capacity, max_capacity, r.description, r.img_room, r.floor
+        // Ambil data booking DAN data ruangan sekaligus
+        $query = "SELECT b.*, r.room_name, r.min_capacity, max_capacity, r.description, r.img_room, r.floor
               FROM bookings b
               JOIN rooms r ON b.id_room = r.id_room
               WHERE b.id_booking = :id_booking 
               AND b.id_user = :id_user";
               
-    $this->db->query($query);
-    $this->db->bind('id_booking', $id_booking);
-    $this->db->bind('id_user', $id_user);
+        $this->db->query($query);
+        $this->db->bind('id_booking', $id_booking);
+        $this->db->bind('id_user', $id_user);
     
-    return $this->db->singleSet(); // Gunakan single() karena cuma mau 1 data
-}
+        return $this->db->singleSet();
+    }
+
+    
 
     public function autoCancelLateBookings()
     {

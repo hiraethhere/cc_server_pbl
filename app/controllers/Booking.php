@@ -42,6 +42,7 @@ class Booking extends Controller {
         //Jika Tab adalah Reschedule, ambil data tambahannya
                 if ($data['currentTab'] === 'reschedule') {
                 $data['reschedules'] = $this->model('RescheduleModel')->getRescheduleByBookingId($bookingId);
+                // $data['reschedules'] = $this->model('RescheduleModel')->getAllRescheduleByIdUser($_SESSION['user']['user_id']);
             }
         }
 
