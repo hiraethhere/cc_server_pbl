@@ -57,8 +57,8 @@
                         </div>
                         <a href="/Auth/ForgetPassword" class="text-blue-600 hover:underline font-medium">Lupa Password?</a>
                     </div>
-
-                    <div class="mb-6 flex justify-center">
+                    <!-- cloudflare brooo -->
+                    <div class="mb-6 flex justify-left">
                         <div class="cf-turnstile" data-sitekey="<?= TURNSTILE_SITE_KEY ?>"></div>
                     </div>
 

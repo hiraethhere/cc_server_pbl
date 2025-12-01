@@ -23,7 +23,9 @@ class s_20251119_03_userSeeder extends Seeder{
             (6, 3, 'Shidqi Athallah Bahri', '$passwordUser', 'shidqi.tik24@stu.pnj.ac.id', '2407411038', 'TIK', 'D4 Teknik Informatika', 'active', 0, 1, NULL, NULL, NULL, NULL , NOW(), NOW()),
             (7, 4, 'Nadiva Mecca Rimanda', '$passwordUser', 'mecca.tik24@stu.pnj.ac.id', '2407411037', 'TIK', NULL, 'active', 0, 1, NULL, NULL, NULL, NULL , NOW(), NOW()),
             (8, 5, 'Naqib Zuhair Al-Hudri', '$passwordUser', 'naqib.tik24@stu.pnj.ac.id', '2407411039', 'Perpustakaan', NULL, 'active', 0, 1, NULL, NULL, NULL, NULL , NOW(), NOW()),
-            (9, 3, 'antin', '$passwordUser', 'expired@example.com', '556677891', 'TIK', 'Teknik Multimedia', 'active', 0, 1, NULL, NULL, NULL, '$expired' , NOW(), NOW())
+            (9, 3, 'antin', '$passwordUser', 'expired@example.com', '556677891', 'TIK', 'Teknik Multimedia', 'active', 0, 1, NULL, NULL, NULL, '$expired' , NOW(), NOW()),
+            (10, 3, 'Lebron James', '$passwordUser', 'lebron.tik24@stu.pnj.ac.id', '2407411045', 'Teknik NBA', NULL, 'pending', 0, 1, NULL, NULL, NULL, NULL , NOW(), NOW()),
+            (11, 4, 'Naufal Bryant', '$passwordUser', 'naufal.tik24@stu.pnj.ac.id', '2407411046', 'Teknik At-Taufiq', NULL, 'pending', 0, 1, NULL, NULL, NULL, NULL , NOW(), NOW())
             ";
 
     $this->db->query($sql);
