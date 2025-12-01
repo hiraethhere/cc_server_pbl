@@ -14,7 +14,7 @@ class m_20251119_05_create_table_bookings extends Migration{
                 start_time DATETIME,
                 end_time DATETIME,
                 booking_code VARCHAR(10),
-                status ENUM('pending','active','ongoing','done', 'cancelled') DEFAULT 'active',
+                status ENUM('pending','ongoing','done', 'cancelled') DEFAULT 'pending',
                 reject_reason VARCHAR(255) NULL,
                 cancel_by ENUM('user','system','admin') NULL,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

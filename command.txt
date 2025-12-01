@@ -1,0 +1,14 @@
+Docker Command
+# kalo mau up jalanin container
+docker-compose up 
+# kalo mau build container-container (ngambil dari docker compose) 
+docker-compose up -d --build
+# masuk ke bash (terminal) container
+docker exec -it <nama container> bash
+contoh: docker exec -it ruanginPNJ_server bash
+
+# migrasi database
+# masuk dulu ke container ruanginPNJ_server trus run command yang ada di cli.php
+docker exec -it ruanginPNJ_server bash
+php cli.php migrate:fresh
+
