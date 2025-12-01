@@ -77,7 +77,7 @@ class BookingModel {
     $query = "SELECT DISTINCT b.id_booking, b.start_time FROM bookings b
               LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
               WHERE (b.id_user = :uid OR bm.id_user = :uid)
-              AND b.status IN ('pending', 'active', 'ongoing')
+              AND b.status IN ('pending', 'ongoing')
               ORDER BY b.start_time DESC LIMIT 1";
 
     $this->db->query($query);
