@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const roomIdInput = document.getElementById('id_room');
 
     // Fallback jika roomId tidak ada
-        const roomId = roomIdInput ? roomIdInput.value : 1;
+        const roomId = roomIdInput ? roomIdInput.value : '';
 
     // config waktu, atur aja
     const operationalStart = 8 * 60; // 08:00

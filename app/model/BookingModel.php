@@ -131,7 +131,7 @@ class BookingModel {
     }
 
     //ini buat masukin anggota ke booking members
-    public function BookingMember($id_booking, $id_user){
+    public function insertBookingMember($id_booking, $id_user){
         $query = "INSERT INTO booking_members (id_booking, id_user)
                     VALUES (:id_booking, :id_user)";
         $this->db->query($query);

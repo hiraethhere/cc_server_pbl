@@ -1,15 +1,9 @@
 <?php
-// Hanya untuk logika tab (tidak pakai database)
-$tab = $_GET['tab'] ?? 'approval';
-$tab = strtolower($tab);
-$valid_tabs = ['semua', 'approval'];
-if (!in_array($tab, $valid_tabs)) {
-    $tab = 'approval';
-}
 
 function isActive($current, $check) {
     return $current === $check;
 }
+$nomor = ($current_page - 1) * $limit + 1
 ?>
 
 
@@ -121,6 +115,7 @@ function isActive($current, $check) {
                 </div>
             </div>
 
+
             <!-- Table Daftar Anggota -->
             <div class="rounded-lg shadow-sm border border-gray-200 overflow-hidden mx-8">
                 <div class="overflow-x-auto">
@@ -136,10 +131,9 @@ function isActive($current, $check) {
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
-                            <?php $i = 1 ?>
                             <?php foreach($users as $user) : ?>
                             <tr class="hover:bg-gray-50 transition-colors duration-150">
-                                <td class="px-6 py-4 text-sm text-gray-900"><?= $i ?></td>
+                                <td class="px-6 py-4 text-sm text-gray-900"><?= $nomor ?></td>
                                 <td class="px-6 py-4 text-sm font-medium text-gray-900"><?= htmlspecialchars($user['username'] ?? '-') ?></td>
                                 <td class="px-6 py-4">
                                     <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm <?= getStyleRole($user['role_name']) ?>">
@@ -159,7 +153,7 @@ function isActive($current, $check) {
                                     </a>
                                 </td>
                             </tr>
-                            <?php $i += 1 ?>
+                            <?php $nomor += 1 ?>
                             <?php endforeach ?>
                         </tbody>
                     </table>
@@ -253,10 +247,9 @@ function isActive($current, $check) {
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
-                            <?php $c = 1 ?>
                             <?php foreach($users as $user) : ?>
                             <tr class="hover:bg-gray-50 transition-colors duration-150">
-                                <td class="px-6 py-4 text-sm text-gray-900"><?= $c ?></td>
+                                <td class="px-6 py-4 text-sm text-gray-900"><?= $nomor ?></td>
                                 <td class="px-6 py-4 text-sm font-medium text-gray-900"><?= htmlspecialchars($user['username'] ?? '-') ?></td>
                                 <td class="px-6 py-4">
                                     <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm bg-[#B9D0FE] <?= getStyleRole($user['role_name']) ?>">
@@ -276,7 +269,7 @@ function isActive($current, $check) {
                                     </a>
                                 </td>
                             </tr>
-                            <?php $c += 1 ?>
+                            <?php $nomor += 1 ?>
                             <?php endforeach ?>
                         </tbody>
                     </table>
@@ -285,34 +278,76 @@ function isActive($current, $check) {
 
         <?php endif; ?>
         
-        <!-- Pagination (Sama untuk kedua tab) -->
+                <?php if ($total_page >= 1): ?>
+            
         <div class="flex items-center justify-center px-6 py-4 bg-white border-t border-gray-200 mx-8">
+            
             <div class="flex items-center gap-2">
-                <button class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-150">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                    </svg>
-                </button>
-                <button class="px-4 py-2 text-sm font-medium text-white bg-[#1E68FB] rounded-lg">1</button>
-                <button class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-150">2</button>
-                <button class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-150">3</button>
-                <span class="px-2 text-gray-500">...</span>
-                <button class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-150">8</button>
-                <button class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-150">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                    </svg>
-                </button>
+                
+                <?php if ($current_page > 1): ?>
+                    <a href="?tab=<?= $tab; ?>&page=<?= $current_page - 1; ?>" class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-150">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </a>
+                <?php else: ?>
+                    <button disabled class="p-2 text-gray-300 cursor-not-allowed rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+                <?php endif; ?>
+
+
+                <?php for ($p = 1; $p <= $total_page; $p++) : ?>
+                    
+                    <?php if ($p == $current_page) : ?>
+                        <button class="px-4 py-2 text-sm font-medium text-white bg-[#1E68FB] rounded-lg">
+                            <?= $p; ?>
+                        </button>
+                    
+                    <?php else : ?>
+                        <a href="?tab=<?= $tab; ?>&page=<?= $p; ?>" class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-150 block">
+                            <?= $p; ?>
+                        </a>
+                    <?php endif; ?>
+
+                <?php endfor; ?>
+
+
+                <?php if ($current_page < $total_page): ?>
+                    <a href="?tab=<?= $tab; ?>&page=<?= $current_page + 1; ?>" class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-150">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                <?php else: ?>
+                    <button disabled class="p-2 text-gray-300 cursor-not-allowed rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                <?php endif; ?>
+            <?php endif; ?>
+
             </div>
 
-            <div class="flex items-center gap-2">
-                <span class="text-sm text-gray-600">Go to</span>
-                <input type="text" value="1" 
-                       class="w-16 px-3 py-2 text-center text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <span class="text-sm text-gray-600">Page</span>
+                    <form action="" method="GET" class="flex items-center gap-2 ml-4">
+                        <input type="hidden" name="tab" value="<?= $tab; ?>">
+                        <span class="text-sm text-gray-600">Go to</span>
+                        <input type="number" 
+                            name="page" 
+                            min="1" 
+                            max="<?= $total_page; ?>"
+                            value="<?= $current_page; ?>" 
+                            class="w-16 px-3 py-2 text-center text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        
+                        <span class="text-sm text-gray-600">Page</span>
+                        
+                        <button type="submit" class="hidden"></button>
+                    </form>
+                </div>
             </div>
-        </div>
-    </div>
 </main>
 
 <script src="/js/filterDropdown.js" defer></script>

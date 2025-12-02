@@ -28,13 +28,25 @@ class Admin extends Controller {
     
     public function Anggota(){
 
-        $activeTab = isset($_GET['tab']) ? $_GET['tab'] : 'approval';
+        $data['tab'] = isset($_GET['tab']) ? $_GET['tab'] : 'approval';
+        $data['current_page'] = 1;
+        $data['total_page'] = 1;
 
-        if ($activeTab == 'approval') {
-            $data['users'] = $this->model('UserModel')->getUserForAdmin();
+        $data['limit'] = 5;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $start = ($page > 1) ? ($page * $data['limit']) - $data['limit'] : 0;
+
+        if ($data['tab'] == 'approval') {
+            $data['users'] = $this->model('UserModel')->getUserForAdminPaginated($data['limit'], $start);
+            $total_data = $this->model('UserModel')->countPendingUsers()['total'];
+            $data['total_page'] = ceil($total_data / $data['limit']);
+            $data['current_page'] = $page;
            $data['link'] = 'selesaikan';
         } else {
-            $data['users'] = $this->model('UserModel')->getAllUsersPaginated(10, 0);
+            $data['users'] = $this->model('UserModel')->getAllUsersPaginated($data['limit'], $start);
+            $total_data = $this->model('UserModel')->countAllUsers()['total'];
+            $data['total_page'] = ceil($total_data / $data['limit']);
+            $data['current_page'] = $page;
             $data['link'] = 'detailAnggota';
         }
 

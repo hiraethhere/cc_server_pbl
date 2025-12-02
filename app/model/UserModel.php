@@ -140,9 +140,8 @@ class UserModel {
         return $this->db->singleSet();
     }
 
-    public function getUserForAdminPaginated($limit, $start)
-    {
-        $query = "SELECT u.id_user, u.username, r.role_name, u.nomor_induk, u.jurusan_unit, u.created_at 
+    public function getUserForAdminPaginated($limit, $start){
+        $query = "SELECT u.id_user, u.username, r.role_name, u.nomor_induk, u.status, u.jurusan_unit, u.created_at 
                   FROM users u 
                   JOIN roles r ON u.id_role = r.id_role 
                   WHERE u.id_role NOT IN (1,2) 
@@ -183,8 +182,7 @@ class UserModel {
         return $this->db->singleSet();
     }
 
-    public function countPendingUsers()
-    {
+    public function countPendingUsers(){
         // Tidak perlu JOIN untuk hitung total, cukup filter tabel users saja biar cepat
         $query = "SELECT COUNT(*) as total 
                   FROM users 
