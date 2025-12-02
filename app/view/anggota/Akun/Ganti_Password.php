@@ -1,67 +1,66 @@
 <!-- Main Content -->
 <main class="container mx-auto px-6 pt-8 pb-22 w-97/100 flex-1 flex flex-col justify-center items-center min-h-9/10 bg-cover">
 
-    <nav class="text-sm text-dark-overlay/60 w-full mb-12">
-        <a href="/Akun" class="text-gray-900 hover:text-[#1E68FB]">Akun</a>
-        <span class="mx-2">></span>
+    <nav class="flex text-sm text-dark-overlay6 w-full mb-12">
+        <a href="/Akun" class="text-blue-overlay hover:text-blue-700">Akun</a>
+        <span class="mx-2">
+            <div>
+                <?= icon('arrowRight', 'h-5 w-5') ?>
+            </div>
+        </span>
         <span class="text-dark-overlay/60 font-medium hover:cursor-pointer">Ganti Password</span>
     </nav>
     
-    <h2 class="text-2xl sm:text-3xl text-center font-bold text-[#171E29] mb-5 left-align">Ganti Password</h2>
+    <h2 class="text-2xl sm:text-3xl text-center font-bold text-dark-overlay mb-5 left-align">Ganti Password</h2>
 
-    <div class="bg-[#F3F5FA] rounded-2xl w-full max-w-xl p-8">
-        <!-- Links Row -->
-        <!-- <div class="flex items-center mb-2 mt-1 text-sm lg:hidden md:hidden sm:hidden">
-            <i class="fas fa-arrow-left"></i>
-            <a href="/auth/formLogin" class="text-blue-600 hover:text-blue-800 hover:underline font-medium ml-2">Kembali ke Login</a>
-        </div> -->
+    <div class="rounded-2xl w-full max-w-2xl p-8">
 
         <!-- Form -->
         <form action="<?= BASEURL ?>/akun/handlePasswordChange" method="POST" enctype="multipart/form-data">
             <div class="grid gap-4">
                 <!-- Password -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Password Lama</label>
+                <div class="mb-4" data-toggle-password>
+                    <label class="block text-sm font-medium text-dark-overlay7 mb-2">Password Lama</label>
                     <div class="relative">
                         <input type="password" id="password" name="passwordLama" placeholder="••••••••"
-                            class="w-full bg-white px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
-                            <i class="fas fa-eye hover:cursor-pointer" id="toggleIcon"></i>
+                            class="w-full bg-white px-4 py-2 border border-dark-overlay4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-dark-overlay5">
+                            <img src="/icon/eye-on.svg" class="w-5 h-5 hover:cursor-pointer">
                         </button>
                     </div>
                 </div>
 
                 <!-- Password -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Password Baru</label>
+                <div class="mb-4" data-toggle-password>
+                    <label class="block text-sm font-medium text-dark-overlay7 mb-2">Password Baru</label>
                     <div class="relative">
                         <input type="password" id="password" name="passwordBaru" placeholder="••••••••"
-                            class="w-full bg-white px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
-                            <i class="fas fa-eye hover:cursor-pointer" id="toggleIcon"></i>
+                            class="w-full bg-white px-4 py-2 border border-dark-overlay4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-dark-overlay5">
+                            <img src="/icon/eye-on.svg" class="w-5 h-5 hover:cursor-pointer">
                         </button>
                     </div>
                 </div>
 
                 <!-- Password -->
                 <div class="mb-1">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Password Baru</label>
+                    <label class="block text-sm font-medium text-dark-overlay7 mb-2">Konfirmasi Password Baru</label>
                     <div class="relative">
                         <input type="password" id="password" name="passwordBaruConfirm" placeholder="••••••••"
-                            class="w-full bg-white px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
-                            <i class="fas fa-eye hover:cursor-pointer" id="toggleIcon"></i>
+                            class="w-full bg-white px-4 py-2 border border-dark-overlay4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-dark-overlay5">
+                            <img src="/icon/eye-on.svg" class="w-5 h-5 hover:cursor-pointer">
                         </button>
                     </div>
                 </div>
 
                 <div class="text-sm mb-2">
-                    <a href="/Auth/ForgetPassword" class="text-blue-600 hover:underline font-medium">Lupa password lama?</a>
+                    <a href="/Auth/ForgetPassword" class="text-blue-overlay hover:text-blue-700 hover:underline font-medium">Lupa password lama?</a>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
-                    <a  href="/akun" type="button" class="px-4 py-3 bg-white text-gray-800 rounded-lg font-medium hover:bg-gray-100 border border-gray-400 transition hover:cursor-pointer">Batal</a>
-                    <button class="px-4 py-3 bg-[#1E68FB] text-white rounded-lg font-medium hover:bg-blue-700 transition shadow-sm hover:cursor-pointer">Konfirmasi</button>
+                    <a  href="/akun" type="button" class="px-4 py-2 text-center bg-white text-dark-overlay4 rounded-md font-medium hover:bg-dark-overlay1 border border-dark-overlay4 transition hover:cursor-pointer">Batal</a>
+                    <button class="px-4 py-2 bg-blue-overlay text-white rounded-lg font-medium hover:bg-blue-700 transition shadow-sm hover:cursor-pointer">Konfirmasi</button>
                 </div>
             </div>
         </form>
@@ -69,7 +68,22 @@
     </div>
 </main>
 
-
-<!-- JavaScript -->
-
 <script src="/js/togglePassword.js"></script>
+<script src="/js/modal.js" defer></script>
+<script>
+function konfirmasiGantiPassword() {
+    Modal.confirm(
+        'Ubah Password',
+        'Apakah anda yakin ingin mengubah Password?',
+        function() {
+            window.location.href = '#';
+        },
+        {
+            icon: '/icon/logoutDashboard.svg',
+            confirmText: 'Konfirmasi',
+            confirmClass: 'w-full px-6 py-2 bg-green1 text-white rounded-lg font-semibold hover:bg-green-700 transition',
+            cancelText: 'Batalkan'
+        }
+    );
+}
+</script>

@@ -78,7 +78,7 @@
         <div class="flex items-center gap-3 pb-2">
             <!-- Filter Hari Ini -->
             <?php 
-                $filter_id = 'Hari Ini'; 
+                $filter_id = 'Hari Ini2'; 
                 $label = 'Hari Ini'; 
                 $options = ['Ruang Duta' => 'Ruang Duta', 'Ruang Meeting Kecil' => 'Ruang Meeting Kecil']; 
                 $current_values = $_GET[$filter_id] ?? ''; 
@@ -277,5 +277,6 @@
         
 </main>
 
+<script src="/js/filterDropDown.js" defer></script>
 </body>
 </html>

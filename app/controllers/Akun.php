@@ -17,6 +17,7 @@ class Akun extends Controller{
             // 1. Tentukan judul halaman
         $data['judul'] = 'Profil Akun';
         $data['user'] = $_SESSION['user'];
+        $data['navbar'] = 'Akun';
         // 3. Panggil view (Urutan pemanggilan harus benar: Header, Body, Footer)
         $this->view('Layout/Header', $data);
         $this->view('anggota/Akun/index', $data); 
@@ -25,6 +26,7 @@ class Akun extends Controller{
 
     public function gantiPassword(){
         $data['judul'] = 'Ganti Password';
+        $data['navbar'] = 'Akun';
         $this->view('Layout/Header', $data);
         $this->view('anggota/akun/Ganti_Password', $data);
         $this->view('Layout/Footer');
@@ -32,6 +34,7 @@ class Akun extends Controller{
 
     public function hapusAkun(){
         $data['judul'] = 'Hapus Akun';
+        $data['navbar'] = 'Akun';
         $this->view('Layout/Header', $data);
         $this->view('Akun/Hapus', $data);
         $this->view('Layout/Footer');
