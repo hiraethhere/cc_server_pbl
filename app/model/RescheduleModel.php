@@ -127,7 +127,7 @@ class RescheduleModel {
         $this->db->bind('id_user', $id_user);
         $this->db->execute();
     }
-
+    
     public function getRescheduleJoinBooking($id_reschedule) {
     $query = "SELECT r.*, b.id_room, b.booking_code, 
                      b.start_time as old_start, 

@@ -101,7 +101,7 @@ class Booking extends Controller {
     }
 
     // Panggil Model untuk cari user
-    $user = $this->model('UserModel')->getUserByNomor_Induk($nomor_induk);
+    $user = $this->model('UserModel')->getUserByNomor_IndukActive($nomor_induk);
 
     // Kembalikan JSON
         header('Content-Type: application/json');
@@ -234,6 +234,8 @@ class Booking extends Controller {
         $result = $this->model('BookingModel')->cancelBooking($_POST['id_booking']);
         $suspend = $this->model('UserModel')->addSuspendCount($_SESSION['user']['user_id']);
 
+
+
             if ($result <= 0 || $suspend <= 0 ) {
                 throw new Exception("internal server error", 1);
             }
@@ -255,17 +257,23 @@ class Booking extends Controller {
 
         if ($id_booking === false || $id_booking < 1) {
             Flasher::setModalInfo('Parameter Salah', 'hayooo ubah-ubah parameter yaa?', 'error');
-            header('Location: /booking'); // Redirect ke halaman login
+            header('Location: /booking'); // Redirect ke halaman booking
+            exit;
+        }
+
+        if ($this->model('RescheduleModel')->getRescheduleByBookingId($id_booking)) {
+            Flasher::setModalInfo('Anda Sudah memiliki reschedule', 'tidak boleh reschedule 2 kali', 'error');
+            header('Location: /booking'); // Redirect ke halaman booking
             exit;
         }
 
         $data['detailRuangan'] = $this->model('BookingModel')->getBookingByIdAndUser($id_booking, $_SESSION['user']['user_id']);
         $bookingData = $data['detailRuangan'];
         if (!$bookingData) {
-        // Jika data kosong, berarti booking itu tidak ada, ATAU bukan milik user ini
+        // Jika data kosong, berarti booking itu tidak ada, ATAU user bukan penanggung jawab booking ini
         
-        // Opsi A: Tampilkan pesan error pake Flasher
-        Flasher::setFlash('Gagal', 'Anda tidak memiliki akses ke booking ini.', 'danger');
+        // ampilkan pesan error pake Flasher
+        Flasher::setModalInfo('Gagal reschedule', 'Anda tidak memiliki akses ke booking ini, hanya penanggung jawab yang bisa reschedule', 'error');
         header('Location: ' . BASEURL . '/Booking');
         exit;
         }

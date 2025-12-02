@@ -390,8 +390,7 @@ class Admin extends Controller {
         // Masukkan anggota baru dari tabel reschedule
         $modelBooking->importMembersFromReschedule($resData['id_booking'], $id_reschedule);
 
-
-        // LOGIK 5: FINALISASI (Update Status)
+        // FINALISASI (Update Status)
         $modelReschedule->updateStatus($id_reschedule, 'approved');
 
         // Jika sampai sini tidak ada error, SIMPAN PERMANEN
@@ -399,6 +398,7 @@ class Admin extends Controller {
         
         Flasher::setModalInfo('Berhasil', 'Reschedule disetujui.', 'success');
         header('location: /admin');
+        exit;
 
     } catch (Exception $e) {
         // Jika ada error di tahap manapun, BATALKAN SEMUA
