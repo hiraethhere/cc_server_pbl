@@ -148,6 +148,7 @@ class Booking extends Controller {
 
         $bookingModel = $this->model('BookingModel');
         $userModel = $this->model('UserModel');
+        $rescheduleModel = $this->model('RescheduleModel');
 
 
         try {
@@ -208,11 +209,12 @@ class Booking extends Controller {
             foreach($validatedUsers as $id_member){
                 $bookingModel->insertBookingMember((int)$newBookingId, $id_member);
             }
+            $rescheduleModel->autoCancelRescheduleConflict($id_room, $start_datetime, $end_datetime);
 
-        $bookingModel->commit();
-        Flasher::setModalInfo('Booking Berhasil', 'Booking berhasil dibuat. Jangan telat yaa','success');
-        header("Location: /dashboard");
-        exit;
+            $bookingModel->commit();
+            Flasher::setModalInfo('Booking Berhasil', 'Booking berhasil dibuat. Jangan telat yaa','success');
+            header("Location: /dashboard");
+            exit;
 
         } catch (\Throwable $e) {
             $bookingModel->rollBack();
@@ -311,11 +313,11 @@ class Booking extends Controller {
         $newDate    = $_POST['tanggalBaru'] ?? NULL; // Pastikan name di view sesuai
         $newStart   = $_POST['jamMulai'] ?? NULL;
         $newEnd     = $_POST['jamSelesai'] ?? NULL;
-        $reason     = $_POST['alasan'] ?? 'none';
+        // $reason     = $_POST['alasan'] ?? 'none';
         $nim_list   = $_POST['nim'] ?? []; // Array NIM Anggota
 
     // 2. Validasi Dasar
-        if (!$id_booking || !$newDate || !$newStart || !$newEnd || !$reason) {
+        if (!$id_booking || !$newDate || !$newStart || !$newEnd) {
             Flasher::setModalInfo('Gagal!', 'Semua field wajib diisi (Tanggal, Jam, Alasan)', 'error');
             header("Location: /Booking/Reschedule/$id_booking");
             exit;
@@ -400,7 +402,6 @@ class Booking extends Controller {
         // Insert ke tabel `reschedule`
         $rescheduleData = [
             'id_booking'        => $id_booking,
-            'reschedule_reason' => $reason,
             'new_start_time'    => $new_start_datetime,
             'new_end_time'      => $new_end_datetime,
             'status_reschedule' => 'pending' // Default pending

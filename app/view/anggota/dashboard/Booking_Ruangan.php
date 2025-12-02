@@ -210,7 +210,6 @@
 
 <script>const BASEURL = "<?= BASEURL ?>";</script>
 <script src="/js/bookingRoom.js?"v=<?php echo time(); ?>></script>
-<script src="/js/modal.js"></script>
 <script>
     // Add member (WAJIB JS)
     const addButton = document.getElementById('addMember');
@@ -260,19 +259,19 @@
     }
 
     function konfirmasiBooking() {
-    Modal.confirm(
-        'Konfirmasi Booking',
-        'Apakah anda yakin data yang anda input sudah benar?',
-        function() {
-        // ini yang benar untuk POST form, bukan window.location.href
-        document.getElementById('bookingForm').submit();
-        },
-        {
-        icon: <?= json_encode(icon("calendar", "w-12 h-12", "green1")) ?>,
-        confirmText: 'Booking',
-        confirmClass: 'w-full px-6 py-2 bg-green1 text-white rounded-lg font-semibold hover:bg-green-700 transition hover:cursor-pointer',
-        cancelText: 'Batalkan'
-        }
-    );
-}
+        Modal.confirm(
+            'Konfirmasi Booking',
+            'Apakah anda yakin data yang anda input sudah benar?',
+            function() {
+            // ini yang benar untuk POST form, bukan window.location.href
+            document.getElementById('bookingForm').submit();
+            },
+            {
+            icon: <?= json_encode(icon("calendar", "w-12 h-12", "green1")) ?>,
+            confirmText: 'Booking',
+            confirmClass: 'w-full px-6 py-2 bg-green1 text-white rounded-lg font-semibold hover:bg-green-700 transition hover:cursor-pointer',
+            cancelText: 'Batalkan'
+            }
+        );
+    }
 </script>  

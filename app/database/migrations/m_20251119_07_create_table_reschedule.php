@@ -7,7 +7,6 @@ class m_20251119_07_create_table_reschedule extends Migration{
         $query = "CREATE TABLE reschedule (
                 id_reschedule INT AUTO_INCREMENT PRIMARY KEY,
                 id_booking INT NOT NULL,
-                reschedule_reason VARCHAR(255),
                 cancel_reason VARCHAR(255),
                 status_reschedule ENUM('pending', 'approved', 'declined') NOT NULL DEFAULT 'pending',
                 cancel_by ENUM('user', 'system', 'admin') NULL,

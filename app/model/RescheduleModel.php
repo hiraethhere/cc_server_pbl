@@ -129,7 +129,7 @@ class RescheduleModel {
 // Create Data Reschedule Header
     public function createReschedule($data){
         $query = "INSERT INTO reschedule 
-                (id_booking, reschedule_reason, status_reschedule, new_start_time, new_end_time, created_at)
+                (id_booking, status_reschedule, new_start_time, new_end_time, created_at)
                 VALUES 
                 (:id_booking, :reason, :status, :start, :end, CURRENT_TIMESTAMP)";
     
@@ -155,16 +155,34 @@ class RescheduleModel {
     }
     
     public function getRescheduleJoinBooking($id_reschedule) {
-    $query = "SELECT r.*, b.id_room, b.booking_code, 
-                     b.start_time as old_start, 
-                     b.end_time as old_end
-              FROM reschedule r
-              JOIN bookings b ON r.id_booking = b.id_booking
-              WHERE r.id_reschedule = :id";
-              
-    $this->db->query($query);
-    $this->db->bind('id', $id_reschedule);
-    return $this->db->singleSet();
-}
+        $query = "SELECT r.*, b.id_room, b.booking_code, 
+                        b.start_time as old_start, 
+                        b.end_time as old_end
+                FROM reschedule r
+                JOIN bookings b ON r.id_booking = b.id_booking
+                WHERE r.id_reschedule = :id";
+                
+        $this->db->query($query);
+        $this->db->bind('id', $id_reschedule);
+        return $this->db->singleSet();
+    }
+
+    //ini dipake di controller booking, jadi dia akan update status reschedule ke decline
+    public function autoCancelRescheduleConflict($id_room, $start_time, $end_time){
+        $query = "UPDATE reschedule r
+            JOIN bookings b ON r.id_booking = b.id_booking
+            SET r.status_reschedule = 'declined', r.cancel_reason = 'Sistem: Waktu ini telah diambil oleh booking baru.'
+            WHERE r.status_reschedule = 'pending'
+            AND b.id_room = :id_room
+            AND r.new_start_time < :end_time 
+            AND r.new_end_time > :start_time;";
+
+        $this->db->query($query);
+        $this->db->bind('id_room', $id_room);
+        $this->db->bind('start_time', $start_time);
+        $this->db->bind('end_time', $end_time);
+        $this->db->execute();
+        return $this->db->rowCount();
+    }
 
 }
