@@ -73,7 +73,7 @@ const Modal = {
             // Default button (hanya tombol tutup)
             const closeBtn = document.createElement('button');
             closeBtn.textContent = 'Tutup';
-            closeBtn.className = 'w-full px-6 py-2 bg-gray-500 text-white rounded-lg font-semibold hover:bg-gray-600 transition';
+            closeBtn.className = 'w-full px-6 py-2 bg-dark-overlay5 text-white1 rounded-lg font-semibold hover:bg-dark-overlay6 transition';
             closeBtn.onclick = Modal.close;
             buttons.appendChild(closeBtn);
         }
@@ -106,12 +106,12 @@ const Modal = {
             buttons: [
                 {
                     text: options.cancelText || 'Batalkan',
-                    className: 'w-full px-6 py-2 bg-white text-black rounded-lg border border-gray-500 font-semibold hover:bg-gray-100 transition hover:cursor-pointer',
+                    className: 'w-full px-6 py-2 bg-white1 text-dark-overlay rounded-lg border border-dark-overlay5 font-semibold hover:bg-dark-overlay1 transition',
                     onclick: Modal.close
                 },
                 {
                     text: options.confirmText || 'Ya',
-                    className: options.confirmClass || 'w-full px-6 py-2 bg-[#C90B0B] text-white rounded-lg font-semibold hover:bg-red-800 transition',
+                    className: options.confirmClass || 'w-full px-6 py-2 bg-red1 text-white1 rounded-lg font-semibold hover:bg-dark-overlay transition',
                     onclick: function() {
                         Modal.close();
                         if (onConfirm) onConfirm();
@@ -133,7 +133,7 @@ const Modal = {
             buttons: [
                 {
                     text: options.buttonText || 'OK',
-                    className: options.buttonClass || 'w-full px-6 py-2 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition',
+                    className: options.buttonClass || 'w-full px-6 py-2 bg-blue-overlay text-white1 rounded-lg font-semibold hover:bg-blue-overlay8 transition',
                     onclick: Modal.close
                 }
             ]
@@ -178,12 +178,12 @@ const Modal = {
             buttons: [
                 {
                     text: options.cancelText || 'Batalkan',
-                    className: 'w-full px-6 py-2 bg-white text-gray-800 rounded-lg font-medium hover:bg-gray-200 border border-gray-500 transition',
+                    className: 'w-full px-6 py-2 bg-white1 text-dark-overlay rounded-lg font-medium hover:bg-dark-overlay1 border border-dark-overlay5 transition',
                     onclick: Modal.close
                 },
                 {
                     text: options.confirmText || 'Kirim',
-                    className: options.confirmClass || 'w-full px-6 py-2 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition', 
+                    className: options.confirmClass || 'w-full px-6 py-2 bg-blue-overlay text-white1 rounded-lg font-semibold hover:bg-blue-overlay8 transition', 
                     onclick: function() {
                         const inputValue = document.getElementById('promptInput').value.trim();
                         const ratingInput = document.querySelector('input[name="rating"]:checked');

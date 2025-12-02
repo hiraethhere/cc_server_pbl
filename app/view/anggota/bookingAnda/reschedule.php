@@ -1,6 +1,5 @@
 <?php
 ?>
-
 <main class="container mx-auto px-6 py-8">
     <div class="mx-5">
         <nav class="mb-6 text-sm text-dark-overlay/60 flex items-center">
@@ -226,22 +225,6 @@ INI POP UP KONFIRMASI
     </div>
 </div>
 
-<!-- **************************************************
-INI POP UP SUCCESS
-******************************************************* -->
-<div id="successModal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
-    <div class="bg-white rounded-2xl p-8 w-full max-w-sm mx-4 text-center border border-[#8E97A6]">
-        <div class="mb-4">
-            <i class="fas fa-check-circle text-green-500 text-5xl"></i>
-        </div>
-        <h3 class="text-xl font-bold text-gray-800 mb-2">Request Booking Berhasil</h3>
-        <p class="text-sm text-gray-600 mb-6">Tunggu approval dari admin</p>
-        <button
-                class="w-full px-6 py-2 bg-[#38C55C] text-white rounded-lg font-semibold hover:bg-green-600 transition hover:cursor-pointer">
-            OK
-        </button>
-    </div>
-</div>
 
 
 <script>const BASEURL = "<?= BASEURL ?>";</script>
