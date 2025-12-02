@@ -1,6 +1,5 @@
 <?php
 ?>
-
 <main class="container mx-auto px-6 py-8">
     <div class="mx-5">
         <nav class="mb-6 text-sm text-dark-overlay/60 flex items-center">
