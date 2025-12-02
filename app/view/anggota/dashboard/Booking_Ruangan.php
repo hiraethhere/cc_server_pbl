@@ -1,7 +1,4 @@
-<?php
-?>
-
-<main class="container mx-auto px-6 py-8">
+<main class="container mx-auto md:px-6 lg:px-6 px-1 py-8">
     <div class="mx-5">
         <nav class="mb-6 text-sm text-dark-overlay/60 flex items-center">
             <a href="/Dashboard" class="text-[#1E68FB] hover:text-blue-700">Ruangan</a>
@@ -17,7 +14,7 @@
             <div class="order-2 lg:order-none lg:col-span-2">
                 <div class="bg-[#FBFCFF] rounded-2xl shadow-lg p-6 md:p-8">
 
-                    <form id="bookingForm" action="/Booking/handleBooking" method="POST">
+                    <form id="bookingForm" action="<?= BASEURL ?>/Booking/handleBooking" method="POST">
                         <input type="hidden" name="id_room" value="<?= $detailRuangan['id_room'] ?>">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div class="relative">
@@ -205,7 +202,7 @@
 
 
 <script>const BASEURL = "<?= BASEURL ?>";</script>
-<script src="/js/bookingRoom.js"></script>
+<script src="/js/bookingRoom.js?"v=<?php echo time(); ?>></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     

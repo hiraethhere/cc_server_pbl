@@ -13,7 +13,8 @@ class Booking extends Controller {
             }
         }
 
-    // public function index(){
+    // public function index()
+    //{
         
     //     $data['judul'] = 'History';
     //     $data['navbar'] = 'History';
@@ -28,18 +29,32 @@ class Booking extends Controller {
 
         $data['booking'] = $this->model('BookingModel')->getActiveBookingByUser($_SESSION['user']['user_id']) ?: [];
         $bookingId = $data['booking']['id_booking'] ?? null;
-        $data['activeBooking'] = $bookingId ? $this->model('BookingModel')->getActiveBookingJoinRoom($bookingId): [];
+
+        //biar ga error pas di view
+        $data['activeBooking'] = [];
+        $data['reschedule'] = null; // Default null
+        $data['currentTab'] = $_GET['tab'] ?? 'booking'; // Default tab 'booking'
+
+        if ($bookingId) {
+        //selalu ambil detail booking lengkap (Join Room) 
+        //Alasannya: Di tab reschedule pun, kamu mungkin butuh info "Reschedule untuk Ruang Apa & Jam Berapa"
+            $data['activeBooking'] = $this->model('BookingModel')->getActiveBookingJoinRoom($bookingId);
+        }
+        if ($data['currentTab'] === 'reschedule') {
+                // $data['reschedules'] = $this->model('RescheduleModel')->getAllRescheduleByIdUser($);
+                $data['reschedules'] = $this->model('RescheduleModel')->getAllRescheduleByIdUser($_SESSION['user']['user_id']);
+        }
 
         if ($data['activeBooking']){
-        $data['bookingDate'] = tanggal_indonesia($data['activeBooking']['start_time']);
-        $data['start_time'] = date('H:i', strtotime($data['activeBooking']['start_time']));
-        $data['end_time'] = date('H:i', strtotime($data['activeBooking']['end_time']));
-        $data['status'] = translateStatus($data['activeBooking']['status']);
+            $data['bookingDate'] = tanggal_indonesia($data['activeBooking']['start_time']);
+            $data['start_time'] = date('H:i', strtotime($data['activeBooking']['start_time']));
+            $data['end_time'] = date('H:i', strtotime($data['activeBooking']['end_time']));
+            $data['status'] = translateStatus($data['activeBooking']['status']);
         } else {
-        $data['bookingDate'] = '';
-        $data['start_time'] = '';
-        $data['end_time'] = '';
-        $data['status'] = '';
+            $data['bookingDate'] = '';
+            $data['start_time'] = '';
+            $data['end_time'] = '';
+            $data['status'] = '';
         }
         $data['judul'] = 'Booking Anda';
         $data['navbar'] = 'bookingAnda';
@@ -85,7 +100,7 @@ class Booking extends Controller {
     }
 
     // Panggil Model untuk cari user
-    $user = $this->model('UserModel')->getUserByNomor_Induk($nomor_induk);
+    $user = $this->model('UserModel')->getUserByNomor_IndukActive($nomor_induk);
 
     // Kembalikan JSON
         header('Content-Type: application/json');
@@ -99,10 +114,17 @@ class Booking extends Controller {
     public function handleBooking(){
         Flasher::modalInfo();
 
-        $id_room = $_POST['id_room'];
-        $bookingDate = $_POST['tanggalPinjam'];
-        $startTime = $_POST['jamMulai'];
-        $endTime = $_POST['jamSelesai'];
+        $id_room = $_POST['id_room'] ?? NULL;
+        $bookingDate = $_POST['tanggalPinjam']?? NULL;
+        $startTime = $_POST['jamMulai']?? NULL;
+        $endTime = $_POST['jamSelesai']?? NULL;
+
+        if (!$id_room || !$bookingDate || !$startTime || !$endTime) {
+            Flasher::setModalInfo('Gagal!', 'Semua field wajib diisi', 'error');
+            header("Location: /dashboard");
+        exit;
+        }
+
 
         if (!isset($_POST['nim']) || !is_array($_POST['nim'])) {
             // Handle jika tidak ada input NIM sama sekali
@@ -203,35 +225,208 @@ class Booking extends Controller {
 
     public function cancelBooking(){
 
+        $bookingModel = $this->model('BookingModel');
+        $userModel = $this->model('UserModel');
+        $rescheduleModel = $this->model('RescheduleModel');
+
         try{
             if (empty($_POST['id_booking']) || empty($_SESSION['user']['user_id'])) {
                 throw new Exception("id_booking tidak valid", 1);
             }
+        $bookingModel->beginTransaction();
 
-        $result = $this->model('BookingModel')->cancelBooking($_POST['id_booking']);
-        $suspend = $this->model('UserModel')->addSuspendCount($_SESSION['user']['user_id']);
+        //ini dia update status ke cancelled
+        $result = $bookingModel->cancelBooking($_POST['id_booking']);
+        //menambahkan suspend ke user
+        $suspend = $userModel->addSuspendCount($_SESSION['user']['user_id']);
+        //ini dia nge cancel atau nge declined reschedule yang masih pending (kalo ada)
+        $rescheduleModel->cancelRescheduleByUser($_POST['id_booking']);
 
-            if ($result <= 0 || $suspend <= 0 ) {
+            if ($result <= 0 || $suspend <= 0) {
                 throw new Exception("internal server error", 1);
             }
 
+
+
+        $bookingModel->commit();
         Flasher::setModalInfo('Cancel Peminjaman Berhasil', 'Peminjaman berhasil dibatalkan', 'success');
         header('location: /dashboard');
         exit();
 
         }catch(Throwable $e){
+            $bookingModel->rollback();
             Flasher::setModalInfo('Gagal cancel', $e->getMessage(), 'error');
             header('location: /dashboard');
             exit();
         }
     }
 
-    public function Reschedule() {
+    public function Reschedule($id_booking = NULL) {
+
+        $id_booking = param_number($id_booking);
+
+        if ($id_booking === false || $id_booking < 1) {
+            Flasher::setModalInfo('Parameter Salah', 'hayooo ubah-ubah parameter yaa?', 'error');
+            header('Location: /booking'); // Redirect ke halaman booking
+            exit;
+        }
+
+        if ($this->model('RescheduleModel')->getRescheduleByBookingId($id_booking)) {
+            Flasher::setModalInfo('Anda Sudah memiliki reschedule', 'tidak boleh reschedule 2 kali', 'error');
+            header('Location: /booking'); // Redirect ke halaman booking
+            exit;
+        }
+
+        $data['detailRuangan'] = $this->model('BookingModel')->getBookingByIdAndUser($id_booking, $_SESSION['user']['user_id']);
+        $bookingData = $data['detailRuangan'];
+        if (!$bookingData) {
+        // Jika data kosong, berarti booking itu tidak ada, ATAU user bukan penanggung jawab booking ini
+        
+        // ampilkan pesan error pake Flasher
+        Flasher::setModalInfo('Gagal reschedule', 'Anda tidak memiliki akses ke booking ini, hanya penanggung jawab yang bisa reschedule', 'error');
+        header('Location: ' . BASEURL . '/Booking');
+        exit;
+        }
+
+        if ($bookingData['status'] == 'done' || $bookingData['status'] == 'cancelled' || $bookingData['status'] == 'ongoing') {
+         Flasher::setFlash('Gagal', 'Booking yang sudah selesai/batal tidak bisa di-reschedule.', 'warning');
+         header('Location: ' . BASEURL . '/Booking');
+         exit;
+        }
+
+        $data['members'] = $this->model('BookingModel')->getBookingMembers($id_booking);
+
+        $data['user'] = $_SESSION['user'];
         $data['navbar'] = 'bookingAnda';
         $data['judul'] = 'Reschedule';
         $this->view('Layout/Header', $data);
         $this->view('anggota/bookingAnda/reschedule', $data); 
         $this->view('Layout/Footer');
+    }
+
+
+
+    public function handleReschedule(){
+        $id_booking = $_POST['id_booking'] ?? NULL;
+        $newDate    = $_POST['tanggalBaru'] ?? NULL; // Pastikan name di view sesuai
+        $newStart   = $_POST['jamMulai'] ?? NULL;
+        $newEnd     = $_POST['jamSelesai'] ?? NULL;
+        $reason     = $_POST['alasan'] ?? 'none';
+        $nim_list   = $_POST['nim'] ?? []; // Array NIM Anggota
+
+    // 2. Validasi Dasar
+        if (!$id_booking || !$newDate || !$newStart || !$newEnd || !$reason) {
+            Flasher::setModalInfo('Gagal!', 'Semua field wajib diisi (Tanggal, Jam, Alasan)', 'error');
+            header("Location: /Booking/Reschedule/$id_booking");
+            exit;
+        }
+
+        $new_start_datetime = "$newDate $newStart";
+        $new_end_datetime   = "$newDate $newEnd";
+
+    // Hitung Range Mingguan (Untuk cek kuota di tanggal baru)
+        $ts = strtotime($newDate);
+        // $range_start = date('Y-m-d 00:00:00', strtotime('monday this week', $ts));
+        // $range_end   = date('Y-m-d 23:59:59', strtotime('sunday this week', $ts));
+
+        $bookingModel = $this->model('BookingModel');
+        $rescheduleModel = $this->model('RescheduleModel');
+        $userModel    = $this->model('UserModel');
+
+
+                        try {
+        $bookingModel->beginTransaction();
+
+        // -----------------------------------------------------------
+        // STEP A: Validasi Booking Lama
+        // -----------------------------------------------------------
+        // Cek apakah booking ini benar milik user yang login?
+        $existingBooking = $bookingModel->getBookingByIdAndUser($id_booking, $_SESSION['user']['user_id']);
+        if (!$existingBooking) {
+            throw new Exception('Data booking tidak ditemukan atau akses ditolak.');
+        }
+
+        // -----------------------------------------------------------
+        // STEP B: Cek Ketersediaan Ruangan di Jam BARU
+        // -----------------------------------------------------------
+        // Kita cek apakah ruangan tersebut kosong di jam yang baru diminta
+        $cekRoom = $bookingModel->roomCheck($existingBooking['id_room'], $new_end_datetime, $new_start_datetime);
+        
+        if ($cekRoom['total'] > 0) {
+             // Opsional: Cek apakah yang bentrok itu diri sendiri (kalau geser jam dikit)?
+             // Tapi karena ini request reschedule baru, amannya anggap bentrok.
+             throw new Exception("Ruangan sudah terisi pada jadwal baru yang dipilih.");
+        }
+
+        // apakah ini perlu?
+        // STEP C: Cek Kuota Ketua di Minggu BARU
+        // 
+        // Jika pindah minggu, harus cek kuota lagi. Jika minggu sama, sebenernya aman, 
+        // tapi kita cek saja untuk konsistensi.
+        // NOTE: Kita skip cek ini jika status reschedule 'pending' tidak memakan kuota, 
+        // tapi kalau mau strict, nyalakan baris di bawah ini:
+        /*
+        if (!$bookingModel->checkUserQuota($currentUserId, $range_start, $range_end)) {
+             throw new Exception('Kuota mingguan Anda sudah habis di tanggal baru tersebut.');
+        }
+        */
+
+        // STEP D: Validasi Anggota (Looping NIM)
+
+        $validatedMembers = [];
+
+        foreach ($nim_list as $nim) {
+            $nim = trim($nim);
+            if (empty($nim)) continue;
+
+            // Cek User Exist
+            $userAnggota = $userModel->getUserByNomor_Induk($nim);
+            if (!$userAnggota) throw new Exception("NIM Anggota ($nim) tidak terdaftar.");
+
+            // Jangan masukkan ketua sebagai anggota
+            if ($userAnggota['id_user'] == $_SESSION['user']['user_id']) continue;
+
+            // (Opsional) Cek Kuota Anggota di tanggal baru
+            // if (!$bookingModel->checkUserQuota($userAnggota['id_user'], $range_start, $range_end)) {
+            //    throw new Exception("Anggota (" . $userAnggota['nama_lengkap'] . ") limit habis.");
+            // }
+
+            $validatedMembers[] = $userAnggota['id_user'];
+        }
+
+        // Insert ke Database
+
+        
+        // Insert ke tabel `reschedule`
+        $rescheduleData = [
+            'id_booking'        => $id_booking,
+            'reschedule_reason' => $reason,
+            'new_start_time'    => $new_start_datetime,
+            'new_end_time'      => $new_end_datetime,
+            'status_reschedule' => 'pending' // Default pending
+        ];
+
+        // Kamu perlu buat method ini di BookingModel
+        $newRescheduleId = $rescheduleModel->createReschedule($rescheduleData);
+
+        // 2. Insert ke tabel `reschedule_members`
+        foreach ($validatedMembers as $id_member) {
+            // Kamu perlu buat method ini di BookingModel
+            $rescheduleModel->insertRescheduleMember($newRescheduleId, $id_member);
+        }
+
+        // Sukses
+        $rescheduleModel->commit();
+        Flasher::setModalInfo('Berhasil!', 'Pengajuan reschedule terkirim. Tunggu persetujuan admin.', 'success');
+        header("Location: /Booking/bookingAnda?tab=reschedule");
+        exit;
+
+    } catch (\Throwable $e) {
+        $rescheduleModel->rollBack();
+        Flasher::setModalInfo('Gagal Reschedule!', $e->getMessage(), 'error');
+        header("Location: /Booking/Reschedule/$id_booking");
+        exit;
+    }
     }
 
 }

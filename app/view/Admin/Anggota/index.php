@@ -142,7 +142,7 @@ function isActive($current, $check) {
                                 <td class="px-6 py-4 text-sm text-gray-900"><?= $i ?></td>
                                 <td class="px-6 py-4 text-sm font-medium text-gray-900"><?= htmlspecialchars($user['username'] ?? '-') ?></td>
                                 <td class="px-6 py-4">
-                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm bg-blue-100 text-blue-700">
+                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm <?= getStyleRole($user['role_name']) ?>">
                                         <?= htmlspecialchars($user['role_name']) ?>
                                     </span>
                                 </td>
@@ -259,7 +259,7 @@ function isActive($current, $check) {
                                 <td class="px-6 py-4 text-sm text-gray-900"><?= $c ?></td>
                                 <td class="px-6 py-4 text-sm font-medium text-gray-900"><?= htmlspecialchars($user['username'] ?? '-') ?></td>
                                 <td class="px-6 py-4">
-                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm bg-[#B9D0FE] text-[#1E68FB]">
+                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm bg-[#B9D0FE] <?= getStyleRole($user['role_name']) ?>">
                                         <?= htmlspecialchars($user['role_name'] ?? '-') ?>
                                     </span>
                                 </td>

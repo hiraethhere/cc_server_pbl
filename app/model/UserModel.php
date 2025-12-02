@@ -21,6 +21,12 @@ class UserModel {
         return $this->db->singleSet();
     }
 
+    public function getUserByNomor_IndukActive($nomor_induk){
+        $this->db->query("SELECT * FROM users WHERE nomor_induk = :nomor_induk AND id_role IN (4, 5, 3) AND status = 'active' limit 1");
+        $this->db->bind(':nomor_induk', $nomor_induk, PDO::PARAM_STR);
+        return $this->db->singleSet();
+    }
+
     public function getPasswordByEmail($email){
         $this->db->query("SELECT password FROM  users WHERE email = :email");
         $this->db->bind(':email', $email);

@@ -16,7 +16,7 @@ $current_array = array_filter(explode(',', $current_values));
      data-default-label="<?= $label ?>">
 
     <button onclick="toggleDropdown('<?= $filter_id ?>_menu')" type="button" 
-        class="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm text-[#1E68FB] bg-white hover:bg-gray-50 transition min-w-[10rem] focus:outline-none focus:ring-2 focus:ring-blue-500">
+        class="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm text-blue-overlay bg-white hover:bg-gray-50 transition min-w-[10rem] focus:outline-none focus:ring-2 focus:ring-blue-500">
         
         <span class="font-medium" id="<?= $filter_id ?>_label">
             <?= $label ?> 
