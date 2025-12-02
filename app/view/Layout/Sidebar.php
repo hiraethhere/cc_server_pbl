@@ -11,8 +11,9 @@
 </head>
 <body class="bg-gray-50 font-sf-pro flex min-h-screen">
 
+    <?php include __DIR__ . '/../template/iconComponent.php'; ?>
     <!-- SIDEBAR -->
-    <aside class="w-48 bg-[#FBFCFF] shadow-lg flex flex-col z-20">
+    <aside class="w-56 bg-[#FBFCFF] shadow-lg flex flex-col z-20">
         
         <!-- Logo -->
         <div class="px-6 py-5 border-b border-gray-200">
@@ -24,7 +25,7 @@
         
             <!-- Dashboard (AKTIF) -->
             <a href="/Admin/index"
-                class="flex items-center px-4 py-3
+                class="flex items-center px-4 py-2 mb-4
                     <?= ($data['navbar'] === 'dashboard')
                 ? 'text-[rgba(30,104,251,0.80)] border-r-4 border-[#1E68FB] font-medium'
                 : 'text-gray-700 hover:bg-gray-100 rounded-lg' ?>
@@ -42,7 +43,7 @@
 
             <!-- Data Anggota -->
             <a href="/Admin/Anggota"
-                class="flex items-center px-4 py-3
+                class="flex items-center px-4 py-2 mb-4
                     <?= ($data['navbar'] === 'Anggota')
                 ? 'text-[rgba(30,104,251,0.80)] border-r-4 border-[#1E68FB] font-medium'
                 : 'text-gray-700 hover:bg-gray-100 rounded-lg' ?>
@@ -60,7 +61,7 @@
 
             <!-- Data Peminjaman -->
             <a href="/Admin/Peminjaman"
-                class="flex items-center px-4 py-3
+                class="flex items-center px-4 py-2 mb-4
                     <?= ($data['navbar'] === 'Peminjaman')
                 ? 'text-[rgba(30,104,251,0.80)] border-r-4 border-[#1E68FB] font-medium'
                 : 'text-gray-700 hover:bg-gray-100 rounded-lg' ?>
@@ -79,7 +80,7 @@
 
             <!-- Data Ruangan -->
            <a href="/Admin/Ruangan"
-                class="flex items-center px-4 py-3
+                class="flex items-center px-4 py-2 mb-4
                     <?= ($data['navbar'] === 'Ruangan')
                 ? 'text-[rgba(30,104,251,0.80)] border-r-4 border-[#1E68FB] font-medium'
                 : 'text-gray-700 hover:bg-gray-100 rounded-lg' ?>
@@ -96,7 +97,7 @@
 
             <!-- Akun -->
             <a href="/Admin/Akun"
-                class="flex items-center px-4 py-3
+                class="flex items-center px-4 py-2 mb-4
                     <?= ($data['navbar'] === 'Akun')
                     ? 'text-[rgba(30,104,251,0.80)] border-r-4 border-[#1E68FB] font-medium'
                 : 'text-gray-700 hover:bg-gray-100 rounded-lg' ?>
@@ -117,7 +118,7 @@
 
         <!-- Logout -->
         <div class="px-4 py-4 border-t border-gray-200">
-            <a href="#" onclick="konfirmasiLogout()" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition text-xs font-medium">
+            <a href="#" onclick="konfirmasiLogout()" class="flex items-center px-4 py-2 mb- text-gray-600 hover:bg-gray-100 rounded-lg transition text-xs font-medium">
                 <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
                 <polyline points="16 17 21 12 16 7"/>
