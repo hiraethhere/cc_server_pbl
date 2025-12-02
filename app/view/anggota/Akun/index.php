@@ -58,11 +58,11 @@
     <!-- Action Buttons -->
     <div class="grid grid-cols-2 gap-4 mb-4">
         <a href="/Akun/gantiPassword" 
-           class="bg-[#1E68FB] text-white hover:from-blue-600 hover:to-blue-700 text-center py-3 rounded-lg font-semibold transition duration-200">
+           class="bg-blue-overlay text-white hover:bg-blue-700 text-center py-3 rounded-lg font-semibold transition duration-200">
             Ganti Password
         </a>
         <a href="#" onclick="konfirmasiLogout()"
-            class="block w-full bg-[#C90B0B] text-white hover:bg-red-700 text-center py-3 rounded-lg font-semibold transition duration-200">
+            class="block w-full bg-red1 text-white hover:bg-red-700 text-center py-3 rounded-lg font-semibold transition duration-200">
             Logout
         </a>
     </div>
