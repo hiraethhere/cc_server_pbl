@@ -1,6 +1,6 @@
 <!-- Main Content -->
 <main class="container mx-auto px-4 w-97/100 lg:px-6 sm:px-6 py-6 sm:py-8 flex-1">
-    <h2 class="text-2xl sm:text-3xl text-center font-bold text-[#171E29] mb-10 pt-5 left-align">Riwayat Peminjaman</h2>
+    <h2 class="text-2xl sm:text-3xl text-center font-bold text-dark-overlay mb-10 pt-5 left-align">Riwayat Peminjaman</h2>
 
     <!-- Time Filters -->
     <div class="flex md:flex-row flex-col md:justify-between mb-6 gap-4">
@@ -22,9 +22,11 @@
             ?>
 
             <button type="button" 
-                    class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition border border-gray-300 bg-white"
+                    class="p-2 text-dark-overlay5 hover:text-dark-overlay7 hover:bg-dark-overlay1 rounded-lg transition border border-dark-overlay5 bg-white"
                     onclick="document.getElementById('jenis_anggota').value=''; document.getElementById('jurusan').value=''; document.getElementById('status').value=''; document.getElementById('filterForm').submit();">
-                <img src="/icon/crossRed.svg" alt="clear" class="w-4 h-4">
+                <div class="text-red1">
+                    <?= icon('cross', 'w-4 h-4') ?>
+                </div>
             </button>
         </div>
 
@@ -32,16 +34,20 @@
         <div class="order-1 md:order-2">
             <div class="relative max-w-md ml-auto">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <img src="/icon/search.svg" alt="search" class="w-5 h-5">
+                    <div class="text-dark-overlay7">
+                        <?= icon('search', 'w-5 h-5') ?>
+                    </div>
                 </div>
                 <input type="text" id="search-input" placeholder="Cari..."
-                    class="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg 
-                            bg-white text-gray-900 placeholder-gray-400 text-sm
+                    class="block w-full p-10 py-2 border border-dark-overlay5 rounded-lg 
+                            bg-white text-dark-overlay7 placeholder-dark-overlay7 text-sm
                             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
                             transition duration-150">
                 <button type="button" id="clear-search" 
-                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
-                    <img src="/icon/silang.svg" alt="clear" classs="w-4 h-4">
+                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-dark-overlay7 hover:text-dark-overlay hidden">
+                    <div class="hover:cursor-pointer">
+                        <?= icon('cross', 'w-4 h-4') ?>
+                    </div>
                 </button>
             </div>
         </div>
@@ -50,50 +56,48 @@
     <!-- Table Content -->
     <div class="">
         <!-- Desktop Table -->
-        <div id="desktop-table" class="md:block hidden overflow-x-auto bg-white rounded-t-xl">
-            <table class="w-full text-sm border-separate border-spacing-0 border border-[#8E97A6] rounded-t-xl">
-                <thead class="bg-[rgba(30,104,251,0.10)] rounded-t-xl">
+        <div id="desktop-table" class="md:block hidden overflow-x-auto bg-background2 rounded-t-xl">
+            <table class="w-full text-sm border-separate border-spacing-0 border border-dark-overlay4 rounded-t-xl">
+                <thead class="bg-blue-overlay1 rounded-t-xl">
                     <tr>
-                        <th class="px-4 py-3 text-center font-semibold text-gray-700 rounded-tl-xl">No.</th>
-                        <th class="px-4 py-3 text-center font-semibold text-gray-700">Tanggal</th>
-                        <th class="px-4 py-3 text-center font-semibold text-gray-700">Ruangan</th>
-                        <th class="px-4 py-3 text-center font-semibold text-gray-700">Jam</th>
-                        <th class="px-4 py-3 text-center font-semibold text-gray-700">Jumlah Orang</th>
-                        <th class="px-4 py-3 text-center font-semibold text-gray-700">Status</th>
-                        <th class="px-4 py-3 text-center font-semibold text-gray-700 rounded-tr-xl">Aksi</th>
+                        <th class="px-6 py-4 text-left font-semibold text-dark-overlay7 rounded-tl-xl">No.</th>
+                        <th class="px-6 py-4 text-left font-semibold text-dark-overlay7">Tanggal</th>
+                        <th class="px-6 py-4 text-left font-semibold text-dark-overlay7">Ruangan</th>
+                        <th class="px-6 py-4 text-left font-semibold text-dark-overlay7">Jam</th>
+                        <th class="px-6 py-4 text-left font-semibold text-dark-overlay7">Jumlah Orang</th>
+                        <th class="px-6 py-4 text-center font-semibold text-dark-overlay7">Status</th>
+                        <th class="px-6 py-4 text-center font-semibold text-dark-overlay7 rounded-tr-xl">Aksi</th>
                     </tr>
                 </thead>
 
 
-                <tbody id="" class="divide-y divide-gray-500">
+                <tbody id="" class="divide-y divide-dark-overlay5">
                 <?php $i = 1 ?>
                 <?php foreach($bookings as $booking) : ?>
                     <!-- **************************************************
                     INI Data pERTAMA
                     ******************************************************* -->
-                    <tr class="hover:bg-gray-50 transition border-b border-gray-300">
-                        <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]"><?= $i ?></td>
-                        <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]"><?= tanggal_indonesia($booking['start_time']) ?></td>
-                        <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]"><?= $booking['room_name'] ?></td>
-                        <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]"><?= date('H:i', strtotime($booking['start_time'])) . '-' . date('H:i', strtotime($booking['end_time'])); ?></td>
-                        <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]"><?= $booking['total_person'] ?></td>
-                        <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">
+                    <tr class="hover:bg-dark-overlay1 transition border-b border-dark-overlay4">
+                        <td class="px-6 py-4 text-left text-sm border-b border-dark-overlay4"><?= $i ?></td>
+                        <td class="px-6 py-4 text-left text-sm border-b border-dark-overlay4"><?= tanggal_indonesia($booking['start_time']) ?></td>
+                        <td class="px-6 py-4 text-left text-sm border-b border-dark-overlay4"><?= $booking['room_name'] ?></td>
+                        <td class="px-6 py-4 text-left text-sm border-b border-dark-overlay4"><?= date('H:i', strtotime($booking['start_time'])) . '-' . date('H:i', strtotime($booking['end_time'])); ?></td>
+                        <td class="px-6 py-4 text-left text-sm border-b border-dark-overlay4"><?= $booking['total_person'] ?></td>
+                        <td class="px-6 py-4 text-left text-sm border-b border-dark-overlay4">
                             <div
                                     class="flex <?= getStyleStatus($booking['status']) ?> items-center justify-center text-white px-2 py-2 rounded-sm text-xs font-medium shadow-md min-w-1/2">
                                 <span><?= translateStatus($booking['status']) ?></span>
                             </div>
                         </td>
-                        <td class="px-4 py-3 text-center justify-center flex border-b border-[#8E97A6]">
-                            <button
-                                    class="flex bg-[#1E68FB] items-center text-white hover:bg-blue-600 hover:cursor-pointer px-5 py-2 rounded-sm text-xs font-medium transition shadow-md transform hover:scale-105">
+                        <td class="px-6 py-4 text-center justify-center flex border-b border-dark-overlay4">
+                            <button onclick="kirimFeedback('<?= $booking['id_booking'] ?>')"
+                                    class="flex bg-blue-overlay items-center text-white hover:bg-blue-700 hover:cursor-pointer px-5 py-2 rounded-sm text-xs font-medium transition shadow-md transform hover:scale-105">
                                 <span>Feedback</span>
                                 
-                                <div class="bg-white p-1 rounded-xs ml-3"> 
-                                    <svg class="w-3 h-3 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                        
-                                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    </svg>
+                                <div class="bg-background2 rounded-xs ml-3"> 
+                                    <div class="text-blue-overlay">
+                                        <?= icon('plus', 'w-4 h-4') ?>
+                                    </div>
                                 </div>
                             </button>
                         </td>
@@ -110,45 +114,44 @@
         <!-- Mobile Cards -->
         <?php $i = 1 ?>
             <?php foreach($bookings as $booking) : ?>
-        <div id="mobile-cards" class="block md:hidden space-y-4 flex flex-col items-center">
+        <div id="mobile-cards" class="block md:hidden space-y-4 flex flex-col items-center mb-6">
             <!-- Row 1 -->
-            <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-5 hover:shadow-md transition-shadow w-full">                    
+            <div class="bg-background2 rounded-xl shadow-lg border border-dark-overlay4 p-5 hover:shadow-md transition-shadow w-full">                    
                 <div class="grid grid-cols-1 gap-x-4 gap-y-3 text-sm pb-3 mb-3">
-                    <div class="grid grid-cols-2 border-b border-gray-200">
+                    <div class="grid grid-cols-2 border-b border-dark-overlay4">
                         <div>
-                            <div class="text-gray-500 text-xs uppercase tracking-wider">Ruangan</div>
-                            <div class="font-semibold text-lg text-gray-900"><?= $booking['room_name'] ?></div>
+                            <div class="text-dark-overlay7 text-xs uppercase tracking-wider">Ruangan</div>
+                            <div class="font-semibold text-lg text-dark-overlay"><?= $booking['room_name'] ?></div>
                         </div>
                         <div class="w-full flex justify-end items-start">
-                            <div class="<?= getStyleStatus($booking['status']) ?> font-semibold text-sm text-white py-1 w-1/2 text-center rounded-md">
+                            <div class="<?= getStyleStatus($booking['status']) ?> font-semibold text-sm text-white1 py-1 w-1/2 text-center rounded-md">
                                 <span><?= translateStatus($booking['status']) ?></span>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-2 border-b border-gray-200">
-                        <div class="text-gray-500 text-xs uppercase tracking-wider">Tanggal</div>
-                        <div class="font-semibold text-gray-900"><?= tanggal_indonesia($booking['start_time']) ?></div>
+                    <div class="grid grid-cols-2 border-b border-dark-overlay4">
+                        <div class="text-dark-overlay7 text-xs uppercase tracking-wider">Tanggal</div>
+                        <div class="font-semibold text-dark-overlay"><?= tanggal_indonesia($booking['start_time']) ?></div>
                     </div>
 
-                    <div class="grid grid-cols-2 border-b border-gray-200">
-                        <div class="text-gray-500 text-xs uppercase tracking-wider">Jam</div>
-                        <div class="font-semibold text-gray-900"><?= date('H:i', strtotime($booking['start_time'])) . '-' . date('H:i', strtotime($booking['end_time'])); ?></div>
+                    <div class="grid grid-cols-2 border-b border-dark-overlay4">
+                        <div class="text-dark-overlay7 text-xs uppercase tracking-wider">Jam</div>
+                        <div class="font-semibold text-dark-overlay"><?= date('H:i', strtotime($booking['start_time'])) . '-' . date('H:i', strtotime($booking['end_time'])); ?></div>
                     </div>
                     
                     <div class="grid grid-cols-2">
-                        <div class="text-gray-500 text-xs uppercase tracking-wider">Orang</div>
-                        <div class="font-semibold text-gray-900"><?= $booking['total_person'] ?></div>
+                        <div class="text-dark-overlay7 text-xs uppercase tracking-wider">Orang</div>
+                        <div class="font-semibold text-dark-overlay"><?= $booking['total_person'] ?></div>
                     </div>  
                 </div>
                 <div class="mt-4 grid grid-cols-1 justify-center w-full">
-                    <button class="flex items-center justify-center w-full bg-[#1E68FB] text-white hover:bg-blue-600 py-2 rounded-sm text-xs font-medium transition shadow-md">
+                    <button onclick="kirimFeedback('<?= $booking['id_booking'] ?>')" class="flex items-center justify-center w-full bg-blue-overlay text-white hover:bg-blue-700 py-2 rounded-sm text-sm font-medium transition shadow-md">
                         <span>Feedback</span>
-                        <div class="bg-white rounded-xs ml-3">
-                            <svg class="w-3 h-3 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                            </svg>
+                        <div class="bg-background2 rounded-xs ml-3"> 
+                            <div class="text-blue-overlay">
+                                <?= icon('plus', 'w-4 h-4') ?>
+                            </div>
                         </div>
                     </button>
                 </div>
@@ -171,7 +174,7 @@
                 Go to
             </div>
             <div>
-                <input type="text" maxlength="1" readonly class="w-7 px-1 py-1 border border-gray-300 rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="text" maxlength="1" readonly class="w-7 px-1 py-1 border border-dark-overlay4 rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
             <div>
                 Page
@@ -182,3 +185,104 @@
 
 <script src="js/filterDropDown.js" defer></script>
 <script src="/js/search.js" defer></script>
+<script>
+    function kirimFeedback(bookingId) {
+        // Buat konten modal dengan rating stars dan textarea
+        const feedbackContent = `
+            <div class="text-center">
+                <label class="block text-center text-sm text-dark-overlay7 mb-3">
+                    Input kamu sangat berharga dalam meningkatkan kualitas ruangan di perpustakaan kami.
+                </label>
+                <div id="ratingStars" class="flex gap-2 mb-6 justify-center">
+                    <button type="button" onclick="setRating(1)" class="star-btn text-3xl cursor-pointer transition" data-rating="1">★</button>
+                    <button type="button" onclick="setRating(2)" class="star-btn text-3xl cursor-pointer transition" data-rating="2">★</button>
+                    <button type="button" onclick="setRating(3)" class="star-btn text-3xl cursor-pointer transition" data-rating="3">★</button>
+                    <button type="button" onclick="setRating(4)" class="star-btn text-3xl cursor-pointer transition" data-rating="4">★</button>
+                    <button type="button" onclick="setRating(5)" class="star-btn text-3xl cursor-pointer transition" data-rating="5">★</button>
+                </div>
+                <div id="ratingValue" class="text-center text-sm text-gray-600 mb-4">Pilih rating (1-5 bintang)</div>
+                
+                <label class="block text-sm font-semibold text-gray-800 mb-2"></label>
+                <textarea id="feedbackText" 
+                          placeholder="Bagikan pengalaman Anda menggunakan ruangan ini..." 
+                          class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" 
+                          rows="4"></textarea>
+            </div>
+        `;
+        
+        Modal.open({
+            title: 'Bagaimana Pengalamanmu memakai ruangan kami?',
+            content: feedbackContent,
+            icon: '<?php echo icon("star", "w-12 h-12", "#FFB800"); ?>',
+            extraClass: 'max-w-xl',
+            buttons: [
+                {
+                    text: 'Batalkan',
+                    className: 'w-full px-6 py-2 bg-white text-gray-800 rounded-lg border border-gray-500 font-semibold hover:bg-gray-100 transition',
+                    onclick: Modal.close
+                },
+                {
+                    text: 'Kirim Penilaian',
+                    className: 'w-full px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-800 transition',
+                    onclick: function() {
+                        const rating = window.currentRating || 0;
+                        const ulasan = document.getElementById('feedbackText').value.trim();
+                        
+                        if (rating === 0) {
+                            alert('Silakan pilih rating terlebih dahulu!');
+                            return;
+                        }
+                        
+                        console.log(`Feedback untuk Booking ${bookingId}:`);
+                        console.log(`Rating Bintang: ${rating}`);
+                        console.log(`Ulasan: ${ulasan}`);
+                        
+                        // Tampilkan modal sukses
+                        Modal.alert(
+                            'Terima Kasih!',
+                            'Penilaian Anda telah diterima. Feedback Anda sangat membantu kami!',
+                            {
+                                buttonText: 'OK',
+                                buttonClass: 'w-full px-6 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-800 transition'
+                            }
+                        );
+                        
+                        // Kosongkan rating setelah submit
+                        window.currentRating = 0;
+                        
+                        // TODO: Tambahkan AJAX/fetch untuk mengirim data ke server
+                        // fetch('/Booking/submitFeedback', { 
+                        //     method: 'POST', 
+                        //     headers: { 'Content-Type': 'application/json' },
+                        //     body: JSON.stringify({ bookingId, ulasan, rating }) 
+                        // })
+                    }
+                }
+            ]
+        });
+    }
+    
+    // Variabel untuk menyimpan rating yang dipilih
+    window.currentRating = 0;
+    
+    // Fungsi untuk set rating saat user klik bintang
+    function setRating(rating) {
+        window.currentRating = rating;
+        
+        // Update tampilan bintang
+        const starButtons = document.querySelectorAll('.star-btn');
+        starButtons.forEach((btn, index) => {
+            if (index < rating) {
+                btn.style.color = '#FFB800';
+            } else {
+                btn.style.color = '#D1D5DB';
+            }
+        });
+        
+        // Update teks rating
+        const ratingValue = document.getElementById('ratingValue');
+        if (ratingValue) {
+            ratingValue.textContent = `${rating} dari 5 bintang dipilih`;
+        }
+    }
+</script>

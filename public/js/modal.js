@@ -1,16 +1,28 @@
 // public/js/modal.js
-// Object untuk mengelola modal - menggunakan pola Singleton
 
 const Modal = {
     // Fungsi untuk membuka modal
     open: function(options) {
         // Ambil element modal
         const modal = document.getElementById('reusableModal');
+        const container = document.getElementById('modalContainer'); // Gunakan ID yang baru
+        
+        // Reset ke default width (max-w-sm) setiap kali modal dibuka
+        container.className = 'bg-white rounded-2xl p-8 w-full mx-4 relative z-10 border border-[#8E97A6] max-w-sm';
+        
+        // Jika ada extraClass, replace max-w-sm dengan extraClass
+        if (options.extraClass) {
+            // Hapus semua class max-w-* yang mungkin ada
+            container.classList.remove('max-w-xs', 'max-w-sm', 'max-w-md', 'max-w-lg', 'max-w-xl', 'max-w-2xl', 'max-w-3xl');
+            // Tambahkan class baru
+            container.classList.add(options.extraClass);
+        }
+        
         const title = document.getElementById('modalTitle');
         const content = document.getElementById('modalContent');
         const buttons = document.getElementById('modalButtons');
         const iconContainer = document.getElementById('modalIcon');
-        const iconImg = document.getElementById('modalIconImg');
+        const iconContent = document.getElementById('modalIconContent');
         
         // Set title
         title.textContent = options.title || 'Informasi';
@@ -22,9 +34,10 @@ const Modal = {
         
         // Set icon (opsional)
         if (options.icon) {
-            iconImg.src = options.icon;
+            iconContent.innerHTML = options.icon; 
             iconContainer.classList.remove('hidden');
         } else {
+            iconContent.innerHTML = '';
             iconContainer.classList.add('hidden');
         }
         
@@ -89,10 +102,11 @@ const Modal = {
             title: title,
             content: message,
             icon: options.icon,
+            extraClass: options.extraClass || 'max-w-sm', // Default small untuk confirm
             buttons: [
                 {
                     text: options.cancelText || 'Batalkan',
-                    className: 'w-full px-6 py-2 bg-white text-black rounded-lg border border-gray-500 font-semibold hover:bg-gray-100 transition',
+                    className: 'w-full px-6 py-2 bg-white text-black rounded-lg border border-gray-500 font-semibold hover:bg-gray-100 transition hover:cursor-pointer',
                     onclick: Modal.close
                 },
                 {
@@ -115,6 +129,7 @@ const Modal = {
             title: title,
             content: message,
             icon: options.icon,
+            extraClass: options.extraClass || 'max-w-sm', // Default small untuk alert
             buttons: [
                 {
                     text: options.buttonText || 'OK',
@@ -125,17 +140,30 @@ const Modal = {
         });
     },
 
-    // Method untuk modal dengan input field (seperti decline reschedule)
+    // Method untuk modal dengan input field (DENGAN RATING)
     prompt: function(title, message, onSubmit, options) {
         options = options || {};
         
+        // --- HTML Template Bintang ---
+        const starRatingHtml = `
+            <div id="starRatingContainer" class="flex justify-center flex-row-reverse space-x-1 space-x-reverse text-3xl mb-4 text-gray-300">
+                <input type="radio" id="rating-5" name="rating" value="5" class="star-radio" hidden /><label for="rating-5" class="rating-star cursor-pointer transition">★</label>
+                <input type="radio" id="rating-4" name="rating" value="4" class="star-radio" hidden /><label for="rating-4" class="rating-star cursor-pointer transition">★</label>
+                <input type="radio" id="rating-3" name="rating" value="3" class="star-radio" hidden /><label for="rating-3" class="rating-star cursor-pointer transition">★</label>
+                <input type="radio" id="rating-2" name="rating" value="2" class="star-radio" hidden /><label for="rating-2" class="rating-star cursor-pointer transition">★</label>
+                <input type="radio" id="rating-1" name="rating" value="1" class="star-radio" hidden /><label for="rating-1" class="rating-star cursor-pointer transition">★</label>
+            </div>
+        `;
+        
+        // Gabungkan rating dan konten prompt
         const promptContent = `
-            <p class="text-sm text-gray-600 mb-4">${message}</p>
+            ${starRatingHtml}
+            <p class="text-sm text-gray-700 mb-4 text-center">${message}</p>
             
             <div class="text-left mb-4">
-                <label class="block text-sm font-semibold text-gray-800 mb-2">${options.label || 'Alasan'}</label>
+                <label class="block text-sm font-semibold text-gray-800 mb-2">${options.label || 'Ulasan'}</label>
                 <textarea id="promptInput" 
-                          placeholder="${options.placeholder || 'Tulis alasan disini'}" 
+                          placeholder="${options.placeholder || 'Tulis ulasan/feedback Anda disini'}" 
                           class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" 
                           rows="${options.rows || 4}"
                           ${options.required ? 'required' : ''}></textarea>
@@ -146,33 +174,86 @@ const Modal = {
             title: title,
             content: promptContent,
             icon: options.icon,
+            extraClass: options.extraClass || 'max-w-lg', // Default large untuk prompt/form
             buttons: [
                 {
                     text: options.cancelText || 'Batalkan',
-                    className: 'w-full px-6 py-2 bg-white text-[#171E29] rounded-lg font-medium hover:bg-gray-200 border border-gray-500 transition',
+                    className: 'w-full px-6 py-2 bg-white text-gray-800 rounded-lg font-medium hover:bg-gray-200 border border-gray-500 transition',
                     onclick: Modal.close
                 },
                 {
-                    text: options.confirmText || 'Ya',
-                    className: options.confirmClass || 'w-full px-6 py-2 bg-[#C90B0B] text-white rounded-lg font-semibold hover:bg-red-800 transition',
+                    text: options.confirmText || 'Kirim',
+                    className: options.confirmClass || 'w-full px-6 py-2 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition', 
                     onclick: function() {
                         const inputValue = document.getElementById('promptInput').value.trim();
+                        const ratingInput = document.querySelector('input[name="rating"]:checked');
+                        const ratingValue = ratingInput ? parseInt(ratingInput.value) : 0;
                         
+                        if (options.minRating && ratingValue === 0) {
+                            alert('Harap berikan penilaian bintang terlebih dahulu.');
+                            return;
+                        }
+
                         if (options.required && !inputValue) {
-                            alert('Harap isi alasan terlebih dahulu');
+                            alert('Harap isi ulasan terlebih dahulu.');
                             return;
                         }
                         
                         Modal.close();
                         if (onSubmit) {
-                            onSubmit(inputValue);
+                            onSubmit(inputValue, ratingValue); 
                         }
                     }
                 }
             ]
         });
+
+        // --- Logika Visual Bintang ---
+        setTimeout(() => { // Tunggu modal ter-render dulu
+            const stars = document.querySelectorAll('#starRatingContainer .rating-star');
+            
+            function updateStarVisuals(target) {
+                const allStars = document.querySelectorAll('#starRatingContainer .rating-star');
+                
+                allStars.forEach(s => {
+                    s.classList.remove('text-yellow-400');
+                });
+                
+                let highlight = false;
+                for (let i = allStars.length - 1; i >= 0; i--) {
+                    const star = allStars[i];
+                    if (star === target || highlight) {
+                        star.classList.add('text-yellow-400');
+                        highlight = true;
+                    }
+                }
+            }
+
+            stars.forEach(star => {
+                star.addEventListener('mouseover', function() {
+                    updateStarVisuals(this);
+                });
+                
+                star.addEventListener('mouseout', function() {
+                    const checkedStar = document.querySelector('input[name="rating"]:checked');
+                    stars.forEach(s => s.classList.remove('text-yellow-400'));
+
+                    if (checkedStar) {
+                        const checkedLabel = document.querySelector(`label[for="rating-${checkedStar.value}"]`);
+                        updateStarVisuals(checkedLabel);
+                    }
+                });
+                
+                star.addEventListener('click', function() {
+                    updateStarVisuals(this); 
+                });
+            });
+        }, 100);
     }
 };
+
+// Expose Modal to global
+window.Modal = Modal;
 
 // Tutup modal dengan tombol ESC
 document.addEventListener('keydown', function(e) {
