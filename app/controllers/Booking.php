@@ -13,7 +13,8 @@ class Booking extends Controller {
             }
         }
 
-    // public function index(){
+    // public function index()
+    //{
         
     //     $data['judul'] = 'History';
     //     $data['navbar'] = 'History';
@@ -35,27 +36,25 @@ class Booking extends Controller {
         $data['currentTab'] = $_GET['tab'] ?? 'booking'; // Default tab 'booking'
 
         if ($bookingId) {
-        //SELALU ambil detail booking lengkap (Join Room) 
+        //selalu ambil detail booking lengkap (Join Room) 
         //Alasannya: Di tab reschedule pun, kamu mungkin butuh info "Reschedule untuk Ruang Apa & Jam Berapa"
             $data['activeBooking'] = $this->model('BookingModel')->getActiveBookingJoinRoom($bookingId);
-
-        //Jika Tab adalah Reschedule, ambil data tambahannya
-                if ($data['currentTab'] === 'reschedule') {
-                $data['reschedules'] = $this->model('RescheduleModel')->getRescheduleByBookingId($bookingId);
-                // $data['reschedules'] = $this->model('RescheduleModel')->getAllRescheduleByIdUser($_SESSION['user']['user_id']);
-            }
+        }
+        if ($data['currentTab'] === 'reschedule') {
+                // $data['reschedules'] = $this->model('RescheduleModel')->getAllRescheduleByIdUser($);
+                $data['reschedules'] = $this->model('RescheduleModel')->getAllRescheduleByIdUser($_SESSION['user']['user_id']);
         }
 
         if ($data['activeBooking']){
-        $data['bookingDate'] = tanggal_indonesia($data['activeBooking']['start_time']);
-        $data['start_time'] = date('H:i', strtotime($data['activeBooking']['start_time']));
-        $data['end_time'] = date('H:i', strtotime($data['activeBooking']['end_time']));
-        $data['status'] = translateStatus($data['activeBooking']['status']);
+            $data['bookingDate'] = tanggal_indonesia($data['activeBooking']['start_time']);
+            $data['start_time'] = date('H:i', strtotime($data['activeBooking']['start_time']));
+            $data['end_time'] = date('H:i', strtotime($data['activeBooking']['end_time']));
+            $data['status'] = translateStatus($data['activeBooking']['status']);
         } else {
-        $data['bookingDate'] = '';
-        $data['start_time'] = '';
-        $data['end_time'] = '';
-        $data['status'] = '';
+            $data['bookingDate'] = '';
+            $data['start_time'] = '';
+            $data['end_time'] = '';
+            $data['status'] = '';
         }
         $data['judul'] = 'Booking Anda';
         $data['navbar'] = 'bookingAnda';
@@ -226,25 +225,36 @@ class Booking extends Controller {
 
     public function cancelBooking(){
 
+        $bookingModel = $this->model('BookingModel');
+        $userModel = $this->model('UserModel');
+        $rescheduleModel = $this->model('RescheduleModel');
+
         try{
             if (empty($_POST['id_booking']) || empty($_SESSION['user']['user_id'])) {
                 throw new Exception("id_booking tidak valid", 1);
             }
+        $bookingModel->beginTransaction();
 
-        $result = $this->model('BookingModel')->cancelBooking($_POST['id_booking']);
-        $suspend = $this->model('UserModel')->addSuspendCount($_SESSION['user']['user_id']);
+        //ini dia update status ke cancelled
+        $result = $bookingModel->cancelBooking($_POST['id_booking']);
+        //menambahkan suspend ke user
+        $suspend = $userModel->addSuspendCount($_SESSION['user']['user_id']);
+        //ini dia nge cancel atau nge declined reschedule yang masih pending (kalo ada)
+        $rescheduleModel->cancelRescheduleByUser($_POST['id_booking']);
 
-
-
-            if ($result <= 0 || $suspend <= 0 ) {
+            if ($result <= 0 || $suspend <= 0) {
                 throw new Exception("internal server error", 1);
             }
 
+
+
+        $bookingModel->commit();
         Flasher::setModalInfo('Cancel Peminjaman Berhasil', 'Peminjaman berhasil dibatalkan', 'success');
         header('location: /dashboard');
         exit();
 
         }catch(Throwable $e){
+            $bookingModel->rollback();
             Flasher::setModalInfo('Gagal cancel', $e->getMessage(), 'error');
             header('location: /dashboard');
             exit();

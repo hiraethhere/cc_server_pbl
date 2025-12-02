@@ -202,7 +202,7 @@
 
 
 <script>const BASEURL = "<?= BASEURL ?>";</script>
-<script src="/js/bookingRoom.js"></script>
+<script src="/js/bookingRoom.js?"v=<?php echo time(); ?>></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     

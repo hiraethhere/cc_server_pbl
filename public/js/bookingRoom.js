@@ -1,4 +1,4 @@
-        document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
         // 1. DEFINISI ID SESUAI HTML KAMU
         const tanggalPinjam = document.getElementById('tanggalPinjam');
         const jamMulai = document.getElementById('jamMulai');
@@ -10,8 +10,8 @@
         const roomId = roomIdInput ? roomIdInput.value : 1;
 
     // config waktu, atur aja
-    const operationalStart = 8 * 60; // 07:00
-    const operationalEnd = 16 * 60;  // 17:00
+    const operationalStart = 8 * 60; // 08:00
+    const operationalEnd = 16 * 60;  // 16:00
     const interval = 30;             // 30 menit
     const maxDuration = 180;         // 3 jam (180 menit)
     const today = new Date();

@@ -76,7 +76,7 @@
                                 <button type="button" id="buttonCancel" class="bg-[#C90B0B] text-white px-6 py-2 rounded-sm text-sm hover:bg-red-700 hover:cursor-pointer">
                                     Cancel Booking
                                 </button>
-                                <a href="Booking/Reschedule/<?= $booking['id_booking'] ?>" class="bg-[#1E68FB] text-white px-6 py-2 rounded-sm text-sm hover:bg-blue-700 hover:cursor-pointer">
+                                <a href="/Booking/Reschedule/<?= $booking['id_booking'] ?>" class="bg-[#1E68FB] text-white px-6 py-2 rounded-sm text-sm hover:bg-blue-700 hover:cursor-pointer">
                                     Reschedule
                                 </a>
                             </div>
@@ -120,17 +120,17 @@
                         <tbody id="" class="divide-y divide-gray-500">
 
 
-
+                        <?php $i = 1 ?>
                         <?php foreach($reschedules as $reschedule) ?>
                             <tr class="hover:bg-gray-50 transition border-b border-gray-300">
-                                <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">1</td>
-                                <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">8 November 2025</td>
-                                <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">Ruang Lentera Edukasi</td>
-                                <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]">09:00 - 12:00</td>
+                                <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]"><?= $i ?></td>
+                                <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]"><?= htmlspecialchars(tanggal_indonesia($reschedule['new_start_time']) ?? '-') ?></td>
+                                <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]"><?= htmlspecialchars($reschedule['room_name']) ?? '-' ?></td>
+                                <td class="px-4 py-3 text-center text-sm border-b border-[#8E97A6]"><?= htmlspecialchars_decode(waktu_indonesia($reschedule['new_start_time']) ?? '')?> - <?= htmlspecialchars_decode(waktu_indonesia($reschedule['new_end_time']) ?? '')?></td>
                                 <td class="px-4 py-3 text-center justify-center flex border-b border-[#8E97A6]">
                                     <div
-                                            class="flex bg-[#1E68FB] items-center justify-center text-white px-5 py-2 rounded-sm text-xs font-medium shadow-md min-w-1/2">
-                                        <span>Menunggu</span>
+                                            class="flex <?= getStyleStatus($reschedule['status_reschedule']) ?> items-center justify-center text-white px-5 py-2 rounded-sm text-xs font-medium shadow-md min-w-1/2">
+                                        <span><?= htmlspecialchars(translateStatus($reschedule['status_reschedule']) ?? '')?></span>
                                     </div>
                                 </td>
                             </tr>

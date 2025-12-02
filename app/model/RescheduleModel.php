@@ -31,11 +31,23 @@ class RescheduleModel {
         return $this->db->resultSet();
     }
 
+    public function getPendingReschedulebyBookingId($id_booking){
+        $this->db->query("SELECT * FROM reschedule WHERE id_booking = :id_booking AND status = 'pending'");
+        $this->db->bind('id_booking', $id_booking);
+        return $this->db->resultSet();
+    }
+
     public function getAllRescheduleByIdUser($id_user){
-        $this->db->query("SELECT rs.start_time  FROM reschedule rs WHERE id_user = :id_user");
+        $this->db->query("SELECT rs.new_start_time, rs.new_end_time, r.room_name, rs.status_reschedule 
+        FROM reschedule rs 
+        JOIN bookings b ON rs.id_booking =b.id_booking
+        JOIN rooms r ON b.id_room = r.id_room 
+        WHERE id_user = :id_user");
         $this->db->bind('id_user', $id_user);
         return $this->db->resultSet();
     }
+
+
 
 
     //ini ambil data buat detail reschedule
@@ -88,6 +100,20 @@ class RescheduleModel {
         $this->db->query($query);
         $this->db->bind('id', $id_reschedule);
         return $this->db->singleSet()['total'];
+    }
+
+    //ini cancel reschedule saat booking utamanya di cancel
+    public function cancelRescheduleByUser($id_booking){
+        $query = "UPDATE reschedule 
+              SET status_reschedule = 'declined', 
+                  cancel_reason = 'Booking utama dibatalkan oleh user',
+                  cancel_by = 'system'
+              WHERE id_booking = :id_booking 
+              AND status_reschedule = 'pending'";
+        $this->db->query($query);
+        $this->db->bind('id_booking', $id_booking);
+        $this->db->execute();
+        return $this->db->rowCount();
     }
 
     public function updateStatus($id_reschedule, $status) {
