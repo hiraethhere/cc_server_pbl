@@ -47,6 +47,39 @@ class RescheduleModel {
         return $this->db->resultSet();
     }
 
+    public function checkUserHasReschedule($id_user){
+        $query = "SELECT 1 
+                FROM reschedule rs
+                LEFT JOIN reschedule_members rm ON rm.id_reschedule = rs.id_reschedule 
+                WHERE rs.status_reschedule = 'pending'
+                AND rm.id_user = :id_user
+                LIMIT 1";
+        
+        $this->db->query($query);
+        $this->db->bind('id_user', $id_user);
+
+        return $this->db->singleSet() ? true : false;
+    }
+
+    //ini dia update ke decline di reschedule
+    public function declinePendingByUser($id_user) {
+        // Dengan join ke 'reschedule_members' (rm) untuk pengecekan member
+        $query = "UPDATE reschedule rs
+                LEFT JOIN reschedule_members rm 
+                ON rm.id_reschedule = rs.id_reschedule 
+                SET rs.status_reschedule = 'declined'
+                WHERE rm.id_user = :id_user 
+                AND rs.status_reschedule = 'pending'";
+
+        $this->db->query($query);
+        $this->db->bind('id_user', $id_user);
+
+        // Eksekusi query
+        $this->db->execute();
+        
+        // Mengembalikan jumlah baris yang berubah (0 jika tidak ada yang pending, 1 jika ada)
+        return $this->db->rowCount(); 
+    }
 
 
 

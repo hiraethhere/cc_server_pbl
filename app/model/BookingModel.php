@@ -155,38 +155,26 @@ class BookingModel {
         return $this->db->resultSet();
     }
 
+    // ini dia cek apakah dia ada booking minggu ini
     public function checkUserQuota($id_user, $range_start, $range_end){
-        // Cek tabel bookings apakah user pernah booking sebagai ketua?
-        $query1 = "SELECT COUNT(*) as total FROM bookings 
-                WHERE id_user = :uid 
-                AND status IN ('pending', 'ongoing')
-                AND start_time BETWEEN :range_start AND :range_end";
-        
-        $this->db->query($query1);
-        $this->db->bind('uid', $id_user);
-        $this->db->bind('range_start', $range_start);
-        $this->db->bind('range_end', $range_end);
-        $res1 = $this->db->singleSet();
+        $sql = "SELECT 1
+            FROM bookings b
+            LEFT JOIN booking_members bm 
+            ON bm.id_booking = b.id_booking
+            WHERE (b.id_user = :uid OR bm.id_user = :uid)
+                AND b.status IN ('pending', 'ongoing')
+                AND (b.start_time < :range_end AND b.end_time > :range_start)
+            LIMIT 1
+        ";
 
-        if($res1['total'] > 0) return false; // Gagal, sudah ada jadwal
+        $this->db->query($sql);
+        $this->db->bind("uid", $id_user);
+        $this->db->bind("range_start", $range_start);
+        $this->db->bind("range_end", $range_end);   
 
-        // Cek tabel booking_members apakah dia ada booking sebagai anggota?
-        $query2 = "SELECT COUNT(*) as total FROM booking_members bm
-                JOIN bookings b ON bm.id_booking = b.id_booking
-                WHERE bm.id_user = :uid
-                AND b.status IN ('pending', 'approved', 'ongoing')
-                AND b.start_time BETWEEN :range_start AND :range_end";
-               
-        $this->db->query($query2);
-        $this->db->bind('uid', $id_user);
-        $this->db->bind('range_start', $range_start);
-        $this->db->bind('range_end', $range_end);
-        $res2 = $this->db->singleSet();
-
-        if($res2['total'] > 0) return false; // Gagal
-
-        return true; // user tidak memiliki booking
+        return $this->db->singleSet() ? false : true;
     }
+
 
     //ini untuk reschedule dimana dia update total person dan juga schedulenya di tabel bookings
     public function updateScheduleAndTotalPerson($id_booking, $start, $end, $total){

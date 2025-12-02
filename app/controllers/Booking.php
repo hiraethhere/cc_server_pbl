@@ -189,8 +189,12 @@ class Booking extends Controller {
                     throw new Exception("Anggota (" . $userAnggota['username'] . ") sudah ada jadwal minggu ini.");
                 }
 
+                if ($rescheduleModel->checkUserHasReschedule($userAnggota['id_user'])) {
+                    throw new Exception("Anggota (" . $userAnggota['username'] . ") sudah ada di anggota reschedule orang lain.");
+                }
+
             // Simpan ID anggota yang valid
-                $validatedUsers[] = $userAnggota['id_user'];
+            $validatedUsers[] = $userAnggota['id_user'];
             }
 
             $total_person = 1 + count($validatedUsers);
@@ -209,7 +213,10 @@ class Booking extends Controller {
             foreach($validatedUsers as $id_member){
                 $bookingModel->insertBookingMember((int)$newBookingId, $id_member);
             }
+            //auto cancel misalnya ada reschedule yang mengarah ke jam dan tanggal yang sama
             $rescheduleModel->autoCancelRescheduleConflict($id_room, $start_datetime, $end_datetime);
+            //decline reschedulenya kalo si ketua ini masuk ke anggota reschedulenya orang lain
+            $rescheduleModel->declinePendingByUser($id_ketua);
 
             $bookingModel->commit();
             Flasher::setModalInfo('Booking Berhasil', 'Booking berhasil dibuat. Jangan telat yaa','success');
@@ -222,7 +229,6 @@ class Booking extends Controller {
             header('location: /dashboard');
             exit();
         }
-
     }
 
     public function cancelBooking(){
@@ -274,7 +280,7 @@ class Booking extends Controller {
         }
 
         if ($this->model('RescheduleModel')->getRescheduleByBookingId($id_booking)) {
-            Flasher::setModalInfo('Anda Sudah memiliki reschedule', 'tidak boleh reschedule 2 kali', 'error');
+            Flasher::setModalInfo('Gagal Reschedule', 'booking ini sudah pernah di reschedule', 'error');
             header('Location: /booking'); // Redirect ke halaman booking
             exit;
         }
@@ -336,7 +342,7 @@ class Booking extends Controller {
         $userModel    = $this->model('UserModel');
 
 
-                        try {
+        try {
         $bookingModel->beginTransaction();
 
         // -----------------------------------------------------------
@@ -359,6 +365,8 @@ class Booking extends Controller {
              // Tapi karena ini request reschedule baru, amannya anggap bentrok.
              throw new Exception("Ruangan sudah terisi pada jadwal baru yang dipilih.");
         }
+
+        //belom ada cek user apakah dia ada booking aktif atau tidak?
 
         // apakah ini perlu?
         // STEP C: Cek Kuota Ketua di Minggu BARU
@@ -395,9 +403,6 @@ class Booking extends Controller {
 
             $validatedMembers[] = $userAnggota['id_user'];
         }
-
-        // Insert ke Database
-
         
         // Insert ke tabel `reschedule`
         $rescheduleData = [
