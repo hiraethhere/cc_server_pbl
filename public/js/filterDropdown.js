@@ -101,5 +101,59 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
+
+    // === 4. FILTER ACTION BUTTON TOGGLE ICON (Check <-> Cross) ===
+    (function() {
+        const btn = document.getElementById('filter-action-btn');
+        const iconContainer = document.getElementById('filter-action-icon');
+        const form = document.getElementById('filterForm');
+
+        if (!btn || !iconContainer) return;
+
+        function filtersActiveFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            for (const [k, v] of params) {
+                if (v !== '' && k !== 'page' && k !== 'search') return true;
+            }
+            return false;
+        }
+
+        function update() {
+            const active = filtersActiveFromURL();
+            const checkHTML = iconContainer.dataset.check || '';
+            const crossHTML = iconContainer.dataset.cross || '';
+
+            if (active) {
+                // show cross and make button clear filters
+                if (crossHTML) iconContainer.innerHTML = crossHTML;
+                btn.onclick = function() {
+                    if (form) {
+                        form.querySelectorAll('input, select').forEach(el => {
+                            if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+                            else el.value = '';
+                        });
+                        form.submit();
+                    } else {
+                        window.location.href = window.location.pathname;
+                    }
+                };
+                btn.classList.remove('text-dark-overlay5');
+                btn.classList.add('text-red1');
+            } else {
+                // show check and make button apply/submit filters
+                if (checkHTML) iconContainer.innerHTML = checkHTML;
+                btn.onclick = function() {
+                    if (form) form.submit();
+                    else window.location.reload();
+                };
+                btn.classList.remove('text-red1');
+                btn.classList.add('text-dark-overlay5');
+            }
+        }
+
+        // Initial update and also watch for history changes (back/forward)
+        update();
+        window.addEventListener('popstate', update);
+    })();
 });
 // Jangan lupa sertakan logika search dan clear filter Anda di file ini juga

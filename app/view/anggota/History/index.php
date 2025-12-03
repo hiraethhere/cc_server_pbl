@@ -21,11 +21,12 @@
                 include __DIR__ . '/../../template/filterDropDown.php';
             ?>
 
-            <button type="button" 
-                    class="p-2 text-dark-overlay5 hover:text-dark-overlay7 hover:bg-dark-overlay1 rounded-lg transition border border-dark-overlay5 bg-white"
-                    onclick="document.getElementById('jenis_anggota').value=''; document.getElementById('jurusan').value=''; document.getElementById('status').value=''; document.getElementById('filterForm').submit();">
-                <div class="text-red1">
-                    <?= icon('cross', 'w-4 h-4') ?>
+            <button type="button" id="filter-action-btn"
+                    class="p-2 text-dark-overlay5 hover:text-dark-overlay7 hover:bg-dark-overlay1 rounded-lg transition border border-dark-overlay5 bg-white">
+                <div id="filter-action-icon" class="text-dark-overlay5"
+                     data-check="<?= htmlspecialchars(icon('check', 'w-4 h-4 text-blue-overlay'), ENT_QUOTES) ?>"
+                     data-cross="<?= htmlspecialchars(icon('cross', 'w-4 h-4 text-red1'), ENT_QUOTES) ?>">
+                    <?= icon('check', 'w-4 h-4') ?>
                 </div>
             </button>
         </div>

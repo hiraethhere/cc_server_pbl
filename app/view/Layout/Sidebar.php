@@ -13,7 +13,7 @@
 
     <?php include __DIR__ . '/../template/iconComponent.php'; ?>
     <!-- SIDEBAR -->
-    <aside class="w-56 bg-background2 shadow-lg flex flex-col z-20">
+    <aside class="w-56 bg-background2 shadow-lg flex flex-col h-screen sticky top-0 overflow-auto z-20">
         
         <!-- Logo -->
         <div class="px-6 py-5 border-b border-dark-overlay2">
@@ -127,7 +127,7 @@
             {
                 icon: '/icon/logoutDashboard.svg',
                 confirmText: 'Logout',
-                confirmClass: 'w-full px-6 py-2 bg-red1 text-white rounded-lg font-semibold hover:bg-red-700 transition hover:cursor-pointer',
+                confirmClass: 'w-full px-6 py-2 bg-red1 text-white rounded-lg font-semibold hover:bg-red-800 transition hover:cursor-pointer',
                 cancelText: 'Batalkan'
             }
         );
