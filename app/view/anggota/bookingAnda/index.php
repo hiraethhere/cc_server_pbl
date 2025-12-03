@@ -70,8 +70,8 @@
                                 </div>
                             </div>
                             <div class="flex space-x-4 py-4">
-                                <button type="button" id="buttonCancel" class="bg-red1 text-white px-6 py-2 rounded-sm text-sm hover:bg-red-700 hover:cursor-pointer">
-                                    Cancel Booking
+                                <button  type="button" id="buttonCancel" class="bg-red1 text-white px-6 py-2 rounded-sm text-sm hover:bg-red-700 hover:cursor-pointer">
+                                    Batalkan Booking
                                 </button>
                                 <a href="Booking/Reschedule/<?= $booking['id_booking'] ?>" class="bg-blue-overlay text-white px-6 py-2 rounded-sm text-sm hover:bg-blue-700 hover:cursor-pointer">
                                     Reschedule
@@ -146,3 +146,27 @@
             </div>
     </div>
 </main>
+
+<script>
+
+    const buttonCancel = document.getElementById('buttonCancel')
+
+    function konfirmasiCancel() {
+        Modal.confirm(
+            'Konfirmasi Pembatalan Booking',
+            'Anda akan mendapatkan suspend jika membatalkan booking, baca panduan untuk informasi lebih lanjut',
+            function() {
+            // ini yang benar untuk POST form, bukan window.location.href
+            document.getElementById('cancelForm').submit();
+            },
+            {
+            icon: <?= json_encode(icon("calendar", "w-12 h-12", "green1")) ?>,
+            confirmText: 'Batalkan Booking',
+            confirmClass: 'w-full px-6 py-2 bg-red1 text-white rounded-lg font-semibold hover:bg-red-800 transition hover:cursor-pointer',
+            cancelText: 'Kembali'
+            }
+        );
+    }
+
+    buttonCancel.addEventListener('click', konfirmasiCancel)
+</script>

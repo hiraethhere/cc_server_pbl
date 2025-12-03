@@ -17,7 +17,7 @@
                 <div class="bg-background2 rounded-2xl shadow-lg p-6 md:p-8">
 
                     <form id="bookingForm" action="<?= BASEURL ?>/Booking/handleBooking" method="POST">
-                        <input type="hidden" name="id_room" value="<?= $detailRuangan['id_room'] ?>">
+                        <input type="hidden" id="id_room" name="id_room" value="<?= $detailRuangan['id_room'] ?>">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div class="relative">
                                 <label class="block text-sm font-semibold text-dark-overlay7 mb-2 flex items-center">
