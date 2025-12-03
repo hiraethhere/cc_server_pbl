@@ -19,7 +19,7 @@
                 <?php if ($tab === 'booking' || empty($tab)): ?>
                     <?php if (!empty($activeBooking)): ?>
                     <!-- Booking Details -->
-                    <div class="w-full mx-auto bg-background2 rounded-b-xl shadow-xl p-12">
+                    <div class="w-full mx-auto bg-background2 rounded-b-xl shadow-xl lg:p-12 p-4">
                         <div class="">
                             <div class="relative lg:h-96 md:h-96 h-48">
                                 <img src="/img/DefaultRuangan.jpg" 
@@ -86,7 +86,7 @@
 
                     <?php else: ?>
                         <!-- Empty State untuk Booking -->
-                        <div class="w-full mx-auto bg-background2 rounded-b-xl shadow-xl p-12">
+                        <div class="w-full mx-auto bg-background2 rounded-b-xl shadow-xl lg:p-12 p-4">
                             <div class="flex flex-col items-center justify-center py-16">
                                 <svg class="w-24 h-24 text-gray-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -102,7 +102,7 @@
 
             <?php elseif ($tab === 'reschedule'): ?>
                 <?php if (!empty($reschedules)): ?>
-                <div id="desktop-table" class="md:block hidden overflow-x-auto bg-white rounded-t-xl p-12">
+                <div id="desktop-table" class="md:block hidden overflow-x-auto bg-white rounded-t-xl lg:p-12 p-4">
                     
                     <table class="w-full text-sm border-separate border-spacing-0 border border-dark-overlay4 rounded-t-xl">
                         <thead class="bg-blue-overlay1 rounded-t-xl">
@@ -137,7 +137,7 @@
                     
                 </div>
                     <?php else: ?>
-                    <div class="text-center py-8 text-dark-overlay7">
+                    <div class="text-center py-16 text-dark-overlay7">
                         sepertinya kamu belum ada riwayat pengajuan reschedule.
                     </div>
                     <?php endif; ?>
