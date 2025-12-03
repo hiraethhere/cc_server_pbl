@@ -322,6 +322,7 @@ class Booking extends Controller {
         // $reason     = $_POST['alasan'] ?? 'none';
         $nim_list   = $_POST['nim'] ?? []; // Array NIM Anggota
 
+
     // 2. Validasi Dasar
         if (!$id_booking || !$newDate || !$newStart || !$newEnd) {
             Flasher::setModalInfo('Gagal!', 'Semua field wajib diisi (Tanggal, Jam, Alasan)', 'error');
@@ -331,6 +332,10 @@ class Booking extends Controller {
 
         $new_start_datetime = "$newDate $newStart";
         $new_end_datetime   = "$newDate $newEnd";
+        $ts = strtotime($newDate);
+
+        $range_start = date('Y-m-d 00:00:00', strtotime('monday this week', $ts));
+        $range_end   = date('Y-m-d 23:59:59', strtotime('sunday this week', $ts));
 
     // Hitung Range Mingguan (Untuk cek kuota di tanggal baru)
         $ts = strtotime($newDate);
@@ -381,7 +386,7 @@ class Booking extends Controller {
         }
         */
 
-        // STEP D: Validasi Anggota (Looping NIM)
+        // Validasi Anggota (Looping NIM)
 
         $validatedMembers = [];
 
@@ -396,10 +401,14 @@ class Booking extends Controller {
             // Jangan masukkan ketua sebagai anggota
             if ($userAnggota['id_user'] == $_SESSION['user']['user_id']) continue;
 
-            // (Opsional) Cek Kuota Anggota di tanggal baru
-            // if (!$bookingModel->checkUserQuota($userAnggota['id_user'], $range_start, $range_end)) {
-            //    throw new Exception("Anggota (" . $userAnggota['nama_lengkap'] . ") limit habis.");
-            // }
+            //cek apakah dia sudah masuk ke booking minggu ini?
+            if (!$bookingModel->checkUserQuota($userAnggota['id_user'], $range_start, $range_end)) {
+                    throw new Exception("Anggota (" . $userAnggota['username'] . ") sudah ada jadwal minggu ini.");
+                }
+
+            if ($rescheduleModel->checkUserHasReschedule($userAnggota['id_user'])) {
+                    throw new Exception("Anggota (" . $userAnggota['username'] . ") sudah ada di anggota reschedule orang lain.");
+                }
 
             $validatedMembers[] = $userAnggota['id_user'];
         }
