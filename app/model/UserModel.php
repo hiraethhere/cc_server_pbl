@@ -64,6 +64,12 @@ class UserModel {
         return $this->db->singleSet();  
     }
 
+    public function getSuspendCount($id_user){
+        $this->db->query("SELECT suspend_count FROM users WHERE id_user = :id_user");
+        $this->db->bind('id_user', $id_user);
+        return $this->db->singleSet()['suspend_count'];
+    }
+
     public function getUserForAdmin(){
         $this->db->query("SELECT u.id_user, u.status , u.username,r.role_name, u.nomor_induk, u.jurusan_unit, u.created_at 
                         FROM users u JOIN roles r ON u.id_role = r.id_role WHERE u.id_role NOT IN (1,2) AND status = 'pending'" );

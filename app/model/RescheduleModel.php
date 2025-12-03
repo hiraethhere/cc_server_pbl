@@ -38,11 +38,13 @@ class RescheduleModel {
     }
 
     public function getAllRescheduleByIdUser($id_user){
-        $this->db->query("SELECT rs.new_start_time, rs.new_end_time, r.room_name, rs.status_reschedule 
-        FROM reschedule rs 
-        JOIN bookings b ON rs.id_booking =b.id_booking
-        JOIN rooms r ON b.id_room = r.id_room 
-        WHERE id_user = :id_user");
+        $query = "SELECT DISTINCT rs.new_start_time, rs.new_end_time, r.room_name, rs.status_reschedule
+            FROM reschedule rs
+            JOIN bookings b ON rs.id_booking = b.id_booking
+            JOIN rooms r ON b.id_room = r.id_room
+            LEFT JOIN reschedule_members rm ON rm.id_reschedule = rs.id_reschedule
+            WHERE b.id_user = :id_user OR rm.id_user = :id_user";
+        $this->db->query($query);
         $this->db->bind('id_user', $id_user);
         return $this->db->resultSet();
     }

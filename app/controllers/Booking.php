@@ -254,8 +254,6 @@ class Booking extends Controller {
                 throw new Exception("internal server error", 1);
             }
 
-
-
         $bookingModel->commit();
         Flasher::setModalInfo('Cancel Peminjaman Berhasil', 'Peminjaman berhasil dibatalkan', 'success');
         header('location: /dashboard');
