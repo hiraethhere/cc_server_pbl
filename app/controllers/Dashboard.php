@@ -55,6 +55,7 @@ class Dashboard extends Controller
 
     public function Panduan(){
         $data['judul'] = 'Panduan pakai RuanginPNJ';
+        $data['navbar'] = 'Panduan';
         $this->view('Layout/Header', $data);
         $this->view('anggota/panduan/index', $data); 
         $this->view('Layout/Footer');

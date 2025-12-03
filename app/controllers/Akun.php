@@ -17,6 +17,7 @@ class Akun extends Controller{
             // 1. Tentukan judul halaman
         $data['judul'] = 'Profil Akun';
         $data['user'] = $_SESSION['user'];
+        $data['navbar'] = 'Akun';
         // 3. Panggil view (Urutan pemanggilan harus benar: Header, Body, Footer)
         $this->view('Layout/Header', $data);
         $this->view('anggota/Akun/index', $data); 
@@ -25,6 +26,7 @@ class Akun extends Controller{
 
     public function gantiPassword(){
         $data['judul'] = 'Ganti Password';
+        $data['navbar'] = 'Akun';
         $this->view('Layout/Header', $data);
         $this->view('anggota/akun/Ganti_Password', $data);
         $this->view('Layout/Footer');
@@ -32,6 +34,7 @@ class Akun extends Controller{
 
     public function hapusAkun(){
         $data['judul'] = 'Hapus Akun';
+        $data['navbar'] = 'Akun';
         $this->view('Layout/Header', $data);
         $this->view('Akun/Hapus', $data);
         $this->view('Layout/Footer');
@@ -82,5 +85,63 @@ class Akun extends Controller{
 
     public function forgetPassword(){
         $this->view('Auth/forgetPassword');
+    }
+
+    public function updateProfilePhoto(){
+        $id_user = $_SESSION['user']['user_id'] ?? null;
+        if (!$id_user) {
+            Flasher::setModalInfo('Gagal', 'User tidak ditemukan', 'error');
+            header('Location: /akun');
+            exit;
+        }
+
+        $selectedAvatar = $_POST['selected_avatar'] ?? '';
+        $uploadedPath = '';
+
+        // Handle file upload if provided
+        if (isset($_FILES['profile_file']) && $_FILES['profile_file']['error'] === UPLOAD_ERR_OK) {
+            $file = $_FILES['profile_file'];
+            $allowed = ['image/jpeg', 'image/png', 'image/webp'];
+            if (!in_array($file['type'], $allowed)) {
+                Flasher::setModalInfo('Format tidak didukung', 'Gunakan JPG, PNG, atau WEBP', 'error');
+                header('Location: /akun');
+                exit;
+            }
+
+            $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+            $filename = 'profile_' . $id_user . '_' . time() . '.' . $ext;
+            $targetDir = __DIR__ . '/../../public/img/profiles';
+            if (!is_dir($targetDir)) mkdir($targetDir, 0755, true);
+            $targetPath = $targetDir . '/' . $filename;
+
+            if (move_uploaded_file($file['tmp_name'], $targetPath)) {
+                $uploadedPath = '/img/profiles/' . $filename;
+            } else {
+                Flasher::setModalInfo('Upload gagal', 'Terjadi masalah saat menyimpan file', 'error');
+                header('Location: /akun');
+                exit;
+            }
+        }
+
+        $newProfile = '';
+        if (!empty($uploadedPath)) {
+            $newProfile = $uploadedPath;
+        } elseif (!empty($selectedAvatar)) {
+            $newProfile = $selectedAvatar; // expected to be path like /img/avatars/...
+        } else {
+            // user chose default/empty
+            $newProfile = '';
+        }
+
+        $result = $this->model('UserModel')->updateProfilePhoto($id_user, $newProfile);
+        if ($result >= 0) {
+            // Update session so UI reflects change
+            $_SESSION['user']['profile_photo'] = $newProfile;
+            Flasher::setModalInfo('Berhasil', 'Foto profil berhasil diperbarui', 'success');
+        } else {
+            Flasher::setModalInfo('Gagal', 'Gagal memperbarui foto profil', 'error');
+        }
+
+        header('Location: /akun');
     }
 }

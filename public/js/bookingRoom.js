@@ -1,4 +1,4 @@
-        document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
         // 1. DEFINISI ID SESUAI HTML KAMU
         const tanggalPinjam = document.getElementById('tanggalPinjam');
         const jamMulai = document.getElementById('jamMulai');
@@ -7,11 +7,11 @@
         const roomIdInput = document.getElementById('id_room');
 
     // Fallback jika roomId tidak ada
-        const roomId = roomIdInput ? roomIdInput.value : 1;
+        const roomId = roomIdInput ? roomIdInput.value : '';
 
     // config waktu, atur aja
-    const operationalStart = 7 * 60; // 07:00
-    const operationalEnd = 17 * 60;  // 17:00
+    const operationalStart = 8 * 60; // 08:00
+    const operationalEnd = 16 * 60;  // 16:00
     const interval = 30;             // 30 menit
     const maxDuration = 180;         // 3 jam (180 menit)
     const today = new Date();
@@ -181,5 +181,100 @@ jamMulai.addEventListener('change', function() {
 
     function resetSelect(el, text) {
         el.innerHTML = `<option value="" disabled selected hidden>${text}</option>`;
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    
+   //Fungsi Debounce (Mencegah spam request)
+    function debounce(func, delay) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    // 2. Fungsi Utama Fetch Data
+    // Kita pisahkan logikanya agar bersih
+    const fetchUserData = debounce(async (inputElement) => {
+        const nim = inputElement.value.trim();
+        // Cari field nama pasangannya (sibling dalam satu grid)
+        const row = inputElement.closest('.grid'); 
+        const namaField = row.querySelector(".nama-input");
+        const allNimInputs = document.querySelectorAll('[name="nim[]"]');
+
+        let isDuplicate = false;
+
+        allNimInputs.forEach((input) => {
+            // Jangan cek input dengan dirinya sendiri
+            if (input === inputElement) return;
+            
+            // Cek jika value-nya sama (dan tidak kosong)
+            // Pastikan HTML Penanggung Jawab sudah ada attribute value="..."
+            if (input.value.trim() !== "" && input.value.trim() === nim) {
+                isDuplicate = true;
+            }
+        });
+
+        if (isDuplicate) {
+            namaField.value = "";
+            namaField.placeholder = "NIM sudah terdaftar di form ini!";
+            // Tambahkan alert visual kecil atau border merah agar user sadar
+            namaField.classList.add('text-red-500')
+            inputElement.classList.add('border-red-500', 'text-red-500');
+            return; // Hentikan proses, jangan fetch ke database
+        } else {
+            // Hapus indikator error jika sudah benar
+            inputElement.classList.remove('border-red-500', 'text-red-500');
+            namaField.classList.remove('text-red-500')
+        }
+
+        // Reset jika kosong atau terlalu pendek
+        if (nim.length < 5) {
+            namaField.value = "";
+            return;
+        }
+
+        // Tanda sedang loading (Opsional, UX lebih baik)
+        namaField.placeholder = "Mencari...";
+
+        try {
+            const response = await fetch(`${BASEURL}/Booking/cariAnggota`, { 
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nim: nim })
+            });
+
+            if (!response.ok) throw new Error("Network response was not ok");
+
+            const data = await response.json();
+            console.log("Dapet data:", data);
+
+            if (data && data.nama) {
+                namaField.value = data.nama;
+            } else {
+                namaField.value = ""; // Kosongkan jika tidak ketemu
+                namaField.placeholder = "Data tidak ditemukan";
+            }
+
+        } catch (err) {
+            console.error("Fetch error:", err);
+            namaField.value = "";
+            namaField.placeholder = "Gagal memuat data";
+        }
+    }, 500); // Delay 500ms
+
+    // 3. EVENT DELEGATION (Kunci agar input dinamis bisa jalan)
+    // Kita pasang listener di container pembungkus utama, bukan di masing-masing input
+    const membersContainer = document.getElementById('membersContainer');
+
+    if (membersContainer) {
+        membersContainer.addEventListener('input', function(e) {
+            // Cek apakah yang diketik adalah elemen dengan class 'nim-input'
+            if (e.target && e.target.classList.contains('nim-input')) {
+                fetchUserData(e.target);
+            }
+        });
     }
 });

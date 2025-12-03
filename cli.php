@@ -28,7 +28,7 @@ if ($command === 'migrate') {
     echo "php cli.php migrate:fresh  (Reset total database) \n"; 
     echo "php cli.php seed \n";
     echo "php cli.php bookings:autocancel (Membatalkan booking telat 10 menit) \n";
-    echo "php cli.php bookings:autocomplete (Membatalkan booking yang sudah lewat) \n";
+    echo "php cli.php bookings:autocomplete (Menyelesaikan booking yang sudah lewat) \n";
 }
 
 function runMigrations() {

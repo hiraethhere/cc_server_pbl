@@ -154,6 +154,39 @@ class Auth extends Controller {
 
     public function handleLogin(){
         try{
+
+            //Cek apakah token dikirim dari form
+            if (!isset($_POST['cf-turnstile-response'])) {
+                throw new Exception('Mohon selesaikan verifikasi keamanan (CAPTCHA).');
+            }
+
+            // Persiapkan data untuk verifikasi ke Cloudflare
+            $turnstileResponse = $_POST['cf-turnstile-response'];
+            $remoteIp = $_SERVER['REMOTE_ADDR'];
+            $url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+            
+            $data = [
+                'secret' => TURNSTILE_SECRET_KEY,
+                'response' => $turnstileResponse,
+                'remoteip' => $remoteIp
+            ];
+
+            // Kirim request verifikasi menggunakan cURL
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($ch);
+            curl_close($ch);    
+
+            // Cek hasil verifikasi
+            $result = json_decode($response);
+            
+            if (!$result || !$result->success) {
+                throw new Exception('Verifikasi keamanan gagal. Silakan coba lagi.');
+            }
+
             $data = [
             'email' => $_POST['email'],
             'password' => $_POST['password']
@@ -195,6 +228,23 @@ class Auth extends Controller {
             'nomor_induk' => $user['nomor_induk']
         ];
         $_SESSION['role'] = $user['role'];
+
+        if (isset($_POST['remember'])) {
+            $email = $user['email'];
+            $expired_time = time() + 86400 * 7; // 7 hari dari sekarang
+            
+            // Buat Payload (Data yang mau disimpan)
+            // Kita gabung email dan waktu expire
+            $payload = $email . '|' . $expired_time;
+            
+            // Buat Tanda Tangan (Signature)
+            // Menggunakan HMAC-SHA256. Ini inti keamanannya.
+            $signature = hash_hmac('sha256', $payload, APP_KEY);
+            
+            $cookieValue = base64_encode($email) . ':' . $expired_time . ':' . $signature;
+            
+            setcookie('ruangin_login', $cookieValue, $expired_time, "/", "", false, true);
+        }
 
         generateCsrf();
 
@@ -327,9 +377,10 @@ class Auth extends Controller {
     }
 
     public function handleLogout(){
-
+        // setcookie('ruangin_login', '', time() - 3600);
         session_unset();
         session_destroy();
+        setcookie('ruangin_login', '', time() - 3600, '/');
         header('location: /auth/');
         exit;
     }

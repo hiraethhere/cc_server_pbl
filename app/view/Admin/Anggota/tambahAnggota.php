@@ -16,7 +16,7 @@
                 <div>
                     <label for="nama_lengkap" class="block text-sm font-medium text-[#171E29] mb-2">Nama Lengkap</label>
                     <input type="text" id="nama_lengkap" placeholder="Input nama"
-                           class="w-full px-4 py-2 border border-[#171E2950] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                           class="w-full    px-4 py-2 border border-[#171E2950] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition">
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">

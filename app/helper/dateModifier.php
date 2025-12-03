@@ -62,6 +62,7 @@ function tanggal_indonesia_jam($datetime) {
     return "$day $month $year, $time";
 }
 
+//ini buat ambil jamnya doang
 function waktu_indonesia($datetime) {
     return date('H:i', strtotime($datetime));
 }
