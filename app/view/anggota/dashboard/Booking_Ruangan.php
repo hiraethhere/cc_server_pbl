@@ -227,7 +227,7 @@
                     <span class="inline-flex items-center justify-center w-7 h-7 bg-dark-overlay7 text-white rounded-full text-xs font-bold"><?= $i + 2?></span>
                     <span class="ml-2 font-medium text-sm text-dark-overlay7">Anggota</span>
                 </div>
-                <button type="button" onclick="removeMember(this)" class="text-red1 hover:text-red-800 transition">
+                <button type="button" onclick="removeMember(this)" class="text-red1 hover:text-red-800 transition hover:cursor-pointer">
                     <div>
                         <?= icon('trash', 'w-6 h-6') ?>
                     </div>

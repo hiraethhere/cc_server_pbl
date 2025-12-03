@@ -223,6 +223,13 @@ class Admin extends Controller {
         $this->view('admin/ruangan/dataRuangan');
     }
 
+    public function Feedback(){
+        $data['judul'] = 'Feedback Pengguna';
+        $data['navbar'] = 'Feedback';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/feedback/index');
+    }
+
     public function Akun(){
         $data['judul'] = 'Profile Admin';
         $data['navbar'] = 'Akun';
