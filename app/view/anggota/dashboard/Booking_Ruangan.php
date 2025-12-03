@@ -17,7 +17,7 @@
                 <div class="bg-background2 rounded-2xl shadow-lg p-6 md:p-8">
 
                     <form id="bookingForm" action="<?= BASEURL ?>/Booking/handleBooking" method="POST">
-                        <input type="hidden" name="id_room" value="<?= $detailRuangan['id_room'] ?>">
+                        <input type="hidden" id="id_room" name="id_room" value="<?= $detailRuangan['id_room'] ?>">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div class="relative">
                                 <label class="block text-sm font-semibold text-dark-overlay7 mb-2 flex items-center">
@@ -227,6 +227,11 @@
                     <span class="inline-flex items-center justify-center w-7 h-7 bg-dark-overlay7 text-white rounded-full text-xs font-bold"><?= $i + 2?></span>
                     <span class="ml-2 font-medium text-sm text-dark-overlay7">Anggota</span>
                 </div>
+                <button type="button" onclick="removeMember(this)" class="text-red1 hover:text-red-800 transition">
+                    <div>
+                        <?= icon('trash', 'w-6 h-6') ?>
+                    </div>
+                </button>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <input type="text" maxlength="10" placeholder="NIM/NIP Anggota" name="nim[]" required

@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             try {
                 // Fetch ke Controller Bookings yang sudah kita buat
+                console.log("Mengirim data:", { room_id: roomId, date: date });
                 const response = await fetch(`${BASEURL}/Booking/cekJadwal`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },

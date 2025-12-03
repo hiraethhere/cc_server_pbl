@@ -164,11 +164,10 @@ class RescheduleModel {
         $query = "INSERT INTO reschedule 
                 (id_booking, status_reschedule, new_start_time, new_end_time, created_at)
                 VALUES 
-                (:id_booking, :reason, :status, :start, :end, CURRENT_TIMESTAMP)";
+                (:id_booking, :status, :start, :end, CURRENT_TIMESTAMP)";
     
         $this->db->query($query);
         $this->db->bind('id_booking', $data['id_booking']);
-        $this->db->bind('reason', $data['reschedule_reason']);
         $this->db->bind('status', $data['status_reschedule']);
         $this->db->bind('start', $data['new_start_time']);
         $this->db->bind('end', $data['new_end_time']);
