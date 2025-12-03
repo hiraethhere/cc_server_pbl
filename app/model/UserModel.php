@@ -103,6 +103,14 @@ class UserModel {
         return $this->db->rowCount(); 
     }
 
+    public function updateProfilePhoto($id_user, $profile_photo){
+        $this->db->query("UPDATE users SET profile_photo = :profile_photo WHERE id_user = :id_user");
+        $this->db->bind(':profile_photo', $profile_photo);
+        $this->db->bind(':id_user', $id_user);
+        $this->db->execute();
+        return $this->db->rowCount();
+    }
+
     public function addSuspendCount($id_user){
         $this->db->query("UPDATE users SET suspend_count = suspend_count + 1 WHERE id_user = :id_user");
         $this->db->bind(':id_user',$id_user);

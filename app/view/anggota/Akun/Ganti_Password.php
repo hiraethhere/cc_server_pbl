@@ -60,7 +60,7 @@
 
                 <div class="grid grid-cols-2 gap-3">
                     <a  href="/akun" type="button" class="px-4 py-2 text-center bg-white text-dark-overlay4 rounded-md font-medium hover:bg-dark-overlay1 border border-dark-overlay4 transition hover:cursor-pointer">Batal</a>
-                    <button class="px-4 py-2 bg-blue-overlay text-white rounded-lg font-medium hover:bg-blue-700 transition shadow-sm hover:cursor-pointer">Konfirmasi</button>
+                    <button type="button" onclick="konfirmasiGantiPassword()" class="px-4 py-2 bg-blue-overlay text-white rounded-lg font-medium hover:bg-blue-700 transition shadow-sm hover:cursor-pointer">Konfirmasi</button>
                 </div>
             </div>
         </form>
@@ -79,9 +79,9 @@ function konfirmasiGantiPassword() {
             window.location.href = '#';
         },
         {
-            icon: '/icon/logoutDashboard.svg',
+            icon: '<?php echo icon("key", "text-red-500", "24", "w-8 h-8 mx-auto"); ?>',
             confirmText: 'Konfirmasi',
-            confirmClass: 'w-full px-6 py-2 bg-green1 text-white rounded-lg font-semibold hover:bg-green-700 transition',
+            confirmClass: 'w-full px-6 py-2 bg-blue-overlay text-white rounded-lg font-semibold hover:bg-blue-700 transition hover:cursor-pointer',
             cancelText: 'Batalkan'
         }
     );

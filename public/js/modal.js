@@ -8,7 +8,7 @@ const Modal = {
         const container = document.getElementById('modalContainer'); // Gunakan ID yang baru
         
         // Reset ke default width (max-w-sm) setiap kali modal dibuka
-        container.className = 'bg-white rounded-2xl p-8 w-full mx-4 relative z-10 border border-[#8E97A6] max-w-sm';
+        container.className = 'bg-white rounded-2xl p-8 w-full mx-4 relative z-10 border border-dark-overlay4 max-w-sm';
         
         // Jika ada extraClass, replace max-w-sm dengan extraClass
         if (options.extraClass) {
@@ -34,7 +34,22 @@ const Modal = {
         
         // Set icon (opsional)
         if (options.icon) {
-            iconContent.innerHTML = options.icon; 
+            iconContent.innerHTML = ''; // Clear dulu
+            
+            // Jika icon adalah path file (string dengan .svg atau dimulai dengan /)
+            if (typeof options.icon === 'string' && (options.icon.includes('.svg') || options.icon.startsWith('/'))) {
+                // Buat img element untuk icon dari file
+                const img = document.createElement('img');
+                img.src = options.icon;
+                img.alt = 'icon';
+                img.style.width = '48px';
+                img.style.height = '48px';
+                iconContent.appendChild(img);
+            } else {
+                // Icon adalah HTML string (dari PHP function atau inline SVG)
+                iconContent.innerHTML = options.icon;
+            }
+            
             iconContainer.classList.remove('hidden');
         } else {
             iconContent.innerHTML = '';
@@ -49,13 +64,13 @@ const Modal = {
             options.buttons.forEach(function(btn) {
                 const button = document.createElement('button');
                 button.textContent = btn.text;
-                button.className = btn.className || 'px-6 py-2 rounded-lg font-semibold transition';
+                button.className = btn.className || 'px-6 py-2 rounded-lg font-semibold transition hover:cursor-pointer';
                 
                 // Jika ada link, buat sebagai anchor tag
                 if (btn.link) {
                     const link = document.createElement('a');
                     link.href = btn.link;
-                    link.className = btn.className || 'px-6 py-2 rounded-lg font-semibold transition';
+                    link.className = btn.className || 'px-6 py-2 rounded-lg font-semibold transition hover:cursor-pointer';
                     link.textContent = btn.text;
                     link.style.display = 'inline-block';
                     link.style.width = '100%';
@@ -73,7 +88,7 @@ const Modal = {
             // Default button (hanya tombol tutup)
             const closeBtn = document.createElement('button');
             closeBtn.textContent = 'Tutup';
-            closeBtn.className = 'w-full px-6 py-2 bg-dark-overlay5 text-white1 rounded-lg font-semibold hover:bg-dark-overlay6 transition';
+            closeBtn.className = 'w-full px-6 py-2 bg-dark-overlay5 text-white1 rounded-lg font-semibold hover:bg-dark-overlay6 transition hover:cursor-pointer';
             closeBtn.onclick = Modal.close;
             buttons.appendChild(closeBtn);
         }
@@ -106,12 +121,12 @@ const Modal = {
             buttons: [
                 {
                     text: options.cancelText || 'Batalkan',
-                    className: 'w-full px-6 py-2 bg-white1 text-dark-overlay rounded-lg border border-dark-overlay5 font-semibold hover:bg-dark-overlay1 transition',
+                    className: 'w-full px-6 py-2 bg-white1 text-dark-overlay rounded-lg border border-dark-overlay5 font-semibold hover:bg-dark-overlay1 transition hover:cursor-pointer',
                     onclick: Modal.close
                 },
                 {
                     text: options.confirmText || 'Ya',
-                    className: options.confirmClass || 'w-full px-6 py-2 bg-red1 text-white1 rounded-lg font-semibold hover:bg-dark-overlay transition',
+                    className: options.confirmClass || 'w-full px-6 py-2 bg-red1 text-white1 rounded-lg font-semibold hover:bg-dark-overlay transition hover:cursor-pointer',
                     onclick: function() {
                         Modal.close();
                         if (onConfirm) onConfirm();
@@ -133,7 +148,7 @@ const Modal = {
             buttons: [
                 {
                     text: options.buttonText || 'OK',
-                    className: options.buttonClass || 'w-full px-6 py-2 bg-blue-overlay text-white1 rounded-lg font-semibold hover:bg-blue-overlay8 transition',
+                    className: options.buttonClass || 'w-full px-6 py-2 bg-blue-overlay text-white1 rounded-lg font-semibold hover:bg-blue-overlay8 transition hover:cursor-pointer',
                     onclick: Modal.close
                 }
             ]
@@ -178,12 +193,12 @@ const Modal = {
             buttons: [
                 {
                     text: options.cancelText || 'Batalkan',
-                    className: 'w-full px-6 py-2 bg-white1 text-dark-overlay rounded-lg font-medium hover:bg-dark-overlay1 border border-dark-overlay5 transition',
+                    className: 'w-full px-6 py-2 bg-white1 text-dark-overlay rounded-lg font-medium hover:bg-dark-overlay1 border border-dark-overlay5 transition hover:cursor-pointer',
                     onclick: Modal.close
                 },
                 {
                     text: options.confirmText || 'Kirim',
-                    className: options.confirmClass || 'w-full px-6 py-2 bg-blue-overlay text-white1 rounded-lg font-semibold hover:bg-blue-overlay8 transition', 
+                    className: options.confirmClass || 'w-full px-6 py-2 bg-blue-overlay text-white1 rounded-lg font-semibold hover:bg-blue-overlay8 transition hover:cursor-pointer', 
                     onclick: function() {
                         const inputValue = document.getElementById('promptInput').value.trim();
                         const ratingInput = document.querySelector('input[name="rating"]:checked');

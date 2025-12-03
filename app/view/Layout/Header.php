@@ -116,7 +116,7 @@ $inactiveClassMobile = 'text-dark-overlay hover:text-white rounded-full font-med
 
     <?php include __DIR__ . '/../template/modal.php'; ?>
 
-    <script src="/js/modal.js" defer></script>
+    <script src="/js/modal.js"></script>
     <script src="/js/mobileHeader.js" defer></script>
     <script>
     function konfirmasiLogout() {
@@ -129,7 +129,7 @@ $inactiveClassMobile = 'text-dark-overlay hover:text-white rounded-full font-med
             {
                 icon: '/icon/logoutDashboard.svg',
                 confirmText: 'Logout',
-                confirmClass: 'w-full px-6 py-2 bg-[#C90B0B] text-white rounded-lg font-semibold hover:bg-red-800 transition',
+                confirmClass: 'w-full px-6 py-2 bg-red1 text-white1 rounded-lg font-semibold hover:bg-red-800 transition hover:cursor-pointer',
                 cancelText: 'Batalkan'
             }
         );

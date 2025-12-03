@@ -21,56 +21,52 @@
                     <!-- Booking Details -->
                     <div class="w-full mx-auto bg-background2 rounded-b-xl shadow-xl p-12">
                         <div class="">
-                            <div class="relative h-96">
+                            <div class="relative lg:h-96 md:h-96 h-48">
                                 <img src="/img/DefaultRuangan.jpg" 
                                     alt="Ruang Lentera Edukasi" class="w-full h-full object-cover rounded-xl">
                             </div>
-                            <div class="grid grid-cols-2 justify-center items-center border border-dark-overlay7 mt-6 p-3 rounded-md">
+                            <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 lg:justify-center justify-start items-center border border-dark-overlay7 mt-6 p-3 rounded-md pb-4 lg-pb-0">
                                 <div class="">
-                                    <p class="text-dark-overlay7 text-sm">Nama Ruangan</p>
-                                    <h2 class="text-3xl font-semibold text-dark-overlay"><?= htmlspecialchars($activeBooking['room_name'] ?? '-')?></h2>
+                                    <p class="text-dark-overlay7 lg:text-sm text-xs">Nama Ruangan</p>
+                                    <h2 class="lg:text-3xl text-xl font-semibold text-dark-overlay"><?= htmlspecialchars($activeBooking['room_name'] ?? '-')?></h2>
                                 </div>
 
                                 <div class="">         
-                                    <p class="text-dark-overlay7 text-sm">Status</p>
-                                    <div class="max-w-1/4">
-                                        <a class="bg-blue-overlay-25 flex-wrap py-2 px-4 justify-center text-white1 rounded-md mt-2 flex">
+                                    <p class="text-dark-overlay7 lg:text-sm text-xs">Status</p>
+                                    <div>
+                                        <a class="bg-blue-overlay-25 inline-flex items-center whitespace-nowrap py-2 px-4 text-white1 rounded-md mt-2">
                                             <div class="text-blue-overlay">
                                                 <?= icon('circleFill', 'h-5 w-5 mr-2') ?>
                                             </div>
-                                            <h2 class="text-sm inline-block font-semibold text-blue-overlay"><?= htmlspecialchars($status) ?></h2>
+                                            <h2 class="text-sm font-semibold text-blue-overlay mb-0"><?= htmlspecialchars($status) ?></h2>
                                         </a>
-                                    </div>           
+                                    </div>         
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-2 justify-center items-center border border-dark-overlay7 mt-6 p-3 rounded-md">
-                                <div>
-                                    <div class="border-dark-overlay7 py-4">         
-                                        <p class="text-dark-overlay7 text-sm">Tanggal Peminjaman</p>
-                                        <div class="max-w-3/6">
-                                            <h2 class="text-sm inline-block font-semibold pr-2 1y-1 text-dark-overlay rounded-lg mt-2"><?= htmlspecialchars($bookingDate) ?></h2>
-                                        </div>           
-                                    </div>
-                                    <div class="border-dark-overlay7 py-4">
-                                        <p class="text-dark-overlay7 text-sm">Jumlah Orang</p>
-                                        <h2 class="text-sm font-semibold"><?= htmlspecialchars($activeBooking['total_person'] ?? '-') ?></h2>     
-                                    </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-y-2 justify-start items-start border border-dark-overlay7 mt-6 p-4 rounded-md">
+                                <div class="border-dark-overlay7 py-4">         
+                                    <p class="text-dark-overlay7 lg:text-sm text-xs">Tanggal Peminjaman</p>
+                                    <div class="max-w-3/6">
+                                        <h2 class="text-sm inline-block font-semibold pr-2 1y-1 text-dark-overlay rounded-lg mt-2"><?= htmlspecialchars($bookingDate) ?></h2>
+                                    </div>           
                                 </div>
-                                <div class="grid grid-rows-2">
-                                    <div class="border-dark-overlay7 py-4">         
-                                        <p class="text-dark-overlay7 text-sm">Jam Peminjaman</p>
-                                        <div class="max-w-3/6">
-                                            <h2 class="text-sm inline-block font-semibold pr-2 1y-1 text-dark-overlay rounded-lg mt-2"><?= htmlspecialchars($start_time)?> -  <?= htmlspecialchars($end_time) ?></h2>
-                                        </div>           
-                                    </div>
+                                <div class="border-dark-overlay7 py-4">
+                                    <p class="text-dark-overlay7 lg:text-sm text-xs">Jumlah Orang</p>
+                                    <h2 class="text-sm font-semibold"><?= htmlspecialchars($activeBooking['total_person'] ?? '-') ?></h2>     
+                                </div>
+                                <div class="border-dark-overlay7 py-4">         
+                                    <p class="text-dark-overlay7 lg:text-sm text-xs">Jam Peminjaman</p>
+                                    <div class="max-w-3/6">
+                                        <h2 class="text-sm inline-block font-semibold pr-2 1y-1 text-dark-overlay rounded-lg mt-2"><?= htmlspecialchars($start_time)?> -  <?= htmlspecialchars($end_time) ?></h2>
+                                    </div>           
+                                </div>
 
-                                    <div class="border-dark-overlay7 py-4">         
-                                        <p class="text-dark-overlay7 text-sm">Kode Booking</p>
-                                        <div class="max-w-3/6">
-                                            <h2 class="text-sm inline-block font-semibold pr-2 1y-1 text-dark-overlay rounded-lg mt-2"><?= htmlspecialchars($activeBooking['booking_code'] ?? '-')?></h2>
-                                        </div>           
-                                    </div>
+                                <div class="border-dark-overlay7 py-4">         
+                                    <p class="text-dark-overlay7 lg:text-sm text-xs">Kode Booking</p>
+                                    <div class="max-w-3/6">
+                                        <h2 class="text-sm inline-block font-semibold pr-2 1y-1 text-dark-overlay rounded-lg mt-2"><?= htmlspecialchars($activeBooking['booking_code'] ?? '-')?></h2>
+                                    </div>           
                                 </div>
                             </div>
                             <div class="flex space-x-4 py-4">
@@ -105,9 +101,9 @@
                     <?php endif; ?>
 
             <?php elseif ($tab === 'reschedule'): ?>
-
+                <?php if (!empty($reschedules)): ?>
                 <div id="desktop-table" class="md:block hidden overflow-x-auto bg-white rounded-t-xl p-12">
-                    <?php if (!empty($reschedules)): ?>
+                    
                     <table class="w-full text-sm border-separate border-spacing-0 border border-dark-overlay4 rounded-t-xl">
                         <thead class="bg-blue-overlay1 rounded-t-xl">
                             <tr>
@@ -138,14 +134,15 @@
                         </tbody>
                     </table>
 
+                    
+                </div>
                     <?php else: ?>
-                        <div class="text-center py-8 text-gray-500">
+                    <div class="text-center py-8 text-dark-overlay7">
                         sepertinya kamu belum ada riwayat pengajuan reschedule.
-                        </div>
-                        <?php endif; ?>
                     </div>
                     <?php endif; ?>
+                </div>
+                <?php endif; ?>
             </div>
-        </div>
     </div>
 </main>
