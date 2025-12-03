@@ -156,21 +156,26 @@ class BookingModel {
     }
 
     // ini dia cek apakah dia ada booking minggu ini
-    public function checkUserQuota($id_user, $range_start, $range_end){
+    public function checkUserQuota($id_user, $range_start, $range_end, $exclude_id = NULL){
         $sql = "SELECT 1
             FROM bookings b
             LEFT JOIN booking_members bm 
             ON bm.id_booking = b.id_booking
             WHERE (b.id_user = :uid OR bm.id_user = :uid)
                 AND b.status IN ('pending', 'ongoing')
-                AND (b.start_time < :range_end AND b.end_time > :range_start)
-            LIMIT 1
-        ";
+                AND (b.start_time < :range_end AND b.end_time > :range_start)";
+
+            if ($exclude_id != NULL) {
+            $sql .= " AND b.id_booking != :exclude_id";
+            }
 
         $this->db->query($sql);
         $this->db->bind("uid", $id_user);
         $this->db->bind("range_start", $range_start);
-        $this->db->bind("range_end", $range_end);   
+        $this->db->bind("range_end", $range_end);  
+            if ($exclude_id != NULL) {
+            $this->db->bind("exclude_id", $exclude_id);
+            } 
 
         return $this->db->singleSet() ? false : true;
     }

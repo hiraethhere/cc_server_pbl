@@ -401,8 +401,8 @@ class Booking extends Controller {
             // Jangan masukkan ketua sebagai anggota
             if ($userAnggota['id_user'] == $_SESSION['user']['user_id']) continue;
 
-            //cek apakah dia sudah masuk ke booking minggu ini?
-            if (!$bookingModel->checkUserQuota($userAnggota['id_user'], $range_start, $range_end)) {
+            //logika nya salah ini
+            if (!$bookingModel->checkUserQuota($userAnggota['id_user'], $range_start, $range_end, $id_booking)) {
                     throw new Exception("Anggota (" . $userAnggota['username'] . ") sudah ada jadwal minggu ini.");
                 }
 
@@ -433,7 +433,7 @@ class Booking extends Controller {
         // Sukses
         $rescheduleModel->commit();
         Flasher::setModalInfo('Berhasil!', 'Pengajuan reschedule terkirim. Tunggu persetujuan admin.', 'success');
-        header("Location: /Booking/bookingAnda?tab=reschedule");
+        header("Location: /Booking/index?tab=reschedule");
         exit;
 
     } catch (\Throwable $e) {
