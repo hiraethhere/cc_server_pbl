@@ -168,7 +168,6 @@ class RescheduleModel {
     
         $this->db->query($query);
         $this->db->bind('id_booking', $data['id_booking']);
-        $this->db->bind('reason', $data['reschedule_reason']);
         $this->db->bind('status', $data['status_reschedule']);
         $this->db->bind('start', $data['new_start_time']);
         $this->db->bind('end', $data['new_end_time']);
