@@ -64,9 +64,11 @@
 
   /* green */
   --color-green1: #38C55C;
+  --color-green-overlay4: #38c55c66;
 
   /* red */
   --color-red1: #C90B0B;
+  --color-red-overlay3: #c90b0b4d;
 
   /* yellow */
   --color-yellow1: #FDDF30;
