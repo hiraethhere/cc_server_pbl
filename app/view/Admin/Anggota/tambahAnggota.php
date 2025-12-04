@@ -44,7 +44,7 @@
                                 class="w-full px-4 py-2 border border-[#171E2950] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition appearance-none">
                             <option value="" disabled selected hidden>Pilih Jurusan</option>
                         </select>
-                        <input type="text" id="jurusan_text" placeholder="Masukkan Unit Kerja" class="hidden w-full px-4 py-2 border border-[#171E2950] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                        <input type="text" id="jurusan_text" name="jurusan_text" placeholder="Masukkan Unit Kerja" class="hidden w-full px-4 py-2 border border-[#171E2950] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition">
                     </div>
                     
                     <div id="container_prodi" class="hidden">

@@ -426,10 +426,10 @@ class Admin extends Controller {
         }
     }
 
-        public function handleRegisterByAdmin(){
+    public function handleRegisterByAdmin(){
         try {
 
-            if (!$_POST['username'] || !$_POST['password'] || !$_POST['email'] || !$_POST['nomor_induk'] || !$_POST['jurusan_unit']) {
+            if (!$_POST['username'] || !$_POST['password'] || !$_POST['email'] || !$_POST['nomor_induk']) {
                 throw new Exception('Data tidak lengkap');
             }
 
@@ -450,11 +450,14 @@ class Admin extends Controller {
                 break;
             }
 
-            if ($id_role = 3) {
+            if ($id_role === 3) {
                 if (!validateEmail($_POST['email'])) {
                     throw new Exception('Email tidak valid');
                 }
+                $jurusan_unit = $_POST['jurusan_unit'];
                 $expiredDate = countExpiredAt($_POST['email'], $_POST['prodi']);
+            } else {
+                $jurusan_unit = $_POST['jurusan_text'];
             }
 
             $data = [
@@ -463,7 +466,7 @@ class Admin extends Controller {
                 'password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
                 'nomor_induk' => $_POST['nomor_induk'],
                 'email' => $_POST['email'],
-                'jurusan_unit' => $_POST['jurusan_unit'],
+                'jurusan_unit' => $jurusan_unit,
                 'prodi' => $_POST['prodi'] ?? NULL,
                 'status' => 'active',
                 'kubaca_photo' => NULL,
