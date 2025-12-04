@@ -7,51 +7,55 @@ $nomor = ($current_page - 1) * $limit + 1
 ?>
 
 
-<main class="flex-1 p-8 overflow-y-auto bg-[#F9FAFC]">
+<main class="flex-1 p-8 overflow-y-auto bg-background1">
     <!-- Breadcrumb -->
-    <nav class="mb-6 text-sm">
-        <a href="/Admin/Anggota" class="text-[#1E68FB] hover:text-blue-700">Data Anggota</a>
-        <span class="mx-2 text-gray-400">
-            <img src="/icon/arrow.svg" class="w-5 h-5">
+    <nav class="flex mb-6 text-sm">
+        <a href="/Admin/Anggota" class="text-blue-overlay hover:text-blue-700">Data Anggota</a>
+        <span class="mx-2 text-dark-overlay6">
+            <div>
+                <?= icon('arrowRight', 'w-5 h-5') ?>
+            </div>
         </span>
-        <span class="font-medium text-gray-900">Daftar Anggota</span>
+        <span class="font-medium text-dark-overlay6">Daftar Anggota</span>
     </nav>
 
     <!-- Header dengan Title dan Button -->
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-[#171E29]">Daftar Anggota</h2>
+        <h2 class="text-2xl font-bold text-dark-overlay">Daftar Anggota</h2>
         <a href="/Admin/tambahAnggota"
-           class="flex items-center gap-2 px-3 py-1.5 bg-[#1E68FB] hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm hover:shadow-md transition duration-200">
+           class="flex items-center gap-2 px-3 py-1.5 bg-blue-overlay hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm hover:shadow-md transition duration-200">
             Tambah Anggota
-            <img src="/icon/plus.svg" alt="Tambah Anggota" class="w-4 h-4">
+            <div>
+                <?= icon('plus', 'h-4 w-4') ?>
+            </div>
         </a>
     </div>
 
-    <div class="bg-[#FBFCFF] rounded-lg shadow-md">
+    <div class="bg-background2 rounded-lg shadow-md">
         <!-- Tab Navigation & Search -->
-        <div class="border-b border-gray-200">
+        <div class="">
             <!-- Tabs -->
             <div class="grid grid-cols-2">             
                 <a href="?tab=approval"
                 class="px-6 py-2.5 rounded-tl-lg font-medium text-sm transition-all duration-200 text-center
                         <?= isActive($tab, 'approval') 
-                            ? 'bg-[#1E68FB] text-white shadow-md' 
-                            : 'bg-[rgba(30,104,251,0.10)] text-[#1E68FB] hover:bg-blue-200' ?>">
+                            ? 'bg-blue-overlay text-white shadow-md' 
+                            : 'bg-blue-overlay1 text-blue-overlay hover:bg-blue-overlay2' ?>">
                     Approval
                 </a>
                 <a href="?tab=semua"
                 class="px-6 py-2.5 rounded-tr-lg font-medium text-sm transition-all duration-200 text-center
                         <?= isActive($tab, 'semua') 
-                            ? 'bg-[#1E68FB] text-white shadow-md' 
-                            : 'bg-[rgba(30,104,251,0.10)] text-[#1E68FB] hover:bg-blue-200' ?>">
+                            ? 'bg-blue-overlay text-white shadow-md' 
+                            : 'bg-blue-overlay1 text-blue-overlay hover:bg-blue-overlay2' ?>">
                     Daftar Anggota
                 </a>
             </div>
         </div>
 
         <!-- ============================================
-             LOGIKA IF-ELSE DI SINI (SETELAH TAB NAVIGATION)
-             ============================================ -->
+        LOGIKA IF-ELSE DI SINI (SETELAH TAB NAVIGATION)
+        ============================================ -->
         <?php if ($tab === 'approval'): ?>
             <?php if (!empty($users)): ?>
             <!-- KONTEN TAB approval -->
@@ -60,11 +64,9 @@ $nomor = ($current_page - 1) * $limit + 1
                 <form method="POST" id="filterForm">
                     <input type="hidden" name="tab" value="<?= $tab ?>">
 
-                    <div class="flex items-center gap-3 pt-6 pb-2 bg-gray-50 px-8">
-                        
+                    <div class="flex items-center gap-3 py-4 px-8 bg-background1">
+     
                         <?php 
-                        // Anggap Anda sudah mendefinisikan array $jenis_anggota_options, dsb.
-                        // Di sini Anda memuat komponen:
                         $filter_id = 'jenis_anggota'; 
                         $label = 'Jenis Anggota'; 
                         $options = ['Mahasiswa' => 'Mahasiswa', 'Dosen' => 'Dosen', 'Tendik' => 'Tendik']; 
@@ -88,10 +90,13 @@ $nomor = ($current_page - 1) * $limit + 1
                         include __DIR__ . '/../../template/filterDropDown.php';
                         ?>
 
-                        <button type="button" 
-                                class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition border border-gray-300 bg-white"
-                                onclick="document.getElementById('jenis_anggota').value=''; document.getElementById('jurusan').value=''; document.getElementById('status').value=''; document.getElementById('filterForm').submit();">
-                            <img src="/icon/crossRed.svg" alt="clear" class="w-4 h-4">
+                        <button type="button" id="filter-action-btn"
+                                class="p-2 text-dark-overlay5 hover:text-dark-overlay7 hover:bg-dark-overlay1 rounded-lg transition border border-dark-overlay5 bg-white">
+                            <div id="filter-action-icon" class="text-dark-overlay5"
+                                data-check="<?= htmlspecialchars(icon('check', 'w-4 h-4 text-blue-overlay'), ENT_QUOTES) ?>"
+                                data-cross="<?= htmlspecialchars(icon('cross', 'w-4 h-4 text-red1'), ENT_QUOTES) ?>">
+                                <?= icon('check', 'w-4 h-4') ?>
+                            </div>
                         </button>
                     </div>
                 </form>
@@ -103,13 +108,15 @@ $nomor = ($current_page - 1) * $limit + 1
                             <img src="/icon/search.svg" alt="search" class="w-5 h-5">
                         </div>
                         <input type="text" id="search-input" placeholder="Cari Anggota"
-                            class="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg 
-                                    bg-white text-gray-900 placeholder-gray-400 text-sm
+                            class="block w-full pl-10 pr-10 py-2 border border-dark-overlay4 rounded-lg 
+                                    bg-white text-dark-overlay7 placeholder-dark-overlay7 text-sm
                                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
                                     transition duration-150">
                         <button type="button" id="clear-search" 
-                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
-                            <img src="/icon/silang.svg" alt="clear" classs="w-4 h-4">
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-dark-overlay7 hover:text-dark-overlay7 hidden">
+                            <div class="hover:cursor-pointer">
+                                <?= icon('cross', 'w-4 h-4') ?>
+                            </div>
                         </button>
                     </div>
                 </div>
@@ -117,38 +124,38 @@ $nomor = ($current_page - 1) * $limit + 1
 
 
             <!-- Table Daftar Anggota -->
-            <div class="rounded-lg shadow-sm border border-gray-200 overflow-hidden mx-8">
+            <div class="rounded-lg shadow-sm border border-dark-overlay4 overflow-hidden mx-8">
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead>
-                            <tr class="bg-gray-50 border-b border-gray-200">
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">No</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nama</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Jenis Anggota</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Jurusan/Unit Kerja</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tangal Daftar</th>
-                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi</th>
+                            <tr class="bg-background1 border-b border-dark-overlay4">
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-dark-overlay7 uppercase tracking-wider">No</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-dark-overlay7 uppercase tracking-wider">Nama</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-dark-overlay7 uppercase tracking-wider">Jenis Anggota</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-dark-overlay7 uppercase tracking-wider">Jurusan/Unit Kerja</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-dark-overlay7 uppercase tracking-wider">Tangal Daftar</th>
+                                <th class="px-6 py-4 text-center text-xs font-semibold text-dark-overlay7 uppercase tracking-wider">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                             <?php foreach($users as $user) : ?>
-                            <tr class="hover:bg-gray-50 transition-colors duration-150">
-                                <td class="px-6 py-4 text-sm text-gray-900"><?= $nomor ?></td>
-                                <td class="px-6 py-4 text-sm font-medium text-gray-900"><?= htmlspecialchars($user['username'] ?? '-') ?></td>
+                            <tr class="hover:bg-background1 transition-colors duration-150">
+                                <td class="px-6 py-4 text-sm text-dark-overlay"><?= $nomor ?></td>
+                                <td class="px-6 py-4 text-sm font-medium text-dark-overlay"><?= htmlspecialchars($user['username'] ?? '-') ?></td>
                                 <td class="px-6 py-4">
-                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm <?= getStyleRole($user['role_name']) ?>">
+                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm <?= getStyleRole($user['role_name']) ?> min-w-24 justify-center">
                                         <?= htmlspecialchars($user['role_name']) ?>
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-700"><?= htmlspecialchars($user['jurusan_unit'] ?? '-') ?></td>
+                                <td class="px-6 py-4 text-sm text-dark-overlay"><?= htmlspecialchars($user['jurusan_unit'] ?? '-') ?></td>
                                 <td class="px-6 py-4">
-                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-full">
+                                    <span class="inline-flex py-1 text-xs font-medium rounded-full">
                                         <?= htmlspecialchars($user['createdDate'] ?? '-') ?>
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     <a href="/Admin/selesaikan/<?= $user['id_user'] ?>"
-                                       class="inline-flex items-center px-4 py-1 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-150 shadow-md">
+                                       class="inline-flex items-center px-4 py-1.5 text-xs font-medium text-dark-overlay bg-white border border-dark-overlay4 rounded-lg hover:bg-background1 transition-colors duration-150 shadow-md">
                                         Selesaikan
                                     </a>
                                 </td>
@@ -162,11 +169,11 @@ $nomor = ($current_page - 1) * $limit + 1
             <?php else: ?>
                 <!-- Empty State untuk Tab Approval -->
                 <div class="flex flex-col items-center justify-center py-20 px-8">
-                    <svg class="w-24 h-24 text-gray-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                    <h3 class="text-xl font-semibold text-gray-700 mb-2">Belum Ada Anggota yang Perlu Diapprove</h3>
-                    <p class="text-gray-500 text-center">Saat ini tidak ada anggota baru yang menunggu approval</p>
+                    <div>
+                        <?= icon('fileList', 'h-24 w-24') ?>
+                    </div>
+                    <h3 class="text-xl font-semibold text-dark-overlay mb-2">Belum Ada Anggota yang Perlu Diapprove</h3>
+                    <p class="text-dark-overlay7 text-center">Saat ini tidak ada anggota baru yang menunggu approval</p>
                 </div>
             <?php endif; ?>
 
@@ -177,7 +184,7 @@ $nomor = ($current_page - 1) * $limit + 1
                 <form method="POST" id="filterForm">
                     <input type="hidden" name="tab" value="<?= $tab ?>">
 
-                    <div class="flex items-center gap-3 pt-6 pb-2 bg-gray-50 px-8">
+                    <div class="flex items-center gap-3 py-4 px-8 bg-background1">
                         
                         <?php 
                         // Anggap Anda sudah mendefinisikan array $jenis_anggota_options, dsb.
@@ -205,10 +212,13 @@ $nomor = ($current_page - 1) * $limit + 1
                         include __DIR__ . '/../../template/filterDropDown.php';
                         ?>
 
-                        <button type="button" 
-                                class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition border border-gray-300 bg-white"
-                                onclick="document.getElementById('jenis_anggota').value=''; document.getElementById('jurusan').value=''; document.getElementById('status').value=''; document.getElementById('filterForm').submit();">
-                            <img src="/icon/crossRed.svg" alt="clear" class="w-4 h-4">
+                        <button type="button" id="filter-action-btn"
+                                class="p-2 text-dark-overlay5 hover:text-dark-overlay7 hover:bg-dark-overlay1 rounded-lg transition border border-dark-overlay5 bg-white">
+                            <div id="filter-action-icon" class="text-dark-overlay5"
+                                data-check="<?= htmlspecialchars(icon('check', 'w-4 h-4 text-blue-overlay'), ENT_QUOTES) ?>"
+                                data-cross="<?= htmlspecialchars(icon('cross', 'w-4 h-4 text-red1'), ENT_QUOTES) ?>">
+                                <?= icon('check', 'w-4 h-4') ?>
+                            </div>
                         </button>
                     </div>
                 </form>
@@ -220,12 +230,12 @@ $nomor = ($current_page - 1) * $limit + 1
                             <img src="/icon/search.svg" alt="search" class="w-5 h-5">
                         </div>
                         <input type="text" id="search-input" placeholder="Cari Anggota"
-                            class="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg 
-                                    bg-white text-gray-900 placeholder-gray-400 text-sm
+                            class="block w-full pl-10 pr-10 py-2 border border-dark-overlay4 rounded-lg 
+                                    bg-white text-dark-overlay placeholder-dark-overlay6 text-sm
                                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
                                     transition duration-150">
                         <button type="button" id="clear-search" 
-                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 hidden">
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-dark-overlay6 hover:text-dark-overlay7 hidden">
                             <img src="/icon/silang.svg" alt="clear" classs="w-4 h-4">
                         </button>
                     </div>
@@ -233,38 +243,38 @@ $nomor = ($current_page - 1) * $limit + 1
             </div>
 
             <!-- Table Approval -->
-            <div class="rounded-lg shadow-sm border border-gray-200 overflow-hidden mx-8 mt-4">
+            <div class="rounded-lg shadow-sm border border-dark-overlay4 overflow-hidden mx-8">
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead>
-                            <tr class="bg-gray-50 border-b border-gray-200">
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">No</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nama</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Jenis Anggota</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Jurusan/Unit Kerja</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi</th>
+                            <tr class="bg-background1 border-b border-dark-overlay4">
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-dark-overlay7 uppercase tracking-wider">No</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-dark-overlay7 uppercase tracking-wider">Nama</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-dark-overlay7 uppercase tracking-wider">Jenis Anggota</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-dark-overlay7 uppercase tracking-wider">Jurusan/Unit Kerja</th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-dark-overlay7 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-center text-xs font-semibold text-dark-overlay7 uppercase tracking-wider">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                             <?php foreach($users as $user) : ?>
-                            <tr class="hover:bg-gray-50 transition-colors duration-150">
-                                <td class="px-6 py-4 text-sm text-gray-900"><?= $nomor ?></td>
-                                <td class="px-6 py-4 text-sm font-medium text-gray-900"><?= htmlspecialchars($user['username'] ?? '-') ?></td>
+                            <tr class="hover:bg-background1 transition-colors duration-150">
+                                <td class="px-6 py-4 text-sm text-dark-overlay"><?= $nomor ?></td>
+                                <td class="px-6 py-4 text-sm font-medium text-dark-overlay"><?= htmlspecialchars($user['username'] ?? '-') ?></td>
                                 <td class="px-6 py-4">
-                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm bg-[#B9D0FE] <?= getStyleRole($user['role_name']) ?>">
+                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm <?= getStyleRole($user['role_name']) ?> min-w-24 justify-center">
                                         <?= htmlspecialchars($user['role_name'] ?? '-') ?>
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-700"><?= $user['jurusan_unit'] ?></td>
+                                <td class="px-6 py-4 text-sm text-dark-overlay"><?= $user['jurusan_unit'] ?></td>
                                 <td class="px-6 py-4">
-                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm <?= $user['statusStyle'] ?> text-[#FBFCFF]">
+                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm <?= $user['statusStyle'] ?> text-background2 min-w-24 justify-center">
                                         <?= htmlspecialchars($user['status'] ?? '-') ?>
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     <a href="<?= BASEURL . "admin/" . $link .'/' . $user['id_user']?>"
-                                       class="inline-flex items-center px-4 py-2 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-150">
+                                       class="inline-flex items-center px-4 py-1.5 text-xs font-medium text-dark-overlay bg-white border border-dark-overlay4 rounded-lg hover:bg-background1 transition-colors duration-150">
                                         Lihat Detail
                                     </a>
                                 </td>
@@ -280,12 +290,12 @@ $nomor = ($current_page - 1) * $limit + 1
         
                 <?php if ($total_page >= 1): ?>
             
-        <div class="flex items-center justify-center px-6 py-4 bg-white border-t border-gray-200 mx-8">
+        <div class="flex items-center justify-center px-6 py-4 bg-white border-t border-dark-overlay4 mx-8">
             
             <div class="flex items-center gap-2">
                 
                 <?php if ($current_page > 1): ?>
-                    <a href="?tab=<?= $tab; ?>&page=<?= $current_page - 1; ?>" class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-150">
+                    <a href="?tab=<?= $tab; ?>&page=<?= $current_page - 1; ?>" class="p-2 text-dark-overlay5 hover:text-dark-overlay hover:bg-gray-100 rounded-lg transition-colors duration-150">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                         </svg>
@@ -302,12 +312,12 @@ $nomor = ($current_page - 1) * $limit + 1
                 <?php for ($p = 1; $p <= $total_page; $p++) : ?>
                     
                     <?php if ($p == $current_page) : ?>
-                        <button class="px-4 py-2 text-sm font-medium text-white bg-[#1E68FB] rounded-lg">
+                        <button class="px-4 py-2 text-sm font-medium text-white bg-blue-overlay rounded-lg">
                             <?= $p; ?>
                         </button>
                     
                     <?php else : ?>
-                        <a href="?tab=<?= $tab; ?>&page=<?= $p; ?>" class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-150 block">
+                        <a href="?tab=<?= $tab; ?>&page=<?= $p; ?>" class="px-4 py-2 text-sm font-medium text-dark-overlay hover:bg-gray-100 rounded-lg transition-colors duration-150 block">
                             <?= $p; ?>
                         </a>
                     <?php endif; ?>
@@ -316,7 +326,7 @@ $nomor = ($current_page - 1) * $limit + 1
 
 
                 <?php if ($current_page < $total_page): ?>
-                    <a href="?tab=<?= $tab; ?>&page=<?= $current_page + 1; ?>" class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-150">
+                    <a href="?tab=<?= $tab; ?>&page=<?= $current_page + 1; ?>" class="p-2 text-dark-overlay5 hover:text-dark-overlay hover:bg-gray-100 rounded-lg transition-colors duration-150">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                         </svg>
@@ -334,15 +344,15 @@ $nomor = ($current_page - 1) * $limit + 1
 
                     <form action="" method="GET" class="flex items-center gap-2 ml-4">
                         <input type="hidden" name="tab" value="<?= $tab; ?>">
-                        <span class="text-sm text-gray-600">Go to</span>
+                        <span class="text-sm text-dark-overlay7">Go to</span>
                         <input type="number" 
                             name="page" 
                             min="1" 
                             max="<?= $total_page; ?>"
                             value="<?= $current_page; ?>" 
-                            class="w-16 px-3 py-2 text-center text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            class="w-16 px-3 py-2 text-center text-sm border border-dark-overlay4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         
-                        <span class="text-sm text-gray-600">Page</span>
+                        <span class="text-sm text-dark-overlay7">Page</span>
                         
                         <button type="submit" class="hidden"></button>
                     </form>
@@ -351,19 +361,4 @@ $nomor = ($current_page - 1) * $limit + 1
 </main>
 
 <script src="/js/filterDropdown.js" defer></script>
-<script>
-const searchInput = document.getElementById('search-input');
-const clearBtn = document.getElementById('clear-search');
-
-if (searchInput && clearBtn) {
-    searchInput.addEventListener('input', () => {
-        clearBtn.classList.toggle('hidden', searchInput.value === '');
-    });
-
-    clearBtn.addEventListener('click', () => {
-        searchInput.value = '';
-        searchInput.focus();
-        clearBtn.classList.add('hidden');
-    });
-}
-</script>
+<script src="/js/search.js" defer></script>
