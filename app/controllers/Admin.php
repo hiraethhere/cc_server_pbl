@@ -256,6 +256,13 @@ class Admin extends Controller {
         $this->view('admin/ruangan/editDataRuangan');
     }
 
+    public function EditTataTertib(){
+        $data['judul'] = 'Edit Tata Tertib';
+        $data['navbar'] = 'Ruangan';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/ruangan/editTataTertib');
+    }
+
     public function dataRuangan(){
         // $data['ruangan'] = $this->model('RuanganModel')->getAllRooms 
         $data['judul'] = 'Detail Ruangan';

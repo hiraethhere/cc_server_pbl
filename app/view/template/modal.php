@@ -2,8 +2,8 @@
     <div class="fixed inset-0 bg-opacity-50 backdrop-filter backdrop-blur-xs" onclick="Modal.close()"></div>
     
     <div id="modalContainer" class="bg-white1 rounded-2xl p-8 w-full mx-4 relative z-10 border border-dark-overlay4">
-        <div id="modalIcon" class="mb-4 hidden">
-            <div id="modalIconContent" class="w-12 h-12 mx-auto flex items-center justify-center"></div>
+        <div id="modalIcon" class="hidden">
+            <div id="modalIconContent" class="mx-auto flex items-center justify-center"></div>
         </div>
         
         <h3 id="modalTitle" class="text-xl font-bold text-dark-overlay mb-2 text-center"></h3>

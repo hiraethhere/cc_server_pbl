@@ -1,5 +1,5 @@
 <!-- Main Content -->
-<main class="container mx-auto md:px-6 lg:px-6 px-1 py-8 max-w-2xl">
+<main class="container mx-auto md:px-6 lg:px-6 px-4 py-8 max-w-2xl">
     <h2 class="text-3xl font-bold text-dark-overlay mb-10 text-center">Akun</h2>
 
     <!-- Avatar Section -->

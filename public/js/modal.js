@@ -159,16 +159,19 @@ const Modal = {
     prompt: function(title, message, onSubmit, options) {
         options = options || {};
         
-        // --- HTML Template Bintang ---
-        const starRatingHtml = `
-            <div id="starRatingContainer" class="flex justify-center flex-row-reverse space-x-1 space-x-reverse text-3xl mb-4 text-gray-300">
-                <input type="radio" id="rating-5" name="rating" value="5" class="star-radio" hidden /><label for="rating-5" class="rating-star cursor-pointer transition">★</label>
-                <input type="radio" id="rating-4" name="rating" value="4" class="star-radio" hidden /><label for="rating-4" class="rating-star cursor-pointer transition">★</label>
-                <input type="radio" id="rating-3" name="rating" value="3" class="star-radio" hidden /><label for="rating-3" class="rating-star cursor-pointer transition">★</label>
-                <input type="radio" id="rating-2" name="rating" value="2" class="star-radio" hidden /><label for="rating-2" class="rating-star cursor-pointer transition">★</label>
-                <input type="radio" id="rating-1" name="rating" value="1" class="star-radio" hidden /><label for="rating-1" class="rating-star cursor-pointer transition">★</label>
-            </div>
-        `;
+        // --- HTML Template Bintang (hanya jika ada minRating atau showRating) ---
+        let starRatingHtml = '';
+        if (options.minRating || options.showRating) {
+            starRatingHtml = `
+                <div id="starRatingContainer" class="flex justify-center flex-row-reverse space-x-1 space-x-reverse text-3xl mb-4 text-gray-300">
+                    <input type="radio" id="rating-5" name="rating" value="5" class="star-radio" hidden /><label for="rating-5" class="rating-star cursor-pointer transition">★</label>
+                    <input type="radio" id="rating-4" name="rating" value="4" class="star-radio" hidden /><label for="rating-4" class="rating-star cursor-pointer transition">★</label>
+                    <input type="radio" id="rating-3" name="rating" value="3" class="star-radio" hidden /><label for="rating-3" class="rating-star cursor-pointer transition">★</label>
+                    <input type="radio" id="rating-2" name="rating" value="2" class="star-radio" hidden /><label for="rating-2" class="rating-star cursor-pointer transition">★</label>
+                    <input type="radio" id="rating-1" name="rating" value="1" class="star-radio" hidden /><label for="rating-1" class="rating-star cursor-pointer transition">★</label>
+                </div>
+            `;
+        }
         
         // Gabungkan rating dan konten prompt
         const promptContent = `
@@ -176,7 +179,7 @@ const Modal = {
             <p class="text-sm text-gray-700 mb-4 text-center">${message}</p>
             
             <div class="text-left mb-4">
-                <label class="block text-sm font-semibold text-gray-800 mb-2">${options.label || 'Ulasan'}</label>
+                <label class="block text-sm font-semibold text-gray-800 mb-2">${options.label || 'Ulasan'}${options.required ? '<span class="text-red-500">*</span>' : ''}</label>
                 <textarea id="promptInput" 
                           placeholder="${options.placeholder || 'Tulis ulasan/feedback Anda disini'}" 
                           class="w-full px-4 py-3 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" 
@@ -223,47 +226,49 @@ const Modal = {
             ]
         });
 
-        // --- Logika Visual Bintang ---
-        setTimeout(() => { // Tunggu modal ter-render dulu
-            const stars = document.querySelectorAll('#starRatingContainer .rating-star');
-            
-            function updateStarVisuals(target) {
-                const allStars = document.querySelectorAll('#starRatingContainer .rating-star');
+        // --- Logika Visual Bintang (hanya jika ada rating) ---
+        if (options.minRating || options.showRating) {
+            setTimeout(() => { // Tunggu modal ter-render dulu
+                const stars = document.querySelectorAll('#starRatingContainer .rating-star');
                 
-                allStars.forEach(s => {
-                    s.classList.remove('text-yellow-400');
-                });
-                
-                let highlight = false;
-                for (let i = allStars.length - 1; i >= 0; i--) {
-                    const star = allStars[i];
-                    if (star === target || highlight) {
-                        star.classList.add('text-yellow-400');
-                        highlight = true;
+                function updateStarVisuals(target) {
+                    const allStars = document.querySelectorAll('#starRatingContainer .rating-star');
+                    
+                    allStars.forEach(s => {
+                        s.classList.remove('text-yellow-400');
+                    });
+                    
+                    let highlight = false;
+                    for (let i = allStars.length - 1; i >= 0; i--) {
+                        const star = allStars[i];
+                        if (star === target || highlight) {
+                            star.classList.add('text-yellow-400');
+                            highlight = true;
+                        }
                     }
                 }
-            }
 
-            stars.forEach(star => {
-                star.addEventListener('mouseover', function() {
-                    updateStarVisuals(this);
-                });
-                
-                star.addEventListener('mouseout', function() {
-                    const checkedStar = document.querySelector('input[name="rating"]:checked');
-                    stars.forEach(s => s.classList.remove('text-yellow-400'));
+                stars.forEach(star => {
+                    star.addEventListener('mouseover', function() {
+                        updateStarVisuals(this);
+                    });
+                    
+                    star.addEventListener('mouseout', function() {
+                        const checkedStar = document.querySelector('input[name="rating"]:checked');
+                        stars.forEach(s => s.classList.remove('text-yellow-400'));
 
-                    if (checkedStar) {
-                        const checkedLabel = document.querySelector(`label[for="rating-${checkedStar.value}"]`);
-                        updateStarVisuals(checkedLabel);
-                    }
+                        if (checkedStar) {
+                            const checkedLabel = document.querySelector(`label[for="rating-${checkedStar.value}"]`);
+                            updateStarVisuals(checkedLabel);
+                        }
+                    });
+                    
+                    star.addEventListener('click', function() {
+                        updateStarVisuals(this); 
+                    });
                 });
-                
-                star.addEventListener('click', function() {
-                    updateStarVisuals(this); 
-                });
-            });
-        }, 100);
+            }, 100);
+        }
     }
 };
 

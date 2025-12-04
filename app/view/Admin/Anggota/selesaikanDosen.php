@@ -19,7 +19,7 @@
                     <div class="mb-1">
                         <label class="block text-sm font-medium text-[#171E2970] mb-2">Nama</label>
                         <div class="relative">
-                            <input type="Text" id="Nama" name="Nama" placeholder="<?= htmlspecialchars($user['username'] ?? '-') ?>" readonly
+                            <input type="Text" id="Nama" name="Nama" value="<?= htmlspecialchars($user['username'] ?? '-') ?>" readonly
                                 class="w-full px-4 py-2 border border-[#888D93] rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-[#171E29]">
                         </div>
                     </div>
@@ -27,7 +27,7 @@
                     <div class="mb-1">
                         <label class="block text-sm font-medium text-[#171E2970] mb-2">Jurusan/Unit Kerja</label>
                         <div class="relative">
-                            <input type="Text" id="Jurusan" name="Jurusan" placeholder="<?= htmlspecialchars($user['jurusan_unit'] ?? '-')  ?>" readonly
+                            <input type="Text" id="Jurusan" name="Jurusan" value="<?= htmlspecialchars($user['jurusan_unit'] ?? '-')  ?>" readonly
                                 class="w-full px-4 py-2 border border-[#888D93] rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-[#171E29]">
                         </div>
                     </div>
@@ -36,14 +36,14 @@
                         <div class="mb-1 w-full">
                             <label class="block text-sm font-medium text-[#171E2970] mb-2">Jenis Anggota</label>
                             <div class="relative">
-                                <input type="Text" id="Jurusan" name="Jurusan" placeholder="<?= htmlspecialchars($user['role_name'] ?? '-')  ?>" readonly
+                                <input type="Text" id="Jurusan" name="Jurusan" value="<?= htmlspecialchars($user['role_name'] ?? '-')  ?>" readonly
                                     class="w-full px-4 py-2 border border-[#888D93] rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-[#171E29]">
                             </div>
                         </div>
                         <div class="mb-1 w-full">
                             <label class="block text-sm font-medium text-[#171E2970] mb-2">Email</label>
                             <div class="relative">
-                                <input type="Email" id="Email" name="Email" placeholder="<?= htmlspecialchars($user['email'] ?? '-')  ?>" readonly
+                                <input type="Email" id="Email" name="Email" value="<?= htmlspecialchars($user['email'] ?? '-')  ?>" readonly
                                     class="w-full px-4 py-2 border border-[#888D93] rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-[#171E29]">
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                     <div class="mb-1">
                         <label class="block text-sm font-medium text-[#171E2970] mb-2">NIP</label>
                         <div class="relative">
-                            <input type="Text" id="NIM" name="NIM" placeholder="<?= htmlspecialchars($user['nomor_induk'] ?? '-')  ?>" readonly
+                            <input type="Text" id="NIM" name="NIM" value="<?= htmlspecialchars($user['nomor_induk'] ?? '-')  ?>" readonly
                                 class="w-full px-4 py-2 border border-[#888D93] rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-[#171E29]">
                         </div>
                     </div>
@@ -60,7 +60,7 @@
                     <div class="mb-1">
                         <label class="block text-sm font-medium text-[#171E2970] mb-2">Tanggal Daftar</label>
                         <div class="relative">
-                            <input type="text" id="TanggalDaftar" name="Tanggal Daftar" placeholder="<?= htmlspecialchars(tanggal_indonesia($user['created_at']) ?? '-')  ?>" readonly
+                            <input type="text" id="TanggalDaftar" name="Tanggal Daftar" value="<?= htmlspecialchars(tanggal_indonesia($user['created_at']) ?? '-')  ?>" readonly
                                 class="w-full px-4 py-2 border border-[#888D93] rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-[#171E29]">
                         </div>
                     </div>
@@ -103,7 +103,7 @@
                 document.getElementById('approveForm').submit();
             },
             {
-                icon: '/icon/user.svg',
+                icon: <?= json_encode(icon("usersAdmin", "w-24 h-24 text-green1")) ?>,
                 confirmText: 'Ya',
                 confirmClass: 'w-full px-6 py-2 bg-[#38C55C] text-white rounded-lg font-semibold hover:bg-green-600 transition',
                 cancelText: 'Batalkan'
@@ -133,9 +133,9 @@
                 form.submit();
             },
             {
-                icon: '/icon/cross-circle.svg',
+                icon: <?= json_encode(icon("usersAdmin", "w-24 h-24 text-red1")) ?>,
                 label: 'Alasan',
-                placeholder: 'Tulis alasan disini',
+                value: 'Tulis alasan disini',
                 rows: 4,
                 required: true, // Wajib diisi
                 confirmText: 'Ya',
@@ -144,7 +144,7 @@
             }
         );
     }
-    
+
     if(buttonDecline) {
         buttonDecline.addEventListener('click', openDeclineRescheduleModal);
     }

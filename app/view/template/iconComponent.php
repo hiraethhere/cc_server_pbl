@@ -1,4 +1,5 @@
 <?php
+if (!function_exists('icon')) {
 function icon($name, $class = 'w-5 h-5', $color = 'currentColor', $size = '24') {
     $strokeWidth = '2'; // Default stroke width
     $icons = [
@@ -56,6 +57,10 @@ function icon($name, $class = 'w-5 h-5', $color = 'currentColor', $size = '24') 
             <path fill="currentColor" d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
         </svg>',
 
+        'arrowLeft' => '<svg class="' . $class . '" fill="' . $color . '" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path fill="currentColor" d="M14 18L15.41 16.59L10.83 12L15.41 7.41L14 6L8 12z"/>
+        </svg>',
+
         //plus
         'plus' => '<svg class="' . $class . '" fill="' . $color . '" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path fill="currentColor" d="M12 4.75c.69 0 1.25.56 1.25 1.25v4.75H18a1.25 1.25 0 1 1 0 2.5h-4.75V18a1.25 1.25 0 1 1-2.5 0v-4.75H6a1.25 1.25 0 1 1 0-2.5h4.75V6c0-.69.56-1.25 1.25-1.25"/>
@@ -101,6 +106,7 @@ function icon($name, $class = 'w-5 h-5', $color = 'currentColor', $size = '24') 
             <path fill="currentColor" d="m5.825 21l1.625-7.025L2 9.25l7.2-.625L12 2l2.8 6.625l7.2.625l-5.45 4.725L18.175 21L12 17.275z"/>
         </svg>',
 
+        //circle
         'circleFill' => '<svg class="' . $class . '" fill="' . $color . '" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path fill="currentColor" d="M12.003 21q-1.866 0-3.51-.708q-1.643-.709-2.859-1.924t-1.925-2.856T3 12.003t.709-3.51Q4.417 6.85 5.63 5.634t2.857-1.925T11.997 3t3.51.709q1.643.708 2.859 1.922t1.925 2.857t.709 3.509t-.708 3.51t-1.924 2.859t-2.856 1.925t-3.509.709"/>
         </svg>',
@@ -179,9 +185,35 @@ function icon($name, $class = 'w-5 h-5', $color = 'currentColor', $size = '24') 
         // file
         'fileList' => '<svg class="' . $class . '" fill="none" stroke="' . $color . '" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>',
+
+        //pencil
+        'pencil' => '<svg class="' . $class . '" fill="' . $color . '" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path fill="currentColor" d="m14.06 9l.94.94L5.92 19H5v-.92zm3.6-6c-.25 0-.51.1-.7.29l-1.83 1.83l3.75 3.75l1.83-1.83c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29m-3.6 3.19L3 17.25V21h3.75L17.81 9.94z"/>
+        </svg>',
+
+        //uploadd
+        'uploadFoto' => '<svg class="' . $class . '" fill="' . $color . '" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path fill="currentColor" d="M9 16h6v-6h4l-7-7l-7 7h4zm-4 2h14v2H5z"/>
+        </svg>',
+
+        // bin
+        'bin' => '<svg class="' . $class . '" fill="none" stroke="' . $color . '" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <g stroke-linecap="round" stroke-linejoin="round" stroke-width="1">
+                <path stroke-dasharray="24" stroke-dashoffset="24" d="M12 20h5c0.5 0 1 -0.5 1 -1v-14M12 20h-5c-0.5 0 -1 -0.5 -1 -1v-14">
+                    <animate fill="freeze" attributeName="stroke-dashoffset"/>
+                </path>
+                <path stroke-dasharray="20" stroke-dashoffset="20" d="M4 5h16">
+                    <animate fill="freeze" attributeName="stroke-dashoffset"/>
+                </path>
+                <path stroke-dasharray="8" stroke-dashoffset="8" d="M10 4h4M10 9v7M14 9v7">
+                    <animate fill="freeze" attributeName="stroke-dashoffset"/>
+                </path>
+            </g>
         </svg>'
     ];
     
     return $icons[$name] ?? '';
+}
 }
 ?>
