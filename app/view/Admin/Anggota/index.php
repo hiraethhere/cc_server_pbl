@@ -273,7 +273,7 @@ $nomor = ($current_page - 1) * $limit + 1
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    <a href="<?= BASEURL . "admin/" . $link .'/' . $user['id_user']?>"
+                                    <a href="<?= BASEURL . "admin/" . $data['link'] .'/' . ($user['id_user'] ?? '')?>"
                                        class="inline-flex items-center px-4 py-1.5 text-xs font-medium text-dark-overlay bg-white border border-dark-overlay4 rounded-lg hover:bg-background1 transition-colors duration-150">
                                         Lihat Detail
                                     </a>

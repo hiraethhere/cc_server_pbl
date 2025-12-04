@@ -15,6 +15,13 @@ class UserModel {
         return $this->db->singleSet();
     }
 
+    //buat detail di admin
+    public function getUserAndRoleById($id){
+        $this->db->query("SELECT u.*, r.role_name FROM users u JOIN roles r ON u.id_role = r.id_role  WHERE id_user = :id_user limit 1");
+        $this->db->bind(':id_user', $id);
+        return $this->db->singleSet();
+    }
+
     public function getUserByNomor_Induk($nomor_induk){
         $this->db->query("SELECT * FROM users WHERE nomor_induk = :nomor_induk AND id_role in (4, 5, 3)  limit 1");
         $this->db->bind(':nomor_induk', $nomor_induk, PDO::PARAM_STR);
@@ -117,14 +124,15 @@ class UserModel {
         return $this->db->rowCount();
     }
 
+    //ini dipake di cancelBooking() pada saat batalin booking dan nambahin suspendCount user 
     public function addSuspendCount($id_user){
         $this->db->query("UPDATE users SET suspend_count = suspend_count + 1 WHERE id_user = :id_user");
         $this->db->bind(':id_user',$id_user);
         $this->db->execute(); 
-    
         return $this->db->rowCount(); 
     }
 
+    //ini mencari user yang pending
     public function getPendingUser(){
         $this->db->query("SELECT * FROM users WHERE status = 'pending' AND id_role NOT IN (1,2)" );
         return $this->db->resultSet();
@@ -150,6 +158,15 @@ class UserModel {
                           FROM users u 
                           JOIN roles r ON u.id_role = r.id_role 
                           WHERE u.id_user = :id_user LIMIT 1");
+        $this->db->bind(':id_user', $id_user);
+        return $this->db->singleSet();
+    }
+
+    public function getPendingUserJoinRoleById($id_user){
+        $this->db->query("SELECT u.*, r.role_name 
+                          FROM users u 
+                          JOIN roles r ON u.id_role = r.id_role 
+                          WHERE u.id_user = :id_user AND u.status = 'pending' LIMIT 1");
         $this->db->bind(':id_user', $id_user);
         return $this->db->singleSet();
     }
