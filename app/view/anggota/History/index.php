@@ -173,7 +173,7 @@
             <div class="flex items-center gap-2">
                 
                 <?php if ($current_page > 1): ?>
-                    <a href="?tab=<?= $tab; ?>&page=<?= $current_page - 1; ?>" class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-150">
+                    <a href="?page=<?= $current_page - 1; ?>" class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-150">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                         </svg>
