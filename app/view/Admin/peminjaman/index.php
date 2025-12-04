@@ -13,7 +13,7 @@ function isActive($current, $check) {
 ?>
 
 
-<main class="flex-1 p-8 overflow-y-auto bg-[#F9FAFC]">
+<main class="flex-1 p-8 overflow-y-auto bg-background1">
     <!-- Breadcrumb -->
     <nav class="mb-6 text-sm">
         <a href="/Admin/Peminjaman" class="text-[#1E68FB] hover:text-blue-700">Data Peminjaman Ruangan</a>
@@ -69,7 +69,7 @@ function isActive($current, $check) {
         </div>
 
             <!-- KONTEN TAB -->
-
+            <?php if (!empty($bookings)): ?>
             <div class="flex justify-between items-center">
                 <form method="POST" id="filterForm">
                     <input type="hidden" name="tab" value="<?= $tab ?>">
@@ -122,34 +122,35 @@ function isActive($current, $check) {
                     <table class="w-full">
                         <thead>
                             <tr class="bg-gray-50 border-b border-gray-200">
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">No</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tanggal</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Ruangan</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Kode Booking</th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Penanggung Jawab</th>      
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi</th>
+                                <th class="px-4 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">No</th>
+                                <th class="px-4 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tanggal</th>
+                                <th class="px-4 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Ruangan</th>
+                                <th class="px-4 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Kode Booking</th>
+                                <th class="px-4 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Penanggung Jawab</th>      
+                                <th class="px-4 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                                <th class="px-4 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi</th>
                             </tr>
                         </thead>
+                        
                         <tbody class="divide-y divide-gray-200">
                             <?php $i = 1 ?>
                             <?php foreach($bookings as $booking) : ?>
                             <tr class="hover:bg-gray-50 transition-colors duration-150">
-                                <td class="px-6 py-4 text-xs text-gray-900"><?= $i ?></td>
-                                <td class="px-6 py-4 text-xs font-medium text-gray-900"><?= tanggal_indonesia($booking['start_time']) ?>
+                                <td class="px-4 py-4 text-xs text-gray-900"><?= $i ?></td>
+                                <td class="px-4 py-4 text-xs font-medium text-gray-900"><?= tanggal_indonesia($booking['start_time']) ?>
                                     <br>
                                     <span><?= waktu_indonesia($booking['start_time']) . '-' . waktu_indonesia($booking['end_time']) ?></span>
                                 </td>
-                                <td class="px-6 py-4 text-xs text-gray-900"><?= htmlspecialchars( $booking['room_name'] ?? '-') ?></td>
-                                <td class="px-6 py-4 text-xs text-gray-900"><?= $booking['booking_code']?></td>
-                                <td class="px-6 py-4 text-xs text-gray-900"><?= $booking['booker_name'] ?></td>
-                                <td class="px-6 py-4">
+                                <td class="px-4 py-4 text-xs text-gray-900"><?= htmlspecialchars( $booking['room_name'] ?? '-') ?></td>
+                                <td class="px-4 py-4 text-xs text-gray-900"><?= $booking['booking_code']?></td>
+                                <td class="px-4 py-4 text-xs text-gray-900"><?= $booking['username'] ?></td>
+                                <td class="px-4 py-4">
                                     <span class="inline-flex px-3 py-1 text-xs min-w-5/6 justify-center font-medium rounded-sm <?= getStyleStatus($booking['status']) ?> text-[#FBFCFF]">
                                         <?= translateStatus($booking['status']) ?>
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 text-center">
-                                    <a href="<?= BASEURL . '/admin/' . $link ?>"
+                                <td class="px-4 py-4 text-center">
+                                    <a href="<?= BASEURL . '/admin/' . $link . '/'. $booking[$data['id_column']] ?>"
                                        class="inline-flex items-center px-4 py-2 text-xs font-medium text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-150">
                                         Lihat Detail
                                     </a>
@@ -158,6 +159,8 @@ function isActive($current, $check) {
                             <?php $i++ ?>
                             <?php endforeach ?>
                         </tbody>
+                        
+                        
                     </table>
                 </div>
             </div>
@@ -190,6 +193,22 @@ function isActive($current, $check) {
                     <span class="text-sm text-gray-600">Page</span>
                 </div>
             </div>
+            <?php else: ?>
+            <div class="flex flex-col items-center justify-center p-20">
+                <div class="mb-4">
+                    <?= icon('fileList', 'h-20 w-20 text-gray-400') ?>
+                </div>
+                <div class="flex items-center flex-col justify-center">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">Belum Ada Data Booking</h3>
+                    <p class="text-sm text-gray-500 text-center mb-6">Tidak ada booking yang berjalan</p>
+                    <a href="/Admin/buatBooking"
+                        class="inline-flex items-center gap-2 px-4 py-2 bg-[#1E68FB] hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-200">
+                        Buat Booking Baru
+                        <?= icon('plus', 'w-4 h-4') ?>
+                    </a>
+                </div>
+            </div>
+            <?php endif; ?>
     </div>
 
 </main>

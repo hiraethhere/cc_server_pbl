@@ -14,7 +14,7 @@ class m_20251119_02_create_table_users extends Migration{
                 nomor_induk VARCHAR(30),
                 jurusan_unit VARCHAR(255),
                 prodi VARCHAR(255),
-                status ENUM('pending','rejected','active','deleted','cancelled') DEFAULT 'pending',
+                status ENUM('pending','rejected','active','deleted','suspended') DEFAULT 'pending',
                 suspend_count INT DEFAULT 0,
                 email_verified BOOLEAN DEFAULT FALSE,
                 reject_reason VARCHAR(255),

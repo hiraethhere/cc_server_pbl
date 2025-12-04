@@ -12,10 +12,10 @@
     <div class="bg-[#FBFCFF] rounded-2xl w-full shadow-xl p-6">
         <h3 class="text-xl font-semibold text-[#171E29] mb-6">Isi Data Anggota</h3>
             
-            <form class="space-y-4"> 
+            <form class="space-y-4" id="formDaftar" action="<?= BASEURL ?>admin/handleRegisterByAdmin" method="POST"> 
                 <div>
                     <label for="nama_lengkap" class="block text-sm font-medium text-[#171E29] mb-2">Nama Lengkap</label>
-                    <input type="text" id="nama_lengkap" placeholder="Input nama"
+                    <input type="text" id="nama_lengkap" placeholder="Input nama" name="username"
                            class="w-full    px-4 py-2 border border-[#171E2950] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition">
                 </div>
                 
@@ -23,13 +23,13 @@
                     
                     <div>
                         <label for="email" class="block text-sm font-medium text-[#171E29] mb-2">Email</label>
-                        <input type="email" id="email" placeholder="Input Email"
+                        <input type="email" id="email" placeholder="Input Email" name="email"
                                class="w-full px-4 py-2 border border-[#171E2950] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition">
                     </div>
                     
                     <div>
                         <label for="jenis_anggota" class="block text-sm font-medium text-[#171E29] mb-2">Jenis Anggota</label>
-                        <select id="jenis_anggota"
+                        <select id="jenis_anggota" name="jenis_anggota"
                                 class="w-full px-4 py-2 border border-[#171E2950] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition appearance-none">
                             <option value=""disabled selected hidden>Pilih Jenis Anggota</option>
                             <option value="mahasiswa">Mahasiswa</option>
@@ -40,23 +40,24 @@
 
                     <div>
                         <label for="jurusan" class="block text-sm font-medium text-[#171E29] mb-2">Jurusan/Unit Kerja</label>
-                        <select id="jurusan"
+                        <select id="jurusan_select" name="jurusan_unit"
                                 class="w-full px-4 py-2 border border-[#171E2950] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition appearance-none">
-                            <option value=""disabled selected hidden>Pilih Jurusan</option>
+                            <option value="" disabled selected hidden>Pilih Jurusan</option>
                         </select>
+                        <input type="text" id="jurusan_text" name="jurusan_text" placeholder="Masukkan Unit Kerja" class="hidden w-full px-4 py-2 border border-[#171E2950] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition">
                     </div>
                     
-                    <div>
+                    <div id="container_prodi" class="hidden">
                         <label for="prodi" class="block text-sm font-medium text-[#171E29] mb-2">Prodi (Untuk Mahasiswa)</label>
-                        <select id="prodi"
+                        <select id="prodi" name="prodi"
                                 class="w-full px-4 py-2 border border-[#171E2950] text-sm rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500 outline-none transition appearance-none">
-                            <option value="">Pilih Prodi</option>
+                            <option value="" disabled selected hidden>Pilih Prodi</option>
                             </select>
                     </div>
 
                     <div>
                         <label for="nim_nip" class="block text-sm font-medium text-[#171E29] mb-2">NIM/NIP</label>
-                        <input type="text" id="nim_nip" placeholder="Input NIM/NIP"
+                        <input type="text" id="nim_nip" placeholder="Input NIM/NIP" name="nomor_induk"
                                class="w-full px-4 py-2 border border-[#171E2950] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition">
                     </div>
                     
@@ -82,28 +83,111 @@
                         Tambah Anggota
                     </button>
                 </div>
-                
             </form>
     </div>
 </main>
-<?php include __DIR__ . '/../../template/modal.php'; ?>
 
-<script src="/js/togglePassword.js" defer></script> 
-<script src="/js/modal.js" defer></script>
+<?php include __DIR__ . '/../../template/modal.php'; ?>
 <script>
-function konfirmasiTambahAnggota() {
+    // Ambil data dari PHP
+    // Pastikan variabel ini ter-render dengan benar di page source
+    const registerDataJurusan = <?= json_encode($dataJurusan) ?>; 
+    const registerDataProdi = <?= json_encode($dataProdi) ?>;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const roleSelect = document.getElementById('jenis_anggota');
+        
+        const jurusanSelect = document.getElementById('jurusan_select');
+        const jurusanText = document.getElementById('jurusan_text');
+        
+        const prodiContainer = document.getElementById('container_prodi');
+        const prodiSelect = document.getElementById('prodi');
+
+        // --- 1. Logic Ganti Role (Mahasiswa/Dosen/Staff) ---
+        roleSelect.addEventListener('change', function() {
+            const selectedRole = this.value;
+
+            // Reset Form
+            jurusanSelect.value = "";
+            jurusanText.value = "";
+            prodiSelect.innerHTML = '<option value="" disabled selected hidden>Pilih Prodi</option>';
+
+            if (selectedRole === 'mahasiswa') {
+                // Tampilkan Mode Mahasiswa (Dropdown Jurusan & Prodi)
+                jurusanSelect.classList.remove('hidden');
+                jurusanText.classList.add('hidden');
+                prodiContainer.classList.remove('hidden');
+
+                // Isi Dropdown Jurusan
+                populateJurusan();
+            } else {
+                // Tampilkan Mode Staff/Dosen (Input Text Jurusan)
+                jurusanSelect.classList.add('hidden');
+                jurusanText.classList.remove('hidden');
+                prodiContainer.classList.add('hidden');
+            }
+        });
+
+        // --- 2. Fungsi Mengisi Dropdown Jurusan ---
+        function populateJurusan() {
+            jurusanSelect.innerHTML = '<option value="" disabled selected hidden>Pilih Jurusan</option>';
+            
+            // Loop array biasa
+            registerDataJurusan.forEach(namaJurusan => {
+                const option = document.createElement('option');
+                // Value kita set sama dengan Text agar bisa dipakai untuk kunci ambil data Prodi
+                option.value = namaJurusan; 
+                option.textContent = namaJurusan;
+                jurusanSelect.appendChild(option);
+            });
+        }
+
+        // --- 3. Logic Ganti Jurusan (Mengisi Prodi) ---
+        jurusanSelect.addEventListener('change', function() {
+            const selectedJurusan = this.value; // Contoh: "Teknik Mesin"
+
+            // Bersihkan prodi lama
+            prodiSelect.innerHTML = '<option value="" disabled selected hidden>Pilih Prodi</option>';
+
+            // Ambil array prodi langsung dari Object berdasarkan Key (Nama Jurusan)
+            // Cek apakah data prodi untuk jurusan tersebut ada?
+            if (registerDataProdi[selectedJurusan]) {
+                
+                const listProdi = registerDataProdi[selectedJurusan];
+
+                listProdi.forEach(namaProdi => {
+                    const option = document.createElement('option');
+                    option.value = namaProdi; 
+                    option.textContent = namaProdi;
+                    prodiSelect.appendChild(option);
+                });
+                
+                prodiSelect.disabled = false;
+            } else {
+                // Handle jika jurusan tidak punya prodi di data JSON
+                const option = document.createElement('option');
+                option.textContent = "Data prodi tidak ditemukan";
+                prodiSelect.appendChild(option);
+                prodiSelect.disabled = true;
+            }
+        });
+    });
+
+    function konfirmasiTambahAnggota() {
     Modal.confirm(
         'Tambah Anggota?',
         'Anda yakin ingin Tambah Anggota?',
         function() {
-            window.location.href = '#';
+            document.getElementById('formDaftar').submit();
         },
         {
             icon: '/icon/userDashboard.svg',
-            confirmText: 'Approve',
+            confirmText: 'Tambah',
             confirmClass: 'w-full px-6 py-2 bg-[#38C55C] text-white rounded-lg font-semibold hover:bg-green-600 transition hover:cursor-pointer',
             cancelText: 'Batalkan'
         }
     );
 }
 </script>
+<script src="/js/togglePassword.js" defer></script> 
+<script src="/js/modal.js" defer></script>

@@ -1,19 +1,21 @@
-<main class="flex-1 p-8 overflow-y-auto bg-[#F9FAFC]">
+<main class="flex-1 p-8 overflow-y-auto bg-background2">
     <!-- Breadcrumb -->
     <nav class="flex mb-6 text-sm">
-        <a href="/Admin/Ruangan" class="text-[#1E68FB] hover:text-blue-700">Data Ruangan</a>
-        <span class="mx-2">
-            <img src="/icon/arrow.svg" class="w-5 h-5">
+        <a href="/Admin/Ruangan" class="text-blue-overlay hover:text-blue-700">Data Ruangan</a>
+        <span class="mx-2 text-dark-overlay6">
+            <div>
+                <?= icon('arrowRight', 'w-5 h-5') ?>
+            </div>
         </span>
-        <a href="#" class="text-gray-900 hover:text-[#1E68FB]">Tambah Ruangan</a>
+        <a href="#" class="text-dark-overlay6 hover:text-blue-overlay">Tambah Ruangan</a>
     </nav>
 
-    <h2 class="text-2xl font-bold text-[#171E29]">Tambah Ruangan</h2>
+    <h2 class="text-2xl font-bold text-dark-overlay">Tambah Ruangan</h2>
 
     <div class="grid lg:grid-cols-1 xl:grid-cols-2 gap-10 mt-6">
 
         <!-- KOLOM KIRI – Foto + Form Utama -->
-        <div class="space-y-8 bg-[#FBFCFF] shadow-xl rounded-xl">
+        <div class="space-y-8 bg-background2 shadow-xl rounded-xl">
 
             <!-- Foto + Rating + Upload -->
             <div class="relative rounded-t-2xl overflow-hidden mb-0">
@@ -23,8 +25,8 @@
         
                 <!-- Overlay Rating (mirip gambar) -->
                 <div class="absolute top-6 left-6 flex items-center gap-3 px-5 py-1
-                                bg-[#171E2950]
-                                rounded-lg border border-gray-100 
+                                bg-dark-overlay4
+                                rounded-lg
                                 animate-in fade-in slide-in-from-bottom duration-500">
                     
                     <p class="text-white font-semibold">INI FOTO DEFAULT</p>
@@ -34,13 +36,16 @@
         
 
                 <!-- Upload Foto Baru -->
-                <div class="flex justify-between items-center absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
-                    <label class="flex items-center gap-3 text-white cursor-pointer hover:text-blue-300 transition">
-                        <!-- <i class="fas fa-camera text-xl"></i> -->
-                        <span class="font-medium py-2 px-3 rounded-full text-xs bg-[#1E68FB]">Ganti Foto</span>
+                <div class="flex justify-between items-center absolute bottom-0 left-0 right-0 p-6 bg-linear-to-t from-black/70 to-transparent">
+                    <label class="flex items-center gap-3 text-white cursor-pointer transition">
+                        <span class="flex items-center font-medium py-2 px-3 rounded-full text-xs bg-blue-overlay hover:bg-blue-overlay7">Ganti Foto
+                            <div>
+                                <?= icon('uploadFoto', 'h-5 w-5 ml-2') ?>
+                            </div>
+                        </span>
                         <span type="file" accept=".png,.jpg,.jpeg" class="hidden">
                     </label>
-                    <p class="font-medium py-2 px-3 rounded-full text-xs bg-[#1E68FB] text-white">.png, .jpg, .jpeg</p>
+                    <p class="font-medium py-2 px-3 rounded-full text-xs bg-blue-overlay text-white">.png, .jpg, .jpeg</p>
                 </div>
             </div>
 
@@ -48,20 +53,20 @@
             <div class="space-y-4 p-8 rounded-xl">
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Nama Ruangan</label>
+                    <label class="block text-sm font-medium text-dark-overlay7 mb-2">Nama Ruangan</label>
                     <input type="text" value="Ruangan Lentera Edukasi"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                            class="w-full px-4 py-2 border border-dark-overlay4 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay transition">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Lokasi</label>
+                    <label class="block text-sm font-medium text-dark-overlay7 mb-2">Lokasi</label>
                     <input type="text" value="Lantai 2"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                            class="w-full px-4 py-2 border border-dark-overlay4 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                    <label class="block text-sm font-medium text-dark-overlay7 mb-2">Status</label>
+                    <select class="w-full px-4 py-2 border border-dark-overlay4 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay">
                         <option>Tersedia</option>
                         <option>Tidak Tersedia</option>
                         <option>Dalam Perbaikan</option>
@@ -69,47 +74,66 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Kapasitas Ruangan</label>
+                    <label class="block text-sm font-medium text-dark-overlay7 mb-2">Kapasitas Ruangan</label>
                     <div class="flex justify-between items-center gap-4">
-                        <input type="number" value="4" min="1" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-center">
-                            <span class="text-gray-600">Sampai</span>
-                        <input type="number" value="8" min="1" class="w-full px-4 py-2 border border-gray-300 rounded-lg text-center">
+                        <input type="number" value="4" min="1" class="w-full px-4 py-2 border border-dark-overlay4 rounded-lg text-center">
+                            <span class="text-dark-overlay7">Sampai</span>
+                        <input type="number" value="8" min="1" class="w-full px-4 py-2 border border-dark-overlay4 rounded-lg text-center">
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- KOLOM KANAN – Deskripsi + Tombol Aksi -->
-        <div class="space-y-4 bg-[#FBFCFF] shadow-xl rounded-xl p-8 self-start">
+        <div class="space-y-4 bg-background2 shadow-xl rounded-xl p-8 self-start">
 
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
+            <label class="block text-sm font-medium text-dark-overlay7 mb-2">
             Deskripsi Lengkap
             </label>
             <textarea rows="6" placeholder="Tuliskan deskripsi lengkap ruangan..."
-                    class="w-full px-5 py-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"><?= htmlspecialchars($deskripsi_lengkap ?? '') ?></textarea>
-            <!-- <p class="text-xs text-gray-500 mt-1 text-right">0/255</p> -->
+                    class="w-full px-5 py-4 border border-dark-overlay4 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay"></textarea>
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
+            <label class="block text-sm font-medium text-dark-overlay7 mb-2">
             Deskripsi Singkat
             </label>
             <textarea rows="3" placeholder="Tuliskan deskripsi singkat yang muncul di kartu ruangan..."
-                class="w-full px-5 py-4 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">Temukan, pinjam, dan nikmati bacaan favoritmu dengan mudah.</textarea>
-            <!-- <p class="text-xs text-gray-500 mt-1 text-right">68/100</p> -->
+                class="w-full px-5 py-4 border border-dark-overlay4 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay"></textarea>
         </div>
 
         <!-- Tombol Aksi -->
         <div class="flex gap-8 pt-2">
-            <button class="flex-1 bg-[#FBFCFF] hover:bg-gray-200 border border-[#5C616A] text-[#5C616A] font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition transform hover:cursor-pointer">
-            Batal
+            <button class="flex-1 bg-background2 hover:bg-dark-overlay2 border border-dark-overlay5 text-dark-overlay5 font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition transform hover:cursor-pointer">
+                Batal
             </button>
-            <button class="flex-1 bg-[#38C55C] hover:bg-green-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition transform hover:cursor-pointer">
-            Tambah
+            <button onclick="konfirmasiTambah()" class="flex-1 bg-green1 hover:bg-green-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition transform hover:cursor-pointer">
+                Tambah
             </button>
         </div>
 
         </div>
     </div>
-</main>
+</main> 
+
+<?php include __DIR__ . '/../../template/modal.php'; ?>
+
+<script src="/js/modal.js" defer></script>
+<script>
+function konfirmasiTambah() {
+    Modal.confirm(
+        'Tambah Ruangan?',
+        'Anda yakin ingin menambah ruagan?',
+        function() {
+            window.location.href = '#';
+        },
+        {
+            icon: <?= json_encode(icon("calendar", "w-12 h-12", "green1")) ?>,
+            confirmText: 'Taambah',
+            confirmClass: 'w-full px-6 py-2 bg-green1 text-white rounded-lg font-semibold hover:bg-green-700 transition hover:cursor-pointer',
+            cancelText: 'Batalkan'
+        }
+    );
+}
+</script>
