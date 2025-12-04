@@ -210,6 +210,11 @@ function icon($name, $class = 'w-5 h-5', $color = 'currentColor', $size = '24') 
                     <animate fill="freeze" attributeName="stroke-dashoffset"/>
                 </path>
             </g>
+        </svg>',
+
+        //suspend
+        'suspend' => '<svg class="' . $class . '" fill="none" stroke="' . $color . '" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+            <path fill="none" stroke="currentColor" stroke-linejoin="round" d="M6.5 5v6m3 0V5m5 3a6.5 6.5 0 1 1-13 0a6.5 6.5 0 0 1 13 0Z" stroke-width="1"/>
         </svg>'
     ];
     
