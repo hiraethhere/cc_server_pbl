@@ -174,6 +174,11 @@ function icon($name, $class = 'w-5 h-5', $color = 'currentColor', $size = '24') 
         //usersss
         'usersAdmin' => '<svg class="' . $class . '" fill="' . $color . '" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path fill="currentColor" d="M16 17v2H2v-2s0-4 7-4s7 4 7 4m-3.5-9.5A3.5 3.5 0 1 0 9 11a3.5 3.5 0 0 0 3.5-3.5m3.44 5.5A5.32 5.32 0 0 1 18 17v2h4v-2s0-3.63-6.06-4M15 4a3.4 3.4 0 0 0-1.93.59a5 5 0 0 1 0 5.82A3.4 3.4 0 0 0 15 11a3.5 3.5 0 0 0 0-7"/>
+        </svg>',
+
+        // file
+        'fileList' => '<svg class="' . $class . '" fill="none" stroke="' . $color . '" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
         </svg>'
     ];
     
