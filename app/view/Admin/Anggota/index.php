@@ -6,7 +6,6 @@ function isActive($current, $check) {
 $nomor = ($current_page - 1) * $limit + 1
 ?>
 
-
 <main class="flex-1 p-8 overflow-y-auto bg-background1">
     <!-- Breadcrumb -->
     <nav class="flex mb-6 text-sm">
@@ -105,7 +104,9 @@ $nomor = ($current_page - 1) * $limit + 1
                 <div class="py-4 px-8">
                     <div class="relative max-w-md ml-auto">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <img src="/icon/search.svg" alt="search" class="w-5 h-5">
+                            <div>
+                                <?= icon('search', 'w-5 h-5') ?>
+                            </div>
                         </div>
                         <input type="text" id="search-input" placeholder="Cari Anggota"
                             class="block w-full pl-10 pr-10 py-2 border border-dark-overlay4 rounded-lg 
@@ -187,8 +188,6 @@ $nomor = ($current_page - 1) * $limit + 1
                     <div class="flex items-center gap-3 py-4 px-8 bg-background1">
                         
                         <?php 
-                        // Anggap Anda sudah mendefinisikan array $jenis_anggota_options, dsb.
-                        // Di sini Anda memuat komponen:
                         $filter_id = 'jenis_anggota'; 
                         $label = 'Jenis Anggota'; 
                         $options = ['Mahasiswa' => 'Mahasiswa', 'Dosen' => 'Dosen', 'Tendik' => 'Tendik']; 
@@ -227,7 +226,9 @@ $nomor = ($current_page - 1) * $limit + 1
                 <div class="py-4 px-8">
                     <div class="relative max-w-md ml-auto">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <img src="/icon/search.svg" alt="search" class="w-5 h-5">
+                            <div>
+                                <?= icon('search', 'w-5 h-5') ?>
+                            </div>
                         </div>
                         <input type="text" id="search-input" placeholder="Cari Anggota"
                             class="block w-full pl-10 pr-10 py-2 border border-dark-overlay4 rounded-lg 
@@ -236,7 +237,9 @@ $nomor = ($current_page - 1) * $limit + 1
                                     transition duration-150">
                         <button type="button" id="clear-search" 
                                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-dark-overlay6 hover:text-dark-overlay7 hidden">
-                            <img src="/icon/silang.svg" alt="clear" classs="w-4 h-4">
+                            <div>
+                                <?= icon('cross', 'w-4 h-4 hover:cursor-pointer') ?>
+                            </div>
                         </button>
                     </div>
                 </div>
@@ -256,6 +259,7 @@ $nomor = ($current_page - 1) * $limit + 1
                                 <th class="px-6 py-4 text-center text-xs font-semibold text-dark-overlay7 uppercase tracking-wider">Aksi</th>
                             </tr>
                         </thead>
+                        <?php if (!empty($users)): ?>
                         <tbody class="divide-y divide-gray-200">
                             <?php foreach($users as $user) : ?>
                             <tr class="hover:bg-background1 transition-colors duration-150">
@@ -282,82 +286,85 @@ $nomor = ($current_page - 1) * $limit + 1
                             <?php $nomor += 1 ?>
                             <?php endforeach ?>
                         </tbody>
+                        <?php else: ?>
+                        <tbody>
+                            <tr>
+                                <td colspan="6" class="px-6 py-12">
+                                    <div class="flex flex-col items-center justify-center">
+                                        <div class="mb-4">
+                                            <?= icon('fileList', 'h-20 w-20 text-dark-overlay4') ?>
+                                        </div>
+                                        <h3 class="text-lg font-semibold text-dark-overlay mb-2">Belum Ada Data Anggota</h3>
+                                        <p class="text-sm text-dark-overlay7 text-center">Tidak ada anggota yang ditemukan untuk filter yang Anda pilih</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <?php endif; ?>
                     </table>
                 </div>
             </div>
 
         <?php endif; ?>
         
-            <?php if ($total_page >= 1): ?>
-            
+        <?php if (!empty($users) && $total_page >= 1): ?>   
         <div class="flex items-center justify-center px-6 py-4 bg-white mx-8">
             
             <div class="flex items-center gap-2">
                 
-                <?php if ($current_page > 1): ?>
-                    <a href="?tab=<?= $tab; ?>&page=<?= $current_page - 1; ?>" class="p-2 text-dark-overlay5 hover:text-dark-overlay hover:bg-gray-100 rounded-lg transition-colors duration-150">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                        </svg>
-                    </a>
-                <?php else: ?>
-                    <button disabled class="p-2 text-gray-300 cursor-not-allowed rounded-lg">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                        </svg>
-                    </button>
-                <?php endif; ?>
-
-
-                <?php for ($p = 1; $p <= $total_page; $p++) : ?>
-                    
-                    <?php if ($p == $current_page) : ?>
-                        <button class="px-4 py-2 text-sm font-medium text-white bg-blue-overlay rounded-lg">
-                            <?= $p; ?>
-                        </button>
-                    
-                    <?php else : ?>
-                        <a href="?tab=<?= $tab; ?>&page=<?= $p; ?>" class="px-4 py-2 text-sm font-medium text-dark-overlay hover:bg-gray-100 rounded-lg transition-colors duration-150 block">
-                            <?= $p; ?>
+                    <?php if ($current_page > 1): ?>
+                        <a href="?tab=<?= $tab; ?>&page=<?= $current_page - 1; ?>" class="p-2 text-dark-overlay5 hover:text-dark-overlay hover:bg-dark-overlay1 rounded-lg transition-colors duration-150">
+                            <?= icon('arrowLeft', 'w-6 h-6') ?>
                         </a>
+                    <?php else: ?>
+                        <button disabled class="p-2 text-dark-overlay cursor-not-allowed rounded-lg">
+                            <?= icon('arrowLeft', 'w-6 h-6') ?>
+                        </button>
                     <?php endif; ?>
 
-                <?php endfor; ?>
+
+                    <?php for ($p = 1; $p <= $total_page; $p++) : ?>
+                        
+                        <?php if ($p == $current_page) : ?>
+                            <button class="px-4 py-2 text-sm font-medium text-white bg-blue-overlay rounded-lg">
+                                <?= $p; ?>
+                            </button>
+                        
+                        <?php else : ?>
+                            <a href="?tab=<?= $tab; ?>&page=<?= $p; ?>" class="px-4 py-2 text-sm font-medium text-dark-overlay hover:bg-dark-overlay1 rounded-lg transition-colors duration-150 block">
+                                <?= $p; ?>
+                            </a>
+                        <?php endif; ?>
+
+                    <?php endfor; ?>
 
 
-                <?php if ($current_page < $total_page): ?>
-                    <a href="?tab=<?= $tab; ?>&page=<?= $current_page + 1; ?>" class="p-2 text-dark-overlay5 hover:text-dark-overlay hover:bg-gray-100 rounded-lg transition-colors duration-150">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-                <?php else: ?>
-                    <button disabled class="p-2 text-gray-300 cursor-not-allowed rounded-lg">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </button>
-                <?php endif; ?>
-            <?php endif; ?>
+                    <?php if ($current_page < $total_page): ?>
+                        <a href="?tab=<?= $tab; ?>&page=<?= $current_page + 1; ?>" class="p-2 text-dark-overlay5 hover:text-dark-overlay hover:bg-dark-overlay1 rounded-lg transition-colors duration-150">
+                            <?= icon('arrowRight', 'w-6 h-6') ?>
+                        </a>
+                    <?php else: ?>
+                        <button disabled class="p-2 text-gray-300 cursor-not-allowed rounded-lg">
+                            <?= icon('arrowRight', 'w-6 h-6') ?>
+                        </button>
+                    <?php endif; ?>
+                
 
             </div>
 
-                    <form action="" method="GET" class="flex items-center gap-2 ml-4">
-                        <input type="hidden" name="tab" value="<?= $tab; ?>">
-                        <span class="text-sm text-dark-overlay7">Go to</span>
-                        <input type="number" 
-                            name="page" 
-                            min="1" 
-                            max="<?= $total_page; ?>"
-                            value="<?= $current_page; ?>" 
-                            class="w-16 px-3 py-2 text-center text-sm border border-dark-overlay4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        
-                        <span class="text-sm text-dark-overlay7">Page</span>
-                        
-                        <button type="submit" class="hidden"></button>
-                    </form>
-                </div>
-            </div>
+            <form action="" method="GET" class="flex items-center gap-2 ml-4">
+                <input type="hidden" name="tab" value="<?= $tab; ?>">
+                <span class="text-sm text-dark-overlay7">Go to</span>
+                <input type="number" name="page" min="1" max="<?= $total_page; ?>" value="<?= $current_page; ?>" 
+                    class="w-16 px-3 py-2 text-center text-sm border border-dark-overlay4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                
+                <span class="text-sm text-dark-overlay7">Page</span>
+                
+                <button type="submit" class="hidden"></button>
+            </form>
+        </div>
+        <?php endif; ?>
+    </div>
 </main>
 
 <script src="/js/filterDropdown.js" defer></script>
