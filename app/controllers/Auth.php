@@ -105,6 +105,7 @@ class Auth extends Controller {
                 if (!validateEmail($_POST['email'])) {
                     throw new Exception('Email tidak valid');
                 }
+
                 $expiredDate = countExpiredAt($_POST['email'], $_POST['prodi']);
 
                 // Upload bukti hanya untuk mahasiswa
@@ -201,8 +202,12 @@ class Auth extends Controller {
             throw new Exception('Password Salah');
         }
 
+        if ($user['status'] === 'suspended') {
+            throw new Exception('Akun anda tersuspend! hubungi admin');
+        }
+
         if ($user['status'] !== 'active') {
-            throw new Exception('Akun anda belum AKtif!');
+            throw new Exception('Akun anda belum Aktif!');
         }
 
         if ($user['suspend_count'] >= 3){
@@ -258,6 +263,7 @@ class Auth extends Controller {
         }
         else{
         header('location: /dashboard');
+        exit();
         }
         exit;
         } catch(\Exception $e) {

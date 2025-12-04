@@ -139,8 +139,10 @@ class Admin extends Controller {
     public function tambahAnggota(){
         $data['judul'] = 'Tambah Anggota Baru';
         $data['navbar'] = 'Anggota';
+        $data['dataJurusan'] = getJurusan();
+        $data['dataProdi'] = getProdi();
         $this->view('layout/sidebar', $data);
-        $this->view('admin/anggota/tambahAnggota');
+        $this->view('admin/anggota/tambahAnggota', $data);
     }
     
     public function peminjaman(){
@@ -294,10 +296,13 @@ class Admin extends Controller {
 
         try{
 
-        if (empty($_POST['id_user'])) {
-            throw new Exception('Error id_user tidak ada');
+        if (empty($_POST['id_user']) || empty($_POST['email'])|| empty($_POST['username']) ) {
+            throw new Exception('Error, data tidak lengkap ');
         }
 
+        if ($this->model('UserModel')->getStatusUserById($_POST['id_user'])['status'] === 'active') {
+            throw new Exception('Anggota sudah aktif');
+        }
 
         $result = $this->model('UserModel')->activateUser($_POST['id_user']);
         if ($result === 0 ) {
@@ -309,7 +314,7 @@ class Admin extends Controller {
         exit();
 
         }catch(Throwable $e){
-            Flasher::setModalInfo('Gagal Aktivasi User', $e->getMessage());
+            Flasher::setModalInfo('Gagal Aktivasi User', $e->getMessage(), 'error');
             header('location: /admin/anggota');
             exit();
         }
@@ -338,7 +343,147 @@ class Admin extends Controller {
             header('location: /admin/anggota');
             exit();
         }
+    }
 
+    public function handleSuspend(){
+        try{
+
+        if (empty($_POST['id_user']) || empty($_POST['email'])|| empty($_POST['username'])) {
+            throw new Exception('Error id_user tidak ada');
+        }
+
+        $result = $this->model('UserModel')->addSuspendCount($_POST['id_user']);
+        if ($result === 0 ) {
+            throw new Exception('internal sql error');
+        }
+
+        sendEmail($_POST['email'], $_POST['username'], "suspend count anda telah bertambah 1", "Merasa tidak adil? segera hubungi admin untuk informasi lebih lanjut");
+        Flasher::setModalInfo('Berhasil Menambahkan Suspend Anggota', 'suspend count anggota telah ditambahkan');
+        header('location: /admin/anggota?tab=anggota');
+        exit();
+
+        }catch(Throwable $e){
+            Flasher::setModalInfo('Gagal Suspend user', $e->getMessage(), 'error');
+            header('location: /admin/anggota?tab=semua');
+            exit();
+        }
+    }
+
+    public function handleNonActivate(){
+        try {
+            if (empty($_POST['id_user']) || empty($_POST['email'])|| empty($_POST['username'])) {
+                throw new Exception('Error, data tidak lengkap');
+            }
+
+            $result = $this->model('UserModel')->nonActivateUser($_POST['id_user']);
+            if ($result === 0 ) {
+                throw new Exception('internal sql error');
+            }
+            sendEmail($_POST['email'] ?? 'email user', $_POST['username' ?? 'user'], "Akun anda di nonaktifkan admin! kembali", "Silahkan Hubungi Admin" );
+            Flasher::setModalInfo('Berhasil nonaktifkan akun anggota', 'Akun anggota telah suspended');
+            header('location: /admin/anggota');
+            exit();
+
+        } catch (\Throwable $e) {
+            Flasher::setModalInfo('Gagal Aktivasi user', $e->getMessage(), 'error');
+            header('location: /admin/anggota?tab=anggota');
+            exit();
+        }
+
+    }
+
+    public function handleActivate(){
+        try {
+            if (empty($_POST['id_user']) || empty($_POST['email'])|| empty($_POST['username'])) {
+                throw new Exception('Error, data tidak lengkap');
+            }
+
+        
+        if ($this->model('UserModel')->getStatusUserById($_POST['id_user'])['status'] === 'active') {
+            throw new Exception('Anggota sudah aktif');
+        }
+
+        $result = $this->model('UserModel')->activateUser($_POST['id_user']);
+        if ($result === 0 ) {
+            throw new Exception('internal sql error');
+        }
+        sendEmail($_POST['email'] ?? 'email user', $_POST['username' ?? 'user'], "Akun anda telah aktif kembali", "anda sekarang bisa login ke ruanginPNJ" );
+        Flasher::setModalInfo('Berhasil Approve Anggota', 'Akun anggota sudah bisa aktif kembali');
+        header('location: /admin/anggota');
+        exit();
+
+        } catch (\Throwable $e) {
+            Flasher::setModalInfo('Gagal Aktivasi user', $e->getMessage(), 'error');
+            header('location: /admin/anggota?tab=anggota');
+            exit();
+        }
+    }
+
+        public function handleRegisterByAdmin(){
+        try {
+
+            if (!$_POST['username'] || !$_POST['password'] || !$_POST['email'] || !$_POST['nomor_induk'] || !$_POST['jurusan_unit']) {
+                throw new Exception('Data tidak lengkap');
+            }
+
+            $role = $_POST['jenis_anggota'] ?? NULL;
+
+            switch ($role) {
+                case "mahasiswa":
+                    $id_role = 3;
+                    break;
+                case "dosen":
+                    $id_role = 4;
+                    break;
+                case "tendik":
+                    $id_role = 5;
+                    break;
+                default:
+                    throw new Exception("Error Internal", 1);
+                break;
+            }
+
+            if ($id_role = 3) {
+                if (!validateEmail($_POST['email'])) {
+                    throw new Exception('Email tidak valid');
+                }
+                $expiredDate = countExpiredAt($_POST['email'], $_POST['prodi']);
+            }
+
+            $data = [
+                'id_role' => $id_role,
+                'username' => $_POST['username'],
+                'password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
+                'nomor_induk' => $_POST['nomor_induk'],
+                'email' => $_POST['email'],
+                'jurusan_unit' => $_POST['jurusan_unit'],
+                'prodi' => $_POST['prodi'] ?? NULL,
+                'status' => 'active',
+                'kubaca_photo' => NULL,
+                'profile_photo' => 'DefaultProfilePicture.jpg',
+                'suspend_count' => 0,
+                'email_verified' => true,
+                'expired_at' => $expiredDate ?? NULL,
+                'now' => date('Y-m-d H:i:s')
+            ];
+
+            if ($this->model('UserModel')->findUserByEmailorNomor_Induk($data['email'], $data['nomor_induk'])) {
+                throw new Exception('Email atau NIM sudah terdaftar!');
+            }
+
+            $result = $this->model('UserModel')->createUser($data);
+            if ($result <= 0) {
+                throw new Exception('Something Went Wrong');
+            }
+
+            Flasher::setModalInfo('Berhasil', 'Membuat Anggota Baru', 'success');
+            header('location: /admin/anggota');
+            exit();
+        } catch (\Throwable $e) {
+            Flasher::setModalInfo('Gagal Daftarkan Anggota', $e->getMessage(), 'error');
+            header('location: /admin/anggota');
+            exit();
+        }
     }
 
         public function handlePasswordChange(){

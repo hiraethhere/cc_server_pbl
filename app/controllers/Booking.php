@@ -11,6 +11,16 @@ class Booking extends Controller {
             header('Location: /auth/formLogin'); // Redirect ke halaman login
             exit; //Hentikan eksekusi script
             }
+
+            $user = $this->model('UserModel')->getSuspendCount($_SESSION['user']['user_id']);
+
+            if ($user >= 3) {
+                Flasher::setModalInfo('Suspend_count anda < 3 hayoo looo', 'silahkan hubungi admin', 'error');
+                session_destroy();
+                header('Location: /auth/formLogin'); // Redirect ke halaman login
+
+                exit;
+            }
         }
 
     // public function index()

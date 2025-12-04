@@ -44,7 +44,7 @@
                         <p class="text-[#171E2990] text-sm">Status</p>
                         <a class="flex justify-start items-center bg-[#38C55C25] mt-2 rounded-lg py-2 px-3 max-w-3/10">
                             <img src="/icon/circleGreen.svg" class="w-5 h-5 mr-3 ">
-                            <h2 class="text-sm inline-block font-semibold text-[#38C55C]"><?= translateStatus($user['status']) ?></h2>
+                            <h2 class="text-sm inline-block font-semibold text-[#38C55C]"><?= translateStatusUser($user['status']) ?></h2>
                         </a>           
                     </div>
                 </div>
@@ -90,7 +90,7 @@
 
             <div class="flex flex-col sm:flex-row justify-between gap-4 mt-6">
                 
-                <button class="flex-1 bg-[#C90B0B] hover:bg-red-800 text-white font-semibold py-3 rounded-xl transition duration-150 shadow-md hover:cursor-pointer">
+                <button id="buttonNonAktif" class="flex-1 bg-[#C90B0B] hover:bg-red-800 text-white font-semibold py-3 rounded-xl transition duration-150 shadow-md hover:cursor-pointer">
                     Nonaktifkan
                 </button>
                 
@@ -98,11 +98,29 @@
                     Suspend
                 </button>
                 
-                <button class="flex-1 bg-[#38C55C] hover:bg-green-600 text-white font-semibold py-3 rounded-xl transition duration-150 shadow-md hover:cursor-pointer">
+                <button id="buttonAktifkan" class="flex-1 bg-[#38C55C] hover:bg-green-600 text-white font-semibold py-3 rounded-xl transition duration-150 shadow-md hover:cursor-pointer">
                     Aktifkan
                 </button>
                 
             </div>
+                    <form id="suspendForm" action="<?= BASEURL ?>Admin/handleSuspend" method="POST" class="hidden">
+                        <input type="hidden" name="id_user" value="<?= $user['id_user'] ?>" >
+                        <input type="hidden" name="email" value="<?= $user['email'] ?>" >
+                        <input type="hidden" name="username" value="<?= $user['username'] ?>" >
+                    </form>
+
+                    <form id="non-activateForm" action="<?= BASEURL ?>Admin/handleNonActivate" method="POST" class="hidden">
+                        <input type="hidden" name="id_user" value="<?= $user['id_user'] ?>" >
+                        <input type="hidden" name="email" value="<?= $user['email'] ?>" >
+                        <input type="hidden" name="username" value="<?= $user['username'] ?>" >
+                    </form>
+
+                    <!-- Form Approve (Hidden) -->
+                    <form id="approveForm" action="<?= BASEURL ?>Admin/handleActivate" method="POST" class="hidden">
+                        <input type="hidden" name="id_user" value="<?= $user['id_user'] ?>" >
+                        <input type="hidden" name="email" value="<?= $user['email'] ?>" >
+                        <input type="hidden" name="username" value="<?= $user['username'] ?>" >
+                    </form>
                 
         </div>
     </main>
@@ -111,19 +129,48 @@
 
 <script src="/js/modal.js" defer></script>
 <script>
-function konfirmasiSuspend() {
-    Modal.confirm(
-        'Suspend Anggota?',
-        'Apakah yakin ingin suspend?',
-        function() {
-            window.location.href = '#';
-        },
-        {
-            icon: '/icon/pencil.svg',
-            confirmText: 'Suspend',
-            confirmClass: 'w-full px-6 py-2 bg-[#C90B0B] text-white rounded-lg font-semibold hover:bg-red-800 transition hover:cursor-pointer',
-            cancelText: 'Batalkan'
-        }
-    );
+
+    const buttonAktifkan = document.getElementById('buttonAktifkan');
+    const buttonNonAktif = document.getElementById('buttonNonAktif');
+    if (buttonAktifkan) {
+        buttonAktifkan.addEventListener('click', function () {document.getElementById('approveForm').submit();});
 }
+
+
+    function konfirmasiSuspend() {
+        Modal.confirm(
+            'Suspend Anggota?',
+            'Apakah yakin ingin suspend?',
+            function() {
+                document.getElementById('suspendForm').submit();
+            },
+            {
+                icon: '/icon/pencil.svg',
+                confirmText: 'Suspend',
+                confirmClass: 'w-full px-6 py-2 bg-[#C90B0B] text-white rounded-lg font-semibold hover:bg-red-800 transition hover:cursor-pointer',
+                cancelText: 'Batalkan'
+            }
+        );
+    }
+
+    function konfirmasiNonAktif() {
+        Modal.confirm(
+            'Nonaktifkan Anggota?',
+            'Apakah yakin ingin Menonaktifkan Anggota?',
+            function() {
+                document.getElementById('non-activateForm').submit();
+            },
+            {
+                icon: '/icon/pencil.svg',
+                confirmText: 'Non-Aktifkan',
+                confirmClass: 'w-full px-6 py-2 bg-[#C90B0B] text-white rounded-lg font-semibold hover:bg-red-800 transition hover:cursor-pointer',
+                cancelText: 'Batalkan'
+            }
+        );
+    }
+
+    if(buttonNonAktif) {
+        buttonNonAktif.addEventListener('click', konfirmasiNonAktif);
+    }
+
 </script>

@@ -146,8 +146,21 @@ class UserModel {
         return $this->db->rowCount();
     }
 
+    public function getStatusUserById($id_user){
+        $this->db->query("SELECT status FROM users WHERE id_user = :id_user AND id_role NOT IN (1,2)" );
+        $this->db->bind('id_user', $id_user);
+        return $this->db->singleSet();
+    }
+
     public function activateUser($id_user){
-        $this->db->query("UPDATE users SET status = 'active' WHERE id_user = :id_user");
+        $this->db->query("UPDATE users SET status = 'active', suspend_count = 0 WHERE id_user = :id_user");
+        $this->db->bind('id_user', $id_user);
+        $this->db->execute();
+        return $this->db->rowCount();
+    }
+
+    public function nonActivateUser($id_user){
+        $this->db->query("UPDATE users SET status = 'suspended' WHERE id_user = :id_user");
         $this->db->bind('id_user', $id_user);
         $this->db->execute();
         return $this->db->rowCount();

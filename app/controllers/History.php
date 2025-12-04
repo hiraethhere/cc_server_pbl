@@ -10,6 +10,14 @@ class History extends Controller{
             header('Location: /auth/formLogin'); // Redirect ke halaman login
             exit; //Hentikan eksekusi script
             }
+
+            $user = $this->model('UserModel')->getSuspendCount($_SESSION['user']['user_id']);
+
+            if ($user >= 3) {
+                session_destroy();
+                header("Location: /auth/handleLogout");
+                exit;
+            }
         }
 
     public function index(){

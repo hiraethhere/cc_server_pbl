@@ -20,18 +20,29 @@ function getProdi() {
             "D4 Alat Berat"
         ],
         "Teknik Sipil" => [
-            "Konstruksi Gedung",
-            "Konstruksi Sipil",
-            "Jalan Tol"
+            "D4 Konstruksi Gedung",
+            "D4 Konstruksi Sipil",
+            "D3 Jalan Tol"
         ],
         "Akuntansi" => [
-            "Akuntansi",
-            "Keuangan dan Perbankan",
-            "Manajemen Keuangan"
+            "D4 Akuntansi",
+            "D4 Keuangan dan Perbankan",
+            "D4 Manajemen Keuangan"
         ],
         "Administrasi Niaga" => [
-            "Administrasi Bisnis",
-            "MICE"
+            "D4 Administrasi Bisnis",
+            "D4 MICE"
         ]
+    ];
+}
+
+function getJurusan(){
+    return [
+        'Teknik Informatika',
+        'Teknik Elektro',
+        'Teknik Mesin',
+        'Teknik Sipil',
+        'Akuntansi',
+        'Administrasi Niaga'
     ];
 }

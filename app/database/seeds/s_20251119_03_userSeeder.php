@@ -19,7 +19,7 @@ class s_20251119_03_userSeeder extends Seeder{
             ) VALUES
             (1, 1, 'superadmin', '$passwordAdmin', 'superadmin@example.com', '0001', 'Admin', NULL, 'active', 0, 1, NULL, NULL, NULL, NULL, NOW(), NOW()),
             (2, 2, 'admin', '$passwordAdmin', 'admin@example.com', '19877654', 'Admin', NULL, 'active', 0, 1, NULL, NULL, NULL, NULL, NOW(), NOW()),
-            (3, 3, 'Anton Subanton', '$passwordUser', 'anton@example.com', '22110033', 'TIK', 'Teknik Informatika dan Komputer', 'active', 0, 1, NULL, NULL, NULL, '$expired4Years', NOW(), NOW()),
+            (3, 3, 'Anton Subanton', '$passwordUser', 'anton@example.com', '22110033', 'TIK', 'Teknik Informatika dan Komputer', 'active', 2, 1, NULL, NULL, NULL, '$expired4Years', NOW(), NOW()),
             (4, 4, 'dosen', '$passwordUser', 'dosen@example.com', '55667788', 'Administrasi', 'Sekretariat', 'active', 0, 1, NULL, NULL, NULL, NULL, NOW(), NOW()),
             (5, 5, 'staff', '$passwordUser', 'staff@example.com', '55667789', 'Staff', 'Sekretariat', 'active', 0, 1, NULL, NULL, NULL, NULL, NOW(), NOW()),
             (6, 3, 'Shidqi Athallah Bahri', '$passwordUser', 'shidqi.tik24@stu.pnj.ac.id', '2407411038', 'TIK', 'D4 Teknik Informatika', 'active', 0, 1, NULL, NULL, NULL, NULL , NOW(), NOW()),

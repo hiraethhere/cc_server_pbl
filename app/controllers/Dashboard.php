@@ -14,6 +14,15 @@ class Dashboard extends Controller
             exit; //Hentikan eksekusi script
             }
 
+            //kalo suspend countnya 3, langsung keluarin
+            $user = $this->model('UserModel')->getSuspendCount($_SESSION['user']['user_id']);
+
+            if ($user >= 3) {
+                session_destroy();
+                header("Location: /auth/handleLogout");
+                exit;
+            }
+
         }
     public function index(){
         // header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
