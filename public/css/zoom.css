@@ -1,0 +1,33 @@
+/* Styling untuk smooth interaction */
+#zoomableImage {
+    transition: transform 0.2s ease-out;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+}
+
+#imageWrapper {
+    position: relative;
+    touch-action: none;
+}
+
+#imageWrapper * {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+}
+
+#zoomInBtn:active,
+#zoomOutBtn:active,
+#resetBtn:active {
+    transform: scale(0.95);
+}
+
+#dragHint {
+    transition: opacity 0.3s ease-in-out;
+}
+
+* {
+    -webkit-tap-highlight-color: transparent;
+}

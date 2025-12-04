@@ -215,6 +215,21 @@ function icon($name, $class = 'w-5 h-5', $color = 'currentColor', $size = '24') 
         //suspend
         'suspend' => '<svg class="' . $class . '" fill="none" stroke="' . $color . '" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
             <path fill="none" stroke="currentColor" stroke-linejoin="round" d="M6.5 5v6m3 0V5m5 3a6.5 6.5 0 1 1-13 0a6.5 6.5 0 0 1 13 0Z" stroke-width="1"/>
+        </svg>',
+
+        //plusZoom
+        'plusZoom' => '<svg class="' . $class . '" fill="none" stroke="' . $color . '" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>',
+
+        //minus
+        'minusZoom' => '<svg class="' . $class . '" fill="none" stroke="' . $color . '" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+        </svg>',
+
+        //refresh
+        'refresh' => '<svg class="' . $class . '" fill="' . $color . '" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path fill="currentColor" d="M12 20q-3.35 0-5.675-2.325T4 12t2.325-5.675T12 4q1.725 0 3.3.712T18 6.75V4h2v7h-7V9h4.2q-.8-1.4-2.187-2.2T12 6Q9.5 6 7.75 7.75T6 12t1.75 4.25T12 18q1.925 0 3.475-1.1T17.65 14h2.1q-.7 2.65-2.85 4.325T12 20"/>
         </svg>'
     ];
     
