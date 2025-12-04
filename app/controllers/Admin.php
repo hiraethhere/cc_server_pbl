@@ -41,7 +41,7 @@ class Admin extends Controller {
             $total_data = $this->model('UserModel')->countPendingUsers()['total'];
             $data['total_page'] = ceil($total_data / $data['limit']);
             $data['current_page'] = $page;
-           $data['link'] = 'selesaikan';
+            $data['link'] = 'selesaikan';
         } else {
             $data['users'] = $this->model('UserModel')->getAllUsersPaginated($data['limit'], $start);
             $total_data = $this->model('UserModel')->countAllUsers()['total'];
@@ -65,7 +65,16 @@ class Admin extends Controller {
     public function detailAnggota($id = null){
 
         $id = param_number($id, "ID user tidak valid");
-        $data['user'] = $this->model('UserModel')->getUserById($id);
+
+        if ($id  === false || $id  < 1) {
+            Flasher::setModalInfo('Parameter Salah', 'hayooo ubah-ubah parameter yaa?', 'error');
+            header('Location: /admin'); // Redirect ke halaman admin
+            exit;
+        }
+        $data['user'] = $this->model('UserModel')->getUserAndRoleById($id);
+        $date1 = new DateTime($data['user']['created_at'] ?? '');
+        $date2 = new DateTime($data['user']['expired_at'] ?? '');
+        $data['masaAktif'] = $date1->diff($date2)->y; 
         $data['judul'] = 'Detail Anggota';
         $data['navbar'] = 'Anggota';
         $this->view('layout/sidebar', $data);
@@ -82,16 +91,46 @@ class Admin extends Controller {
             exit;
         }
 
-        $data['user'] = $this->model('userModel')->getUserJoinRoleById($id_user);
+        $data['user'] = $this->model('UserModel')->getPendingUserJoinRoleById($id_user);
+
+        if (!$data['user']) {
+            Flasher::setModalInfo('Parameter Salah', 'hayooo ubah-ubah parameter yaa?', 'error');
+            header('Location: /admin'); // Redirect ke halaman login
+            exit;
+        }
+
         $data['createdDate'] = tanggal_indonesia($data['user']['created_at']);
         $data['judul'] = 'Selesaikan Peminjaman';
         $data['navbar'] = 'Anggota';
+
         $this->view('layout/sidebar', $data);
-        $this->view('admin/anggota/selesaikan', $data);
+        switch ($data['user']['role_name']) {
+            case 'Mahasiswa':
+                $this->view('admin/anggota/selesaikan', $data);
+                break;
+            case 'Dosen':
+                $this->view('admin/anggota/selesaikanDosen', $data);
+                break;
+            default:
+                $this->view('admin/anggota/selesaikanDosen', $data);
+                break;
+        }
+        $this->view('layout/sidebar', $data);
     }
 
-    public function selesaikanDosen(){
-        $data['judul'] = 'Selesaikan Doses';
+    public function selesaikanDosen($id_user = NULL){
+
+        $id = param_number($id_user, "ID ruangan tidak valid");
+
+        if ($id  === false || $id  < 1) {
+            Flasher::setModalInfo('Parameter Salah', 'hayooo ubah-ubah parameter yaa?', 'error');
+            header('Location: /admin'); // Redirect ke halaman login
+            exit;
+        }
+
+        $data['user'] = $this->model('userModel')->getPendingUserJoinRoleById($id_user);
+        $data['createdDate'] = tanggal_indonesia($data['user']['created_at']);
+        $data['judul'] = 'Selesaikan Dosen/Tendik';
         $data['navbar'] = 'Anggota';
         $this->view('layout/sidebar', $data);
         $this->view('admin/anggota/selesaikanDosen');

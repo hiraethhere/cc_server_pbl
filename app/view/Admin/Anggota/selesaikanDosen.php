@@ -19,7 +19,7 @@
                     <div class="mb-1">
                         <label class="block text-sm font-medium text-[#171E2970] mb-2">Nama</label>
                         <div class="relative">
-                            <input type="Text" id="Nama" name="Nama" placeholder="Muhammad Reza Arifin" readonly
+                            <input type="Text" id="Nama" name="Nama" placeholder="<?= htmlspecialchars($user['username'] ?? '-') ?>" readonly
                                 class="w-full px-4 py-2 border border-[#888D93] rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-[#171E29]">
                         </div>
                     </div>
@@ -27,7 +27,7 @@
                     <div class="mb-1">
                         <label class="block text-sm font-medium text-[#171E2970] mb-2">Jurusan/Unit Kerja</label>
                         <div class="relative">
-                            <input type="Text" id="Jurusan" name="Jurusan" placeholder="Teknik Informatika & Komputer" readonly
+                            <input type="Text" id="Jurusan" name="Jurusan" placeholder="<?= htmlspecialchars($user['jurusan_unit'] ?? '-')  ?>" readonly
                                 class="w-full px-4 py-2 border border-[#888D93] rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-[#171E29]">
                         </div>
                     </div>
@@ -36,14 +36,14 @@
                         <div class="mb-1 w-full">
                             <label class="block text-sm font-medium text-[#171E2970] mb-2">Jenis Anggota</label>
                             <div class="relative">
-                                <input type="Text" id="Jurusan" name="Jurusan" placeholder="Dosen" readonly
+                                <input type="Text" id="Jurusan" name="Jurusan" placeholder="<?= htmlspecialchars($user['role_name'] ?? '-')  ?>" readonly
                                     class="w-full px-4 py-2 border border-[#888D93] rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-[#171E29]">
                             </div>
                         </div>
                         <div class="mb-1 w-full">
                             <label class="block text-sm font-medium text-[#171E2970] mb-2">Email</label>
                             <div class="relative">
-                                <input type="Email" id="Email" name="Email" placeholder="Email@example.com" readonly
+                                <input type="Email" id="Email" name="Email" placeholder="<?= htmlspecialchars($user['email'] ?? '-')  ?>" readonly
                                     class="w-full px-4 py-2 border border-[#888D93] rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-[#171E29]">
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                     <div class="mb-1">
                         <label class="block text-sm font-medium text-[#171E2970] mb-2">NIP</label>
                         <div class="relative">
-                            <input type="Text" id="NIM" name="NIM" placeholder="1231231231" readonly
+                            <input type="Text" id="NIM" name="NIM" placeholder="<?= htmlspecialchars($user['nomor_induk'] ?? '-')  ?>" readonly
                                 class="w-full px-4 py-2 border border-[#888D93] rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-[#171E29]">
                         </div>
                     </div>
@@ -60,7 +60,7 @@
                     <div class="mb-1">
                         <label class="block text-sm font-medium text-[#171E2970] mb-2">Tanggal Daftar</label>
                         <div class="relative">
-                            <input type="text" id="TanggalDaftar" name="Tanggal Daftar" placeholder="5 November 2025" readonly
+                            <input type="text" id="TanggalDaftar" name="Tanggal Daftar" placeholder="<?= htmlspecialchars(tanggal_indonesia($user['created_at']) ?? '-')  ?>" readonly
                                 class="w-full px-4 py-2 border border-[#888D93] rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm text-[#171E29]">
                         </div>
                     </div>

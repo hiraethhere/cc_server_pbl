@@ -33,7 +33,7 @@
                         </div>
 
                         <div class="mb-1">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">NIM/NIP/apapun itu</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">NIM</label>
                             <div class="relative">
                                 <input type="Text" id="NIM" name="NIM" placeholder="<?= htmlspecialchars($user['nomor_induk']) ?? '-'?>" readonly
                                     class="w-full bg-white px-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">

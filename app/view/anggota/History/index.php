@@ -166,7 +166,7 @@
 
 
 
-           <?php if ($total_page >= 1): ?>
+        <?php if ($total_page >= 1): ?>
             
         <div class="flex items-center justify-center px-6 py-4 bg-white border-t border-gray-200 mx-8">
             
