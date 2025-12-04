@@ -17,6 +17,7 @@ class Akun extends Controller{
             // 1. Tentukan judul halaman
         $data['judul'] = 'Profil Akun';
         $data['user'] = $_SESSION['user'];
+        $data['suspend_count'] = $this->model('userModel')->getSuspendCount($_SESSION['user']['user_id']);
         $data['navbar'] = 'Akun';
         // 3. Panggil view (Urutan pemanggilan harus benar: Header, Body, Footer)
         $this->view('Layout/Header', $data);

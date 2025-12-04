@@ -24,7 +24,7 @@
                 
                 <!-- Violation Count Badge -->
                 <div class="absolute bottom-4 right-0 text-xs mt-4 bg-dark-overlay6 text-white1 px-2 py-1 rounded-lg shadow-md">
-                    <p class="text-xs">Pelanggaran: <span class="font-semibold">2</span></p>
+                    <p class="text-xs">Pelanggaran: <span class="font-semibold"><?= $suspend_count ?></span></p>
                 </div>
             </div>
         </div>

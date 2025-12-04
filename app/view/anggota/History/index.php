@@ -32,6 +32,7 @@
         </div>
 
         <!-- Search Bar -->
+        <form method="GET" class="order-1 md:order-2">
         <div class="order-1 md:order-2">
             <div class="relative max-w-md ml-auto">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -39,11 +40,12 @@
                         <?= icon('search', 'w-5 h-5') ?>
                     </div>
                 </div>
-                <input type="text" id="search-input" placeholder="Cari..."
+                <input type="text" id="search-input" placeholder="Cari..." name="search"
                     class="block w-full p-10 py-2 border border-dark-overlay5 rounded-lg 
                             bg-white text-dark-overlay7 placeholder-dark-overlay7 text-sm
                             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
                             transition duration-150">
+                            
                 <button type="button" id="clear-search" 
                         class="absolute inset-y-0 right-0 pr-3 flex items-center text-dark-overlay7 hover:text-dark-overlay hidden">
                     <div class="hover:cursor-pointer">
@@ -52,6 +54,7 @@
                 </button>
             </div>
         </div>
+        </form>
     </div>
     
     <!-- Table Content -->
@@ -162,25 +165,75 @@
     </div>
 
 
-    <div class="mt-10 mb-5 flex justify-center items-center">
-        <div div class="flex items-center space-x-3">
-            <div class="p-2"><</div>
-            <div class="p-2">1</div>
-            <div class="p-2">2</div>
-            <div class="p-2">3</div>
-            <div class="p-2">></div>
-        </div>
-        <div class="flex items-center space-x-3 ml-10">
-            <div>
-                Go to
+
+           <?php if ($total_page >= 1): ?>
+            
+        <div class="flex items-center justify-center px-6 py-4 bg-white border-t border-gray-200 mx-8">
+            
+            <div class="flex items-center gap-2">
+                
+                <?php if ($current_page > 1): ?>
+                    <a href="?page=<?= $current_page - 1; ?>" class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-150">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </a>
+                <?php else: ?>
+                    <button disabled class="p-2 text-gray-300 cursor-not-allowed rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+                <?php endif; ?>
+
+
+                <?php for ($p = 1; $p <= $total_page; $p++) : ?>
+                    
+                    <?php if ($p == $current_page) : ?>
+                        <button class="px-4 py-2 text-sm font-medium text-white bg-[#1E68FB] rounded-lg">
+                            <?= $p; ?>
+                        </button>
+                    
+                    <?php else : ?>
+                        <a href="?&page=<?= $p; ?>" class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-150 block">
+                            <?= $p; ?>
+                        </a>
+                    <?php endif; ?>
+
+                <?php endfor; ?>
+
+
+                <?php if ($current_page < $total_page): ?>
+                    <a href="?&page=<?= $current_page + 1; ?>" class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-150">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                <?php else: ?>
+                    <button disabled class="p-2 text-gray-300 cursor-not-allowed rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                <?php endif; ?>
+            <?php endif; ?>
+
             </div>
-            <div>
-                <input type="text" maxlength="1" readonly class="w-7 px-1 py-1 border border-dark-overlay4 rounded-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <form action="" method="GET" class="flex items-center gap-2 ml-4">
+                        <span class="text-sm text-gray-600">Go to</span>
+                        <input type="number" 
+                            name="page" 
+                            min="1" 
+                            max="<?= $total_page; ?>"
+                            value="<?= $current_page; ?>" 
+                            class="w-16 px-3 py-2 text-center text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        
+                        <span class="text-sm text-gray-600">Page</span>
+                        
+                        <button type="submit" class="hidden"></button>
+                    </form>
+                </div>
             </div>
-            <div>
-                Page
-            </div>
-        </div>
     </div>
 </main>
 

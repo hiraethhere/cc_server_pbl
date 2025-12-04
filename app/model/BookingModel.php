@@ -94,31 +94,99 @@ class BookingModel {
     }
 
     public function getBookingIdByUser($id_user){
-    // Kita gunakan DISTINCT supaya jika ada join yang berulang, data booking tetap muncul sekali saja.
-    // Kita pakai LEFT JOIN ke booking_members agar booking dimana dia jadi Ketua (dan mungkin tidak ada anggota) tetap termuat.
-    
-    $query = "SELECT DISTINCT b.id_booking, b.start_time FROM bookings b
-              LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
-              WHERE (b.id_user = :uid OR bm.id_user = :uid)
-              ORDER BY b.start_time DESC";
+        // Kita gunakan DISTINCT supaya jika ada join yang berulang, data booking tetap muncul sekali saja.
+        // Kita pakai LEFT JOIN ke booking_members agar booking dimana dia jadi Ketua (dan mungkin tidak ada anggota) tetap termuat.
+        
+        $query = "SELECT DISTINCT b.id_booking, b.start_time FROM bookings b
+                LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
+                WHERE (b.id_user = :uid OR bm.id_user = :uid)
+                ORDER BY b.start_time DESC";
 
-    $this->db->query($query);
-    $this->db->bind('uid', $id_user);
+        $this->db->query($query);
+        $this->db->bind('uid', $id_user);
     
-    return $this->db->resultSet();
-    }
-
-    //ini gua masi bingung mau pake created_at atau start_time kalo start_time itu dia gak asli
-    public function getAllBookingByUser($id_user){
-        $this->db->query("SELECT DISTINCT b.id_booking, r.room_name, b.start_time, b.end_time, b.total_person, b.status, b.created_at 
-                            FROM bookings b
-                            JOIN  rooms r ON b.id_room = r.id_room
-                            LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking 
-                            WHERE b.id_user = :id_user OR bm.id_user = :id_user ORDER BY b.start_time DESC;");
-                
-        $this->db->bind('id_user', $id_user);
         return $this->db->resultSet();
     }
+
+
+public function getAllBookingByUser($id_user, $limit, $offset) {
+        $sql = "SELECT DISTINCT b.id_booking, r.room_name, b.start_time, b.end_time,
+                    b.total_person, b.status, b.created_at
+                FROM bookings b
+                JOIN rooms r ON b.id_room = r.id_room
+                LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
+                WHERE b.id_user = :id_user OR bm.id_user = :id_user
+                ORDER BY b.start_time DESC
+                LIMIT :limit OFFSET :offset";
+
+        $this->db->query($sql);
+        $this->db->bind('id_user', $id_user);
+        $this->db->bind('limit', (int)$limit, PDO::PARAM_INT);
+        $this->db->bind('offset', (int)$offset, PDO::PARAM_INT);
+
+        return $this->db->resultSet();
+    }
+
+
+
+    public function countAllBookingByUser($id_user){
+        $this->db->query("SELECT COUNT(DISTINCT b.id_booking) AS total
+                        FROM bookings b
+                        LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
+                        WHERE b.id_user = :id_user OR bm.id_user = :id_user");
+        $this->db->bind('id_user', $id_user);
+        return $this->db->singleSet()['total'];
+    }
+
+    public function searchBookingByUser($id_user, $limit, $offset, $search) {
+        $query = "SELECT DISTINCT b.id_booking, r.room_name, b.start_time, b.end_time,
+                    b.total_person, b.status, b.created_at
+                FROM bookings b
+                JOIN rooms r ON b.id_room = r.id_room
+                LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
+                WHERE (b.id_user = :id_user OR bm.id_user = :id_user)
+                AND (
+                        r.room_name LIKE :search OR
+                        b.status LIKE :search OR
+                        b.start_time LIKE :search OR
+                        b.end_time LIKE :search OR
+                        b.total_person LIKE :search OR
+                        DATE(b.start_time) LIKE :search
+                )
+                ORDER BY b.start_time DESC
+                LIMIT :limit OFFSET :offset";
+
+        $this->db->query($query);
+        $this->db->bind('id_user', $id_user);
+        $this->db->bind('search', "%$search%");
+        $this->db->bind('limit', (int)$limit, PDO::PARAM_INT);
+        $this->db->bind('offset', (int)$offset, PDO::PARAM_INT);
+
+        return $this->db->resultSet();
+    }
+
+    public function countSearchBookingByUser($id_user, $search) {
+        $query = "SELECT COUNT(DISTINCT b.id_booking) AS total
+                FROM bookings b
+                JOIN rooms r ON b.id_room = r.id_room
+                LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
+                WHERE (b.id_user = :id_user OR bm.id_user = :id_user)
+                AND (
+                        r.room_name LIKE :search OR
+                        b.status LIKE :search OR
+                        b.start_time LIKE :search OR
+                        b.end_time LIKE :search OR
+                        b.total_person LIKE :search OR
+                        DATE(b.start_time) LIKE :search
+                )";
+
+        $this->db->query($query);
+        $this->db->bind('id_user', $id_user);
+        $this->db->bind('search', "%$search%");
+        return $this->db->singleSet()['total'];
+    }
+
+
 
     public function getActiveBookingJoinRoom($id_booking){
         $query = "SELECT b.id_booking, b.start_time, b.status, b.end_time, b.total_person, b.booking_code, r.room_name, r.short_description
@@ -242,10 +310,6 @@ class BookingModel {
                         JOIN users u ON b.id_user = u.id_user
                         WHERE b.status IN ('done', 'cancelled') ORDER BY start_time DESC");
         return $this->db->resultSet();
-    }
-
-    public function getAllBookingPaginated(){
-        $this->db->query("SELECT * FROM bookings ORDER BY start_time DESC LIMIT :limit OFFSET :offset;");
     }
 
     public function getBookingByIdAndUser($id_booking, $id_user){
