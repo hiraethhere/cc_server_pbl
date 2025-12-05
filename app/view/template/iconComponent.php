@@ -230,6 +230,16 @@ function icon($name, $class = 'w-5 h-5', $color = 'currentColor', $size = '24') 
         //refresh
         'refresh' => '<svg class="' . $class . '" fill="' . $color . '" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path fill="currentColor" d="M12 20q-3.35 0-5.675-2.325T4 12t2.325-5.675T12 4q1.725 0 3.3.712T18 6.75V4h2v7h-7V9h4.2q-.8-1.4-2.187-2.2T12 6Q9.5 6 7.75 7.75T6 12t1.75 4.25T12 18q1.925 0 3.475-1.1T17.65 14h2.1q-.7 2.65-2.85 4.325T12 20"/>
+        </svg>',
+
+        //paperClip
+        'paperClip' => '<svg class="' . $class . '" fill="none" stroke="' . $color . '" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" d="M2.5 4v4.5c0 1.7 1.3 3 3 3s3-1.3 3-3v-6c0-1.1-.9-2-2-2s-2 .9-2 2v6c0 .6.4 1 1 1s1-.4 1-1V4" stroke-width="1"/>
+        </svg>',
+
+        //fileUpload
+        'fileUpload' => '<svg class="' . $class . '" fill="' . $color . '" viewBox="0 0 384 512" xmlns="http://www.w3.org/2000/svg">
+            <path fill="currentColor" d="M0 64C0 28.7 28.7 0 64 0h160v128c0 17.7 14.3 32 32 32h128v288c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64zm384 64H256V0z"/>
         </svg>'
     ];
     
