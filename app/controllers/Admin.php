@@ -207,6 +207,13 @@ class Admin extends Controller {
         $this->view('admin/peminjaman/detailReschedule', $data);
     }
 
+    public function detailBerlangsung(){
+        $data['judul'] = 'Detail Peminjaman yang Berlangsung';
+        $data['navbar'] = 'Peminjaman';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/peminjaman/detailBerlangsung');
+    }
+
     public function detailRiwayat(){
         $data['judul'] = 'Detail Riwayat Peminjaman';
         $data['navbar'] = 'Peminjaman';

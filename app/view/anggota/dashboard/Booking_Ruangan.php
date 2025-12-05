@@ -109,7 +109,7 @@
                 </div>
             </div>
 
-            <div class="order-1 lg:order-none lg:col-span-1 space-y-6 lg:sticky">
+            <div class="order-1 lg:order-0 lg:col-span-1 space-y-6 lg:sticky">
         
                 <!-- KARTU RUANGAN (TIDAK STICKY) -->
                 <div class="bg-background2 rounded-2xl shadow-lg overflow-hidden">
