@@ -31,7 +31,7 @@ class History extends Controller{
         $search = isset($_GET['search']) ? trim($_GET['search']) : '';
         $idUser = $_SESSION['user']['user_id'];
 
-            if ($search === '') {
+        if ($search === '') {
             // tanpa pencarian
             $data['bookings'] = $this->model('BookingModel')->getAllBookingByUser($idUser, $data['limit'], $start);
 
@@ -51,6 +51,36 @@ class History extends Controller{
         $this->view('Layout/Header', $data);
         $this->view('anggota/History/index', $data); 
         $this->view('Layout/Footer');
+    }
+
+    public function submiFeedback(){
+        // 1. Ambil raw data JSON dari request body
+    $json = file_get_contents('php://input');
+    
+    // 2. Decode menjadi Array PHP
+    $input = json_decode($json, true);
+
+    if (!$input) {
+        echo json_encode(['status' => 'error', 'message' => 'Data invalid']);
+        exit;
+    }
+
+    // 3. Ambil variabelnya
+    $bookingId = $input['bookingId'];
+    $rating = $input['rating'];
+    $ulasan = $input['ulasan'];
+
+    // 4. Panggil Model untuk simpan ke database
+    // Pastikan kamu punya method ini di BookingModel
+    $result = $this->model('FeedbackModel')->addFeedback($bookingId, $rating, $ulasan);
+
+    // 5. Kirim respon balik ke JavaScript
+    header('Content-Type: application/json');
+    if ($result > 0) {
+        echo json_encode(['status' => 'success']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Gagal menyimpan ke database']);
+    }
     }
 
 }

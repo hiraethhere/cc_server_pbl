@@ -94,16 +94,34 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 text-center justify-center flex border-b border-dark-overlay4">
-                            <button onclick="kirimFeedback('<?= $booking['id_booking'] ?>')"
-                                    class="flex bg-blue-overlay items-center text-white hover:bg-blue-700 hover:cursor-pointer px-5 py-2 rounded-sm text-xs font-medium transition shadow-md transform hover:scale-105">
+                            <?php if (!isset($booking['rating'])) :?>
+                            <button onclick="kirimFeedback('<?= $booking['id_booking'] ?>')" class="flex items-center justify-center w-full bg-blue-overlay text-white hover:bg-blue-700 py-2 rounded-sm text-sm font-medium transition shadow-md">
                                 <span>Feedback</span>
-                                
                                 <div class="bg-background2 rounded-xs ml-3"> 
                                     <div class="text-blue-overlay">
                                         <?= icon('plus', 'w-4 h-4') ?>
                                     </div>
                                 </div>
                             </button>
+                            <?php elseif ($booking['status']  === 'done'): ?>
+                                <button onclick="kirimFeedback('<?= $booking['id_booking'] ?>')" class="flex items-center justify-center w-full bg-blue-overlay text-white hover:bg-blue-700 py-2 rounded-sm text-sm font-medium transition shadow-md">
+                                <span>Done</span>
+                                <div class="bg-background2 rounded-xs ml-3"> 
+                                    <div class="text-blue-overlay">
+                                        <?= icon('plus', 'w-4 h-4') ?>
+                                    </div>
+                                </div>
+                            </button>
+                        <?php else : ?>
+                                <button class="flex items-center justify-center w-full bg-gray-600 text-white hover:bg-blue-700 py-2 rounded-sm text-sm font-medium transition shadow-md">
+                                <span>Feedback</span>
+                                <div class="bg-background2 rounded-xs ml-3"> 
+                                    <div class="text-blue-overlay">
+                                        <?= icon('plus', 'w-4 h-4') ?>
+                                    </div>
+                                </div>
+                            </button>
+                        <?php endif ?>
                         </td>
                     </tr>
                     <?php endforeach ?>
@@ -150,6 +168,8 @@
                     </div>  
                 </div>
                 <div class="mt-4 grid grid-cols-1 justify-center w-full">
+
+                <?php if (1 == 0) :?>
                     <button onclick="kirimFeedback('<?= $booking['id_booking'] ?>')" class="flex items-center justify-center w-full bg-blue-overlay text-white hover:bg-blue-700 py-2 rounded-sm text-sm font-medium transition shadow-md">
                         <span>Feedback</span>
                         <div class="bg-background2 rounded-xs ml-3"> 
@@ -158,6 +178,16 @@
                             </div>
                         </div>
                     </button>
+                <?php else : ?>
+                        <button onclick="kirimFeedback('<?= $booking['id_booking'] ?>')" class="flex items-center justify-center w-full bg-gray-600 text-white hover:bg-blue-700 py-2 rounded-sm text-sm font-medium transition shadow-md">
+                        <span>Feedback</span>
+                        <div class="bg-background2 rounded-xs ml-3"> 
+                            <div class="text-blue-overlay">
+                                <?= icon('plus', 'w-4 h-4') ?>
+                            </div>
+                        </div>
+                    </button>
+                <?php endif ?>
                 </div>
             </div>
         </div>

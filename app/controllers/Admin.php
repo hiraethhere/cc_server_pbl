@@ -496,10 +496,10 @@ class Admin extends Controller {
         }
     }
 
-        public function handlePasswordChange(){
+    public function handlePasswordChange(){
 
         //ga boleh kosong
-        if (empty($_POST['passwordBaru']) || empty($_POST['passwordLama'])) {
+        if (empty($_POST['passwordBaru']) || empty($_POST['password']) || empty($_POST['passwordBaruConfirm'])) {
             Flasher::setModalInfo('Password tidak boleh kosong', 'Silahkan isi password', 'error');
             header('location: /admin/akun');
             exit();
@@ -513,14 +513,18 @@ class Admin extends Controller {
         }
 
         $oldPassword = $this->model('UserModel')->getPasswordByEmail($_SESSION['user']['email']);
+        // var_dump($_SESSION['user']['email']);
         // var_dump($oldPassword);
+        // var_dump($_POST['password']);
+        // var_dump(password_verify($_POST['passwordBaru'], $oldPassword['password']));
+        // die();
         if (!$oldPassword) {
             Flasher::setModalInfo('Akun tidak ditemukan', 'Internal server error', 'error');
             header('location: /admin/akun');
             exit();
         }
 
-        if (!password_verify($_POST['passwordBaru'], $oldPassword['password'])) {
+        if (!password_verify($_POST['password'], $oldPassword['password'])) {
             Flasher::setModalInfo('Password lama salah', 'Silahkan masukan password yang benar', 'error');
             header('location: /admin/akun');
             exit();

@@ -111,10 +111,11 @@ class BookingModel {
 
 public function getAllBookingByUser($id_user, $limit, $offset) {
         $sql = "SELECT DISTINCT b.id_booking, r.room_name, b.start_time, b.end_time,
-                    b.total_person, b.status, b.created_at
+                    b.total_person, b.status, b.created_at, f.rating as rating_user
                 FROM bookings b
                 JOIN rooms r ON b.id_room = r.id_room
                 LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
+                LEFT JOIN feedback f ON b.id_booking = f.id_booking AND f.id_user = :id_user
                 WHERE b.id_user = :id_user OR bm.id_user = :id_user
                 ORDER BY b.start_time DESC
                 LIMIT :limit OFFSET :offset";
@@ -140,10 +141,11 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
 
     public function searchBookingByUser($id_user, $limit, $offset, $search) {
         $query = "SELECT DISTINCT b.id_booking, r.room_name, b.start_time, b.end_time,
-                    b.total_person, b.status, b.created_at
+                    b.total_person, b.status, b.created_at, f.rating
                 FROM bookings b
                 JOIN rooms r ON b.id_room = r.id_room
                 LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
+                LEFT JOIN feedback f ON b.id_booking = f.id_booking AND f.id_user = :id_user
                 WHERE (b.id_user = :id_user OR bm.id_user = :id_user)
                 AND (
                         r.room_name LIKE :search OR
@@ -332,10 +334,18 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
     public function autoCancelLateBookings()
     {
         
-        $query = "UPDATE " . $this->table . " 
-                  SET status = 'cancelled', cancel_by = 'system' 
-                  WHERE status = 'pending' 
-                  AND NOW() > DATE_ADD(start_time, INTERVAL 10 MINUTE)";
+        $query = "UPDATE bookings b
+                    LEFT JOIN reschedule r ON r.id_booking = b.id_booking
+                    SET 
+                        b.status = 'cancelled',
+                        b.cancel_by = 'system',
+                        r.cancel_by = 'system',
+                        r.status_reschedule = CASE 
+                            WHEN r.status_reschedule = 'pending' THEN 'cancelled'
+                            ELSE r.status_reschedule
+                        END
+                    WHERE b.status = 'pending'
+                    AND NOW() > DATE_ADD(b.start_time, INTERVAL 10 MINUTE);";
                   
         $this->db->query($query);
         $this->db->execute();

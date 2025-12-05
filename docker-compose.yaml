@@ -22,10 +22,10 @@ services:
       ofelia.enabled: "true"
       # Nama job bebas, tetapi harus berbeda pada setiap job
       # "@every 5m" artinya dijalankan setiap 5 menit
-      ofelia.job-exec.cancel-job.schedule: "@every 5m"
+      ofelia.job-exec.cancel-job.schedule: "@every 2m"
       ofelia.job-exec.cancel-job.command: "php /var/www/html/cli.php bookings:autocancel"
       # ini akan berjalan setiap 5 menit untuk mengecek apakah ada booking yang sudah selesai tapi statusnya belum berubah
-      ofelia.job-exec.complete-job.schedule: "@every 5m"
+      ofelia.job-exec.complete-job.schedule: "@every 2m"
       ofelia.job-exec.complete-job.command: "php /var/www/html/cli.php bookings:autocomplete"
 
   # Service 2: Database (MySQL)

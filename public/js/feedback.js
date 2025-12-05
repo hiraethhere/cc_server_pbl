@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('kirimFeedback dipanggil untuk booking:', bookingId); // Debug
         
         const feedbackContent = `
-            <div class="text-center">
+            <form class="text-center">
                 <label class="block text-center text-sm text-dark-overlay7 mb-3">
                     Input kamu sangat berharga dalam meningkatkan kualitas ruangan di perpustakaan kami.
                 </label>
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
                           placeholder="Bagikan pengalaman Anda menggunakan ruangan ini..." 
                           class="w-full px-4 py-3 text-sm border border-dark-overlay5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" 
                           rows="4"></textarea>
-            </div>
+            </form>
         `;
         
         // Icon star untuk modal header

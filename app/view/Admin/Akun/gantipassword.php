@@ -46,7 +46,7 @@
                     <div class="mb-3" data-toggle-password>
                         <label class="block text-sm font-medium text-dark-overlay7 mb-2">Konfirmasi Password Baru</label>
                         <div class="relative">
-                            <input type="password" id="konfirmasiPassword" name="passwordbaruConfirm" placeholder="••••••••" autocomplete="new-password"
+                            <input type="password" id="konfirmasiPassword" name="passwordBaruConfirm" placeholder="••••••••" autocomplete="new-password"
                                 class="w-full px-4 py-2 border border-dark-overlay4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
                             <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-dark-overlay5">
                                 <img src="/icon/eye-on.svg" alt="Show Password" class="w-5 h-5 hover:cursor-pointer">
