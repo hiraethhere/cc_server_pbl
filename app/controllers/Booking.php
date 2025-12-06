@@ -212,6 +212,7 @@ class Booking extends Controller {
             $dataBooking = [
                         'id_room' => $id_room,
                         'id_user' => $id_ketua,
+                        'booker_name' => $_SESSION['user']['username'],
                         'total_person' => $total_person,
                         'booking_code' => $bookingCode,
                         'start_time' => $start_datetime,

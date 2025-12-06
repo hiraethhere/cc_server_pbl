@@ -279,10 +279,21 @@ class Admin extends Controller {
     }
 
     public function Feedback(){
+
+        $data['limit'] = 5;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $start = ($page > 1) ? ($page * $data['limit']) - $data['limit'] : 0;
+
+        $data['feedbacks'] = $this->model('FeedbackModel')->getAllFeedbackPaginated($data['limit'], $start);
+        $total_data = $this->model('FeedbackModel')->getTotalFeedbackCount();
+        $data['total_page'] = ceil($total_data / $data['limit']);
+        $data['current_page'] = $page;
+
+
         $data['judul'] = 'Feedback Pengguna';
         $data['navbar'] = 'Feedback';
         $this->view('layout/sidebar', $data);
-        $this->view('admin/feedback/index');
+        $this->view('admin/feedback/index', $data);
     }
 
     public function Akun(){

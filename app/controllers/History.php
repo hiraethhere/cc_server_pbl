@@ -59,7 +59,7 @@ class History extends Controller{
                 throw new Exception("Data tidak lengkap!", 1);
             }
 
-            if (!$this->model('BookingModel')->isUserAssociatedWithBooking($_POST['id_booking'], $_POST['id_user'])) {
+            if (!$this->model('BookingModel')->isUserAssociatedWithBooking($_POST['id_booking'], $_SESSION['user']['user_id'])) {
                 throw new Exception("Anda tidak memiliki akses ke booking ini!", 1);
             }
 
