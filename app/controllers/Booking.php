@@ -254,13 +254,17 @@ class Booking extends Controller {
         $bookingModel->beginTransaction();
 
         //ini dia update status ke cancelled
+        $existingBooking = $bookingModel->getBookingByIdAndUser($_POST['id_booking'], $_SESSION['user']['user_id']);
+        if (!$existingBooking) {
+            throw new Exception('Hanya ketua yang bisa membatalkan peminjaman!');
+        }
         $result = $bookingModel->cancelBooking($_POST['id_booking']);
         //menambahkan suspend ke user
         $suspend = $userModel->addSuspendCount($_SESSION['user']['user_id']);
         //ini dia nge cancel atau nge declined reschedule yang masih pending (kalo ada)
         $rescheduleModel->cancelRescheduleByUser($_POST['id_booking']);
 
-            if ($result <= 0 || $suspend <= 0) {
+            if ($result <= 0 || $suspend <= 0 || $suspend <= 0) {
                 throw new Exception("internal server error", 1);
             }
 
@@ -271,8 +275,8 @@ class Booking extends Controller {
 
         }catch(Throwable $e){
             $bookingModel->rollback();
-            Flasher::setModalInfo('Gagal cancel', $e->getMessage(), 'error');
-            header('location: /dashboard');
+            Flasher::setModalInfo('Gagal Membatalkan Booking', $e->getMessage(), 'error');
+            header('location: /Booking');
             exit();
         }
     }

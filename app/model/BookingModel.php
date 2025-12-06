@@ -111,7 +111,7 @@ class BookingModel {
 
 public function getAllBookingByUser($id_user, $limit, $offset) {
         $sql = "SELECT DISTINCT b.id_booking, r.room_name, b.start_time, b.end_time,
-                    b.total_person, b.status, b.created_at, f.rating as rating_user
+                    b.total_person, b.status, b.created_at, f.rating
                 FROM bookings b
                 JOIN rooms r ON b.id_room = r.id_room
                 LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
@@ -127,7 +127,6 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
 
         return $this->db->resultSet();
     }
-
 
 
     public function countAllBookingByUser($id_user){
@@ -327,6 +326,23 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
         $this->db->bind('id_user', $id_user);
     
         return $this->db->singleSet();
+    }
+
+    public function isUserAssociatedWithBooking($id_booking, $id_user) {
+        // Query untuk mengecek apakah user adalah PEMBUAT atau ANGGOTA dari booking tersebut
+        $query = "SELECT b.id_booking 
+                FROM bookings b
+                LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
+                WHERE b.id_booking = :id_booking 
+                AND (b.id_user = :id_user OR bm.id_user = :id_user)
+                LIMIT 1";
+
+        $this->db->query($query);
+        $this->db->bind('id_booking', $id_booking);
+        $this->db->bind('id_user', $id_user);
+        
+        // Jika ada hasil, berarti user berhak. Jika false/kosong, berarti tidak berhak.
+        return $this->db->singleSet(); 
     }
 
     

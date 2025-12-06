@@ -76,13 +76,13 @@
 
 
                 <tbody id="" class="divide-y divide-dark-overlay5">
-                <?php $i = 1 ?>
+                <?php $nomor = ($current_page - 1) * $limit + 1?>
                 <?php foreach($bookings as $booking) : ?>
                     <!-- **************************************************
                     INI Data pERTAMA
                     ******************************************************* -->
                     <tr class="hover:bg-dark-overlay1 transition border-b border-dark-overlay4">
-                        <td class="px-6 py-4 text-left text-sm border-b border-dark-overlay4"><?= $i ?></td>
+                        <td class="px-6 py-4 text-left text-sm border-b border-dark-overlay4"><?= $nomor ?></td>
                         <td class="px-6 py-4 text-left text-sm border-b border-dark-overlay4"><?= tanggal_indonesia($booking['start_time']) ?></td>
                         <td class="px-6 py-4 text-left text-sm border-b border-dark-overlay4"><?= $booking['room_name'] ?></td>
                         <td class="px-6 py-4 text-left text-sm border-b border-dark-overlay4"><?= date('H:i', strtotime($booking['start_time'])) . '-' . date('H:i', strtotime($booking['end_time'])); ?></td>
@@ -94,8 +94,8 @@
                             </div>
                         </td>
                         <td class="px-6 py-4 text-center justify-center flex border-b border-dark-overlay4">
-                            <?php if (!isset($booking['rating'])) :?>
-                            <button onclick="kirimFeedback('<?= $booking['id_booking'] ?>')" class="flex items-center justify-center w-full bg-blue-overlay text-white hover:bg-blue-700 py-2 rounded-sm text-sm font-medium transition shadow-md">
+                            <?php if ($booking['status']  === 'done' && empty($booking['rating'])): ?>
+                            <button onclick="kirimFeedback('<?= $booking['id_booking'] ?>', '<?= $_SESSION['user']['user_id']?>')" class="flex items-center justify-center w-full bg-blue-overlay text-white hover:bg-blue-700 py-2 hover:cursor-pointer rounded-sm text-sm font-medium transition shadow-md">
                                 <span>Feedback</span>
                                 <div class="bg-background2 rounded-xs ml-3"> 
                                     <div class="text-blue-overlay">
@@ -103,27 +103,28 @@
                                     </div>
                                 </div>
                             </button>
-                            <?php elseif ($booking['status']  === 'done'): ?>
-                                <button onclick="kirimFeedback('<?= $booking['id_booking'] ?>')" class="flex items-center justify-center w-full bg-blue-overlay text-white hover:bg-blue-700 py-2 rounded-sm text-sm font-medium transition shadow-md">
-                                <span>Done</span>
+                        <?php elseif ($booking['status'] == 'cancelled' || $booking['status'] == 'ongoing' || $booking['status'] == 'pending'): ?>
+                            <button class="flex items-center justify-center w-full bg-[#8D9198] text-white cursor-not-allowed py-2 rounded-sm text-sm font-medium transition shadow-md">
+                                <span>Feedback</span>
                                 <div class="bg-background2 rounded-xs ml-3"> 
-                                    <div class="text-blue-overlay">
-                                        <?= icon('plus', 'w-4 h-4') ?>
+                                     <div class="text-black">
+                                        <?= icon('cross', 'w-4 h-4', 'black') ?>
                                     </div>
                                 </div>
                             </button>
                         <?php else : ?>
-                                <button class="flex items-center justify-center w-full bg-gray-600 text-white hover:bg-blue-700 py-2 rounded-sm text-sm font-medium transition shadow-md">
+                                <button class="flex items-center justify-center w-full bg-[#8D9198] text-white cursor-not-allowed py-2 rounded-sm text-sm font-medium transition shadow-md">
                                 <span>Feedback</span>
                                 <div class="bg-background2 rounded-xs ml-3"> 
                                     <div class="text-blue-overlay">
-                                        <?= icon('plus', 'w-4 h-4') ?>
+                                        <?= icon('check', 'w-4 h-4', 'black') ?>
                                     </div>
                                 </div>
                             </button>
                         <?php endif ?>
                         </td>
                     </tr>
+                    <?php $nomor++ ?>
                     <?php endforeach ?>
                 </tbody>
             </table>
@@ -134,7 +135,6 @@
         INI TAMPILAN MOBILE
         ******************************************************* --> 
         <!-- Mobile Cards -->
-        <?php $i = 1 ?>
             <?php foreach($bookings as $booking) : ?>
         <div id="mobile-cards" class="block md:hidden space-y-4 flex flex-col items-center mb-6">
             <!-- Row 1 -->
@@ -168,9 +168,8 @@
                     </div>  
                 </div>
                 <div class="mt-4 grid grid-cols-1 justify-center w-full">
-
-                <?php if (1 == 0) :?>
-                    <button onclick="kirimFeedback('<?= $booking['id_booking'] ?>')" class="flex items-center justify-center w-full bg-blue-overlay text-white hover:bg-blue-700 py-2 rounded-sm text-sm font-medium transition shadow-md">
+                 <?php if ($booking['status']  === 'done' && !isset($booking['rating'])): ?>
+                    <button onclick="kirimFeedback('<?= $booking['id_booking'] ?>', '<?= $_SESSION['user']['user_id']?>')" class="flex items-center justify-center w-full bg-blue-overlay text-white hover:bg-blue-700 py-2 rounded-sm text-sm font-medium transition shadow-md">
                         <span>Feedback</span>
                         <div class="bg-background2 rounded-xs ml-3"> 
                             <div class="text-blue-overlay">
@@ -178,12 +177,21 @@
                             </div>
                         </div>
                     </button>
-                <?php else : ?>
-                        <button onclick="kirimFeedback('<?= $booking['id_booking'] ?>')" class="flex items-center justify-center w-full bg-gray-600 text-white hover:bg-blue-700 py-2 rounded-sm text-sm font-medium transition shadow-md">
+                <?php elseif ($booking['status'] == 'cancelled' || $booking['status'] == 'ongoing' || $booking['status'] == 'pending'): ?>
+                     <button class="flex items-center justify-center w-full bg-gray-600 text-white hover:bg-blue-700 py-2 rounded-sm text-sm font-medium transition shadow-md">
                         <span>Feedback</span>
                         <div class="bg-background2 rounded-xs ml-3"> 
-                            <div class="text-blue-overlay">
-                                <?= icon('plus', 'w-4 h-4') ?>
+                            <div class="text-bllack">
+                                <?= icon('cross', 'w-4 h-4') ?>
+                            </div>
+                        </div>
+                    </button>
+                <?php else : ?>
+                    <button class="flex items-center justify-center w-full bg-gray-600 text-white hover:bg-blue-700 py-2 rounded-sm text-sm font-medium transition shadow-md">
+                        <span>Feedback</span>
+                        <div class="bg-background2 rounded-xs ml-3"> 
+                            <div class="text-black">
+                                <?= icon('check', 'w-4 h-4') ?>
                             </div>
                         </div>
                     </button>
@@ -268,6 +276,7 @@
 </main>
 
 
+<script>const BASEURL = '<?= BASEURL ?>'</script>
 <script src="/js/search.js"></script>
 <script src="/js/filterDropDown.js"></script>
 <script src="/js/feedback.js"></script>

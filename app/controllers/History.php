@@ -53,34 +53,39 @@ class History extends Controller{
         $this->view('Layout/Footer');
     }
 
-    public function submiFeedback(){
-        // 1. Ambil raw data JSON dari request body
-    $json = file_get_contents('php://input');
-    
-    // 2. Decode menjadi Array PHP
-    $input = json_decode($json, true);
+    public function submitFeedback(){
+        try{
+            if (empty($_POST['id_booking'])||empty($_POST['rating'])) {
+                throw new Exception("Data tidak lengkap!", 1);
+            }
 
-    if (!$input) {
-        echo json_encode(['status' => 'error', 'message' => 'Data invalid']);
-        exit;
-    }
+            if (!$this->model('BookingModel')->isUserAssociatedWithBooking($_POST['id_booking'], $_POST['id_user'])) {
+                throw new Exception("Anda tidak memiliki akses ke booking ini!", 1);
+            }
 
-    // 3. Ambil variabelnya
-    $bookingId = $input['bookingId'];
-    $rating = $input['rating'];
-    $ulasan = $input['ulasan'];
+            $data = [
+                'id_booking' => $_POST['id_booking'],
+                'id_user' => $_SESSION['user']['user_id'],
+                'rating' => $_POST['rating'],
+                'comment' => $_POST['comment'] ?? NULL
+            ];
 
-    // 4. Panggil Model untuk simpan ke database
-    // Pastikan kamu punya method ini di BookingModel
-    $result = $this->model('FeedbackModel')->addFeedback($bookingId, $rating, $ulasan);
+            $result = $this->model('FeedbackModel')->addFeedback($data);
 
-    // 5. Kirim respon balik ke JavaScript
-    header('Content-Type: application/json');
-    if ($result > 0) {
-        echo json_encode(['status' => 'success']);
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Gagal menyimpan ke database']);
-    }
+            if($result <= 0 ){
+                throw new Exception("Internal SQL ERROR");
+            }
+
+            Flasher::setModalInfo('Berhasil Mengirim FeedBack', 'Terima kasih yaa, Feedback kamu sangat berarti', 'success');
+            header('Location: /History'); // Redirect ke halaman history
+            exit; //Hentikan eksekusi script
+
+
+        } catch (Exception $e){
+            Flasher::setModalInfo('Gagal Mengirim FeedBack', $e->getMessage(), 'error');
+            header('Location: /History'); // Redirect ke halaman history
+            exit; //Hentikan eksekusi script
+        }
     }
 
 }

@@ -1,11 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Variabel untuk menyimpan rating
     window.currentRating = 0;
-    
+
     // Fungsi set rating
     window.setRating = function(rating) {
         console.log('Rating dipilih:', rating); // Debug
         window.currentRating = rating;
+        const hiddenInput = document.getElementById('ratingInput');
+
+        //ini buat ngubah value input rating di form
+        if (hiddenInput) {
+            hiddenInput.value = rating;
+        }
         
         const starButtons = document.querySelectorAll('.star-btn');
         starButtons.forEach((btn, index) => {
@@ -25,11 +31,17 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // Fungsi kirim feedback
-    window.kirimFeedback = function(bookingId) {
+    window.kirimFeedback = function(bookingId, userId) {
         console.log('kirimFeedback dipanggil untuk booking:', bookingId); // Debug
+
+        const actionUrl = `${BASEURL}/History/submitFeedback`;
         
         const feedbackContent = `
-            <form class="text-center">
+            <form id="feedbackForm" action="${actionUrl}" method="POST" class="text-center">
+                <input type="hidden" name="id_booking" value="${bookingId}">
+                
+                <input type="hidden" name="rating" id="ratingInput" value="0">
+
                 <label class="block text-center text-sm text-dark-overlay7 mb-3">
                     Input kamu sangat berharga dalam meningkatkan kualitas ruangan di perpustakaan kami.
                 </label>
@@ -43,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div id="ratingValue" class="text-center text-sm text-dark-overlay7 mb-4">Pilih rating (1-5 bintang)</div>
                 
                 <label class="block text-sm font-semibold text-dark-overlay7 mb-2 text-left">Ulasan (Opsional):</label>
-                <textarea id="feedbackText" 
+                <textarea id="feedbackText" name = "comment"
                           placeholder="Bagikan pengalaman Anda menggunakan ruangan ini..." 
                           class="w-full px-4 py-3 text-sm border border-dark-overlay5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" 
                           rows="4"></textarea>
@@ -73,12 +85,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         if (rating === 0) {
                             alert('Silakan pilih rating terlebih dahulu!');
-                            return;
+                            return; 
                         }
                         
                         console.log(`Feedback untuk Booking ${bookingId}:`);
                         console.log(`Rating Bintang: ${rating}`);
                         console.log(`Ulasan: ${ulasan}`);
+                        document.getElementById('feedbackForm').submit();
                         
                         // Tampilkan modal sukses
                         // Modal.alert(
@@ -104,6 +117,4 @@ document.addEventListener('DOMContentLoaded', function() {
             ]
         });
     };
-
-    // console.log('Feedback modal script loaded');
 });
