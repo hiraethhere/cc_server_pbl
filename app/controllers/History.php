@@ -25,7 +25,7 @@ class History extends Controller{
         $data['current_page'] = 1;
         $data['total_page'] = 1;
 
-        $data['limit'] = 3;
+        $data['limit'] = 2;
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $start = ($page > 1) ? ($page * $data['limit']) - $data['limit'] : 0;
         $search = isset($_GET['search']) ? trim($_GET['search']) : '';

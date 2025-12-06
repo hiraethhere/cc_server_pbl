@@ -21,13 +21,23 @@ class s_20251127_04_bookingSeeder extends Seeder{
             reject_reason, cancel_by,
             created_at, updated_at
             ) VALUES
-            (1, 1, 6, 'Shidqi Athallah Bahri', 3, NULL, '2024-12-01 10:00:00', '2024-12-01 13:00:00', 'BK001', 'done', NULL, NULL, NOW(), NOW()),
+            (1, 1, 6, 'Shidqi Athallah Bahri', 3, NULL, '2024-12-01 10:00:00', '2024-12-01 13:00:00', 'UJ934TG', 'done', NULL, NULL, NOW(), NOW()),
             (2, 2, 7, 'Nadiva Mecca Rimanda', 5, NULL, '2024-12-02 09:00:00', '2024-12-02 11:00:00', 'BK002', 'ongoing', NULL, NULL, NOW(), NOW()),
             (3, 3, 8, 'Naqib Zuhair Al-Hudri', 4, NULL, '2024-12-03 13:00:00', '2024-12-03 15:00:00', 'BK003', 'pending', NULL, NULL, NOW(), NOW()),
             (5, 1, 6, 'Shidqi Athallah Bahri', 3, NULL, '2024-12-03 10:00:00', '2024-12-10 13:00:00', 'BK001', 'cancelled', NULL, NULL, NOW(), NOW()),
             (4, 2, 6, 'Shidqi Athallah Bahri', 10, NULL, '$ongoing_start', '$ongoing_end', 'BK-NOW', 'pending', NULL, NULL, '$now', '$now'),
             (6, 3, 7, 'Nadiva Mecca Rimanda', 5, NULL, '$upcoming_start', '$upcoming_end', 'BK-NEXT', 'pending', NULL, NULL, '$now', '$now'),
-            (7, 1, 8, 'Naqib Zuhair Al-Hudri', 4, NULL, '2025-12-03 13:00:00', '2025-12-03 15:00:00', 'DUTAPNJ', 'pending', NULL, NULL, NOW(), NOW())
+            (7, 1, 8, 'Naqib Zuhair Al-Hudri', 4, NULL, '2025-12-03 13:00:00', '2025-12-03 15:00:00', 'DUTAPNJ', 'pending', NULL, NULL, NOW(), NOW()),
+            (8, 1, 6, 'Shidqi Athallah Bahri', 4, NULL, '2025-01-01 10:00:00', '2025-01-01 12:00:00', 'DNIWW987', 'cancelled', NULL, NULL, NOW(), NOW()),
+            (9, 2, 6, 'Shidqi Athallah Bahri', 5, NULL, '2025-01-15 14:00:00', '2025-01-15 17:00:00', 'BK1002', 'done', NULL, NULL, NOW(), NOW()),
+            (10, 3, 6, 'Shidqi Athallah Bahri', 3, NULL, '2025-01-29 09:00:00', '2025-01-29 11:00:00', 'BK1003', 'done', NULL, NULL, NOW(), NOW()),
+            (11, 1, 6, 'Shidqi Athallah Bahri', 6, NULL, '2025-02-12 13:00:00', '2025-02-12 16:00:00', 'BK1004', 'cancelled', NULL, NULL, NOW(), NOW()),
+            (12, 2, 6, 'Shidqi Athallah Bahri', 4, NULL, '2025-02-26 08:00:00', '2025-02-26 10:00:00', 'BK1005', 'done', NULL, NULL, NOW(), NOW()),
+            (13, 3, 6, 'Shidqi Athallah Bahri', 8, NULL, '2025-03-12 11:00:00', '2025-03-12 13:00:00', 'BK1006', 'done', NULL, NULL, NOW(), NOW()),
+            (14, 1, 6, 'Shidqi Athallah Bahri', 3, NULL, '2025-03-26 15:00:00', '2025-03-26 18:00:00', 'BK1007', 'done', NULL, NULL, NOW(), NOW()),
+            (15, 2, 6, 'Shidqi Athallah Bahri', 7, NULL, '2025-04-09 10:00:00', '2025-04-09 12:00:00', 'BK1008', 'done', NULL, NULL, NOW(), NOW()),
+            (16, 3, 6, 'Shidqi Athallah Bahri', 4, NULL, '2025-04-23 09:00:00', '2025-04-23 11:00:00', 'BK1009', 'done', NULL, NULL, NOW(), NOW()),
+            (17, 1, 6, 'Shidqi Athallah Bahri', 5, NULL, '2025-05-07 14:00:00', '2025-05-07 17:00:00', 'BK1010', 'done', NULL, NULL, NOW(), NOW())
             ";
         $this->db->query($sql);
         $this->db->execute();

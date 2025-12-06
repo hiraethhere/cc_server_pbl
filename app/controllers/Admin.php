@@ -32,7 +32,7 @@ class Admin extends Controller {
         $data['current_page'] = 1;
         $data['total_page'] = 1;
 
-        $data['limit'] = 5;
+        $data['limit'] = 1;
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $start = ($page > 1) ? ($page * $data['limit']) - $data['limit'] : 0;
 
@@ -280,7 +280,7 @@ class Admin extends Controller {
 
     public function Feedback(){
 
-        $data['limit'] = 5;
+        $data['limit'] = 2;
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $start = ($page > 1) ? ($page * $data['limit']) - $data['limit'] : 0;
 

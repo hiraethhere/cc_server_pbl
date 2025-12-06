@@ -225,20 +225,52 @@
                 <?php endif; ?>
 
 
-                <?php for ($p = 1; $p <= $total_page; $p++) : ?>
-                    
-                    <?php if ($p == $current_page) : ?>
-                        <button class="px-4 py-2 text-sm font-medium text-white bg-[#1E68FB] rounded-lg">
-                            <?= $p; ?>
-                        </button>
-                    
-                    <?php else : ?>
-                        <a href="?&page=<?= $p; ?>" class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-150 block">
-                            <?= $p; ?>
-                        </a>
-                    <?php endif; ?>
+                <?php $pages = [];
 
-                <?php endfor; ?>
+                        // Selalu tampilkan halaman pertama
+                        if ($total_page > 1) {
+                            $pages[] = 1;
+                        }
+
+                        // Jika current_page > 4, tambahkan titik-titik setelah halaman 1
+                        if ($current_page > 4) {
+                            $pages[] = '...';
+                        }
+
+                            // Tambahkan halaman sekitar current_page (current-1, current, current+1)
+                        for ($i = $current_page - 1; $i <= $current_page + 1; $i++) {
+                            if ($i > 1 && $i < $total_page) {
+                                    $pages[] = $i;
+                            }
+                        }
+
+                        // Jika current_page < total_page - 3, tambahkan titik-titik sebelum halaman terakhir
+                        if ($current_page < $total_page - 3) {
+                            $pages[] = '...';
+                        }
+
+                            // Tambahkan halaman terakhir
+                            if ($total_page > 1) {
+                                $pages[] = $total_page;
+                            }
+                            ?>
+
+                            <?php foreach ($pages as $p): ?>
+                                <?php if ($p === '...'): ?>
+                                    <span class="px-3 py-2 text-dark-overlay7">...</span>
+
+                                <?php elseif ($p == $current_page): ?>
+                                    <button class="px-4 py-2 text-sm font-medium text-white bg-blue-overlay rounded-lg">
+                                        <?= $p; ?>
+                                    </button>
+
+                                <?php else: ?>
+                                    <a href="?page=<?= $p; ?>" 
+                                    class="px-4 py-2 text-sm font-medium text-dark-overlay hover:bg-dark-overlay1 rounded-lg transition-colors duration-150 block">
+                                        <?= $p; ?>
+                                    </a>
+                                <?php endif; ?>
+                    <?php endforeach; ?>
 
 
                 <?php if ($current_page < $total_page): ?>

@@ -36,7 +36,7 @@
                         <option value=""disabled selected hidden>Pilih Jenis Anggota</option>
                         <option value="mahasiswa">Mahasiswa</option>
                         <option value="dosen">Dosen</option>
-                        <option value="staff">Staff</option>
+                        <option value="tendik">Staff</option>
                     </select>
                 </div>
 
