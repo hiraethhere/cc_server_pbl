@@ -224,20 +224,57 @@
                     </button>
                 <?php endif; ?>
 
-                <!-- Page Number -->
-                <?php for ($p = 1; $p <= $total_page; $p++) : ?>
-                    <?php if ($p == $current_page) : ?>
-                        <button class="px-4 py-2 text-sm font-medium text-white bg-[#1E68FB] rounded-lg">
-                            <?= $p; ?>
-                        </button>
-                    
-                    <?php else : ?>
-                        <a href="?<?= $baseUrl ?>&page=<?= $p?>" class="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-150 block">
-                            <?= $p; ?>
-                        </a>
-                    <?php endif; ?>
+                <?php 
+                    // 1. Tentukan range halaman yang mau ditampilkan
+                    $range = [];
+                    $delta = 1; // Jumlah halaman yang muncul di kiri-kanan halaman aktif
 
-                <?php endfor; ?>
+                    for ($i = 1; $i <= $total_page; $i++) {
+                        // Kondisi ambil halaman:
+                        // 1. Halaman pertama atau terakhir
+                        // 2. Halaman saat ini
+                        // 3. Halaman di sekitar halaman saat ini (sesuai delta)
+                        if ($i == 1 || $i == $total_page || ($i >= $current_page - $delta && $i <= $current_page + $delta)) {
+                            $range[] = $i;
+                        }
+                    }
+
+                    // 2. Sisipkan titik-titik (...) jika ada lompatan halaman
+                    $pages_to_show = [];
+                    $l = null; // last page number processed
+
+                    foreach ($range as $i) {
+                        if ($l) {
+                            if ($i - $l === 2) {
+                                // Jika selisih cuma 2 (misal 1 dan 3), tampilkan angka 2 (jangan titik-titik)
+                                $pages_to_show[] = $l + 1; 
+                            } elseif ($i - $l > 1) {
+                                // Jika selisih jauh, tampilkan titik-titik
+                                $pages_to_show[] = '...'; 
+                            }
+                        }
+                        $pages_to_show[] = $i;
+                        $l = $i;
+                    }
+                    ?>
+
+                    <?php foreach ($pages_to_show as $p) : ?>
+
+                        <?php if ($p === '...') : ?>
+                            <span class="px-2 py-2 text-sm text-dark-overlay6">...</span>
+                        
+                        <?php elseif ($p == $current_page) : ?>
+                            <button class="px-4 py-2 text-sm font-medium text-white bg-blue-overlay rounded-lg">
+                                <?= $p; ?>
+                            </button>
+                        
+                        <?php else : ?>
+                            <a href="?<?= $baseUrl; ?>&page=<?= $p; ?>" class="px-4 py-2 text-sm font-medium text-dark-overlay hover:bg-dark-overlay1 rounded-lg transition-colors duration-150 block">
+                                <?= $p; ?>
+                            </a>
+                        <?php endif; ?>
+
+                    <?php endforeach; ?>
 
                 <!-- Next -->
                 <?php if ($current_page < $total_page): ?>

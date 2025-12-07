@@ -32,7 +32,7 @@ class Admin extends Controller {
         $data['current_page'] = 1;
         $data['total_page'] = 1;
 
-        $data['limit'] = 5;
+        $data['limit'] = 1;
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $start = ($page > 1) ? ($page * $data['limit']) - $data['limit'] : 0;
 
@@ -172,34 +172,83 @@ class Admin extends Controller {
     
     public function peminjaman(){
 
-        $tab = isset($_GET['tab']) ? $_GET['tab'] : 'hariIni';
-
-        switch ($tab) {
-            case 'hariIni':
-                $data['bookings'] = $this->model('BookingModel')->getBookingTodayJoinRoomAndUser();
-                $data['link'] = 'hariIni';
-                $data['id_column'] = 'id_booking';
-                break;
-            case 'berlangsung':
-                $data['bookings'] = $this->model('BookingModel')->getBookingPendingJoinRoom();
-                $data['link'] = 'detailBerlangsung';
-                $data['id_column'] = 'id_booking';
-                break;
-            case 'reschedule':
-                $data['bookings'] = $this->model('RescheduleModel')->getAllRescheduleRequests();
-                $data['link'] = 'detailReschedule';
-                $data['id_column'] = 'id_reschedule';
-                break;
-            case 'riwayat':
-                $data['bookings'] = $this->model('BookingModel')->getBookingDoneAndCancelledJoinRoom();
-                $data['link'] = 'detailRiwayat';
-                $data['id_column'] = 'id_booking';
-                break;
-            default:
-                Flasher::setModalInfo('Tab tidak diketahui', 'hayoo ubah ubah parameter yaa', 'error');
-                header('location: /admin/peminjaman');
-                break;
+        $data['tab'] = isset($_GET['tab']) ? $_GET['tab'] : 'hariIni';
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+        $data['limit'] = 5;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $start = ($page > 1) ? ($page * $data['limit']) - $data['limit'] : 0;
+        $statusFilter = ''; 
+        if (isset($_GET['status'])) {
+            if (is_array($_GET['status'])) {
+                $statusFilter = $_GET['status']; 
+            } else {
+                $statusFilter = explode(',', $_GET['status']);
+            }
         }
+
+        if ($data['tab'] == 'reschedule') {
+            // --- LOGIKA RESCHEDULE ---
+            $data['id_column'] = 'id_reschedule';
+            $data['link'] = 'detailReschedule';
+
+            // Panggil fungsi filter khusus Reschedule
+            $data['bookings'] = $this->model('RescheduleModel')->filterReschedules(
+                $data['limit'], $start, $search, $statusFilter
+            );
+            $total_data = $this->model('RescheduleModel')->countFilterReschedules($search, $statusFilter);
+
+        } else {
+            // --- LOGIKA BOOKING (hariIni, berlangsung, riwayat) ---
+            $data['id_column'] = 'id_booking';
+            
+            // Tentukan aturan (Constraint) berdasarkan Tab
+            $dateMode = '';     // 'today', 'upcoming', 'all'
+            $forcedStatus = []; // Jika tab memaksa status tertentu
+
+            switch ($data['tab']) {
+                case 'hariIni':
+                    $dateMode = 'today'; 
+                    // Status biasanya yang aktif saja, atau semua status di hari ini? Sesuaikan kebutuhan.
+                    $data['link'] = 'hariIni';
+                    break;
+
+                case 'berlangsung':
+                    // Biasanya status 'approved' atau 'pending' dan tanggal >= hari ini
+                    $dateMode = 'upcoming';
+                    // Jika user tidak milih filter status, kita paksa status 'active'
+                    if (empty($statusFilter)) {
+                        $forcedStatus = ['approved', 'pending', 'on_going']; 
+                    }
+                    $data['link'] = 'detailBerlangsung';
+                    break;
+
+                case 'riwayat':
+                    // Status selesai/batal/rejected
+                    $dateMode = 'all'; // atau 'all'
+                    if (empty($statusFilter)) {
+                        $forcedStatus = ['done', 'cancelled', 'rejected', 'pending', 'active'];
+                    }
+                    $data['link'] = 'detailRiwayat';
+                    break;
+                    
+                default:
+                    // Fallback ke hari ini
+                    $dateMode = 'today';
+                    $data['link'] = 'hariIni';
+                    break;
+            }
+
+            // Jika ada forcedStatus (dari logika tab), gunakan itu. 
+            // Jika tidak, gunakan $statusFilter (dari checkbox user).
+            $finalStatus = !empty($forcedStatus) ? $forcedStatus : $statusFilter;
+
+            // Panggil SATU fungsi model untuk semua tab Booking
+            $data['bookings'] = $this->model('BookingModel')->filterBookings($data['limit'], $start, $search, $finalStatus, $dateMode);
+
+            $total_data = $this->model('BookingModel')->countFilterBookings($search, $finalStatus, $dateMode);
+        }
+        $data['total_page'] = ceil($total_data / $data['limit']);
+        $data['current_page'] = $page;
 
         $data['judul'] = 'Peminjaman';
         $data['navbar'] = 'Peminjaman';

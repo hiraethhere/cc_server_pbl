@@ -166,8 +166,6 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
                 $sql .= " AND (
                     r.room_name LIKE :search OR
                     b.status LIKE :search OR
-                    b.start_time LIKE :search OR
-                    b.end_time LIKE :search OR
                     b.total_person LIKE :search OR
                     DATE(b.start_time) LIKE :search
                 )";
@@ -240,8 +238,6 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
 
         return $this->db->singleSet()['total'];
     }
-
-
 
 
     public function getActiveBookingJoinRoom($id_booking){
@@ -344,20 +340,108 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
         return $this->db->rowCount();
     }
 
-    public function getBookingTodayJoinRoomAndUser() {
-        $this->db->query("SELECT b.id_booking, u.username, b.start_time, b.end_time, b.booking_code, b.booker_name, b.status, r.room_name
-                        FROM bookings b JOIN rooms r ON b.id_room = r.id_room
-                        JOIN users u ON b.id_user = u.id_user
-                        WHERE DATE(start_time) = CURDATE() ORDER BY start_time DESC");
+    public function filterBookings($limit, $start, $search = '', $status = [], $dateMode = '')
+    {
+        // Base Query dengan JOIN User & Room
+        $sql = "SELECT b.*, r.room_name, u.username
+                FROM bookings b
+                JOIN rooms r ON b.id_room = r.id_room
+                JOIN users u ON b.id_user = u.id_user
+                WHERE 1=1";
+
+        // 1. FILTER DATE MODE (Kunci Logic Tab)
+        if ($dateMode == 'today') {
+            // Khusus Tab Hari Ini
+            $sql .= " AND DATE(b.start_time) = CURDATE()";
+        } 
+        elseif ($dateMode == 'upcoming') {
+            // Khusus Tab Berlangsung (Booking masa depan atau sedang jalan)
+            // Dan status bukan selesai/batal (opsional, tergantung logic kamu)
+            $sql .= " AND b.end_time >= NOW()"; 
+        }
+        // elseif ($dateMode == 'history') { ... logic lain jika perlu ... }
+
+        // 2. FILTER STATUS (Dynamic IN)
+        if (!empty($status)) {
+            if (!is_array($status)) $status = [$status];
+            $in = [];
+            foreach ($status as $i => $s) {
+                $in[] = ":status$i";
+            }
+            $sql .= " AND b.status IN (" . implode(',', $in) . ")";
+        }
+
+        // 3. FILTER SEARCH
+        if (!empty($search)) {
+            $sql .= " AND ( 
+                        u.username LIKE :search OR 
+                        r.room_name LIKE :search OR
+                        b.purpose LIKE :search
+                    )";
+        }
+
+        // 4. ORDER & LIMIT
+        $sql .= " ORDER BY b.start_time DESC LIMIT :limit OFFSET :start";
+
+        $this->db->query($sql);
+
+        // 5. BINDING
+        if (!empty($status)) {
+            foreach ($status as $i => $s) {
+                $this->db->bind("status$i", $s);
+            }
+        }
+        if (!empty($search)) {
+            $this->db->bind('search', "%$search%");
+        }
+        
+        $this->db->bind('limit', (int)$limit, PDO::PARAM_INT);
+        $this->db->bind('start', (int)$start, PDO::PARAM_INT);
+
         return $this->db->resultSet();
     }
 
-    public function getBookingPendingjoinRoom() {
-        $this->db->query("SELECT b.id_booking, u.username, b.start_time, b.end_time, b.booking_code, b.booker_name, b.status, r.room_name
-                        FROM bookings b JOIN rooms r ON b.id_room = r.id_room
-                        JOIN users u ON b.id_user = u.id_user
-                        WHERE b.status = 'pending' ORDER BY start_time DESC");
-        return $this->db->resultSet();
+    // Function Count-nya (Wajib Ada)
+    public function countFilterBookings($search = '', $status = [], $dateMode = '')
+    {
+        $sql = "SELECT COUNT(*) as total 
+                FROM bookings b
+                JOIN rooms r ON b.id_room = r.id_room
+                JOIN users u ON b.id_user = u.id_user
+                WHERE 1=1";
+
+        if ($dateMode == 'today') {
+            $sql .= " AND DATE(b.start_time) = CURDATE()";
+        } elseif ($dateMode == 'upcoming') {
+            $sql .= " AND b.end_time >= NOW()";
+        }
+
+        if (!empty($status)) {
+            if (!is_array($status)) $status = [$status];
+            $in = [];
+            foreach ($status as $i => $s) {
+                $in[] = ":status$i";
+            }
+            $sql .= " AND b.status IN (" . implode(',', $in) . ")";
+        }
+
+        if (!empty($search)) {
+            $sql .= " AND (u.username LIKE :search OR r.room_name LIKE :search)";
+        }
+
+        $this->db->query($sql);
+
+        if (!empty($status)) {
+            foreach ($status as $i => $s) {
+                $this->db->bind("status$i", $s);
+            }
+        }
+        if (!empty($search)) {
+            $this->db->bind('search', "%$search%");
+        }
+
+        $result = $this->db->singleSet();
+        return $result['total'];
     }
 
     public function getBookingDoneAndCancelledjoinRoom() {
