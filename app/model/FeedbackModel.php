@@ -33,7 +33,7 @@ class FeedbackModel{
                 JOIN bookings b ON f.id_booking = b.id_booking
                 JOIN rooms r ON b.id_room = r.id_room
                 JOIN users u ON f.id_user = u.id_user
-                ORDER BY f.created_at DESC 
+                ORDER BY b.start_time DESC 
                 LIMIT :limit OFFSET :start";
         
         $this->db->query($query);

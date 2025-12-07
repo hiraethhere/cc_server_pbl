@@ -148,15 +148,27 @@ class Admin extends Controller {
     public function peminjaman(){
 
         $tab = isset($_GET['tab']) ? $_GET['tab'] : 'hariIni';
+        $data['current_page'] = 1;
+        $data['total_page'] = 1;
+
+        $data['limit'] = 5;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $start = ($page > 1) ? ($page * $data['limit']) - $data['limit'] : 0;
 
         switch ($tab) {
             case 'hariIni':
-                $data['bookings'] = $this->model('BookingModel')->getBookingTodayJoinRoomAndUser();
+                $data['bookings'] = $this->model('BookingModel')->getBookingTodayJoinRoomAndUser($data['limit'], $start);
+                $total_data = $this->model('BookingModel')->countBookingToday();
+                $data['total_page'] = ceil($total_data / $data['limit']);
+                $data['current_page'] = $page;
                 $data['link'] = 'hariIni';
                 $data['id_column'] = 'id_booking';
                 break;
             case 'berlangsung':
-                $data['bookings'] = $this->model('BookingModel')->getBookingPendingJoinRoom();
+                $data['bookings'] = $this->model('BookingModel')->getBookingPendingJoinRoom($data['limit'], $start);
+                $total_data = $this->model('BookingModel')->countBookingPending();
+                $data['total_page'] = ceil($total_data / $data['limit']);
+                $data['current_page'] = $page;
                 $data['link'] = 'detailBerlangsung';
                 $data['id_column'] = 'id_booking';
                 break;
@@ -166,7 +178,13 @@ class Admin extends Controller {
                 $data['id_column'] = 'id_reschedule';
                 break;
             case 'riwayat':
-                $data['bookings'] = $this->model('BookingModel')->getBookingDoneAndCancelledJoinRoom();
+                //kalo mau customize ini silahkan jadi limit ga selalu harus lima
+                $data['limit'] = 3;
+                $start = ($page > 1) ? ($page * $data['limit']) - $data['limit'] : 0;
+                $data['bookings'] = $this->model('BookingModel')->getBookingDoneAndCancelledJoinRoom($data['limit'], $start);
+                $total_data = $this->model('BookingModel')->countBookingDoneAndCancelled();
+                $data['total_page'] = ceil($total_data / $data['limit']);
+                $data['current_page'] = $page;
                 $data['link'] = 'detailRiwayat';
                 $data['id_column'] = 'id_booking';
                 break;

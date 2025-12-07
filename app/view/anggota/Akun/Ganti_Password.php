@@ -16,7 +16,7 @@
     <div class="rounded-2xl w-full max-w-2xl">
 
         <!-- Form -->
-        <form action="<?= BASEURL ?>/akun/handlePasswordChange" method="POST" enctype="multipart/form-data">
+        <form id="formChangePassword" action="<?= BASEURL ?>/akun/handlePasswordChange" method="POST" enctype="multipart/form-data">
             <div class="grid gap-4">
                 <!-- Password -->
                 <div class="mb-4" data-toggle-password>
@@ -76,7 +76,7 @@ function konfirmasiGantiPassword() {
         'Ubah Password',
         'Apakah anda yakin ingin mengubah Password?',
         function() {
-            window.location.href = '#';
+            document.getElementById('formChangePassword').submit();
         },
         {
             icon: '<?php echo icon("key", "text-red-500", "24", "w-8 h-8 mx-auto"); ?>',

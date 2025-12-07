@@ -50,46 +50,65 @@ class Akun extends Controller{
     }
 
     public function handlePasswordChange(){
-
-        //ga boleh kosong
-        if (empty($_POST['passwordBaru']) || empty($_POST['passwordLama'])) {
-            Flasher::setModalInfo('Password tidak boleh kosong', 'Silahkan isi password', 'error');
+        // 1. Validasi Input (User Error) - Tidak perlu try-catch
+        if (empty($_POST['passwordBaru']) || empty($_POST['passwordLama']) || empty($_POST['passwordBaruConfirm'])) {
+            Flasher::setModalInfo('Password tidak boleh kosong', 'Silahkan isi semua kolom password', 'error');
             header('location: /akun/gantiPassword');
+            exit;
         }
 
-        // kalo beda sama yang confirm maka salah
         if ($_POST['passwordBaru'] !== $_POST['passwordBaruConfirm']) {
-            Flasher::setModalInfo('Password tidak sama', 'Silahkan isi password dengan benar', 'error');
+            Flasher::setModalInfo('Password tidak sama', 'Konfirmasi password tidak sesuai', 'error');
             header('location: /akun/gantiPassword');
+            exit;
         }
 
-        $oldPassword = $this->model('UserModel')->getPasswordByEmail($_SESSION['user']['email']);
-        // var_dump($oldPassword);
-        if (!$oldPassword) {
-            Flasher::setModalInfo('Akun tidak ditemukan', 'Internal server error', 'error');
+        try {
+            // Ambil data user
+            $oldPassword = $this->model('UserModel')->getPasswordByEmail($_SESSION['user']['email']);
+
+            // Cek apakah user ada (jaga-jaga error session)
+            if (!$oldPassword) {
+                throw new Exception('Data akun tidak ditemukan.');
+            }
+
+            // Cek Password LAMA vs Database (Perbaikan Logic: pakai passwordLama)
+            if (!password_verify($_POST['passwordLama'], $oldPassword['password'])) {
+                Flasher::setModalInfo('Password lama salah', 'Verifikasi gagal', 'error');
+                header('location: /akun/gantiPassword');
+                exit;
+            }
+
+            // Siapkan data update
+            $data = [
+                'password' => password_hash($_POST['passwordBaru'], PASSWORD_DEFAULT),
+                'email' => $_SESSION['user']['email']
+            ];
+
+            // Eksekusi Update
+            $result = $this->model('UserModel')->updatePassword($data);
+
+            // Jika result 0 (berarti password baru sama persis dengan hash lama di DB)
+            if ($result === 0) {
+                Flasher::setModalInfo('Password tidak berubah', 'Password baru sama dengan yang lama', 'warning');
+                header('location: /akun/gantiPassword');
+                exit;
+            }
+
+            // Sukses
+            Flasher::setModalInfo('Berhasil', 'Password berhasil diubah', 'success', '/akun');
+            exit;
+
+        } catch (Exception $e) {
+            // Tangkap Error Sistem (Misal: DB mati, Query salah syntax)
+            
+            // Opsional: Log error asli untuk developer (jangan tampilkan ke user)
+            // error_log($e->getMessage()); 
+
+            Flasher::setModalInfo('Terjadi Kesalahan', 'Gagal memproses permintaan (Server Error)', 'error');
             header('location: /akun/gantiPassword');
+            exit;
         }
-
-        if (!password_verify($_POST['passwordBaru'], $oldPassword['password'])) {
-            Flasher::setModalInfo('Password lama salah', 'Silahkan masukan password yang benar', 'error');
-            header('location: /akun/gantiPassword');
-        }
-        
-        $data = [
-            'password' => password_hash($_POST['passwordBaru'], PASSWORD_DEFAULT),
-            'email' => $_SESSION['user']['email']
-        ];
-        $result = $this->model('UserModel')->updatePassword($data);
-
-        if ($result === 0){
-            Flasher::setModalInfo('Password sama dengan yang dulu', 'Gagal update atau Password sama', 'error');
-            header('location: /akun/gantiPassword');
-        }
-
-        Flasher::setModalInfo('Berhasil mengubah Password', 'Password berhasil diubah', 'success', '/akun');
-        // header('location: /a');
-
-
     }
 
     public function forgetPassword(){

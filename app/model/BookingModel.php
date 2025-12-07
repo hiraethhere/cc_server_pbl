@@ -290,29 +290,76 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
         return $this->db->rowCount();
     }
 
-    public function getBookingTodayJoinRoomAndUser() {
-        $this->db->query("SELECT b.id_booking, u.username, b.start_time, b.end_time, b.booking_code, b.booker_name, b.status, r.room_name
-                        FROM bookings b JOIN rooms r ON b.id_room = r.id_room
-                        JOIN users u ON b.id_user = u.id_user
-                        WHERE DATE(start_time) = CURDATE() ORDER BY start_time DESC");
+    public function getBookingTodayJoinRoomAndUser($limit, $offset) {
+        $query = "SELECT b.id_booking, u.username, b.start_time, b.end_time, 
+                b.booking_code, b.booker_name, b.status, r.room_name
+            FROM bookings b 
+            JOIN rooms r ON b.id_room = r.id_room
+            JOIN users u ON b.id_user = u.id_user
+            WHERE DATE(b.start_time) = CURDATE()
+            ORDER BY b.start_time DESC
+            LIMIT :limit OFFSET :offset
+        ";
+
+        $this->db->query($query);
+        $this->db->bind('limit', (int)$limit);
+        $this->db->bind('offset', (int)$offset);
+
         return $this->db->resultSet();
     }
 
-    public function getBookingPendingjoinRoom() {
-        $this->db->query("SELECT b.id_booking, u.username, b.start_time, b.end_time, b.booking_code, b.booker_name, b.status, r.room_name
-                        FROM bookings b JOIN rooms r ON b.id_room = r.id_room
-                        JOIN users u ON b.id_user = u.id_user
-                        WHERE b.status = 'pending' ORDER BY start_time DESC");
+    public function countBookingToday() {
+        $this->db->query("SELECT COUNT(*) as total FROM bookings WHERE DATE(start_time) = CURDATE()");
+        return $this->db->singleSet()['total'];
+    }
+
+    public function getBookingPendingjoinRoom($limit, $offset) {
+        $query = "SELECT b.id_booking, u.username, b.start_time, b.end_time, 
+        b.booking_code, b.booker_name, b.status, r.room_name
+            FROM bookings b 
+            JOIN rooms r ON b.id_room = r.id_room
+            JOIN users u ON b.id_user = u.id_user
+            WHERE b.status = 'pending'
+            ORDER BY b.start_time DESC
+            LIMIT :limit OFFSET :offset";
+
+        $this->db->query($query);
+        $this->db->bind('limit', (int)$limit);
+        $this->db->bind('offset', (int)$offset);
+
         return $this->db->resultSet();
     }
 
-    public function getBookingDoneAndCancelledjoinRoom() {
-        $this->db->query("SELECT b.id_booking, u.username, b.start_time, b.end_time, b.booking_code, b.booker_name, b.status, r.room_name
-                        FROM bookings b JOIN rooms r ON b.id_room = r.id_room
-                        JOIN users u ON b.id_user = u.id_user
-                        WHERE b.status IN ('done', 'cancelled') ORDER BY start_time DESC");
+    public function countBookingPending() {
+        $this->db->query("SELECT COUNT(*) AS total FROM bookings WHERE status = 'pending'");
+        return $this->db->singleSet()['total'];
+    }
+
+    public function getBookingDoneAndCancelledjoinRoom($limit, $offset) {
+        $query = "SELECT b.id_booking, u.username, b.start_time, 
+                b.end_time, b.booking_code, b.booker_name, b.status, 
+                r.room_name
+            FROM bookings b 
+            JOIN rooms r ON b.id_room = r.id_room
+            JOIN users u ON b.id_user = u.id_user
+            WHERE b.status IN ('done', 'cancelled')
+            ORDER BY b.start_time DESC
+            LIMIT :limit OFFSET :offset
+        ";
+
+        $this->db->query($query);
+        $this->db->bind('limit', (int)$limit);
+        $this->db->bind('offset', (int)$offset);
+
         return $this->db->resultSet();
     }
+
+    public function countBookingDoneAndCancelled() {
+        $this->db->query("SELECT COUNT(*) AS total FROM bookings WHERE status IN ('done', 'cancelled')");
+        return $this->db->singleSet()['total'];
+    }
+
+
 
     public function getBookingByIdAndUser($id_booking, $id_user){
         // Ambil data booking DAN data ruangan sekaligus

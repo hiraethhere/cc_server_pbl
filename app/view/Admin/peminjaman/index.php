@@ -200,32 +200,99 @@ function isActive($current, $check) {
 
 
             <!-- Pagination (Sama untuk kedua tab) -->
-            <div class="flex items-center justify-center px-6 py-4 bg-white border-t border-dark-overlay4 mx-8">
-                <div class="flex items-center gap-2">
-                    <button class="p-2 text-dark-overlay6 hover:text-dark-overlay7 hover:bg-dark-overlay1 rounded-lg transition-colors duration-150">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                        </svg>
-                    </button>
-                    <button class="px-4 py-2 text-sm font-medium text-white bg-blue-overlay rounded-lg">1</button>
-                    <button class="px-4 py-2 text-sm font-medium text-dark-overlay7 hover:bg-dark-overlay1 rounded-lg transition-colors duration-150">2</button>
-                    <button class="px-4 py-2 text-sm font-medium text-dark-overlay7 hover:bg-dark-overlay1 rounded-lg transition-colors duration-150">3</button>
-                    <span class="px-2 text-dark-overlay6">...</span>
-                    <button class="px-4 py-2 text-sm font-medium text-dark-overlay7 hover:bg-dark-overlay1 rounded-lg transition-colors duration-150">8</button>
-                    <button class="p-2 text-dark-overlay6 hover:text-dark-overlay7 hover:bg-dark-overlay1 rounded-lg transition-colors duration-150">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </button>
-                </div>
+            <!-- pagination total euyy -->
+        <?php if (!empty($bookings) && $total_page >= 1): ?>   
+        <div class="flex items-center justify-center px-6 py-4 bg-white mx-8">
+            
+            <div class="flex items-center gap-2">
+                
+                    <?php if ($current_page > 1): ?>
+                        <a href="?tab=<?= $tab; ?>&page=<?= $current_page - 1; ?>" class="p-2 text-dark-overlay5 hover:text-dark-overlay hover:bg-dark-overlay1 rounded-lg transition-colors duration-150">
+                            <?= icon('arrowLeft', 'w-6 h-6') ?>
+                        </a>
+                    <?php else: ?>
+                        <button disabled class="p-2 text-dark-overlay cursor-not-allowed rounded-lg">
+                            <?= icon('arrowLeft', 'w-6 h-6') ?>
+                        </button>
+                    <?php endif; ?>
 
-                <div class="flex items-center gap-2">
-                    <span class="text-sm text-dark-overlay6">Go to</span>
-                    <input type="text" value="1" 
-                        class="w-16 px-3 py-2 text-center text-sm border border-dark-overlay4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <span class="text-sm text-dark-overlay6">Page</span>
-                </div>
+
+                    <?php
+                        $pages = [];
+
+                        // Selalu tampilkan halaman pertama
+                        if ($total_page > 1) {
+                            $pages[] = 1;
+                        }
+
+                        // Jika current_page > 4, tambahkan titik-titik setelah halaman 1
+                        if ($current_page > 4) {
+                            $pages[] = '...';
+                        }
+
+                            // Tambahkan halaman sekitar current_page (current-1, current, current+1)
+                        for ($i = $current_page - 1; $i <= $current_page + 1; $i++) {
+                            if ($i > 1 && $i < $total_page) {
+                                    $pages[] = $i;
+                            }
+                        }
+
+                        // Jika current_page < total_page - 3, tambahkan titik-titik sebelum halaman terakhir
+                        if ($current_page < $total_page - 3) {
+                            $pages[] = '...';
+                        }
+
+                            // Tambahkan halaman terakhir
+                            if ($total_page > 1) {
+                                $pages[] = $total_page;
+                            }
+                            ?>
+
+                            <?php foreach ($pages as $p): ?>
+                                <?php if ($p === '...'): ?>
+                                    <span class="px-3 py-2 text-dark-overlay7">...</span>
+
+                                <?php elseif ($p == $current_page): ?>
+                                    <button class="px-4 py-2 text-sm font-medium text-white bg-blue-overlay rounded-lg">
+                                        <?= $p; ?>
+                                    </button>
+
+                                <?php else: ?>
+                                    <a href="?tab=<?= $tab; ?>&page=<?= $p; ?>" 
+                                    class="px-4 py-2 text-sm font-medium text-dark-overlay hover:bg-dark-overlay1 rounded-lg transition-colors duration-150 block">
+                                        <?= $p; ?>
+                                    </a>
+                                <?php endif; ?>
+                    <?php endforeach; ?>
+
+
+
+                    <?php if ($current_page < $total_page): ?>
+                        <a href="?tab=<?= $tab; ?>&page=<?= $current_page + 1; ?>" class="p-2 text-dark-overlay5 hover:text-dark-overlay hover:bg-dark-overlay1 rounded-lg transition-colors duration-150">
+                            <?= icon('arrowRight', 'w-6 h-6') ?>
+                        </a>
+                    <?php else: ?>
+                        <button disabled class="p-2 text-gray-300 cursor-not-allowed rounded-lg">
+                            <?= icon('arrowRight', 'w-6 h-6') ?>
+                        </button>
+                    <?php endif; ?>
+                
+
             </div>
+
+            <form action="" method="GET" class="flex items-center gap-2 ml-4">
+                <input type="hidden" name="tab" value="<?= $tab; ?>">
+                <span class="text-sm text-dark-overlay7">Go to</span>
+                <input type="number" name="page" min="1" max="<?= $total_page; ?>" value="<?= $current_page; ?>" 
+                    class="w-16 px-3 py-2 text-center text-sm border border-dark-overlay4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                
+                <span class="text-sm text-dark-overlay7">Page</span>
+                
+                <button type="submit" class="hidden"></button>
+            </form>
+        </div>
+        <?php endif; ?>
+    </div>
             <?php else: ?>
             <div class="flex flex-col items-center justify-center p-20">
                 <div class="mb-4">

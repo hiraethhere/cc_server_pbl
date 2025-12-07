@@ -24,10 +24,11 @@ class RuanganModel {
 
     public function getRuanganWithRating($id_room)
 {
-    $query = "SELECT r.*,
+    $query = "SELECT r.*, a.announcement_content,
             IFNULL(AVG(f.rating), 0) AS avg_rating,
             COUNT(f.id_feedback) AS total_review
             FROM rooms r
+            LEFT JOIN announcement a ON r.id_announcement = a.id_announcement 
             LEFT JOIN bookings b ON r.id_room = b.id_room
             LEFT JOIN feedback f ON b.id_booking = f.id_booking
             WHERE r.id_room = :id_room

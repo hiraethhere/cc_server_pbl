@@ -174,7 +174,7 @@
                                 </div>
                             </summary>
                             <p class="mt-3 text-sm leading-relaxed text-justify">
-                                <?=  $detailRuangan['description'] ?>
+                                <?=  htmlspecialchars($detailRuangan['description'] ?? '-') ?>x
                             </p>
                         </details>
                     </div>
@@ -194,7 +194,7 @@
                         </div>
                     </summary>
                     <p class="mt-3 text-sm leading-relaxed text-justify">
-                        <?=  $detailRuangan['description'] ?>
+                        <?= nl2br(htmlspecialchars($detailRuangan['announcement_content'] ?? '-')) ?>
                     </p>
                 </details>
             </div>
