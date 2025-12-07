@@ -43,6 +43,17 @@
 
     <!-- Feedback Cards Grid -->
     <div id="feedbackGrid" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+
+                <?php if (empty($feedbacks)): ?>
+        
+        <div class="col-span-2">
+            <div class="bg-white border border-gray-200 rounded-lg p-6 text-center">
+                <p class="text-dark-overlay6 text-sm">Belum ada data feedback</p>
+            </div>
+        </div>
+
+    <?php else: ?>
+
         <?php foreach($feedbacks as $feedback) : ?>
         <!-- Feedback Card -->
         <div class="feedback-card card-hover bg-background2 rounded-lg shadow-md p-6">
@@ -102,6 +113,7 @@
 
         
         <?php endforeach ?>
+        <?php endif; ?>
     </div>
 
     <?php if ($total_page >= 1): ?>

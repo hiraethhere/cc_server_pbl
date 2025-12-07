@@ -21,4 +21,23 @@ class RuanganModel {
         $this->db->execute();
         return $this->db->singleSet();
     }
+
+    public function getRuanganWithRating($id_room)
+{
+    $query = "SELECT r.*,
+            IFNULL(AVG(f.rating), 0) AS avg_rating,
+            COUNT(f.id_feedback) AS total_review
+            FROM rooms r
+            LEFT JOIN bookings b ON r.id_room = b.id_room
+            LEFT JOIN feedback f ON b.id_booking = f.id_booking
+            WHERE r.id_room = :id_room
+            GROUP BY r.id_room
+    ";
+
+    $this->db->query($query);
+    $this->db->bind(':id_room', $id_room);
+    $this->db->execute();
+    return $this->db->singleSet();
+}
+
 }

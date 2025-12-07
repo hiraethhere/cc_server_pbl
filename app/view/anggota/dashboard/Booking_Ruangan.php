@@ -130,27 +130,21 @@
                             
                             <!-- Bintang -->
                             <div class="flex items-center gap-1">
-                                <svg class="w-7 h-7 text-yellow1 fill-current" viewBox="0 0 24 24">
-                                    <path d="M12 2l2.4 7.3h7.7l-6.2 4.5 2.4 7.3-6.3-4.5-6.3 4.5 2.4-7.3-6.2-4.5h7.7z"/>
-                                </svg>
-                                <svg class="w-7 h-7 text-yellow1 fill-current" viewBox="0 0 24 24">
-                                    <path d="M12 2l2.4 7.3h7.7l-6.2 4.5 2.4 7.3-6.3-4.5-6.3 4.5 2.4-7.3-6.2-4.5h7.7z"/>
-                                </svg>
-                                <svg class="w-7 h-7 text-yellow1 fill-current" viewBox="0 0 24 24">
-                                    <path d="M12 2l2.4 7.3h7.7l-6.2 4.5 2.4 7.3-6.3-4.5-6.3 4.5 2.4-7.3-6.2-4.5h7.7z"/>
-                                </svg>
-                                <svg class="w-7 h-7 text-yellow1 fill-current" viewBox="0 0 24 24">
-                                    <path d="M12 2l2.4 7.3h7.7l-6.2 4.5 2.4 7.3-6.3-4.5-6.3 4.5 2.4-7.3-6.2-4.5h7.7z"/>
-                                </svg>
-                                <svg class="w-7 h-7 text-background2 fill-current" viewBox="0 0 24 24">
-                                    <path d="M12 2l2.4 7.3h7.7l-6.2 4.5 2.4 7.3-6.3-4.5-6.3 4.5 2.4-7.3-6.2-4.5h7.7z"/>
-                                </svg>
+                            <?php 
+                            $max = 5;
+                            for ($i = 1; $i <= $max; $i++):
+                            if ($i <= $detailRuangan['avg_rating']) {
+                                echo icon('starFill', 'w-5 h-5 text-yellow1');   // bintang terisi
+                            } else {
+                                echo icon('starFill', 'w-5 h-5 text-dark-overlay5'); // bintang kosong/gelap
+                            }
+                                endfor; ?>
                             </div>
 
                             <!-- Teks rating -->
                             <div class="text-background2">
-                                <span class="text-xl font-bold">4/5</span>
-                                <span class="text-sm font-medium text-background2 ml-2">(67 Respon)</span>
+                                <span class="text-xl font-bold"><?= round($detailRuangan['avg_rating']) ?>/5</span>
+                                <span class="text-sm font-medium text-background2 ml-2">(<?= $detailRuangan['total_review'] ?> Respon)</span>
                             </div>
                         </div>
                     </div>
