@@ -36,26 +36,51 @@ class Admin extends Controller {
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $start = ($page > 1) ? ($page * $data['limit']) - $data['limit'] : 0;
 
-        if ($data['tab'] == 'approval') {
-            $data['users'] = $this->model('UserModel')->getUserForAdminPaginated($data['limit'], $start);
-            $total_data = $this->model('UserModel')->countPendingUsers()['total'];
-            $data['total_page'] = ceil($total_data / $data['limit']);
-            $data['current_page'] = $page;
-            $data['link'] = 'selesaikan';
-        } else {
-            $data['users'] = $this->model('UserModel')->getAllUsersPaginated($data['limit'], $start);
-            $total_data = $this->model('UserModel')->countAllUsers()['total'];
-            $data['total_page'] = ceil($total_data / $data['limit']);
-            $data['current_page'] = $page;
-            $data['link'] = 'detailAnggota';
+        $statusFilter = ''; 
+        if (isset($_GET['status'])) {
+            if (is_array($_GET['status'])) {
+                $statusFilter = $_GET['status']; 
+            } else {
+                $statusFilter = explode(',', $_GET['status']);
+            }
         }
 
-        foreach ($data['users'] as &$user) {
-            $user['createdDate'] = tanggal_indonesia($user['created_at']);
-            $user['statusStyle'] = getStyleStatus($user['status']);
-            $user['status'] = translateStatusUser($user['status']);
+        $jurusanFilter = '';
+        if (isset($_GET['jurusan'])) { 
+            if (is_array($_GET['jurusan'])) {
+                $jurusanFilter = $_GET['Jurusan']; 
+            } else {
+                $jurusanFilter = explode(',', $_GET['jurusan']);
+            }
+        }
+
+        $jenisFilter = '';
+        if (isset($_GET['jenis'])) {
+            if (is_array($_GET['jenis'])) {
+                $jenisFilter = $_GET['jenis']; 
+            } else {
+                $jenisFilter = explode(',', $_GET['jenis']);
+            }
+        }
+
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+        $userModel = $this->model('UserModel');
+
+        if ($data['tab'] == 'approval') {
+            $forcedStatus = 'pending'; 
+
+            $data['users'] = $userModel->filterUsers($data['limit'], $start, $search, $forcedStatus, $jurusanFilter, $jenisFilter);
+
+            $total_data = $userModel->countFilterUsers($search, $forcedStatus, $jurusanFilter, $jenisFilter);
+            $data['link'] = 'selesaikan';
+        } else {
+            $data['users'] = $userModel->filterUsers($data['limit'], $start, $search, $statusFilter, $jurusanFilter, $jenisFilter);
+            $total_data = $userModel->countFilterUsers($search, $statusFilter, $jurusanFilter, $jenisFilter);;
+            $data['link'] = 'detailAnggota';
         }
         
+        $data['total_page'] = ceil($total_data / $data['limit']);
+        $data['current_page'] = $page;
         $data['judul'] = 'Data Anggota';
         $data['navbar'] = 'Anggota';
         $this->view('layout/sidebar', $data);

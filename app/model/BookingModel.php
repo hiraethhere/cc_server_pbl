@@ -138,54 +138,109 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
         return $this->db->singleSet()['total'];
     }
 
-    public function searchBookingByUser($id_user, $limit, $offset, $search) {
-        $query = "SELECT DISTINCT b.id_booking, r.room_name, b.start_time, b.end_time,
-                    b.total_person, b.status, b.created_at, f.rating
-                FROM bookings b
-                JOIN rooms r ON b.id_room = r.id_room
-                LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
-                LEFT JOIN feedback f ON b.id_booking = f.id_booking AND f.id_user = :id_user
-                WHERE (b.id_user = :id_user OR bm.id_user = :id_user)
-                AND (
-                        r.room_name LIKE :search OR
-                        b.status LIKE :search OR
-                        b.start_time LIKE :search OR
-                        b.end_time LIKE :search OR
-                        b.total_person LIKE :search OR
-                        DATE(b.start_time) LIKE :search
-                )
-                ORDER BY b.start_time DESC
-                LIMIT :limit OFFSET :offset";
+    public function filterBookingByUser($id_user, $limit, $offset, $search = '', $status = '') {
+            $sql = "SELECT DISTINCT b.id_booking, r.room_name, b.start_time, b.end_time,
+                        b.total_person, b.status, b.created_at, f.rating
+                    FROM bookings b
+                    JOIN rooms r ON b.id_room = r.id_room
+                    LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
+                    LEFT JOIN feedback f ON b.id_booking = f.id_booking AND f.id_user = :id_user
+                    WHERE (b.id_user = :id_user OR bm.id_user = :id_user)";
 
-        $this->db->query($query);
-        $this->db->bind('id_user', $id_user);
-        $this->db->bind('search', "%$search%");
-        $this->db->bind('limit', (int)$limit, PDO::PARAM_INT);
-        $this->db->bind('offset', (int)$offset, PDO::PARAM_INT);
+            // filter status
+            if (!empty($status)) {
+                if (!is_array($status)) {
+                    $status = [$status];
+                }
 
-        return $this->db->resultSet();
-    }
+                $in = [];
+                foreach ($status as $i => $s) {
+                    $key = ":status$i";
+                    $in[] = $key;
+                }
+                $sql .= " AND b.status IN (" . implode(',', $in) . ")";
+            }
 
-    public function countSearchBookingByUser($id_user, $search) {
-        $query = "SELECT COUNT(DISTINCT b.id_booking) AS total
-                FROM bookings b
-                JOIN rooms r ON b.id_room = r.id_room
-                LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
-                WHERE (b.id_user = :id_user OR bm.id_user = :id_user)
-                AND (
-                        r.room_name LIKE :search OR
-                        b.status LIKE :search OR
-                        b.start_time LIKE :search OR
-                        b.end_time LIKE :search OR
-                        b.total_person LIKE :search OR
-                        DATE(b.start_time) LIKE :search
+            // filter search
+            if (!empty($search)) {
+                $sql .= " AND (
+                    r.room_name LIKE :search OR
+                    b.status LIKE :search OR
+                    b.start_time LIKE :search OR
+                    b.end_time LIKE :search OR
+                    b.total_person LIKE :search OR
+                    DATE(b.start_time) LIKE :search
                 )";
+            }
 
-        $this->db->query($query);
+            $sql .= " ORDER BY b.start_time DESC LIMIT :limit OFFSET :offset";
+
+            $this->db->query($sql);
+            $this->db->bind('id_user', $id_user);
+
+            // bind status array
+            if (!empty($status)) {
+                foreach ($status as $i => $s) {
+                    $this->db->bind("status$i", $s);
+                }
+            }
+
+            if (!empty($search)) {
+                $this->db->bind('search', "%$search%");
+            }
+
+            $this->db->bind('limit', (int)$limit, PDO::PARAM_INT);
+            $this->db->bind('offset', (int)$offset, PDO::PARAM_INT);
+
+            return $this->db->resultSet();
+        }
+
+
+        public function countFilterBookingByUser($id_user, $search = '', $status = '') {
+        $sql = "SELECT COUNT(DISTINCT b.id_booking) AS total
+                FROM bookings b
+                JOIN rooms r ON b.id_room = r.id_room
+                LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
+                WHERE (b.id_user = :id_user OR bm.id_user = :id_user)";
+
+            if (!empty($status)) {
+                if (!is_array($status)) {
+                    $status = [$status];
+                }
+                $in = [];
+                foreach ($status as $i => $s) {
+                    $in[] = ":status$i";
+                }
+                $sql .= " AND b.status IN (" . implode(',', $in) . ")";
+            }
+
+        if (!empty($search)) {
+            $sql .= " AND (
+                r.room_name LIKE :search OR
+                b.status LIKE :search OR
+                b.start_time LIKE :search OR
+                b.end_time LIKE :search OR
+                b.total_person LIKE :search OR
+                DATE(b.start_time) LIKE :search
+            )";
+        }
+
+        $this->db->query($sql);
         $this->db->bind('id_user', $id_user);
-        $this->db->bind('search', "%$search%");
+
+         if (!empty($status)) {
+                foreach ($status as $i => $s) {
+                    $this->db->bind("status$i", $s);
+                }
+            }
+
+        if (!empty($search)) {
+            $this->db->bind('search', "%$search%");
+        }
+
         return $this->db->singleSet()['total'];
     }
+
 
 
 
