@@ -97,7 +97,7 @@ function isActive($current, $check) {
             <!-- KONTEN TAB -->
         
             <div class="flex justify-between items-center">
-                <form method="POST" id="filterForm">
+                <form method="POST" id="filterForm" class="flex justify-between items-center w-full">
                     <input type="hidden" name="tab" value="<?= $tab ?>">
 
                     <div class="flex items-center gap-3 py-4 px-8 bg-background2">
@@ -112,7 +112,7 @@ function isActive($current, $check) {
                         <?php 
                         $filter_id = 'status'; 
                         $label = 'Status'; 
-                        $options = ['Aktif' => 'active', 'Belum Aktif' => 'pending', 'NonAktif' => 'suspended']; 
+                        $options = ['Aktif' => 'ongoing', 'Menunggu' => 'pending', 'Dibatalkan' => 'cancelled']; 
                         $current_values = $_GET[$filter_id] ?? ''; 
                         include __DIR__ . '/../../template/filterDropDown.php';
                         ?>
@@ -126,7 +126,6 @@ function isActive($current, $check) {
                             </div>
                         </button>
                     </div>
-                </form>
 
                 <!-- Search Bar -->
                 <div class="py-4 px-8">
@@ -136,7 +135,7 @@ function isActive($current, $check) {
                                 <?= icon('search', 'w-5 h-5') ?>
                             </div>
                         </div>
-                        <input type="text" id="search-input" placeholder="Cari Penanggung Jawab"
+                        <input type="text" id="search-input" name="search" placeholder="Cari Penanggung Jawab"
                             class="block w-full pl-10 pr-10 py-2 border border-dark-overlay4 rounded-lg 
                                     bg-white text-dark-overlay placeholder-dark-overlay6 text-sm
                                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
@@ -149,7 +148,9 @@ function isActive($current, $check) {
                         </button>
                     </div>
                 </div>
+                </form>
             </div>
+
             <?php if (!empty($bookings)): ?>
             <div class="rounded-lg shadow-sm border border-dark-overlay4 overflow-hidden mx-8">
                 <div class="overflow-x-auto">

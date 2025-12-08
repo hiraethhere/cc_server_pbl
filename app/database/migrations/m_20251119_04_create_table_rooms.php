@@ -12,7 +12,7 @@ class m_20251119_04_create_table_rooms extends Migration{
                     description TEXT,
                     short_description VARCHAR(101),
                     floor TINYINT,
-                    status ENUM('active', 'non-active', 'deleted') DEFAULT 'active',
+                    status ENUM('active', 'non-active', 'deleted', 'spesial') DEFAULT 'active',
                     min_capacity TINYINT,
                     max_capacity TINYINT,
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

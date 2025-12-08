@@ -376,8 +376,7 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
         if (!empty($search)) {
             $sql .= " AND ( 
                         u.username LIKE :search OR 
-                        r.room_name LIKE :search OR
-                        b.purpose LIKE :search
+                        r.room_name LIKE :search
                     )";
         }
 

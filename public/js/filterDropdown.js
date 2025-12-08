@@ -72,22 +72,31 @@ function applyFilters() {
     const params = new URLSearchParams(window.location.search);
 
     const currentTab = params.get('tab');
+    params.set('page', 1);
+
+    const filterNames = ['status', 'jurusan', 'jenis', 'Status', 'Jurusan', 'Jenis', 'tab'];
 
     // ambil semua hidden input filter
     document.querySelectorAll('input[type="hidden"]').forEach(input => {
-        params.delete(input.name);
-        if (input.value.trim() !== '') {
-            params.set(input.name, input.value);
-        } else {
-            // PENTING: Jika kosong, HAPUS dari URL agar tidak jadi parameter sampah (status=)
-            params.delete(input.name);
+            if (filterNames.includes(input.name)) {
+                params.delete(input.name);
+                // Hanya set jika ada isinya
+                if (input.value.trim() !== '') {
+                    params.set(input.name, input.value);
+                }
+            }
+        });
+
+    const searchInput = document.getElementById('search-input'); 
+    if (searchInput) {
+        params.delete('search'); // Hapus parameter search lama
+        if (searchInput.value.trim() !== '') {
+            params.set('search', searchInput.value.trim()); // Masukkan nilai baru
         }
-    });
+    }
 
-    
+    // return;
 
-    // reset page ke 1
-    params.set('page', 1);
 
     window.location.href = window.location.pathname + '?' + params.toString();
 }
@@ -158,7 +167,7 @@ document.addEventListener('click', (event) => {
                     e.preventDefault();
 
                     // hapus semua filter kecuali search tertentu kalau mau
-                    const filtersToDelete = ['page', 'jenis', 'Jenis', 'status', 'Status', 'jurusan', 'Jurusan', 'url'];
+                    const filtersToDelete = ['page', 'jenis', 'Jenis', 'status', 'Status', 'jurusan', 'Jurusan', 'url', 'search'];
 
                     //Loop array di atas dan hapus dari URL
                     filtersToDelete.forEach(p => url.searchParams.delete(p));

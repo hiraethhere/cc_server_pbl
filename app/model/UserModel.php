@@ -266,8 +266,7 @@ class UserModel {
         $sql .= " AND (
                     u.username LIKE :search OR 
                     u.nomor_induk LIKE :search OR 
-                    u.jurusan_unit LIKE :search OR
-                    u.nama LIKE :search
+                    u.jurusan_unit LIKE :search
                 )";
         }
 
@@ -363,8 +362,11 @@ class UserModel {
         // Filter Search
         if (!empty($search)) {
             $sql .= " AND (
-                        u.username LIKE :search OR 
-                    )";
+                    u.username LIKE :search OR
+                    u.nomor_induk LIKE :search OR 
+                    u.jurusan_unit LIKE :search 
+
+                    )"; 
         }
 
         $this->db->query($sql);
