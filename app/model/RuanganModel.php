@@ -22,8 +22,7 @@ class RuanganModel {
         return $this->db->singleSet();
     }
 
-    public function getRuanganWithRating($id_room)
-{
+    public function getRuanganWithRating($id_room){
     $query = "SELECT r.*, a.announcement_content,
             IFNULL(AVG(f.rating), 0) AS avg_rating,
             COUNT(f.id_feedback) AS total_review
