@@ -141,6 +141,8 @@ document.addEventListener('click', (event) => {
     (function() {
         const btn = document.getElementById('filter-action-btn');
         const iconContainer = document.getElementById('filter-action-icon');
+        const textContainer = document.getElementById('filter-action-text');
+        
         const form = document.getElementById('filterForm');
 
         if (!btn || !iconContainer) return;
@@ -158,9 +160,14 @@ document.addEventListener('click', (event) => {
             const checkHTML = iconContainer.dataset.check || '';
             const crossHTML = iconContainer.dataset.cross || '';
 
+            const textCheck = textContainer ? (textContainer.dataset.textCheck || 'Terapkan') : '';
+            const textCross = textContainer ? (textContainer.dataset.textCross || 'Reset') : '';
+
+
             if (active) {
                 // 🔴 MODE RESET
                 if (crossHTML) iconContainer.innerHTML = crossHTML;
+                if (textContainer) textContainer.textContent = textCross;
 
                 btn.onclick = function(e) {
                     const url = new URL(window.location.href);
@@ -179,6 +186,7 @@ document.addEventListener('click', (event) => {
             } else {
                 // show check and make button apply/submit filters
                 if (checkHTML) iconContainer.innerHTML = checkHTML;
+                if (textContainer) textContainer.textContent = textCheck;
                 btn.onclick = function() {
                     applyFilters();
                 };

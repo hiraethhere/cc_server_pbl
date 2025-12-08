@@ -209,7 +209,7 @@
     </div>
 </main>
 
-
+<script> const BASEURL = '<?= BASEURL ?>'</script>    
 <script src="/js/bookingRoom.js"></script>
 <script>
     // Variabel untuk tracking jumlah anggota
