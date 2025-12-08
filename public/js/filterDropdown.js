@@ -53,6 +53,7 @@ function toggleFilter(filterName, value, labelId, defaultLabel) {
     
     // PENTING: Panggil fungsi AJAX/Submit Form rekan Anda di sini
     // applyFilters(); 
+    // from backend: no ajax no fetch fak yu
 }
 
 /**
@@ -66,6 +67,31 @@ function updateButtonLabel(labelElement, values, defaultLabel) {
         labelElement.textContent = defaultLabel;
     }
 }
+
+function applyFilters() {
+    const params = new URLSearchParams(window.location.search);
+
+    const currentTab = params.get('tab');
+
+    // ambil semua hidden input filter
+    document.querySelectorAll('input[type="hidden"]').forEach(input => {
+        params.delete(input.name);
+        if (input.value.trim() !== '') {
+            params.set(input.name, input.value);
+        } else {
+            // PENTING: Jika kosong, HAPUS dari URL agar tidak jadi parameter sampah (status=)
+            params.delete(input.name);
+        }
+    });
+
+    
+
+    // reset page ke 1
+    params.set('page', 1);
+
+    window.location.href = window.location.pathname + '?' + params.toString();
+}
+
 
 // === 3. LOGIKA UNTUK MENJAGA STATE SETELAH REFRESH (OPSIONAL TAPI BAIK) ===
 document.addEventListener('DOMContentLoaded', () => {
@@ -93,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Event listener untuk menutup dropdown saat klik di luar
-    document.addEventListener('click', (event) => {
+document.addEventListener('click', (event) => {
         let isDropdown = event.target.closest('.filter-dropdown-container');
         if (!isDropdown) {
             document.querySelectorAll('.filter-dropdown-menu').forEach(menu => {
@@ -113,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function filtersActiveFromURL() {
             const params = new URLSearchParams(window.location.search);
             for (const [k, v] of params) {
-                if (v !== '' && k !== 'page' && k !== 'search') return true;
+                if (v !== '' && k !== 'page' && k !== 'tab') return true;
             }
             return false;
         }
@@ -124,18 +150,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const crossHTML = iconContainer.dataset.cross || '';
 
             if (active) {
-                // show cross and make button clear filters
+                // 🔴 MODE RESET
                 if (crossHTML) iconContainer.innerHTML = crossHTML;
-                btn.onclick = function() {
-                    if (form) {
-                        form.querySelectorAll('input, select').forEach(el => {
-                            if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
-                            else el.value = '';
-                        });
-                        form.submit();
-                    } else {
-                        window.location.href = window.location.pathname;
-                    }
+
+                btn.onclick = function(e) {
+                    const url = new URL(window.location.href);
+                    e.preventDefault();
+
+                    // hapus semua filter kecuali search tertentu kalau mau
+                    const filtersToDelete = ['page', 'jenis', 'Jenis', 'status', 'Status', 'jurusan', 'Jurusan', 'url'];
+
+                    //Loop array di atas dan hapus dari URL
+                    filtersToDelete.forEach(p => url.searchParams.delete(p));
+                    // reset URL tanpa query
+                    window.location.href = url.toString();
                 };
                 btn.classList.remove('text-dark-overlay5');
                 btn.classList.add('text-red1');
@@ -143,8 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // show check and make button apply/submit filters
                 if (checkHTML) iconContainer.innerHTML = checkHTML;
                 btn.onclick = function() {
-                    if (form) form.submit();
-                    else window.location.reload();
+                    applyFilters();
                 };
                 btn.classList.remove('text-red1');
                 btn.classList.add('text-dark-overlay5');

@@ -215,6 +215,96 @@ class UserModel {
         return $this->db->resultSet();
     }
 
+    public function filterUsers($limit, $start, $search = '', $status = '', $jurusan = '', $jenis = ''){
+        $sql = "SELECT u.*, r.role_name 
+            FROM users u 
+            JOIN roles r ON u.id_role = r.id_role 
+            WHERE u.id_role NOT IN (1, 2)";
+
+        if (!empty($status)) {
+            if (!is_array($status)) {
+                $status = [$status]; // Paksa jadi array jika cuma string
+            }
+
+        $in = [];
+            foreach ($status as $i => $s) {
+                $key = ":status$i";
+                $in[] = $key;
+            }
+        // Pakai alias u.status untuk menghindari ambiguitas
+        $sql .= " AND u.status IN (" . implode(',', $in) . ")";
+        }
+
+        //filter jurusan
+        if (!empty($jurusan)) {
+            if (!is_array($jurusan)) {
+                $jurusan = [$jurusan];
+            }
+            $in = [];
+            foreach ($jurusan as $i => $s) {
+                $key = ":jurusan$i";
+                $in[] = $key;
+            }
+            $sql .= " AND u.jurusan_unit IN (" . implode(',', $in) . ")";
+        }
+
+        //filter jenis anggota
+        if (!empty($jenis)) {
+            if (!is_array($jenis)) {
+                $jenis = [$jenis];
+            }
+            $in = [];
+            foreach ($jenis as $i => $s) {
+                $key = ":jenis$i";
+                $in[] = $key;
+            }
+            $sql .= " AND r.role_name IN (" . implode(',', $in) . ")";
+        }
+
+        if (!empty($search)) {
+        // Cari berdasarkan username, nomor_induk, jurusan, atau role_name
+        $sql .= " AND (
+                    u.username LIKE :search OR 
+                    u.nomor_induk LIKE :search OR 
+                    u.jurusan_unit LIKE :search OR
+                    u.nama LIKE :search
+                )";
+        }
+
+        //asc tuh yang paling lama muncul duluan
+        $sql .= " ORDER BY u.created_at ASC LIMIT :limit OFFSET :start";
+
+        $this->db->query($sql);
+
+        // Binding Values
+        if (!empty($status)) {
+            foreach ($status as $i => $s) {
+                $this->db->bind("status$i", $s);
+            }
+        }
+
+        if (!empty($jurusan)) {
+            foreach ($jurusan as $i => $s) {
+                $this->db->bind("jurusan$i", $s);
+            }
+        }
+
+        if (!empty($jenis)) {
+            foreach ($jenis as $i => $s) {
+                $this->db->bind("jenis$i", $s);
+            }
+        }
+
+        if (!empty($search)) {
+            $this->db->bind('search', "%$search%");
+        }
+
+        $this->db->bind('limit', (int)$limit, PDO::PARAM_INT);
+        $this->db->bind('start', (int)$start, PDO::PARAM_INT);
+
+        return $this->db->resultSet();
+    }
+
     public function countAllUsers()
     {
         // Tidak perlu JOIN untuk hitung total, cukup filter tabel users saja biar cepat
@@ -226,15 +316,84 @@ class UserModel {
         return $this->db->singleSet();
     }
 
-    public function countPendingUsers(){
-        // Tidak perlu JOIN untuk hitung total, cukup filter tabel users saja biar cepat
-        $query = "SELECT COUNT(*) as total 
-                  FROM users 
-                  WHERE id_role NOT IN (1,2) 
-                  AND status = 'pending'";
-                  
-        $this->db->query($query);
-        return $this->db->singleSet();
+    public function countFilterUsers($search = '', $status = '', $jurusan = '', $jenis = ''){
+        // Gunakan JOIN yang sama untuk memastikan jumlah datanya konsisten
+        $sql = "SELECT COUNT(*) as total 
+                FROM users u 
+                JOIN roles r ON u.id_role = r.id_role 
+                WHERE u.id_role NOT IN (1, 2)";
+
+        // Filter Status
+        if (!empty($status)) {
+            if (!is_array($status)) {
+                $status = [$status];
+            }
+            $in = [];
+            foreach ($status as $i => $s) {
+                $key = ":status$i";
+                $in[] = $key;
+            }
+            $sql .= " AND u.status IN (" . implode(',', $in) . ")";
+        }
+
+        if (!empty($jurusan)) {
+            if (!is_array($jurusan)) {
+                $jurusan = [$jurusan];
+            }
+            $in = [];
+            foreach ($jurusan as $i => $s) {
+                $key = ":jurusan$i";
+                $in[] = $key;
+            }
+            $sql .= " AND u.jurusan_unit IN (" . implode(',', $in) . ")";
+        }
+
+        if (!empty($jenis)) {
+            if (!is_array($jenis)) {
+                $jenis = [$jenis];
+            }
+            $in = [];
+            foreach ($jenis as $i => $s) {
+                $key = ":jenis$i";
+                $in[] = $key;
+            }
+            $sql .= " AND r.role_name IN (" . implode(',', $in) . ")";
+        }
+
+        // Filter Search
+        if (!empty($search)) {
+            $sql .= " AND (
+                        u.username LIKE :search OR 
+                    )";
+        }
+
+        $this->db->query($sql);
+
+        // Binding
+        if (!empty($status)) {
+            foreach ($status as $i => $s) {
+                $this->db->bind("status$i", $s);
+            }
+        }
+
+        if (!empty($jurusan)) {
+            foreach ($jurusan as $i => $s) {
+                $this->db->bind("jurusan$i", $s);
+            }
+        }
+
+         if (!empty($jenis)) {
+            foreach ($jenis as $i => $s) {
+                $this->db->bind("jenis$i", $s);
+            }
+        }
+
+        if (!empty($search)) {
+            $this->db->bind('search', "%$search%");
+        }
+
+        $result = $this->db->singleSet();
+        return $result['total'];
     }
 
     public function autoDeactivateExpiredUsers(){

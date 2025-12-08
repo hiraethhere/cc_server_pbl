@@ -95,24 +95,24 @@ function isActive($current, $check) {
         </div>
 
             <!-- KONTEN TAB -->
-            <?php if (!empty($bookings)): ?>
+        
             <div class="flex justify-between items-center">
                 <form method="POST" id="filterForm">
                     <input type="hidden" name="tab" value="<?= $tab ?>">
 
                     <div class="flex items-center gap-3 py-4 px-8 bg-background2">
-                        <?php 
-                        $filter_id = 'ruangan'; 
-                        $label = 'ruangan'; 
-                        $options = ['Ruang Duta' => 'Ruang Duta', 'Ruang Meeting Kecil' => 'Ruang Meeting Kecil']; 
-                        $current_values = $_GET[$filter_id] ?? ''; 
-                        include __DIR__ . '/../../template/filterDropDown.php';
-                        ?>
+                        <!-- <?php 
+                        // $filter_id = 'ruangan'; 
+                        // $label = 'ruangan'; 
+                        // $options = ['Ruang Duta' => 'Ruang Duta', 'Ruang Meeting Kecil' => 'Ruang Meeting Kecil']; 
+                        // $current_values = $_GET[$filter_id] ?? ''; 
+                        // include __DIR__ . '/../../template/filterDropDown.php';
+                        ?> -->
 
                         <?php 
                         $filter_id = 'status'; 
                         $label = 'Status'; 
-                        $options = ['Aktif' => 'Aktif', 'Belum Aktif' => 'Belum Aktif', 'NonAktif' => 'NonAktif']; 
+                        $options = ['Aktif' => 'active', 'Belum Aktif' => 'pending', 'NonAktif' => 'suspended']; 
                         $current_values = $_GET[$filter_id] ?? ''; 
                         include __DIR__ . '/../../template/filterDropDown.php';
                         ?>
@@ -136,7 +136,7 @@ function isActive($current, $check) {
                                 <?= icon('search', 'w-5 h-5') ?>
                             </div>
                         </div>
-                        <input type="text" id="search-input" placeholder="Cari Anggota"
+                        <input type="text" id="search-input" placeholder="Cari Penanggung Jawab"
                             class="block w-full pl-10 pr-10 py-2 border border-dark-overlay4 rounded-lg 
                                     bg-white text-dark-overlay placeholder-dark-overlay6 text-sm
                                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
@@ -150,6 +150,7 @@ function isActive($current, $check) {
                     </div>
                 </div>
             </div>
+            <?php if (!empty($bookings)): ?>
             <div class="rounded-lg shadow-sm border border-dark-overlay4 overflow-hidden mx-8">
                 <div class="overflow-x-auto">
                     <table class="w-full">
@@ -192,22 +193,21 @@ function isActive($current, $check) {
                             <?php $i++ ?>
                             <?php endforeach ?>
                         </tbody>
-                        
-                        
                     </table>
                 </div>
             </div>
 
-
-            <!-- Pagination (Sama untuk kedua tab) -->
-            <!-- pagination total euyy -->
-        <?php if (!empty($bookings) && $total_page >= 1): ?>   
+         <?php if (!empty($bookings) && $total_page >= 1): ?>   
         <div class="flex items-center justify-center px-6 py-4 bg-white mx-8">
             
             <div class="flex items-center gap-2">
                 
+                    <?php $query = $_GET;
+                    unset($query['page']); // reset page biar aman
+                    $baseUrl = http_build_query($query); ?>
+                    <!-- previous -->
                     <?php if ($current_page > 1): ?>
-                        <a href="?tab=<?= $tab; ?>&page=<?= $current_page - 1; ?>" class="p-2 text-dark-overlay5 hover:text-dark-overlay hover:bg-dark-overlay1 rounded-lg transition-colors duration-150">
+                        <a href="?<?= $baseUrl; ?>&page=<?= $current_page - 1; ?>" class="p-2 text-dark-overlay5 hover:text-dark-overlay hover:bg-dark-overlay1 rounded-lg transition-colors duration-150">
                             <?= icon('arrowLeft', 'w-6 h-6') ?>
                         </a>
                     <?php else: ?>
@@ -216,59 +216,61 @@ function isActive($current, $check) {
                         </button>
                     <?php endif; ?>
 
+                    <?php 
+                    // 1. Tentukan range halaman yang mau ditampilkan
+                    $range = [];
+                    $delta = 1; // Jumlah halaman yang muncul di kiri-kanan halaman aktif
 
-                    <?php
-                        $pages = [];
-
-                        // Selalu tampilkan halaman pertama
-                        if ($total_page > 1) {
-                            $pages[] = 1;
+                    for ($i = 1; $i <= $total_page; $i++) {
+                        // Kondisi ambil halaman:
+                        // 1. Halaman pertama atau terakhir
+                        // 2. Halaman saat ini
+                        // 3. Halaman di sekitar halaman saat ini (sesuai delta)
+                        if ($i == 1 || $i == $total_page || ($i >= $current_page - $delta && $i <= $current_page + $delta)) {
+                            $range[] = $i;
                         }
+                    }
 
-                        // Jika current_page > 4, tambahkan titik-titik setelah halaman 1
-                        if ($current_page > 4) {
-                            $pages[] = '...';
-                        }
+                    // 2. Sisipkan titik-titik (...) jika ada lompatan halaman
+                    $pages_to_show = [];
+                    $l = null; // last page number processed
 
-                            // Tambahkan halaman sekitar current_page (current-1, current, current+1)
-                        for ($i = $current_page - 1; $i <= $current_page + 1; $i++) {
-                            if ($i > 1 && $i < $total_page) {
-                                    $pages[] = $i;
+                    foreach ($range as $i) {
+                        if ($l) {
+                            if ($i - $l === 2) {
+                                // Jika selisih cuma 2 (misal 1 dan 3), tampilkan angka 2 (jangan titik-titik)
+                                $pages_to_show[] = $l + 1; 
+                            } elseif ($i - $l > 1) {
+                                // Jika selisih jauh, tampilkan titik-titik
+                                $pages_to_show[] = '...'; 
                             }
                         }
+                        $pages_to_show[] = $i;
+                        $l = $i;
+                    }
+                    ?>
 
-                        // Jika current_page < total_page - 3, tambahkan titik-titik sebelum halaman terakhir
-                        if ($current_page < $total_page - 3) {
-                            $pages[] = '...';
-                        }
+                    <?php foreach ($pages_to_show as $p) : ?>
 
-                            // Tambahkan halaman terakhir
-                            if ($total_page > 1) {
-                                $pages[] = $total_page;
-                            }
-                            ?>
+                        <?php if ($p === '...') : ?>
+                            <span class="px-2 py-2 text-sm text-dark-overlay6">...</span>
+                        
+                        <?php elseif ($p == $current_page) : ?>
+                            <button class="px-4 py-2 text-sm font-medium text-white bg-blue-overlay rounded-lg">
+                                <?= $p; ?>
+                            </button>
+                        
+                        <?php else : ?>
+                            <a href="?<?= $baseUrl; ?>&page=<?= $p; ?>" class="px-4 py-2 text-sm font-medium text-dark-overlay hover:bg-dark-overlay1 rounded-lg transition-colors duration-150 block">
+                                <?= $p; ?>
+                            </a>
+                        <?php endif; ?>
 
-                            <?php foreach ($pages as $p): ?>
-                                <?php if ($p === '...'): ?>
-                                    <span class="px-3 py-2 text-dark-overlay7">...</span>
-
-                                <?php elseif ($p == $current_page): ?>
-                                    <button class="px-4 py-2 text-sm font-medium text-white bg-blue-overlay rounded-lg">
-                                        <?= $p; ?>
-                                    </button>
-
-                                <?php else: ?>
-                                    <a href="?tab=<?= $tab; ?>&page=<?= $p; ?>" 
-                                    class="px-4 py-2 text-sm font-medium text-dark-overlay hover:bg-dark-overlay1 rounded-lg transition-colors duration-150 block">
-                                        <?= $p; ?>
-                                    </a>
-                                <?php endif; ?>
                     <?php endforeach; ?>
 
-
-
+                    <!-- next page -->
                     <?php if ($current_page < $total_page): ?>
-                        <a href="?tab=<?= $tab; ?>&page=<?= $current_page + 1; ?>" class="p-2 text-dark-overlay5 hover:text-dark-overlay hover:bg-dark-overlay1 rounded-lg transition-colors duration-150">
+                        <a href="?<?= $baseUrl; ?>&page=<?= $current_page + 1; ?>" class="p-2 text-dark-overlay5 hover:text-dark-overlay hover:bg-dark-overlay1 rounded-lg transition-colors duration-150">
                             <?= icon('arrowRight', 'w-6 h-6') ?>
                         </a>
                     <?php else: ?>
@@ -281,7 +283,20 @@ function isActive($current, $check) {
             </div>
 
             <form action="" method="GET" class="flex items-center gap-2 ml-4">
-                <input type="hidden" name="tab" value="<?= $tab; ?>">
+                <?php 
+                // 4. GENERATE HIDDEN INPUT UNTUK SEMUA FILTER YANG ADA
+                // Agar saat tekan enter di input page, filter status/jurusan tidak hilang
+                foreach ($query as $key => $value) {
+                    if (is_array($value)) {
+                        // Jika filter berupa array (misal checkbox status[])
+                        foreach ($value as $v) {
+                            echo '<input type="hidden" name="' . htmlspecialchars($key) . '[]" value="' . htmlspecialchars($v) . '">';
+                        }
+                    } else {
+                        // Jika filter string biasa
+                        echo '<input type="hidden" name="' . htmlspecialchars($key) . '" value="' . htmlspecialchars($value) . '">';
+                    }
+                }?>
                 <span class="text-sm text-dark-overlay7">Go to</span>
                 <input type="number" name="page" min="1" max="<?= $total_page; ?>" value="<?= $current_page; ?>" 
                     class="w-16 px-3 py-2 text-center text-sm border border-dark-overlay4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -292,15 +307,14 @@ function isActive($current, $check) {
             </form>
         </div>
         <?php endif; ?>
-    </div>
-            <?php else: ?>
+        <?php else: ?>
             <div class="flex flex-col items-center justify-center p-20">
                 <div class="mb-4">
                     <?= icon('fileList', 'h-20 w-20 text-gray-400') ?>
                 </div>
                 <div class="flex items-center flex-col justify-center">
                     <h3 class="text-lg font-semibold text-dark-overlay7 mb-2">Belum Ada Data Booking</h3>
-                    <p class="text-sm text-dark-overlay6 text-center mb-6">Tidak ada booking yang berjalan</p>
+                    <p class="text-sm text-dark-overlay6 text-center mb-6">Tidak ada booking untuk filter ini</p>
                     <a href="/Admin/buatBooking"
                         class="inline-flex items-center gap-2 px-4 py-2 bg-blue-overlay hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition duration-200">
                         Buat Booking Baru
@@ -308,7 +322,9 @@ function isActive($current, $check) {
                     </a>
                 </div>
             </div>
-            <?php endif; ?>
+        </div>
+        <?php endif; ?>
+
     </div>
 
 </main>

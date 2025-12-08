@@ -56,17 +56,16 @@ $nomor = ($current_page - 1) * $limit + 1
         LOGIKA IF-ELSE DI SINI (SETELAH TAB NAVIGATION)
         ============================================ -->
         <?php if ($tab === 'approval'): ?>
-            <?php if (!empty($users)): ?>
+            
             <!-- KONTEN TAB approval -->
 
             <div class="flex justify-between items-center">
-                <form method="POST" id="filterForm">
-                    <input type="hidden" name="tab" value="<?= $tab ?>">
+                <form method="GET" id="filterForm">
 
                     <div class="flex items-center gap-3 py-4 px-8 bg-background1">
      
                         <?php 
-                        $filter_id = 'jenis_anggota'; 
+                        $filter_id = 'jenis'; 
                         $label = 'Jenis Anggota'; 
                         $options = ['Mahasiswa' => 'Mahasiswa', 'Dosen' => 'Dosen', 'Tendik' => 'Tendik']; 
                         $current_values = $_GET[$filter_id] ?? ''; 
@@ -76,15 +75,7 @@ $nomor = ($current_page - 1) * $limit + 1
                         <?php 
                         $filter_id = 'jurusan'; 
                         $label = 'Jurusan/Unit Kerja'; 
-                        $options = ['Teknik Informatika & Komputer' => 'TIK', 'Teknik Elektro' => 'TE']; 
-                        $current_values = $_GET[$filter_id] ?? ''; 
-                        include __DIR__ . '/../../template/filterDropDown.php';
-                        ?>
-
-                        <?php 
-                        $filter_id = 'status'; 
-                        $label = 'Status'; 
-                        $options = ['Aktif' => 'Aktif', 'Belum Aktif' => 'Belum Aktif', 'NonAktif' => 'NonAktif']; 
+                        $options = ['Teknik Informatika & Komputer' => 'Teknik Informatika dan Komputer', 'Teknik Elektro' => 'Teknik Elektro', 'Teknik Mesin' => 'Teknik Mesin', 'Teknik Sipil' => 'Teknik Sipil']; 
                         $current_values = $_GET[$filter_id] ?? ''; 
                         include __DIR__ . '/../../template/filterDropDown.php';
                         ?>
@@ -124,6 +115,7 @@ $nomor = ($current_page - 1) * $limit + 1
             </div>
 
 
+            <?php if (!empty($users)): ?>
             <!-- Table Daftar Anggota -->
             <div class="rounded-lg shadow-sm border border-dark-overlay4 overflow-hidden mx-8">
                 <div class="overflow-x-auto">
@@ -151,7 +143,7 @@ $nomor = ($current_page - 1) * $limit + 1
                                 <td class="px-6 py-4 text-sm text-dark-overlay"><?= htmlspecialchars($user['jurusan_unit'] ?? '-') ?></td>
                                 <td class="px-6 py-4">
                                     <span class="inline-flex py-1 text-xs font-medium rounded-full">
-                                        <?= htmlspecialchars($user['createdDate'] ?? '-') ?>
+                                        <?= htmlspecialchars(tanggal_indonesia($user['created_at']) ?? '-') ?>
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-center">
@@ -182,13 +174,13 @@ $nomor = ($current_page - 1) * $limit + 1
             <!-- KONTEN TAB daftar ANggota -->
             
             <div class="flex justify-between items-center">
-                <form method="POST" id="filterForm">
+                <form method="GET" id="filterForm">
                     <input type="hidden" name="tab" value="<?= $tab ?>">
 
                     <div class="flex items-center gap-3 py-4 px-8 bg-background1">
                         
                         <?php 
-                        $filter_id = 'jenis_anggota'; 
+                        $filter_id = 'jenis'; 
                         $label = 'Jenis Anggota'; 
                         $options = ['Mahasiswa' => 'Mahasiswa', 'Dosen' => 'Dosen', 'Tendik' => 'Tendik']; 
                         $current_values = $_GET[$filter_id] ?? ''; 
@@ -198,7 +190,7 @@ $nomor = ($current_page - 1) * $limit + 1
                         <?php 
                         $filter_id = 'jurusan'; 
                         $label = 'Jurusan/Unit Kerja'; 
-                        $options = ['Teknik Informatika & Komputer' => 'TIK', 'Teknik Elektro' => 'TE']; 
+                        $options = ['Teknik Informatika & Komputer' => 'Teknik Informatika dan Komputer', 'Teknik Elektro' => 'Teknik Elektro', 'Teknik Mesin' => 'Teknik Mesin', 'Teknik Sipil' => 'Teknik Sipil'];
                         $current_values = $_GET[$filter_id] ?? ''; 
                         include __DIR__ . '/../../template/filterDropDown.php';
                         ?>
@@ -206,7 +198,7 @@ $nomor = ($current_page - 1) * $limit + 1
                         <?php 
                         $filter_id = 'status'; 
                         $label = 'Status'; 
-                        $options = ['Aktif' => 'Aktif', 'Belum Aktif' => 'Belum Aktif', 'NonAktif' => 'NonAktif']; 
+                        $options = ['Aktif' => 'active', 'Belum Aktif' => 'pending', 'NonAktif' => 'suspended']; 
                         $current_values = $_GET[$filter_id] ?? ''; 
                         include __DIR__ . '/../../template/filterDropDown.php';
                         ?>
@@ -272,7 +264,7 @@ $nomor = ($current_page - 1) * $limit + 1
                                 </td>
                                 <td class="px-6 py-4 text-sm text-dark-overlay"><?= $user['jurusan_unit'] ?></td>
                                 <td class="px-6 py-4">
-                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm <?= $user['statusStyle'] ?> text-background2 min-w-24 justify-center">
+                                    <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm <?= getStyleStatus($user['status']) ?> text-background2 min-w-24 justify-center">
                                         <?= htmlspecialchars($user['status'] ?? '-') ?>
                                     </span>
                                 </td>
@@ -314,8 +306,12 @@ $nomor = ($current_page - 1) * $limit + 1
             
             <div class="flex items-center gap-2">
                 
+                    <?php $query = $_GET;
+                    unset($query['page']); // reset page biar aman
+                    $baseUrl = http_build_query($query); ?>
+                    <!-- previous -->
                     <?php if ($current_page > 1): ?>
-                        <a href="?tab=<?= $tab; ?>&page=<?= $current_page - 1; ?>" class="p-2 text-dark-overlay5 hover:text-dark-overlay hover:bg-dark-overlay1 rounded-lg transition-colors duration-150">
+                        <a href="?<?= $baseUrl; ?>&page=<?= $current_page - 1; ?>" class="p-2 text-dark-overlay5 hover:text-dark-overlay hover:bg-dark-overlay1 rounded-lg transition-colors duration-150">
                             <?= icon('arrowLeft', 'w-6 h-6') ?>
                         </a>
                     <?php else: ?>
@@ -324,59 +320,61 @@ $nomor = ($current_page - 1) * $limit + 1
                         </button>
                     <?php endif; ?>
 
+                    <?php 
+                    // 1. Tentukan range halaman yang mau ditampilkan
+                    $range = [];
+                    $delta = 1; // Jumlah halaman yang muncul di kiri-kanan halaman aktif
 
-                    <?php
-                        $pages = [];
-
-                        // Selalu tampilkan halaman pertama
-                        if ($total_page > 1) {
-                            $pages[] = 1;
+                    for ($i = 1; $i <= $total_page; $i++) {
+                        // Kondisi ambil halaman:
+                        // 1. Halaman pertama atau terakhir
+                        // 2. Halaman saat ini
+                        // 3. Halaman di sekitar halaman saat ini (sesuai delta)
+                        if ($i == 1 || $i == $total_page || ($i >= $current_page - $delta && $i <= $current_page + $delta)) {
+                            $range[] = $i;
                         }
+                    }
 
-                        // Jika current_page > 4, tambahkan titik-titik setelah halaman 1
-                        if ($current_page > 4) {
-                            $pages[] = '...';
-                        }
+                    // 2. Sisipkan titik-titik (...) jika ada lompatan halaman
+                    $pages_to_show = [];
+                    $l = null; // last page number processed
 
-                            // Tambahkan halaman sekitar current_page (current-1, current, current+1)
-                        for ($i = $current_page - 1; $i <= $current_page + 1; $i++) {
-                            if ($i > 1 && $i < $total_page) {
-                                    $pages[] = $i;
+                    foreach ($range as $i) {
+                        if ($l) {
+                            if ($i - $l === 2) {
+                                // Jika selisih cuma 2 (misal 1 dan 3), tampilkan angka 2 (jangan titik-titik)
+                                $pages_to_show[] = $l + 1; 
+                            } elseif ($i - $l > 1) {
+                                // Jika selisih jauh, tampilkan titik-titik
+                                $pages_to_show[] = '...'; 
                             }
                         }
+                        $pages_to_show[] = $i;
+                        $l = $i;
+                    }
+                    ?>
 
-                        // Jika current_page < total_page - 3, tambahkan titik-titik sebelum halaman terakhir
-                        if ($current_page < $total_page - 3) {
-                            $pages[] = '...';
-                        }
+                    <?php foreach ($pages_to_show as $p) : ?>
 
-                            // Tambahkan halaman terakhir
-                            if ($total_page > 1) {
-                                $pages[] = $total_page;
-                            }
-                            ?>
+                        <?php if ($p === '...') : ?>
+                            <span class="px-2 py-2 text-sm text-dark-overlay6">...</span>
+                        
+                        <?php elseif ($p == $current_page) : ?>
+                            <button class="px-4 py-2 text-sm font-medium text-white bg-blue-overlay rounded-lg">
+                                <?= $p; ?>
+                            </button>
+                        
+                        <?php else : ?>
+                            <a href="?<?= $baseUrl; ?>&page=<?= $p; ?>" class="px-4 py-2 text-sm font-medium text-dark-overlay hover:bg-dark-overlay1 rounded-lg transition-colors duration-150 block">
+                                <?= $p; ?>
+                            </a>
+                        <?php endif; ?>
 
-                            <?php foreach ($pages as $p): ?>
-                                <?php if ($p === '...'): ?>
-                                    <span class="px-3 py-2 text-dark-overlay7">...</span>
-
-                                <?php elseif ($p == $current_page): ?>
-                                    <button class="px-4 py-2 text-sm font-medium text-white bg-blue-overlay rounded-lg">
-                                        <?= $p; ?>
-                                    </button>
-
-                                <?php else: ?>
-                                    <a href="?tab=<?= $tab; ?>&page=<?= $p; ?>" 
-                                    class="px-4 py-2 text-sm font-medium text-dark-overlay hover:bg-dark-overlay1 rounded-lg transition-colors duration-150 block">
-                                        <?= $p; ?>
-                                    </a>
-                                <?php endif; ?>
                     <?php endforeach; ?>
 
-
-
+                    <!-- next page -->
                     <?php if ($current_page < $total_page): ?>
-                        <a href="?tab=<?= $tab; ?>&page=<?= $current_page + 1; ?>" class="p-2 text-dark-overlay5 hover:text-dark-overlay hover:bg-dark-overlay1 rounded-lg transition-colors duration-150">
+                        <a href="?<?= $baseUrl; ?>&page=<?= $current_page + 1; ?>" class="p-2 text-dark-overlay5 hover:text-dark-overlay hover:bg-dark-overlay1 rounded-lg transition-colors duration-150">
                             <?= icon('arrowRight', 'w-6 h-6') ?>
                         </a>
                     <?php else: ?>
@@ -389,7 +387,20 @@ $nomor = ($current_page - 1) * $limit + 1
             </div>
 
             <form action="" method="GET" class="flex items-center gap-2 ml-4">
-                <input type="hidden" name="tab" value="<?= $tab; ?>">
+                <?php 
+                // 4. GENERATE HIDDEN INPUT UNTUK SEMUA FILTER YANG ADA
+                // Agar saat tekan enter di input page, filter status/jurusan tidak hilang
+                foreach ($query as $key => $value) {
+                    if (is_array($value)) {
+                        // Jika filter berupa array (misal checkbox status[])
+                        foreach ($value as $v) {
+                            echo '<input type="hidden" name="' . htmlspecialchars($key) . '[]" value="' . htmlspecialchars($v) . '">';
+                        }
+                    } else {
+                        // Jika filter string biasa
+                        echo '<input type="hidden" name="' . htmlspecialchars($key) . '" value="' . htmlspecialchars($value) . '">';
+                    }
+                }?>
                 <span class="text-sm text-dark-overlay7">Go to</span>
                 <input type="number" name="page" min="1" max="<?= $total_page; ?>" value="<?= $current_page; ?>" 
                     class="w-16 px-3 py-2 text-center text-sm border border-dark-overlay4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
