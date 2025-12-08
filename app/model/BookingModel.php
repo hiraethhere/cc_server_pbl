@@ -346,6 +346,20 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
         return $this->db->rowCount();
     }
 
+    public function updateStatusBooking($id_booking, $status, $reason = NULL) {
+        
+        $query = "UPDATE bookings SET status = :status, reject_reason = :reason
+                WHERE id_booking = :id_booking";
+
+        $this->db->query($query);
+        $this->db->bind('status', $status);
+        $this->db->bind('reason', $reason ?? NULL);
+        $this->db->bind('id_booking', $id_booking);
+
+        $this->db->execute();
+        return $this->db->rowCount();
+    }
+
     public function filterBookings($limit, $start, $search = '', $status = [], $dateMode = '')
     {
         // Base Query dengan JOIN User & Room

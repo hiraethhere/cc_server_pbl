@@ -226,7 +226,7 @@ class Admin extends Controller {
                     // Status selesai/batal/rejected
                     $dateMode = 'all'; // atau 'all'
                     if (empty($statusFilter)) {
-                        $forcedStatus = ['done', 'cancelled', 'rejected', 'pending', 'active'];
+                        $forcedStatus = ['done', 'cancelled', 'rejected', 'pending', 'active', 'ongoing'];
                     }
                     $data['link'] = 'detailRiwayat';
                     break;
@@ -1077,6 +1077,121 @@ class Admin extends Controller {
 
             Flasher::setModalInfo('Gagal Booking!', $e->getMessage(), 'error');
             header("Location: /admin/buatBooking");
+            exit();
+        }
+    }
+
+    public function startBooking()
+    {
+        // 1. Cek Request Method & Data
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST['id_booking'])) {
+            Flasher::setModalInfo('Error', 'Aksi tidak valid atau ID hilang.', 'error');
+            header('Location: ' . BASEURL . '/admin/peminjaman');
+            exit;
+        }
+
+        $id_booking = $_POST['id_booking'];
+        $bookingModel = $this->model('BookingModel');
+
+        try {
+            // 2. Eksekusi Update ke 'ongoing'
+            // Parameter ke-3 ($reason) tidak kita isi, jadi otomatis NULL (aman)
+            $result = $bookingModel->updateStatusBooking($id_booking, 'ongoing');
+
+            if ($result > 0) {
+                Flasher::setModalInfo('Berhasil', 'Status berubah menjadi Berjalan (Ongoing).', 'success');
+            } else {
+                // Biasanya masuk sini kalau statusnya memang sudah 'ongoing' sebelumnya
+                Flasher::setModalInfo('Info', 'Tidak ada perubahan status.', 'warning');
+            }
+
+            // 3. Redirect Balik ke Detail
+            header('Location: ' . BASEURL . '/admin/peminjaman');
+            exit;
+
+        } catch (Exception $e) {
+            Flasher::setModalInfo('Gagal', 'Terjadi kesalahan sistem.', 'error');
+            header('Location: ' . BASEURL . '/admin/peminjaman');
+            exit;
+        }
+    }
+
+    public function finishBooking()
+    {
+        // 1. Cek Request Method & Data
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST['id_booking'])) {
+            Flasher::setModalInfo('Error', 'Aksi tidak valid atau ID hilang.', 'error');
+            header('Location: ' . BASEURL . '/admin/peminjaman');
+            exit;
+        }
+
+        $id_booking = $_POST['id_booking'];
+        $bookingModel = $this->model('BookingModel');
+
+        try {
+            // 2. Eksekusi Update ke 'completed'
+            // (Atau 'done' / 'finished' sesuaikan dengan ENUM di databasemu)
+            $result = $bookingModel->updateStatusBooking($id_booking, 'done');
+
+            if ($result > 0) {
+                Flasher::setModalInfo('Selesai', 'Peminjaman telah diselesaikan.', 'success');
+            } else {
+                Flasher::setModalInfo('Info', 'Status sudah selesai atau tidak berubah.', 'warning');
+            }
+
+            // 3. Redirect Balik ke Detail
+            header('Location: ' . BASEURL . '/admin/peminjaman');
+            exit;
+
+        } catch (Exception $e) {
+            Flasher::setModalInfo('Gagal', 'Terjadi kesalahan sistem. ' . $e->getMessage() , 'error');
+            header('Location: ' . BASEURL . '/admin/peminjaman');
+            exit;
+        }
+    }
+
+    public function cancelBooking() {
+        $bookingModel = $this->model('BookingModel');
+        $rescheduleModel = $this->model('RescheduleModel');
+
+        try {
+            // Cek Input
+            if (empty($_POST['id_booking'])) {
+                throw new Exception("ID Booking tidak valid atau tidak ditemukan.", 1);
+            }
+
+            // Mulai Transaksi Database
+            $bookingModel->beginTransaction();
+
+            // atau fungsi cancelBooking di model (asal query-nya update status where id_booking only)
+            $id_booking = $_POST['id_booking'];
+            
+            // Pastikan di BookingModel ada method ini yang WHERE-nya cuma id_booking
+            $result = $bookingModel->updateStatusBooking($id_booking, 'cancelled'); 
+
+            // Jika booking utama batal, reschedule yang 'pending' buat booking ini harus dianggap batal juga
+            $rescheduleModel->cancelRescheduleByUser($id_booking);
+
+            // Cek keberhasilan update
+            if ($result <= 0) {
+                throw new Exception("Gagal update database atau data tidak ditemukan", 1);
+            }
+
+            // Commit Transaksi (Simpan Permanen)
+            $bookingModel->commit();
+
+            Flasher::setModalInfo('Berhasil', 'Peminjaman berhasil dibatalkan oleh Admin.', 'success');
+            
+            // Redirect kembali ke detail atau halaman list
+            header('Location: ' . BASEURL . '/admin/peminjaman?tab=riwayat' . $id_booking);
+            exit();
+
+        } catch (Throwable $e) {
+            // Jika ada error, batalkan semua perubahan DB
+            $bookingModel->rollback();
+            
+            Flasher::setModalInfo('Gagal', $e->getMessage(), 'error');
+            header('Location: ' . BASEURL . '/admin/peminjaman');
             exit();
         }
     }

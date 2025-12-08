@@ -112,6 +112,7 @@
                 </span>
             </div>
             
+            <?php if($reschedule['status_reschedule'] === 'pending'): ?>
             <div class="grid grid-cols-2 gap-8">
                 <button type="button" id="buttonDecline" class="flex-1 bg-red1 hover:bg-red-700 text-white font-medium py-2.5 rounded-lg transition hover:cursor-pointer">
                     Decline
@@ -120,6 +121,7 @@
                     Approve
                 </button>
             </div>
+            <?php endif ?>
 
             
         </div>
@@ -218,14 +220,18 @@
             </div>
         </div>
     </div>
-            <form id="approveForm" method="post" action="/admin/approveReschedule/<?= $reschedule['id_reschedule'] ?>">
-                <!-- kirim ID data yang mau di-approve -->
-                <input type="hidden" name="id_reschedule" value="<?= $reschedule['id_reschedule'] ?>">
+            <form id="bookingForm" method="POST" action="<?= BASEURL; ?>/admin/startBooking">
+                <input type="hidden" name="id_booking" value="<?= $detailBooking['id_booking']; ?>">
+                <input type="hidden" name="status" value="ongoing"> 
             </form>
 
-            <form id="declineForm" method="post" action="/admin/declineReschedule/<?= $reschedule['id_reschedule'] ?>">
-                <!-- kirim ID data yang mau di-decline -->
-                <input type="hidden" name="id_reschedule" value="<?= $reschedule['id_reschedule'] ?>">
+            <form id="declineForm" method="POST" action="<?= BASEURL; ?>/admin/cancelBooking">
+                <input type="hidden" name="id_booking" value="<?= $detailBooking['id_booking']; ?>">
+                <input type="hidden" name="status" value="cancelled">
+            </form>
+
+            <form id="finishForm" method="POST" action="<?= BASEURL; ?>/admin/finishBooking">
+                <input type="hidden" name="id_booking" value="<?= $detailBooking['id_booking']; ?>">
             </form>
 </main>
 

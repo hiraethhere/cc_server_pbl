@@ -223,7 +223,7 @@
                     </div>
                     <?php endif; ?>
                     <?php if ($detailBooking['status'] === 'ongoing') : ?>
-                    <button class="flex-1 bg-blue-overlay hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition hover:cursor-pointer">
+                    <button onclick="konfirmasiSelesaikan()" class="flex-1 bg-blue-overlay hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition hover:cursor-pointer">
                     Selesaikan Peminjaman
                     </button>
                     <?php endif; ?>
@@ -232,17 +232,17 @@
         </div>
     </div>
 
-        <form id="bookingForm" method="POST" action="<?= BASEURL; ?>/admin/handleStartBooking">
+        <form id="bookingForm" method="POST" action="<?= BASEURL; ?>/admin/startBooking">
             <input type="hidden" name="id_booking" value="<?= $detailBooking['id_booking']; ?>">
             <input type="hidden" name="status" value="ongoing"> 
         </form>
 
-        <form id="declineForm" method="POST" action="<?= BASEURL; ?>/admin/handleCancelBooking">
+        <form id="declineForm" method="POST" action="<?= BASEURL; ?>/admin/cancelBooking">
             <input type="hidden" name="id_booking" value="<?= $detailBooking['id_booking']; ?>">
             <input type="hidden" name="status" value="cancelled">
         </form>
 
-        <form id="finishForm" method="POST" action="<?= BASEURL; ?>/admin/handleFinishBooking">
+        <form id="finishForm" method="POST" action="<?= BASEURL; ?>/admin/finishBooking">
             <input type="hidden" name="id_booking" value="<?= $detailBooking['id_booking']; ?>">
         </form>
 </main>
@@ -279,4 +279,20 @@
         }
     );
 }
+
+function konfirmasiSelesaikan() {
+        Modal.confirm(
+            'Selesaikan Peminjaman?',
+            'Anda yakin ingin menyelesaikan peminjaman?',
+            function() {
+                document.getElementById('finishForm').submit();
+            },
+            {
+            icon: <?= json_encode(icon("check", "w-12 h-12 text-green1")) ?>,
+            confirmText: 'Selesaikan',
+            confirmClass: 'w-full px-6 py-2 bg-green1 text-white rounded-lg font-semibold hover:bg-green-700 transition hover:cursor-pointer',
+            cancelText: 'Batalkan'
+            }
+        );
+    }
 </script>
