@@ -79,4 +79,9 @@ class RuanganModel {
         $result = $this->db->singleSet();
         return $result['total'] ?? $result->total ?? 0;
     }
+
+    public function getRuangRapat(){
+        $this->db->query("SELECT * FROM rooms WHERE status = 'spesial'");
+        return $this->db->singleSet();
+    }
 }

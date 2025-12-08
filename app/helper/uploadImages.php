@@ -44,6 +44,86 @@ function uploadImage(array $fileData, $targetDir) : string{
     }
 }
 
+function uploadFile(){
+        /**
+     * Helper untuk mengupload dokumen (PDF, DOC, DOCX, dll)
+     * @param array $fileData - $_FILES['nama_input']
+     * @param string $targetDir - Folder tujuan (relative terhadap root project atau public)
+     * @return string Nama file yang berhasil disimpan
+     * @throws Exception Jika gagal validasi atau upload
+     */
+    function uploadDocument(array $fileData, $targetDir) : string {
+        // Tentukan path penyimpanan
+        // Sesuaikan path ini dengan struktur folder project Anda
+        // Contoh: C:/xampp/htdocs/project_anda/public/uploads/dokumen/
+        $uploadPath = dirname($_SERVER['DOCUMENT_ROOT']) . '/' . trim($targetDir, '/') . '/';
+
+        // Pastikan folder tujuan ada, jika tidak buat baru
+        if (!is_dir($uploadPath)) {
+            mkdir($uploadPath, 0755, true);
+        }
+
+        // 1. Cek error bawaan PHP
+        if ($fileData['error'] !== UPLOAD_ERR_OK) {
+            switch ($fileData['error']) {
+                case UPLOAD_ERR_INI_SIZE:
+                    throw new \Exception("File terlalu besar (melebihi upload_max_filesize di php.ini).");
+                case UPLOAD_ERR_FORM_SIZE:
+                    throw new \Exception("File terlalu besar (melebihi batas form).");
+                case UPLOAD_ERR_PARTIAL:
+                    throw new \Exception("File hanya terupload sebagian.");
+                case UPLOAD_ERR_NO_FILE:
+                    throw new \Exception("Tidak ada file yang diupload.");
+                default:
+                    throw new \Exception("Error upload tidak diketahui. Kode: " . $fileData['error']);
+            }
+        }
+
+        // 2. Validasi Ukuran (Contoh: Maks 5MB untuk dokumen)
+        $maxSize = 5 * 1024 * 1024; // 5MB
+        if ($fileData['size'] > $maxSize) {
+            throw new \Exception("Ukuran file terlalu besar. Maksimal 5MB.");
+        }
+
+        // 3. Validasi Tipe File (MIME Type Check)
+        // Daftar MIME types yang aman untuk dokumen
+        $allowedMimes = [
+            'pdf'  => 'application/pdf',
+            'doc'  => 'application/msword',
+            'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            // Tambahkan jika perlu excel:
+            // 'xls'  => 'application/vnd.ms-excel',
+            // 'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            // Tambahkan jika perlu gambar juga:
+            'jpg'  => 'image/jpeg',
+            'png'  => 'image/png',
+        ];
+
+        $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimeType = finfo_file($fileInfo, $fileData['tmp_name']);
+        finfo_close($fileInfo);
+
+        // Cari ekstensi berdasarkan mime type yang ditemukan
+        $extension = array_search($mimeType, $allowedMimes, true);
+
+        if ($extension === false) {
+            throw new \Exception("Format file tidak didukung ($mimeType). Harap upload PDF atau Word.");
+        }
+
+        // 4. Buat nama file unik
+        // Menggunakan 'dokumen-' sebagai prefix
+        $fileName = 'dokumen-' . uniqid() . '.' . $extension;
+        $targetFile = $uploadPath . $fileName;
+
+        // 5. Pindahkan file
+        if (move_uploaded_file($fileData['tmp_name'], $targetFile)) {
+            return $fileName; // Success
+        } else {
+            throw new \Exception("Gagal memindahkan file ke folder tujuan.");
+        }
+    }
+
+}
 
 //yang ini kurang aman bisa di inject script
 function uploadCover(){

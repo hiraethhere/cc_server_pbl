@@ -212,7 +212,6 @@ class Booking extends Controller {
             $dataBooking = [
                         'id_room' => $id_room,
                         'id_user' => $id_ketua,
-                        'booker_name' => $_SESSION['user']['username'],
                         'total_person' => $total_person,
                         'booking_code' => $bookingCode,
                         'start_time' => $start_datetime,
@@ -370,6 +369,16 @@ class Booking extends Controller {
         $existingBooking = $bookingModel->getBookingByIdAndUser($id_booking, $_SESSION['user']['user_id']);
         if (!$existingBooking) {
             throw new Exception('Data booking tidak ditemukan atau akses ditolak.');
+        }
+
+        $existingReschedule = $rescheduleModel->getActiveRescheduleByBookingId($id_booking);
+
+        if ($existingReschedule) {
+            if ($existingReschedule['status_reschedule'] == 'pending') {
+                throw new Exception("Booking ini sedang dalam proses reschedule (Status: Pending). Tunggu konfirmasi admin.");
+            } else {
+                throw new Exception("Booking ini sudah berhasil di-reschedule sebelumnya. Tidak dapat diubah lagi.");
+            }
         }
 
         // -----------------------------------------------------------

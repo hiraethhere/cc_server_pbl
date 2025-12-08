@@ -17,9 +17,9 @@
         <div class="grid md:grid-cols-2 min-h-40 items-stretch">
             <!-- Teks Kiri -->
             <div class="p-5 flex flex-col justify-center flex-wrap">
-                <h2 class="text-xl font-bold text-black mb-3">Ruang Rapat</h2>
+                <h2 class="text-xl font-bold text-black mb-3"><?= $rapat['room_name'] ?></h2>
                 <p class="text-dark-overlay8 mb-2 pb-2 leading-relaxed border-b border-dark-overlay text-sm">
-                    Ruang bersih, tenang, dilengkapi wifi, cocok untuk belajar, rapat, dan aktivitas produktif.
+                    <?= $rapat['short_description'] ?>
                 </p>
                 <a href="/Admin/bookingRuangRapat" class="w-full mt-1">
                     <button class="px-6 py-2 bg-blue-overlay hover:bg-blue-700 text-white font-semibold text-sm rounded-md shadow-md hover:shadow-lg transition hover:cursor-pointer w-full">

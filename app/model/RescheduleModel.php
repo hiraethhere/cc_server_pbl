@@ -49,6 +49,18 @@ class RescheduleModel {
         return $this->db->resultSet();
     }
 
+    public function getActiveRescheduleByBookingId($id_booking){
+        //ini cari yang statusnya bukan rejected
+        $query = "SELECT status_reschedule FROM reschedule 
+                WHERE id_booking = :id_booking 
+                AND status_reschedule != 'rejected'";
+                
+        $this->db->query($query);
+        $this->db->bind('id_booking', $id_booking);
+        
+        return $this->db->singleSet(); // Mengembalikan row jika ada, false jika tidak ada
+    }
+
     public function checkUserHasReschedule($id_user){
         $query = "SELECT 1 
                 FROM reschedule rs

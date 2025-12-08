@@ -318,6 +318,7 @@ class Admin extends Controller {
         // 5. Hitung Total Halaman
         $data['total_page'] = ceil($total_data / $data['limit']);
         $data['current_page'] = $page;
+        $data['rapat'] = $this->model('RuanganModel')->getRuangRapat();
         $data['judul'] = 'Buat Pinjaman Baru';
         $data['navbar'] = 'Peminjaman';
         $this->view('layout/sidebar', $data);
@@ -348,10 +349,11 @@ class Admin extends Controller {
     }
 
     public function bookingRuangRapat(){
+        $data['rapat'] = $this->model('RuanganModel')->getRuangRapat();
         $data['judul'] = 'Buat Pinjaman Baru';
         $data['navbar'] = 'Peminjaman';
         $this->view('layout/sidebar', $data);
-        $this->view('admin/Peminjaman/bookingRuangRapat');
+        $this->view('admin/Peminjaman/bookingRuangRapat', $data);
     }
 
     public function Ruangan(){
@@ -757,6 +759,7 @@ class Admin extends Controller {
     exit;
 }
 
+    // ini buat booking yang dari admin
     public function handleBooking(){
         Flasher::modalInfo();
 
@@ -874,6 +877,125 @@ class Admin extends Controller {
             $bookingModel->rollBack();
             Flasher::setModalInfo('Booking gagal!', $e->getMessage(),'error');
             header('location: /admin/bookingRuangan/' . $id_room);
+            exit();
+        }
+    }
+
+    public function handleExternalBooking(){
+        Flasher::modalInfo();
+
+        // 1. Ambil Data dari Form
+        $id_room        = $_POST['id_room'] ?? NULL;
+        $email          = $_POST['email'] ?? NULL;
+        $jumlah_orang   = $_POST['jumlah'] ?? 0;
+        $instansi       = $_POST['instansi'] ?? NULL; // Ini akan jadi booker_name
+        $tujuan         = $_POST['tujuan'] ?? NULL;
+        $bookingDate    = $_POST['tanggalPinjam'] ?? NULL;
+        $startTime      = $_POST['jamMulai'] ?? NULL;
+        $endTime        = $_POST['jamSelesai'] ?? NULL;
+        
+        // File Upload
+        $file_proposal  = $_FILES['file_proposal'] ?? NULL;
+
+        // 2. Validasi Dasar (Kelengkapan Data)
+        if (!$id_room || !$bookingDate || !$startTime || !$endTime || !$tujuan || !$instansi || !$email) {
+            Flasher::setModalInfo('Gagal!', 'Semua field wajib diisi.', 'error');
+            // Redirect kembali ke halaman form external
+            header("Location: /Admin/bookingRuangRapat"); 
+            exit;
+        }
+
+        if (!validateEmailPHP($email)) {
+            Flasher::setModalInfo('Gagal!', 'Email Tidak Valid', 'error');
+            header("Location: /Admin/bookingRuangRapat");
+        }
+
+        // Validasi File Upload Wajib Ada
+        if ($file_proposal['error'] == 4) {
+            Flasher::setModalInfo('Gagal!', 'Dokumen surat permohonan/proposal wajib diupload.', 'error');
+            header("Location: /Admin/bookingRuangRapat");
+            exit;
+        }
+
+        // 3. Persiapan Waktu
+        $start_datetime = "$bookingDate $startTime";
+        $end_datetime   = "$bookingDate $endTime";
+        
+        // Generate kode unik booking
+        $bookingCode = generateBookingCode(8);
+
+        // Load Models
+        $bookingModel    = $this->model('BookingModel');
+        $rescheduleModel = $this->model('RescheduleModel');
+
+        try {
+            $bookingModel->beginTransaction();
+
+            // -----------------------------------------------------------
+            // VALIDASI RUANGAN (CRITICAL)
+            // -----------------------------------------------------------
+            // Hanya ini pengecekan logikanya: Apakah ruangan kosong di jam itu?
+            $cekRoom = $bookingModel->roomCheck($id_room, $end_datetime, $start_datetime);
+            
+            if ($cekRoom['total'] > 0) {
+                throw new Exception("Mohon maaf, ruangan sudah ter-booking pada tanggal dan jam tersebut.");
+            }
+
+            // -----------------------------------------------------------
+            // UPLOAD FILE
+            // -----------------------------------------------------------
+            // Menggunakan helper uploadDocument yang sudah dibuat sebelumnya
+            // Pastikan path folder 'uploads/dokumen' sudah ada dan writable
+            try {
+                $namaFileDokumen = uploadDocument($file_proposal, 'uploads/dokumen');
+            } catch (Exception $uploadError) {
+                throw new Exception($uploadError->getMessage());
+            }
+
+
+            // INSERT DATA
+            $dataBooking = [
+                'id_room'       => $id_room,
+                'id_user'       => NULL,            // SET NULL karena Eksternal
+                'booker_name'   => $instansi,       // Nama Peminjam = Nama Instansi
+                'total_person'  => $jumlah_orang,   // Ambil langsung dari input
+                'booking_code'  => $bookingCode,
+                'start_time'    => $start_datetime,
+                'end_time'      => $end_datetime,
+                'email'         => $email,
+                'agency'        => $instansi,
+                'purpose'       => $tujuan,
+                'document_path' => $namaFileDokumen,
+                'status'        => 'pending'        // Biasanya external butuh approval admin
+            ];
+
+            // Create Booking
+            $newBookingId = $bookingModel->createBooking($dataBooking);
+
+            // -----------------------------------------------------------
+            // CLEANUP (Opsional)
+            // -----------------------------------------------------------
+            // Jika booking ini approve langsung (atau memblokir slot),
+            // batalkan reschedule lain yang pending di jam yang sama.
+            $rescheduleModel->autoCancelRescheduleConflict($id_room, $start_datetime, $end_datetime);
+
+            $bookingModel->commit();
+            
+            Flasher::setModalInfo('Berhasil!', 'Permohonan booking terkirim. Silakan cek email secara berkala untuk info persetujuan.', 'success');
+            header("Location: /booking/external"); // Atau halaman sukses
+            exit;
+
+        } catch (\Throwable $e) {
+            $bookingModel->rollBack();
+
+            // Hapus file jika database gagal save
+            if (isset($namaFileDokumen)) {
+                $filePath = dirname($_SERVER['DOCUMENT_ROOT']) . '/public/uploads/dokumen/' . $namaFileDokumen;
+                if (file_exists($filePath)) unlink($filePath);
+            }
+
+            Flasher::setModalInfo('Gagal Booking!', $e->getMessage(), 'error');
+            header("Location: /booking/external");
             exit();
         }
     }
