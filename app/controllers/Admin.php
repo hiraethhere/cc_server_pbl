@@ -256,11 +256,22 @@ class Admin extends Controller {
         $this->view('admin/peminjaman/index', $data);
     }
 
-    public function hariIni(){
+    public function hariIni($id_booking = NULL){
+         $id_res = param_number($id_booking);
+
+        if ($id_res  === false || $id_booking  < 1) {
+            Flasher::setModalInfo('Parameter Salah', 'hayooo ubah-ubah parameter yaa?', 'error');
+            header('Location: /admin'); // Redirect ke halaman login
+            exit;
+        }
+        
+        $data['detailBooking'] = $this->model('BookingModel')->getBookingDetail($id_booking);
+        // var_dump($data['detailBooking']);
+        $data['members'] = $this->model('BookingModel')->getBookingMembers($id_booking);
         $data['judul'] = 'Detail Peminjaman Hari Ini';
         $data['navbar'] = 'Peminjaman';
         $this->view('layout/sidebar', $data);
-        $this->view('admin/peminjaman/detailHariIni');
+        $this->view('admin/peminjaman/detailHariIni', $data);
     }
 
     public function detailReschedule($id_res = NULL){
@@ -281,18 +292,41 @@ class Admin extends Controller {
         $this->view('admin/peminjaman/detailReschedule', $data);
     }
 
-    public function detailPeminjamaman($id_booking = NULL){
+    public function detailBerlangsung($id_booking = NULL){
+
+        $id_res = param_number($id_booking);
+
+        if ($id_res  === false || $id_booking  < 1) {
+            Flasher::setModalInfo('Parameter Salah', 'hayooo ubah-ubah parameter yaa?', 'error');
+            header('Location: /admin'); // Redirect ke halaman login
+            exit;
+        }
+
+
+        $data['detailBooking'] = $this->model('BookingModel')->getBookingDetail($id_booking);
+        // var_dump($data['detailBooking']);
+        $data['members'] = $this->model('BookingModel')->getBookingMembers($id_booking);
         $data['judul'] = 'Detail Peminjaman yang Berlangsung';
         $data['navbar'] = 'Peminjaman';
         $this->view('layout/sidebar', $data);
-        $this->view('admin/peminjaman/detailBerlangsung');
+        $this->view('admin/peminjaman/detailBerlangsung', $data);
     }
 
-    public function detailRiwayat(){
+    public function detailRiwayat($id_booking = NULL){
+        $id_booking = param_number($id_booking);
+
+        if ($id_booking  === false || $id_booking  < 1) {
+            Flasher::setModalInfo('Parameter Salah', 'hayooo ubah-ubah parameter yaa?', 'error');
+            header('Location: /admin'); // Redirect ke halaman login
+            exit;
+        }
+         $data['detailBooking'] = $this->model('BookingModel')->getBookingDetail($id_booking);
+        // var_dump($data['detailBooking']);
+        $data['members'] = $this->model('BookingModel')->getBookingMembers($id_booking);
         $data['judul'] = 'Detail Riwayat Peminjaman';
         $data['navbar'] = 'Peminjaman';
         $this->view('layout/sidebar', $data);
-        $this->view('admin/peminjaman/detailRiwayat');
+        $this->view('admin/peminjaman/detailRiwayat', $data);
     }
 
     public function buatBooking(){

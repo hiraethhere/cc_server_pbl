@@ -145,7 +145,7 @@
                         
                         <!-- Bintang -->
                         <div class="flex items-center gap-1">
-                                <?php 
+                            <?php 
                             $max = 5;
                             for ($i = 1; $i <= $max; $i++):
                             if ($i <= $reschedule['avg_rating']) {
@@ -207,7 +207,7 @@
 
                     <div class="mb-3 w-full">
                         <p class="text-sm font-medium text-dark-overlay7 mb-2">Status</p>
-                        <a class="<?= getStyleStatus($reschedule['status_reschedule']) ?> flex-row flex-wrap inline-flex justify-center py-1 px-4 rounded-md mt-2">
+                        <a class="<?= getStyleStatusDetail($reschedule['status_reschedule']) ?> flex-row flex-wrap inline-flex justify-center py-1 px-4 rounded-md mt-2">
                             <div class="flex items-center gap-2 <?= getStyleStatustext($reschedule['status_reschedule']) ?>">
                                 <?= icon('circleFill', 'w-3 h-3 mr-2') ?>        
                             </div>

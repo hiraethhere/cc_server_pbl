@@ -10,7 +10,7 @@ function translateStatus($status): string
         'cancelled' => 'Dibatalkan',
         'expired'  => 'Kadaluarsa',
         'pending'  => 'Menunggu',
-        'approved' => 'Sudah Disetujui',
+        'approved' => 'Disetujui',
         'declined' => 'Ditolak'
     ];
 
@@ -32,6 +32,22 @@ function translateStatusUser($status): string
 }
 
 function getStyleStatus($status): string {
+
+   $map = [
+        'pending'  => 'bg-blue-600 text-[#1E68FB]',
+        'active'   => 'bg-[#38C55C]',
+        'ongoing'  => 'bg-yellow-500 text-yellow-600 ',
+        'done'     => 'bg-[#38C55C]',
+        'cancelled' => 'bg-[#C90B0B]',
+        'rejected' => 'bg-[#C90B0B]', //opacity 30%
+        'approved' => 'bg-[#38C55C]',
+        'declined' => 'bg-[#C90B0B]'
+    ];
+
+    return $map[$status] ?? 'bg-gray-400';
+}
+
+function getStyleStatusDetail($status): string {
 
    $map = [
         'pending'  => 'bg-blue-600/30 text-[#1E68FB]',

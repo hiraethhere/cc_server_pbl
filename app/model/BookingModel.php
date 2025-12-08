@@ -267,6 +267,7 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
     }
 
     //ini buat ambil di reschedule
+    //ini buat ambil di detailBooking admin juga
     public function getBookingMembers($id_booking){
     // Ambil NIM/NIP dan Nama dari tabel users lewat perantara booking_members
         $query = "SELECT u.id_user, u.username, u.nomor_induk
@@ -508,6 +509,27 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
         $this->db->bind('id_user', $id_user);
         
         // Jika ada hasil, berarti user berhak. Jika false/kosong, berarti tidak berhak.
+        return $this->db->singleSet(); 
+    }
+
+    public function getBookingDetail($id_booking) {
+        $query = "SELECT b.id_booking, b.booking_code, b.start_time, b.end_time, b.status, b.external_email,
+                    b.purpose, b.institution_name, r.room_name, r.min_capacity, r.max_capacity, r.floor, r.description, 
+                    u.username, u.jurusan_unit, u.nomor_induk,
+                    IFNULL(AVG(f.rating), 0) AS avg_rating,
+                    COUNT(f.id_feedback) AS total_review
+                FROM bookings b
+                JOIN rooms r ON b.id_room = r.id_room 
+                LEFT JOIN users u ON b.id_user = u.id_user
+                LEFT JOIN bookings b2 ON r.id_room = b2.id_room
+                LEFT JOIN feedback f ON b2.id_booking = f.id_booking
+                WHERE b.id_booking = :id_booking
+                GROUP BY b.id_booking";
+
+        $this->db->query($query);
+        $this->db->bind('id_booking', $id_booking);
+        
+        // Gunakan single() karena id_booking itu primary key (pasti cuma 1 data)
         return $this->db->singleSet(); 
     }
 
