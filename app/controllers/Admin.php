@@ -217,7 +217,7 @@ class Admin extends Controller {
                     $dateMode = 'upcoming';
                     // Jika user tidak milih filter status, kita paksa status 'active'
                     if (empty($statusFilter)) {
-                        $forcedStatus = ['approved', 'pending', 'on_going']; 
+                        $forcedStatus = ['approved', 'pending', 'ongoing']; 
                     }
                     $data['link'] = 'detailBerlangsung';
                     break;
@@ -947,7 +947,7 @@ class Admin extends Controller {
             // Menggunakan helper uploadDocument yang sudah dibuat sebelumnya
             // Pastikan path folder 'uploads/dokumen' sudah ada dan writable
             try {
-                $namaFileDokumen = uploadDocument($file_proposal, 'uploads/dokumen');
+                $namaFileDokumen = uploadFile($file_proposal, 'storage/documents');
             } catch (Exception $uploadError) {
                 throw new Exception($uploadError->getMessage());
             }
@@ -971,6 +971,9 @@ class Admin extends Controller {
 
             // Create Booking
             $newBookingId = $bookingModel->createBooking($dataBooking);
+            if (!$newBookingId) {
+                throw new Exception("internal sql error");
+            }
 
             // -----------------------------------------------------------
             // CLEANUP (Opsional)
@@ -982,7 +985,7 @@ class Admin extends Controller {
             $bookingModel->commit();
             
             Flasher::setModalInfo('Berhasil!', 'Permohonan booking terkirim. Silakan cek email secara berkala untuk info persetujuan.', 'success');
-            header("Location: /booking/external"); // Atau halaman sukses
+            header("Location: /admin/buatBooking"); // Atau halaman sukses
             exit;
 
         } catch (\Throwable $e) {
@@ -995,7 +998,7 @@ class Admin extends Controller {
             }
 
             Flasher::setModalInfo('Gagal Booking!', $e->getMessage(), 'error');
-            header("Location: /booking/external");
+            header("Location: /admin/buatBooking");
             exit();
         }
     }

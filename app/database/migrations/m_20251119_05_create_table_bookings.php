@@ -8,7 +8,7 @@ class m_20251119_05_create_table_bookings extends Migration{
                 id_booking INT AUTO_INCREMENT PRIMARY KEY,
                 id_room INT,
                 id_user INT,
-                eksternal_email VARCHAR(255) NULL,
+                external_email VARCHAR(255) NULL,
                 total_person INT NULL,
                 institution_name VARCHAR(255) NULL,
                 purpose VARCHAR(255) NULL,

@@ -63,16 +63,21 @@ class BookingModel {
 
     public function createBooking($data){
 
-        $query = "INSERT INTO bookings (id_room, id_user,total_person, booking_code, start_time, end_time, status, created_at) 
-                  VALUES (:id_room, :id_user, :total_person, :booking_code, :start, :end, 'pending', NOW())";
+        $query = "INSERT INTO bookings (id_room, id_user,total_person, booking_code, start_time, end_time, status, external_email, institution_name, purpose, booking_letter, created_at) 
+                  VALUES (:id_room, :id_user, :total_person, :booking_code, :start, :end, :status, :external_email, :institution_name, :purpose, :booking_letter, NOW())";
         
         $this->db->query($query);
         $this->db->bind('id_room', $data['id_room']);
-        $this->db->bind('id_user', $data['id_user']); // penanggung jawab
+        $this->db->bind('id_user', $data['id_user'] ?? NULL); // penanggung jawab
         $this->db->bind('total_person', $data['total_person']);
         $this->db->bind('booking_code', $data['booking_code']);
         $this->db->bind('start', $data['start_time'], PDO::PARAM_STR);
         $this->db->bind('end', $data['end_time'], PDO::PARAM_STR);
+        $this->db->bind('status', $data['status'] ?? 'pending');
+        $this->db->bind('external_email', $data['email'] ?? null);
+        $this->db->bind('institution_name', $data['agency'] ?? null);
+        $this->db->bind('purpose',       $data['purpose'] ?? null);
+        $this->db->bind('booking_letter', $data['document_path'] ?? null);
         $this->db->execute();
         return $this->db->lastInsertId();  
     }
@@ -346,7 +351,7 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
         $sql = "SELECT b.*, r.room_name, u.username
                 FROM bookings b
                 JOIN rooms r ON b.id_room = r.id_room
-                JOIN users u ON b.id_user = u.id_user
+                LEFT JOIN users u ON b.id_user = u.id_user
                 WHERE 1=1";
 
         // 1. FILTER DATE MODE (Kunci Logic Tab)

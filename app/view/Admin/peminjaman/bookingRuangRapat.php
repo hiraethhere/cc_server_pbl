@@ -22,7 +22,7 @@
     <div class="bg-background2 rounded-lg shadow-sm p-6 mt-4">
         <h2 class="text-2xl font-semibold text-dark-overlay mb-4">Ruang Rapat</h2>
 
-        <form class="space-y-4" id="bookingForm" action="/admin/handleEksternalBooking" method="POST" enctype="multipart/form-data">
+        <form class="space-y-4" id="bookingForm" action="/admin/handleExternalBooking" method="POST" enctype="multipart/form-data">
              <input type="hidden" id="id_room" name="id_room" value="<?= $rapat['id_room'] ?>">
             
             <!-- Email Perwakilan -->
@@ -74,7 +74,7 @@
 
             <!-- Upload Surat -->
             <div class="flex items-center justify-between w-full mb-2">
-                <label for="buktiKubaca" 
+                <label for="file_proposal" 
                     class="relative flex items-center w-full pl-4 border border-dark-overlay4 rounded-l-lg shadow-xs cursor-pointer hover:bg-dark-overlay1 focus-within:ring-2 focus-within:ring-blue-500 transition-all duration-200">
 
                     <div class="flex items-center flex-1 space-x-3">
@@ -99,8 +99,7 @@
                             <?= icon('cross', 'w-6 h-6 hover:scale-125 transition-transform') ?>
                         </div>
                     </button>
-
-                    <input type="file" name="buktiKubaca" id="buktiKubaca" class="hidden">
+                    <input type="file" name="file_proposal" id="file_proposal" class="hidden">
                 </label>
             </div>
 
