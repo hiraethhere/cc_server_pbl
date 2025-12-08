@@ -41,4 +41,42 @@ class RuanganModel {
     return $this->db->singleSet();
 }
 
+    public function getRuanganForAdmin($search = '', $limit = 5, $start = 0){
+        $query = "SELECT id_room, room_name, short_description, max_capacity, min_capacity, status FROM rooms";
+
+        if ($search) {
+        $query .= " WHERE room_name LIKE :keyword OR short_description LIKE :keyword";
+        }
+
+        $query .= " LIMIT :limit OFFSET :offset";
+        $this->db->query($query);
+
+        // Jika ada keyword, binding datanya
+        if ($search) {
+            $this->db->bind(':keyword', "%$search%");
+        }
+        $this->db->bind(':limit', $limit);
+        $this->db->bind(':offset', $start);
+        return $this->db->resultSet();
+    }
+
+    // === METHOD 2: HITUNG TOTAL (COUNT) ===
+    public function countRuanganForAdmin($search = '')
+    {
+        $query = "SELECT COUNT(*) as total FROM rooms";
+
+        // Filter search harus SAMA PERSIS dengan method getRuanganForAdmin
+        if ($search) {
+            $query .= " WHERE room_name LIKE :keyword OR short_description LIKE :keyword";
+        }
+
+        $this->db->query($query);
+
+        if ($search) {
+            $this->db->bind(':keyword', "%$search%");
+        }
+
+        $result = $this->db->singleSet();
+        return $result['total'] ?? $result->total ?? 0;
+    }
 }

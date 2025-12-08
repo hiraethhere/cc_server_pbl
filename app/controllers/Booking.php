@@ -45,7 +45,7 @@ class Booking extends Controller {
         $data['reschedule'] = null; // Default null
         $data['currentTab'] = $_GET['tab'] ?? 'booking'; // Default tab 'booking'
 
-        if ($bookingId) {
+        if ($bookingId) {   
         //selalu ambil detail booking lengkap (Join Room) 
         //Alasannya: Di tab reschedule pun, kamu mungkin butuh info "Reschedule untuk Ruang Apa & Jam Berapa"
             $data['activeBooking'] = $this->model('BookingModel')->getActiveBookingJoinRoom($bookingId);

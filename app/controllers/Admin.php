@@ -296,17 +296,55 @@ class Admin extends Controller {
     }
 
     public function buatBooking(){
+
+        $data['limit'] = 5; // Jumlah data per halaman
+        
+        // 2. Ambil Search Key
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+        
+        // 3. Logika Halaman (Pagination)
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        
+        // Hitung START (Offset) sesuai rumus kamu
+        $start = ($page > 1) ? ($page * $data['limit']) - $data['limit'] : 0;
+
+        // 4. Panggil Model (DIPISAH)
+        // Ambil data baris ruangan
+        $data['rooms'] = $this->model('RuanganModel')->getRuanganForAdmin($search, $data['limit'], $start);
+
+        // Hitung total data untuk pagination
+        $total_data = $this->model('RuanganModel')->countRuanganForAdmin($search);
+
+        // 5. Hitung Total Halaman
+        $data['total_page'] = ceil($total_data / $data['limit']);
+        $data['current_page'] = $page;
         $data['judul'] = 'Buat Pinjaman Baru';
         $data['navbar'] = 'Peminjaman';
         $this->view('layout/sidebar', $data);
-        $this->view('admin/Peminjaman/buatBooking');
+        $this->view('admin/Peminjaman/buatBooking', $data);
     }
 
-    public function bookingRuangan(){
+    public function bookingRuangan($id_room = NULL){
+
+        $id = param_number($id_room, "ID ruangan tidak valid");
+
+        if ($id_room === false || $id_room < 1) {
+                Flasher::setModalInfo('Parameter Salah', 'hayooo ubah-ubah parameter yaa?', 'error');
+                header('Location: /dashboard'); // Redirect ke halaman login
+                exit;
+            }
+
+        $data['detailRuangan'] = $this->model('RuanganModel')->getRuanganWithRating($id);
+
+        if (!$data['detailRuangan']) {
+            http_response_code(404);
+            die("Ruangan tidak ditemukan");
+        }
+
         $data['judul'] = 'Buat Pinjaman Baru';
         $data['navbar'] = 'Peminjaman';
         $this->view('layout/sidebar', $data);
-        $this->view('admin/Peminjaman/bookingRuangan');
+        $this->view('admin/Peminjaman/bookingRuangan', $data);
     }
 
     public function bookingRuangRapat(){
@@ -718,5 +756,126 @@ class Admin extends Controller {
     header('Location: ' . BASEURL . '/Admin/detailReschedule/' . $id_reschedule);
     exit;
 }
+
+    public function handleBooking(){
+        Flasher::modalInfo();
+
+        $id_room = $_POST['id_room'] ?? NULL;
+        $bookingDate = $_POST['tanggalPinjam']?? NULL;
+        $startTime = $_POST['jamMulai']?? NULL;
+        $endTime = $_POST['jamSelesai']?? NULL;
+
+        if (!$id_room || !$bookingDate || !$startTime || !$endTime) {
+            Flasher::setModalInfo('Gagal!', 'Semua field wajib diisi', 'error');
+            header("Location: /dashboard");
+        exit;
+        }
+
+
+        if (!isset($_POST['nim']) || !is_array($_POST['nim'])) {
+            // Handle jika tidak ada input NIM sama sekali
+            Flasher::setModalInfo('Gagal!', 'Data anggota tidak valid', 'error');
+            header("Location: /dashboard");
+            exit;
+        }
+
+        $nomorIndukKetua = $_POST['nim'][0];
+        $list_nim_anggota = array_slice($_POST['nim'], 1); 
+
+        
+        $start_datetime = "$bookingDate $startTime";
+        $end_datetime   = "$bookingDate $endTime";
+
+        $ts = strtotime($bookingDate);
+        $range_start = date('Y-m-d 00:00:00', strtotime('monday this week', $ts));
+        $range_end   = date('Y-m-d 23:59:59', strtotime('sunday this week', $ts));
+
+        $bookingCode = generateBookingCode(8);
+
+        $bookingModel = $this->model('BookingModel');
+        $userModel = $this->model('UserModel');
+        $rescheduleModel = $this->model('RescheduleModel');
+
+
+        try {
+                $bookingModel->beginTransaction();
+                $userKetua = $userModel->getUserByNomor_Induk($nomorIndukKetua);
+            if (!$userKetua) {
+                throw new Exception('Nomor Induk ketua tidak ditemukan');
+            }
+
+            if (!$bookingModel->checkUserQuota($userKetua['id_user'], $range_start, $range_end)) {
+                throw new Exception('Ketua sudah ada booking');
+            }
+
+            $id_ketua = $userKetua['id_user'];
+
+                $cekRoom = $bookingModel->roomCheck($id_room, $end_datetime, $start_datetime);
+            if ($cekRoom['total'] > 0) {
+                throw new Exception("Ruangan sudah di booking pada jam itu!");
+            }
+
+            $validatedUsers = [];
+
+            foreach ($list_nim_anggota as $nim) {
+                $nim = trim($nim);
+                if (empty($nim)) continue; // Skip jika kosong
+
+            // Cek User
+                $userAnggota = $userModel->getUserByNomor_Induk($nim);
+                if(!$userAnggota) throw new Exception("NIM Anggota ($nim) tidak ditemukan.");
+
+            // Cek apakah Anggota ini malah jadi Ketua? (Opsional, validasi biar ga input diri sendiri)
+                if($userAnggota['id_user'] == $id_ketua) {
+                     throw new Exception("Ketua tidak perlu dimasukkan lagi sebagai anggota.");
+                }
+
+            // Cek Kuota Anggota
+                if (!$bookingModel->checkUserQuota($userAnggota['id_user'], $range_start, $range_end)) {
+                    throw new Exception("Anggota (" . $userAnggota['username'] . ") sudah ada jadwal minggu ini.");
+                }
+
+                if ($rescheduleModel->checkUserHasReschedule($userAnggota['id_user'])) {
+                    throw new Exception("Anggota (" . $userAnggota['username'] . ") sudah ada di anggota reschedule orang lain.");
+                }
+
+            // Simpan ID anggota yang valid
+            $validatedUsers[] = $userAnggota['id_user'];
+            }
+
+            $total_person = 1 + count($validatedUsers);
+
+            $dataBooking = [
+                        'id_room' => $id_room,
+                        'id_user' => $id_ketua,
+                        'booker_name' => $userKetua['username'],
+                        'total_person' => $total_person,
+                        'booking_code' => $bookingCode,
+                        'start_time' => $start_datetime,
+                        'end_time' => $end_datetime
+                    ];
+
+            $newBookingId = $bookingModel->createBooking($dataBooking);
+
+            foreach($validatedUsers as $id_member){
+                $bookingModel->insertBookingMember((int)$newBookingId, $id_member);
+            }
+            //auto cancel misalnya ada reschedule yang mengarah ke jam dan tanggal yang sama
+            $rescheduleModel->autoCancelRescheduleConflict($id_room, $start_datetime, $end_datetime);
+            //decline reschedulenya kalo si ketua ini masuk ke anggota reschedulenya orang lain
+            $rescheduleModel->declinePendingByUser($id_ketua);
+
+            $bookingModel->commit();
+            Flasher::setModalInfo('Booking Berhasil', 'Booking berhasil dibuat. Berhasil Buat Booking dari Admin kode: ' . $bookingCode ,'success');
+            header("Location: /admin/buatBooking");
+            exit;
+
+        } catch (\Throwable $e) {
+            $bookingModel->rollBack();
+            Flasher::setModalInfo('Booking gagal!', $e->getMessage(),'error');
+            header('location: /admin/bookingRuangan/' . $id_room);
+            exit();
+        }
+    }
 
 }
