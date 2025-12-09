@@ -84,8 +84,13 @@
     <?php foreach($rooms as $room): ?>
         <div class="bg-background2 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
             <div class="relative h-48 from-dark-overlay4 to-dark-overlay7">
-                <img src="/img/DefaultRuangan.jpg" 
-                    alt="Ruang Lentera Edukasi" class="w-full h-full object-cover">
+                <?php if($room['img_room'] !== 'DefaultRuangan.jpg'): ?>
+                    <img src="<?= BASEURL; ?>/File/showPhoto/<?= $room['img_room']; ?>"
+                        alt="<?= $room['room_name'] ?>" class="w-full h-full object-cover">
+                <?php else: ?>
+                    <img src="/img/DefaultRuangan.jpg" 
+                        alt="<?= $room['room_name'] ?>" class="w-full h-full object-cover">
+                <?php endif ?>
             </div>
             <div class="grid grid-rows-[2fr_1fr] px-5 p-3">
                 <div>

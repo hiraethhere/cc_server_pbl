@@ -149,12 +149,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Maks durasi
-        if (duration > maxDuration) {
-            alert("Durasi maksimal 3 jam");
-            jamSelesai.value = "";
-            updateTotalTime(0);
-            return;
-        }
+        // if (duration > maxDuration) {
+        //     alert("Durasi maksimal 3 jam");
+        //     jamSelesai.value = "";
+        //     updateTotalTime(0);
+        //     return;
+        // }
 
         // Cek bentrok booking
         const isConflict = todaysBookings.some(b => {
@@ -198,3 +198,29 @@ document.addEventListener('DOMContentLoaded', function () {
         updateTotalTime(0);
     }
 });
+
+// ini buat ngubah filenya misalkan 
+// Ambil elemen berdasarkan ID
+    const fileInput = document.getElementById('file_proposal');
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+
+    // Tambahkan event listener saat user memilih file
+    fileInput.addEventListener('change', function() {
+        // Cek apakah ada file yang dipilih
+        if (this.files && this.files.length > 0) {
+            // Ambil nama file pertama
+            const name = this.files[0].name;
+            
+            // Ubah teks pada span
+            fileNameDisplay.textContent = name;
+            
+            // Opsional: Ubah warna teks jadi lebih gelap biar kelihatan sudah terisi
+            fileNameDisplay.classList.remove('text-gray-500');
+            fileNameDisplay.classList.add('text-gray-900');
+        } else {
+            // Jika user cancel / tidak jadi pilih
+            fileNameDisplay.textContent = "Belum ada file yang dipilih";
+            fileNameDisplay.classList.add('text-gray-500');
+            fileNameDisplay.classList.remove('text-gray-900');
+        }
+    });

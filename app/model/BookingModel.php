@@ -426,7 +426,7 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
         $sql = "SELECT COUNT(*) as total 
                 FROM bookings b
                 JOIN rooms r ON b.id_room = r.id_room
-                JOIN users u ON b.id_user = u.id_user
+                LEFT JOIN users u ON b.id_user = u.id_user
                 WHERE 1=1";
 
         if ($dateMode == 'today') {
@@ -528,7 +528,7 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
 
     public function getBookingDetail($id_booking) {
         $query = "SELECT b.id_booking, b.booking_code, b.start_time, b.end_time, b.status, b.external_email,
-                    b.purpose, b.institution_name, r.room_name, r.min_capacity, r.max_capacity, r.floor, r.description, 
+                    b.purpose, b.institution_name, b.booking_letter, r.room_name, r.min_capacity, r.max_capacity, r.floor, r.description, 
                     u.username, u.jurusan_unit, u.nomor_induk,
                     IFNULL(AVG(f.rating), 0) AS avg_rating,
                     COUNT(f.id_feedback) AS total_review

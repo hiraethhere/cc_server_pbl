@@ -217,7 +217,7 @@ class Admin extends Controller {
                     $dateMode = 'upcoming';
                     // Jika user tidak milih filter status, kita paksa status 'active'
                     if (empty($statusFilter)) {
-                        $forcedStatus = ['approved', 'pending', 'ongoing']; 
+                        $forcedStatus = ['approved', 'pending', 'ongoing', 'ongoing']; 
                     }
                     $data['link'] = 'detailBerlangsung';
                     break;
@@ -1054,7 +1054,7 @@ class Admin extends Controller {
             // Menggunakan helper uploadDocument yang sudah dibuat sebelumnya
             // Pastikan path folder 'uploads/dokumen' sudah ada dan writable
             try {
-                $namaFileDokumen = uploadFile($file_proposal, 'storage/documents');
+                $namaFileDokumen = uploadDocument($file_proposal, 'storage/documents');
             } catch (Exception $uploadError) {
                 throw new Exception($uploadError->getMessage());
             }
@@ -1098,7 +1098,7 @@ class Admin extends Controller {
 
             // Hapus file jika database gagal save
             if (isset($namaFileDokumen)) {
-                $filePath = dirname($_SERVER['DOCUMENT_ROOT']) . '/public/uploads/dokumen/' . $namaFileDokumen;
+                $filePath = dirname($_SERVER['DOCUMENT_ROOT']) . 'storage/documents/' . $namaFileDokumen;
                 if (file_exists($filePath)) unlink($filePath);
             }
 
@@ -1258,7 +1258,67 @@ class Admin extends Controller {
 
             header("Location: /admin/ruangan");
             exit;
+            
         }
 
+    public function handleAddRoom(){
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: /admin/ruangan");
+            exit;
+        }
 
+        try {
+            
+            if (empty($_POST['room_name']) || empty($_POST['floor']) || empty($_POST['status']) || empty($_POST['description']) || empty($_POST['short_description'])) {
+                throw new Exception("Data tidak lengkap");
+            }
+
+            // 4. Logika Upload Gambar
+            $namaFileGambar = 'defaultRuangan.jpg'; // Gambar default jika user tidak upload
+
+            // Cek apakah ada file yang diupload dan tidak ada error
+            if (isset($_FILES['roomPhoto']) && $_FILES['roomPhoto']['error'] !== 4) {
+                // Panggil helper 'uploadImage' yang kamu buat
+                // Parameter 2: folder tujuan (tanpa slash di depan karena helper pakai trim)
+                $namaFileGambar = uploadImage($_FILES['roomPhoto'], 'storage/roomsImage/');
+                
+            }
+
+            // Susun Data untuk Model
+            $data = [
+                'room_name' => $_POST['room_name'],
+                'floor' => $_POST['floor'],
+                'status' => $_POST['status'],
+                'min_capacity' => $_POST['min_capacity'],
+                'max_capacity' => $_POST['max_capacity'],
+                'description' => $_POST['description'],
+                'short_description' => $_POST['short_description'],
+                'img_room' => $namaFileGambar
+            ];
+
+            // Panggil Model untuk Insert Data
+            // Asumsi nama method di model adalah 'tambahDataRuangan'
+            $result = $this->model('RuanganModel')->createRoom($data);
+
+            if ($result <= 0) {
+                // Jika gagal insert, dan tadi upload gambar baru, hapus gambar yang sudah terlanjur diupload
+                if ($namaFileGambar !== 'default.jpg' && file_exists('storage/roomsImage/' . $namaFileGambar)) {
+                    unlink('storage/roomsImage/' . $namaFileGambar);
+                }
+                throw new Exception('Gagal menambahkan data ruangan ke database.');
+            }
+
+            // 7. Sukses
+            Flasher::setModalInfo('Berhasil', "Ruangan berhasil ditambahkan", 'success');
+            header("Location: /admin/ruangan");
+            exit;
+
+        } catch (Exception $e) {
+            // 8. Error Handling
+            Flasher::setModalInfo('Gagal', $e->getMessage(), 'error');
+            // Redirect kembali ke halaman list atau form tambah (sesuaikan routingmu)
+            header("Location: /admin/tambahDataRuangan"); 
+            exit;
+        }
+    }
 }

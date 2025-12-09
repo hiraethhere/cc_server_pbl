@@ -84,6 +84,19 @@
                             <?= htmlspecialchars($detailBooking['nomor_induk'] ?? $detailBooking['purpose']) ?>
                         </span>
                     </div>
+                    <?php if(!empty($detailBooking['booking_letter'])): ?>
+                    <div class="flex-1">
+                        <p class="mb-2 text-dark-overlay7">Lampiran</p>
+                        <a href="<?= BASEURL; ?>/File/downloadDokumen/<?= $detailBooking['booking_letter'] ?>" 
+                                target="_blank"
+                                class="flex items-center justify-between w-full px-3 py-2 bg-white border border-blue-300 rounded-lg text-left text-blue-600 hover:bg-blue-50 hover:border-blue-500 transition group cursor-pointer">
+                            <span 
+                                class="block w-full px-3 py-2 bg-white border border-dark-overlay4 rounded-lg text-left">
+                                <?= htmlspecialchars($detailBooking['booking_letter'] ?? '-')?>
+                            </span>
+                            </a>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
 

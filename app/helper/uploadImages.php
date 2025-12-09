@@ -44,15 +44,7 @@ function uploadImage(array $fileData, $targetDir) : string{
     }
 }
 
-function uploadFile(){
-        /**
-     * Helper untuk mengupload dokumen (PDF, DOC, DOCX, dll)
-     * @param array $fileData - $_FILES['nama_input']
-     * @param string $targetDir - Folder tujuan (relative terhadap root project atau public)
-     * @return string Nama file yang berhasil disimpan
-     * @throws Exception Jika gagal validasi atau upload
-     */
-    function uploadDocument(array $fileData, $targetDir) : string {
+function uploadDocument(array $fileData, $targetDir) : string {
         // Tentukan path penyimpanan
         // Sesuaikan path ini dengan struktur folder project Anda
         // Contoh: C:/xampp/htdocs/project_anda/public/uploads/dokumen/
@@ -64,6 +56,8 @@ function uploadFile(){
         }
 
         // 1. Cek error bawaan PHP
+        // var_dump($fileData['error']);
+        // exit;
         if ($fileData['error'] !== UPLOAD_ERR_OK) {
             switch ($fileData['error']) {
                 case UPLOAD_ERR_INI_SIZE:
@@ -80,7 +74,7 @@ function uploadFile(){
         }
 
         // 2. Validasi Ukuran (Contoh: Maks 5MB untuk dokumen)
-        $maxSize = 5 * 1024 * 1024; // 5MB
+        $maxSize = 10 * 1024 * 1024; // 5MB
         if ($fileData['size'] > $maxSize) {
             throw new \Exception("Ukuran file terlalu besar. Maksimal 5MB.");
         }
@@ -122,8 +116,6 @@ function uploadFile(){
             throw new \Exception("Gagal memindahkan file ke folder tujuan.");
         }
     }
-
-}
 
 //yang ini kurang aman bisa di inject script
 function uploadCover(){

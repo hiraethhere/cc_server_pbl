@@ -78,7 +78,7 @@ class RuanganModel {
     }
 
     public function getRuanganForAdmin($search = '', $status = '', $limit = 5, $start = 0){
-        $query = "SELECT id_room, room_name, short_description, max_capacity, min_capacity, status FROM rooms WHERE 1=1";
+        $query = "SELECT id_room, img_room, room_name, short_description, max_capacity, min_capacity, status FROM rooms WHERE 1=1";
 
         if ($search) {
         $query .= " AND (room_name LIKE :keyword OR short_description LIKE :keyword)";
@@ -150,5 +150,27 @@ class RuanganModel {
     public function getRuangRapat(){
         $this->db->query("SELECT * FROM rooms WHERE status = 'spesial'");
         return $this->db->singleSet();
+    }
+
+    public function createRoom($data){
+        $query = "INSERT INTO " . $this->table . " 
+                    (room_name, img_room, description, short_description, floor, status, id_announcement)
+                  VALUES
+                    (:room_name, :img_room, :description, :short_description, :floor, :status, :id_announcement)";
+
+        $this->db->query($query);
+        
+        // Binding data
+        $this->db->bind('room_name', $data['room_name']);
+        $this->db->bind('img_room', $data['img_room']);
+        $this->db->bind('description', $data['description']);
+        $this->db->bind('short_description', $data['short_description']);
+        $this->db->bind('floor', $data['floor']);
+        $this->db->bind('status', $data['status']);
+        
+        // Default ID Announcement (Sesuai migrasi default 1, tapi kita bind eksplisit biar aman)
+        $this->db->bind('id_announcement', 1); 
+        $this->db->execute();
+        return $this->db->rowCount();
     }
 }
