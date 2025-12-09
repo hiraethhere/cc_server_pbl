@@ -28,23 +28,29 @@
 
     <div class="flex justify-between items-center">
         <form method="POST" id="filterForm">
-            <input type="hidden" name="tab" value="<?= $tab ?>">
 
             <div class="flex items-center gap-3 pt-6 pb-2 bg-gray-50">
                 <?php 
                 $filter_id = 'status'; 
                 $label = 'status'; 
-                $options = ['Tersedia' => 'Tersedia', 'Tidak Tersedia' => 'Tidak Tersedia']; 
+                $options = ['Tersedia' => 'active', 'Tidak Tersedia' => 'non-active']; 
                 $current_values = $_GET[$filter_id] ?? ''; 
                 include __DIR__ . '/../../template/filterDropDown.php';
                 ?>
                 <button type="button" id="filter-action-btn"
-                        class="p-2 text-dark-overlay5 hover:text-dark-overlay7 hover:bg-dark-overlay1 rounded-lg transition border border-dark-overlay5 bg-white">
+                        class="flex items-center px-3 py-1.5 text-dark-overlay5 hover:text-dark-overlay7 hover:bg-dark-overlay1 hover:cursor-pointer rounded-lg transition border border-dark-overlay5 bg-white">
                     <div id="filter-action-icon" class="text-dark-overlay5"
                         data-check="<?= htmlspecialchars(icon('check', 'w-4 h-4 text-blue-overlay'), ENT_QUOTES) ?>"
                         data-cross="<?= htmlspecialchars(icon('cross', 'w-4 h-4 text-red1'), ENT_QUOTES) ?>">
                         <?= icon('check', 'w-4 h-4 text-blue-overlay') ?>
                     </div>
+                    
+                    <span id="filter-action-text" 
+                        class="ms-2" 
+                        data-text-check="Terapkan" 
+                        data-text-cross="Reset">
+                        Terapkan
+                    </span> 
                 </button>
             </div>
         </form>
@@ -75,7 +81,7 @@
     <!-- Rooms Grid -->
     <div id="rooms-container" class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 md:grid-cols-2 mb-8 mt-6 md:gap-6 lg:gap-8 gap-4">
 
-
+    <?php foreach($rooms as $room): ?>
         <div class="bg-background2 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
             <div class="relative h-48 from-dark-overlay4 to-dark-overlay7">
                 <img src="/img/DefaultRuangan.jpg" 
@@ -83,8 +89,8 @@
             </div>
             <div class="grid grid-rows-[2fr_1fr] px-5 p-3">
                 <div>
-                    <h3 class="font-bold text-lg text-black3 mb-1">Ruang Perancis</h3>
-                    <p class="text-dark-overlay8 mb-2 text-justify text-sm">Ruang bersih, tenang, dilengkapi wifi, cocok untuk belajar, rapat, dan aktivitas produktif.</p>
+                    <h3 class="font-bold text-lg text-black3 mb-1"><?= htmlspecialchars($room['room_name'] ?? '-') ?></h3>
+                    <p class="text-dark-overlay8 mb-2 text-justify text-sm"><?= htmlspecialchars($room['short_description'] ?? '-') ?></p>
                     <hr class="border-t border-dark-overlay">
                 </div>
                 <div class="grid grid-cols-[1fr_2fr] mb-2 md:text-md text-xs">
@@ -92,14 +98,14 @@
                         <div class="flex items-center gap-2 text-black2">
                             <?= icon('userOutline', 'w-5 h-5 mr-2') ?>        
                         </div>
-                        <span class="inline-flex items-center justify-center lg:flex-row flex-col">3-4 orang </span>
+                        <span class="inline-flex items-center justify-center lg:flex-row flex-col"><?= htmlspecialchars($room['min_capacity'] ?? 'no data') .'-' . htmlspecialchars($room['max_capacity'] ?? 'no data')  ?> orang </span>
                     </div>
                     <div class="flex items-center justify-end w-full">
-                        <a class="bg-green-overlay4 flex-row flex-wrap inline-flex justify-center py-1 px-4 rounded-md mt-2">
-                            <div class="flex items-center gap-2 text-green1">
+                        <a class="<?= getStyleStatusDetail($room['status']) ?> flex-row flex-wrap inline-flex justify-center py-1 px-4 rounded-md mt-2">
+                            <div class="flex items-center gap-2 <?= getStyleStatustext($room['status']) ?>">
                                 <?= icon('circleFill', 'w-3 h-3 mr-2') ?>        
                             </div>
-                            <h2 class="text-sm inline-block font-medium text-green1">Tersedia</h2>
+                            <h2 class="text-sm inline-block font-medium <?= getStyleStatustext($room['status']) ?>"><?= translateStatusRoom($room['status']) ?></h2>
                         </a>
                     </div>           
                 </div>
@@ -111,81 +117,9 @@
                 </div>
             </div>
         </div>
-
-
-        <div class="bg-background2 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
-            <div class="relative h-48 from-dark-overlay4 to-dark-overlay7">
-                <img src="/img/DefaultRuangan.jpg" 
-                    alt="Ruang Lentera Edukasi" class="w-full h-full object-cover">
-            </div>
-            <div class="grid grid-rows-[2fr_1fr] px-5 p-3">
-                <div>
-                    <h3 class="font-bold text-lg text-black3 mb-1">Ruang Perancis</h3>
-                    <p class="text-dark-overlay8 mb-2 text-justify text-sm">Ruang bersih, tenang, dilengkapi wifi, cocok untuk belajar, rapat, dan aktivitas produktif.</p>
-                    <hr class="border-t border-dark-overlay">
-                </div>
-                <div class="grid grid-cols-[1fr_2fr] mb-2 md:text-md text-xs">
-                    <div class="flex items-center justify-start w-full">
-                        <div class="flex items-center gap-2 text-black2">
-                            <?= icon('userOutline', 'w-5 h-5 mr-2') ?>        
-                        </div>
-                        <span class="inline-flex items-center justify-center lg:flex-row flex-col">3-4 orang </span>
-                    </div>
-                    <div class="flex items-center justify-end w-full">
-                        <a class="bg-red-overlay3 flex-row flex-wrap inline-flex justify-center py-1 px-4 rounded-md mt-2">
-                            <div class="flex items-center gap-2 text-red1">
-                                <?= icon('circleFill', 'w-3 h-3 mr-2') ?>        
-                            </div>
-                            <h2 class="text-sm inline-block font-medium text-red1">Tidak Tersedia</h2>
-                        </a>
-                    </div>           
-                </div>
-                <div class="w-full flex justify-end">
-                    <a href="/Admin/EditDataRuangan"
-                        class="flex items-center justify-center w-full bg-blue-overlay text-white text-center rounded-xl font-semibold text-sm hover:bg-green1 transition duration-200 py-2">
-                        Edit Ruangan
-                    </a>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="bg-background2 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
-            <div class="relative h-48 from-dark-overlay4 to-dark-overlay7">
-                <img src="/img/DefaultRuangan.jpg" 
-                    alt="Ruang Lentera Edukasi" class="w-full h-full object-cover">
-            </div>
-            <div class="grid grid-rows-[2fr_1fr] px-5 p-3">
-                <div>
-                    <h3 class="font-bold text-lg text-black3 mb-1">Ruang Perancis</h3>
-                    <p class="text-dark-overlay8 mb-2 text-justify text-sm">Ruang bersih, tenang, dilengkapi wifi, cocok untuk belajar, rapat, dan aktivitas produktif.</p>
-                    <hr class="border-t border-dark-overlay">
-                </div>
-                <div class="grid grid-cols-[1fr_2fr] mb-2 md:text-md text-xs">
-                    <div class="flex items-center justify-start w-full">
-                        <div class="flex items-center gap-2 text-black2">
-                            <?= icon('userOutline', 'w-5 h-5 mr-2') ?>        
-                        </div>
-                        <span class="inline-flex items-center justify-center lg:flex-row flex-col">3-4 orang </span>
-                    </div>
-                    <div class="flex items-center justify-end w-full">
-                        <a class="bg-green-overlay4 flex-row flex-wrap inline-flex justify-center py-1 px-4 rounded-md mt-2">
-                            <div class="flex items-center gap-2 text-green1">
-                                <?= icon('circleFill', 'w-3 h-3 mr-2') ?>        
-                            </div>
-                            <h2 class="text-sm inline-block font-medium text-green1">Tersedia</h2>
-                        </a>
-                    </div>           
-                </div>
-                <div class="w-full flex justify-end">
-                    <a href="/Admin/EditDataRuangan"
-                        class="flex items-center justify-center w-full bg-blue-overlay text-white text-center rounded-xl font-semibold text-sm hover:bg-green1 transition duration-200 py-2">
-                        Edit Ruangan
-                    </a>
-                </div>
-            </div>
-        </div>
+        <?php endforeach ?>
     </div>
 </main>
 
 <script src="/js/search.js" defer></script>
+<script src="/js/filterDropdown.js" defer></script>

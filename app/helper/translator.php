@@ -10,7 +10,7 @@ function translateStatus($status): string
         'cancelled' => 'Dibatalkan',
         'expired'  => 'Kadaluarsa',
         'pending'  => 'Menunggu',
-        'approved' => 'Sudah Disetujui',
+        'approved' => 'Disetujui',
         'declined' => 'Ditolak'
     ];
 
@@ -31,17 +31,74 @@ function translateStatusUser($status): string
     return $lookup[$status] ?? 'Status tidak dikenal';
 }
 
+function translateStatusRoom($status): string
+{
+    $lookup = [
+        'active'   => 'Tersedia',
+        'non-active' => 'Tidak Tersedia',
+        'spesial' => 'Admin Only'
+    ];
+
+    return $lookup[$status] ?? 'Status tidak dikenal';
+}
+
 function getStyleStatus($status): string {
 
    $map = [
-        'pending'  => 'bg-blue-500/30 text-[#1E68FB]',
+        'pending'  => 'bg-blue-600 text-[#1E68FB]',
         'active'   => 'bg-[#38C55C]',
-        'ongoing'  => 'bg-yellow-500/30 text-yellow-600 ',
+        'ongoing'  => 'bg-yellow-500 text-yellow-600 ',
         'done'     => 'bg-[#38C55C]',
         'cancelled' => 'bg-[#C90B0B]',
-        'rejected' => 'bg-[#C90B0B]',
+        'rejected' => 'bg-[#C90B0B]', //opacity 30%
         'approved' => 'bg-[#38C55C]',
         'declined' => 'bg-[#C90B0B]'
+    ];
+
+    return $map[$status] ?? 'bg-gray-400';
+}
+
+function getStyleStatusRoom($status): string {
+
+   $map = [
+        'active'   => 'bg-[#38C55C]',
+        'non-active'  => 'bg-red-overlay3',
+        'spesial'     => 'bg-[#38C55C]'
+    ];
+
+    return $map[$status] ?? 'bg-gray-400';
+}
+
+function getStyleStatusDetail($status): string {
+
+   $map = [
+        'pending'  => 'bg-blue-600/30 text-[#1E68FB]',
+        'active'   => 'bg-green-overlay4',
+        'non-active' => 'bg-red-overlay3',
+        'ongoing'  => 'bg-yellow-500/30 text-yellow-600 ',
+        'done'     => 'bg-green-overlay4',
+        'cancelled' => 'bg-[#C90B0B]/30',
+        'rejected' => 'bg-[#C90B0B]/30', //opacity 30%
+        'approved' => 'bg-[#38C55C]/30',
+        'declined' => 'bg-[#C90B0B]/30'
+    ];
+
+    return $map[$status] ?? 'bg-gray-400';
+}
+
+function getStyleStatustext($status): string {
+
+   $map = [
+        'pending'  => 'text-[#1E68FB]',
+        'active'   => 'text-green1',
+        'non-active' => 'text-red1',
+        'ongoing'  => 'text-yellow-600 ',
+        'done'     => 'text-green1',
+        'cancelled' => 'text-[#C90B0B]',
+        'rejected' => 'text-[#C90B0B]',
+        'approved' => 'text-[#38C55C]',
+        'declined' => 'text-[#C90B0B]',
+        'non-active' => 'text-red1',
     ];
 
     return $map[$status] ?? 'bg-gray-400';

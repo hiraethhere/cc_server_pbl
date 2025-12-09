@@ -26,7 +26,7 @@
                 <p class="block text-sm font-medium text-dark-overlay7 mb-2">Nama Ruangan</p>
                 <span 
                     class="block w-full px-4 py-2 bg-white border border-dark-overlay4 rounded-lg text-dark-overlay">
-                    Ruang Lentera Edukasi
+                    <?= htmlspecialchars($reschedule['room_name'] ?? '-') ?>
                 </span>
             </div>
 
@@ -38,21 +38,21 @@
                         <p class="mb-2 text-dark-overlay7">Tanggal</p>
                         <span
                             class="block w-full px-3 py-2 bg-white border border-dark-overlay4 rounded-lg text-left">
-                            5 September 2025
+                            <?= tanggal_indonesia($reschedule['new_start_time']??'-') ?>
                         </span>
                     </div>
                     <div class="flex-1">
                         <p class="mb-2 text-dark-overlay7">Jam Mulai</p>
                         <span 
                             class="block w-full px-3 py-2 bg-white border border-dark-overlay4 rounded-lg text-left">
-                            13:00
+                            <?= waktu_indonesia($reschedule['new_start_time']) ?>
                         </span>
                     </div>
                     <div class="flex-1">
                         <p class="mb-2 text-dark-overlay7">Jam Selesai</p>
                         <span 
                             class="block w-full px-3 py-2 bg-white border border-dark-overlay4 rounded-lg text-left">
-                            15:00
+                            <?= waktu_indonesia($reschedule['new_end_time']) ?>
                         </span>
                     </div>
                 </div>
@@ -66,21 +66,21 @@
                         <p class="mb-2 text-dark-overlay7">Nama</p>
                         <span
                             class="block w-full px-3 py-2 bg-white border border-dark-overlay4 rounded-lg text-left">
-                            Muhammad Reza Arifin
+                            <?= htmlspecialchars($reschedule['username'] ?? '-') ?>
                         </span>
                     </div>
                     <div class="flex-1">
                         <p class="mb-2 text-dark-overlay7">NIM</p>
                         <span 
                             class="block w-full px-3 py-2 bg-white border border-dark-overlay4 rounded-lg text-left">
-                            2407411000
+                            <?= htmlspecialchars($reschedule['nomor_induk'] ?? '-') ?>
                         </span>
                     </div>
                     <div class="flex-1">
                         <p class="mb-2 text-dark-overlay7">Jurusan</p>
                         <span 
                             class="block w-full px-3 py-2 bg-white border border-dark-overlay4 rounded-lg text-left">
-                            Teknik Informatika dan Komputer
+                            <?= htmlspecialchars($reschedule['jurusan_unit'] ?? '-') ?>
                         </span>
                     </div>
                 </div>
@@ -90,24 +90,16 @@
             <div class="mb-5 w-full">
                 <p class="block text-sm font-medium text-dark-overlay7 mb-2">Informasi Anggota</p>
                 <div class="flex flex-col justify-between gap-3 border border-dark-overlay4 p-4 rounded-lg flex-wrap">
+                <?php $i = 0 ?>
+                <?php foreach($members as $member): ?>
                     <div class="flex-1">
                         <span
                             class="block w-full px-3 py-2 bg-white border border-dark-overlay4 rounded-lg text-left">
-                            Muhammad Reza Arifin
+                            <?= htmlspecialchars($member['username'] ?? '-') ?>
                         </span>
                     </div>
-                    <div class="flex-1">
-                        <span 
-                            class="block w-full px-3 py-2 bg-white border border-dark-overlay4 rounded-lg text-left">
-                            Muhammad Reza Arifin
-                        </span>
-                    </div>
-                    <div class="flex-1">
-                        <span 
-                            class="block w-full px-3 py-2 bg-white border border-dark-overlay4 rounded-lg text-left">
-                            Muhammad Reza Arifin
-                        </span>
-                    </div>
+                    <?php $i++ ?>
+                <?php endforeach ?>
                 </div>
             </div>
 
@@ -116,10 +108,11 @@
                 <p class="block text-sm font-medium text-dark-overlay7 mb-2">Jumlah Orang</p>
                 <span 
                     class="block w-full px-4 py-2 bg-white border border-dark-overlay4 rounded-lg text-dark-overlay">
-                    4
+                    <?= $i + 1 ?>
                 </span>
             </div>
             
+            <?php if($reschedule['status_reschedule'] === 'pending'): ?>
             <div class="grid grid-cols-2 gap-8">
                 <button type="button" id="buttonDecline" class="flex-1 bg-red1 hover:bg-red-700 text-white font-medium py-2.5 rounded-lg transition hover:cursor-pointer">
                     Decline
@@ -128,6 +121,7 @@
                     Approve
                 </button>
             </div>
+            <?php endif ?>
 
             
         </div>
@@ -153,46 +147,40 @@
                         
                         <!-- Bintang -->
                         <div class="flex items-center gap-1">
-                            <svg class="w-7 h-7 text-yellow1 fill-current" viewBox="0 0 24 24">
-                                <path d="M12 2l2.4 7.3h7.7l-6.2 4.5 2.4 7.3-6.3-4.5-6.3 4.5 2.4-7.3-6.2-4.5h7.7z"/>
-                            </svg>
-                            <svg class="w-7 h-7 text-yellow1 fill-current" viewBox="0 0 24 24">
-                                <path d="M12 2l2.4 7.3h7.7l-6.2 4.5 2.4 7.3-6.3-4.5-6.3 4.5 2.4-7.3-6.2-4.5h7.7z"/>
-                            </svg>
-                            <svg class="w-7 h-7 text-yellow1 fill-current" viewBox="0 0 24 24">
-                                <path d="M12 2l2.4 7.3h7.7l-6.2 4.5 2.4 7.3-6.3-4.5-6.3 4.5 2.4-7.3-6.2-4.5h7.7z"/>
-                            </svg>
-                            <svg class="w-7 h-7 text-yellow1 fill-current" viewBox="0 0 24 24">
-                                <path d="M12 2l2.4 7.3h7.7l-6.2 4.5 2.4 7.3-6.3-4.5-6.3 4.5 2.4-7.3-6.2-4.5h7.7z"/>
-                            </svg>
-                            <svg class="w-7 h-7 text-white fill-current" viewBox="0 0 24 24">
-                                <path d="M12 2l2.4 7.3h7.7l-6.2 4.5 2.4 7.3-6.3-4.5-6.3 4.5 2.4-7.3-6.2-4.5h7.7z"/>
-                            </svg>
+                            <?php 
+                            $max = 5;
+                            for ($i = 1; $i <= $max; $i++):
+                            if ($i <= $reschedule['avg_rating']) {
+                                echo icon('starFill', 'w-5 h-5 text-yellow1');   // bintang terisi
+                            } else {
+                                echo icon('starFill', 'w-5 h-5 text-dark-overlay5'); // bintang kosong/gelap
+                            }
+                                endfor; ?>  
                         </div>
 
                         <!-- Teks rating -->
                         <div class="text-white">
-                            <span class="text-xl font-bold">4/5</span>
-                            <span class="text-sm font-medium text-white ml-2">(67 Respon)</span>
+                            <span class="text-xl font-bold"><?= round($reschedule['avg_rating']) ?>/5</span>
+                            <span class="text-sm font-medium text-white ml-2">(<?= $reschedule['total_review'] ?> Respon)</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="p-6">
-                        <h3 class="font-bold text-2xl text-black mb-4">Ruang Apa Aja Deh</h3>
+                        <h3 class="font-bold text-2xl text-black mb-4"><?= htmlspecialchars($reschedule['room_name']) ?></h3>
                         <div class="space-y-3 text-sm text-black3 mb-2 gap-4">
                             <div class="flex items-center">
                                 <div class="flex items-center text-black2">
                                     <?= icon('location', 'w-5 h-5 mr-3') ?> 
                                 </div>    
-                                <p class="">Lantai 2</p>
+                                <p class="">Lantai <?= htmlspecialchars($reschedule['floor']) ?></p>
                             </div>
     
                             <div class="flex items-center text-black">
                                 <div class="flex items-center text-black2">
                                     <?= icon('userOutline', 'w-5 h-5 mr-3') ?> 
                                 </div>    
-                                <p >4 - 5 orang</p>
+                                <p ><?= $reschedule['min_capacity'] . '-' . $reschedule['max_capacity'] ?> orang</p>
                             </div>
                             
                         </div>
@@ -204,7 +192,7 @@
                                 </div>
                             </summary>
                             <p class="mt-3 text-sm leading-relaxed text-justify">
-                                Ruangan (...) dengan luas xx m² yang berada di lantai x Perpustakaan Politeknik Negeri Jakarta ini dirancang untuk memberikan kenyamanan dan fasilitas lengkap bagi penggunanya. Ruangan ini dapat Anda gunakan bersama dengan rekan Anda untuk berbagai keperluan, seperti diskusi kelompok, presentasi, atau kegiatan pembelajaran lainnya yang memerlukan suasana tenang dan fokus.
+                                <?= htmlspecialchars($reschedule['description'] ?? '-') ?>
                             </p>
                         </details>
                     </div>
@@ -215,23 +203,36 @@
                         <p class="block text-sm font-medium text-dark-overlay7 mb-2">Kode Booking</p>
                         <span 
                             class="block w-full px-4 py-2 bg-white border border-dark-overlay4 rounded-lg text-dark-overlay">
-                            16HDQ89WRH
+                            <?= $reschedule['booking_code'] ?>
                         </span>
                     </div>
 
                     <div class="mb-3 w-full">
                         <p class="text-sm font-medium text-dark-overlay7 mb-2">Status</p>
-                        <a class="bg-green-overlay4 flex-row flex-wrap inline-flex justify-center py-1 px-4 rounded-md mt-2">
-                            <div class="flex items-center gap-2 text-green1">
+                        <a class="<?= getStyleStatusDetail($reschedule['status_reschedule']) ?> flex-row flex-wrap inline-flex justify-center py-1 px-4 rounded-md mt-2">
+                            <div class="flex items-center gap-2 <?= getStyleStatustext($reschedule['status_reschedule']) ?>">
                                 <?= icon('circleFill', 'w-3 h-3 mr-2') ?>        
                             </div>
-                            <h2 class="text-md inline-block font-semibold text-green1">Diterima</h2>
+                            <h2 class="text-md inline-block font-semibold <?= getStyleStatustext($reschedule['status_reschedule']) ?>"><?= translateStatus($reschedule['status_reschedule']) ?></h2>
                         </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+            <form id="bookingForm" method="POST" action="<?= BASEURL; ?>/admin/startBooking">
+                <input type="hidden" name="id_booking" value="<?= $detailBooking['id_booking']; ?>">
+                <input type="hidden" name="status" value="ongoing"> 
+            </form>
+
+            <form id="declineForm" method="POST" action="<?= BASEURL; ?>/admin/cancelBooking">
+                <input type="hidden" name="id_booking" value="<?= $detailBooking['id_booking']; ?>">
+                <input type="hidden" name="status" value="cancelled">
+            </form>
+
+            <form id="finishForm" method="POST" action="<?= BASEURL; ?>/admin/finishBooking">
+                <input type="hidden" name="id_booking" value="<?= $detailBooking['id_booking']; ?>">
+            </form>
 </main>
 
 <script>
@@ -240,8 +241,8 @@
 
     function openApproveModal() {
         Modal.confirm(
-            'Approve User?',
-            'Anda yakin ingin menyetujui user ini',
+            'Approve Reschedule?',
+            'Anda yakin ingin menyetujui reschedule ini?',
             function() {
                 // Callback ketika tombol konfirmasi ditekan
                 document.getElementById('approveForm').submit();
@@ -249,7 +250,7 @@
             {
                 icon: <?= json_encode(icon("usersAdmin", "w-24 h-24 text-green1")) ?>,
                 confirmText: 'Ya',
-                confirmClass: 'w-full px-6 py-2 bg-green1 text-white rounded-lg font-semibold hover:bg-green-600 transition',
+                confirmClass: 'w-full px-6 py-2 bg-green1 text-white rounded-lg font-semibold hover:bg-green-600 hover:cursor-pointer transition',
                 cancelText: 'Batalkan'
             }
         );
@@ -257,7 +258,7 @@
     
     function openDeclineRescheduleModal() {
         Modal.prompt(
-            'Decline User?',
+            'Decline Reschedule?',
             'Anda yakin ingin menolak permintaan reschedule',
             function(alasan) {
                 // Callback dengan nilai input
@@ -283,7 +284,7 @@
                 rows: 4,
                 required: true, // Wajib diisi
                 confirmText: 'Ya',
-                confirmClass: 'w-full px-6 py-2 bg-red1 text-white rounded-lg font-semibold hover:bg-red-800 transition',
+                confirmClass: 'w-full px-6 py-2 bg-red1 text-white rounded-lg font-semibold hover:bg-red-800 hover:cursor-pointer transition',
                 cancelText: 'Batalkan'
             }
         );

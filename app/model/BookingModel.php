@@ -63,17 +63,21 @@ class BookingModel {
 
     public function createBooking($data){
 
-        $query = "INSERT INTO bookings (id_room, id_user,total_person, booker_name, booking_code, start_time, end_time, status, created_at) 
-                  VALUES (:id_room, :id_user, :total_person, :booker_name, :booking_code, :start, :end, 'pending', NOW())";
+        $query = "INSERT INTO bookings (id_room, id_user,total_person, booking_code, start_time, end_time, status, external_email, institution_name, purpose, booking_letter, created_at) 
+                  VALUES (:id_room, :id_user, :total_person, :booking_code, :start, :end, :status, :external_email, :institution_name, :purpose, :booking_letter, NOW())";
         
         $this->db->query($query);
         $this->db->bind('id_room', $data['id_room']);
-        $this->db->bind('id_user', $data['id_user']); // penanggung jawab
+        $this->db->bind('id_user', $data['id_user'] ?? NULL); // penanggung jawab
         $this->db->bind('total_person', $data['total_person']);
-        $this->db->bind('booker_name', $data['booker_name']);
         $this->db->bind('booking_code', $data['booking_code']);
         $this->db->bind('start', $data['start_time'], PDO::PARAM_STR);
         $this->db->bind('end', $data['end_time'], PDO::PARAM_STR);
+        $this->db->bind('status', $data['status'] ?? 'pending');
+        $this->db->bind('external_email', $data['email'] ?? null);
+        $this->db->bind('institution_name', $data['agency'] ?? null);
+        $this->db->bind('purpose',       $data['purpose'] ?? null);
+        $this->db->bind('booking_letter', $data['document_path'] ?? null);
         $this->db->execute();
         return $this->db->lastInsertId();  
     }
@@ -263,6 +267,7 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
     }
 
     //ini buat ambil di reschedule
+    //ini buat ambil di detailBooking admin juga
     public function getBookingMembers($id_booking){
     // Ambil NIM/NIP dan Nama dari tabel users lewat perantara booking_members
         $query = "SELECT u.id_user, u.username, u.nomor_induk
@@ -341,13 +346,27 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
         return $this->db->rowCount();
     }
 
+    public function updateStatusBooking($id_booking, $status, $reason = NULL) {
+        
+        $query = "UPDATE bookings SET status = :status, reject_reason = :reason
+                WHERE id_booking = :id_booking";
+
+        $this->db->query($query);
+        $this->db->bind('status', $status);
+        $this->db->bind('reason', $reason ?? NULL);
+        $this->db->bind('id_booking', $id_booking);
+
+        $this->db->execute();
+        return $this->db->rowCount();
+    }
+
     public function filterBookings($limit, $start, $search = '', $status = [], $dateMode = '')
     {
         // Base Query dengan JOIN User & Room
         $sql = "SELECT b.*, r.room_name, u.username
                 FROM bookings b
                 JOIN rooms r ON b.id_room = r.id_room
-                JOIN users u ON b.id_user = u.id_user
+                LEFT JOIN users u ON b.id_user = u.id_user
                 WHERE 1=1";
 
         // 1. FILTER DATE MODE (Kunci Logic Tab)
@@ -451,7 +470,7 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
 
     public function getBookingDoneAndCancelledjoinRoom($limit, $offset) {
         $query = "SELECT b.id_booking, u.username, b.start_time, 
-                b.end_time, b.booking_code, b.booker_name, b.status, 
+                b.end_time, b.booking_code, b.status, 
                 r.room_name
             FROM bookings b 
             JOIN rooms r ON b.id_room = r.id_room
@@ -504,6 +523,27 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
         $this->db->bind('id_user', $id_user);
         
         // Jika ada hasil, berarti user berhak. Jika false/kosong, berarti tidak berhak.
+        return $this->db->singleSet(); 
+    }
+
+    public function getBookingDetail($id_booking) {
+        $query = "SELECT b.id_booking, b.booking_code, b.start_time, b.end_time, b.status, b.external_email,
+                    b.purpose, b.institution_name, r.room_name, r.min_capacity, r.max_capacity, r.floor, r.description, 
+                    u.username, u.jurusan_unit, u.nomor_induk,
+                    IFNULL(AVG(f.rating), 0) AS avg_rating,
+                    COUNT(f.id_feedback) AS total_review
+                FROM bookings b
+                JOIN rooms r ON b.id_room = r.id_room 
+                LEFT JOIN users u ON b.id_user = u.id_user
+                LEFT JOIN bookings b2 ON r.id_room = b2.id_room
+                LEFT JOIN feedback f ON b2.id_booking = f.id_booking
+                WHERE b.id_booking = :id_booking
+                GROUP BY b.id_booking";
+
+        $this->db->query($query);
+        $this->db->bind('id_booking', $id_booking);
+        
+        // Gunakan single() karena id_booking itu primary key (pasti cuma 1 data)
         return $this->db->singleSet(); 
     }
 

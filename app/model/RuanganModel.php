@@ -10,10 +10,12 @@ class RuanganModel {
     }
 
     public function getRuanganForDashboard(){
-        $this->db->query("SELECT id_room, room_name, img_room, short_description, floor, max_capacity, min_capacity, status FROM ". $this->table);
+        $this->db->query("SELECT id_room, room_name, img_room, short_description, floor, max_capacity, min_capacity, status FROM ". $this->table . " WHERE status = 'active'");
         $this->db->execute();
         return $this->db->resultSet();
     }
+
+    public function getAllRuangan(){}
 
     public function getRuanganById($id_room){
         $this->db->query("SELECT * FROM  " .  $this->table . " WHERE id_room = :id_room");
@@ -22,23 +24,131 @@ class RuanganModel {
         return $this->db->singleSet();
     }
 
-    public function getRuanganWithRating($id_room)
-{
-    $query = "SELECT r.*, a.announcement_content,
-            IFNULL(AVG(f.rating), 0) AS avg_rating,
-            COUNT(f.id_feedback) AS total_review
-            FROM rooms r
-            LEFT JOIN announcement a ON r.id_announcement = a.id_announcement 
-            LEFT JOIN bookings b ON r.id_room = b.id_room
-            LEFT JOIN feedback f ON b.id_booking = f.id_booking
-            WHERE r.id_room = :id_room
-            GROUP BY r.id_room
-    ";
+    public function getRuanganWithRating($id_room){
+        $query = "SELECT r.*, a.announcement_content,
+                IFNULL(AVG(f.rating), 0) AS avg_rating,
+                COUNT(f.id_feedback) AS total_review
+                FROM rooms r
+                LEFT JOIN announcement a ON r.id_announcement = a.id_announcement 
+                LEFT JOIN bookings b ON r.id_room = b.id_room
+                LEFT JOIN feedback f ON b.id_booking = f.id_booking
+                WHERE r.id_room = :id_room
+                GROUP BY r.id_room
+        ";
 
-    $this->db->query($query);
-    $this->db->bind(':id_room', $id_room);
-    $this->db->execute();
-    return $this->db->singleSet();
-}
+        $this->db->query($query);
+        $this->db->bind(':id_room', $id_room);
+        $this->db->execute();
+        return $this->db->singleSet();
+    }
 
+    public function getAllRuanganForAdmin($search = '', $status = '', $limit = 5, $start = 0){
+        $query = "SELECT id_room, room_name, short_description, max_capacity, min_capacity, status FROM rooms";
+
+        if ($search) {
+        $query .= " WHERE room_name LIKE :keyword OR short_description LIKE :keyword";
+        }
+
+        if (!empty($status)) {
+            if (!is_array($status)) $status = [$status];
+            $in = [];
+            foreach ($status as $i => $s) {
+                $in[] = ":status$i";
+            }
+            $query .= " AND status IN (" . implode(',', $in) . ")";
+        }
+
+        $query .= " LIMIT :limit OFFSET :offset";
+        $this->db->query($query);
+
+        // Jika ada keyword, binding datanya
+        if ($search) {
+            $this->db->bind(':keyword', "%$search%");
+        }
+
+        if (!empty($status)) {
+            foreach ($status as $i => $s) {
+                $this->db->bind("status$i", $s);
+            }
+        }
+
+        $this->db->bind(':limit', $limit);
+        $this->db->bind(':offset', $start);
+        return $this->db->resultSet();
+    }
+
+    public function getRuanganForAdmin($search = '', $status = '', $limit = 5, $start = 0){
+        $query = "SELECT id_room, room_name, short_description, max_capacity, min_capacity, status FROM rooms WHERE 1=1";
+
+        if ($search) {
+        $query .= " AND (room_name LIKE :keyword OR short_description LIKE :keyword)";
+        }
+
+        if (!empty($status)) {
+            if (!is_array($status)) $status = [$status];
+            $in = [];
+            foreach ($status as $i => $s) {
+                $in[] = ":status$i";
+            }
+            $query .= " AND status IN (" . implode(',', $in) . ")";
+        }
+
+        $query .= " LIMIT :limit OFFSET :offset";
+        $this->db->query($query);
+
+        // Jika ada keyword, binding datanya
+        if ($search) {
+            $this->db->bind(':keyword', "%$search%");
+        }
+
+        if (!empty($status)) {
+            foreach ($status as $i => $s) {
+                $this->db->bind("status$i", $s);
+            }
+        }
+
+        $this->db->bind(':limit', $limit);
+        $this->db->bind(':offset', $start);
+        return $this->db->resultSet();
+    }
+
+    // === METHOD 2: HITUNG TOTAL (COUNT) ===
+    public function countRuanganForAdmin($search = '', $status ='')
+    {
+        $query = "SELECT COUNT(*) as total FROM rooms WHERE 1=1";
+
+        // Filter search harus SAMA PERSIS dengan method getRuanganForAdmin
+        if ($search) {
+            $query .= " AND (room_name LIKE :keyword OR short_description LIKE :keyword)";
+        }
+
+         if (!empty($status)) {
+            if (!is_array($status)) $status = [$status];
+            $in = [];
+            foreach ($status as $i => $s) {
+                $in[] = ":status$i";
+            }
+            $query .= " AND status IN (" . implode(',', $in) . ")";
+        }
+
+        $this->db->query($query);
+
+        if ($search) {
+            $this->db->bind(':keyword', "%$search%");
+        }
+
+        if (!empty($status)) {
+            foreach ($status as $i => $s) {
+                $this->db->bind("status$i", $s);
+            }
+        }
+
+        $result = $this->db->singleSet();
+        return $result['total'] ?? $result->total ?? 0;
+    }
+
+    public function getRuangRapat(){
+        $this->db->query("SELECT * FROM rooms WHERE status = 'spesial'");
+        return $this->db->singleSet();
+    }
 }

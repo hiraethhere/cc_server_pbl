@@ -97,7 +97,7 @@ function isActive($current, $check) {
             <!-- KONTEN TAB -->
         
             <div class="flex justify-between items-center">
-                <form method="POST" id="filterForm" class="flex justify-between items-center w-full">
+                <form method="GET" id="filterForm" class="flex justify-between items-center w-full">
                     <input type="hidden" name="tab" value="<?= $tab ?>">
 
                     <div class="flex items-center gap-3 py-4 px-8 bg-background2">
@@ -118,12 +118,19 @@ function isActive($current, $check) {
                         ?>
 
                         <button type="button" id="filter-action-btn"
-                                class="p-2 text-dark-overlay5 hover:text-dark-overlay7 hover:bg-dark-overlay1 rounded-lg transition border border-dark-overlay5 bg-white">
+                                class="flex items-center px-3 py-1.5 hover:cursor-pointer text-dark-overlay5 hover:text-dark-overlay7 hover:bg-dark-overlay1 rounded-lg transition border border-dark-overlay5 bg-white">
                             <div id="filter-action-icon" class="text-dark-overlay5"
                                 data-check="<?= htmlspecialchars(icon('check', 'w-4 h-4 text-blue-overlay'), ENT_QUOTES) ?>"
                                 data-cross="<?= htmlspecialchars(icon('cross', 'w-4 h-4 text-red1'), ENT_QUOTES) ?>">
                                 <?= icon('check', 'w-4 h-4') ?>
                             </div>
+
+                            <span id="filter-action-text" 
+                                class="ms-2" 
+                                data-text-check="Terapkan" 
+                                data-text-cross="Reset">
+                                Terapkan
+                            </span> 
                         </button>
                     </div>
 

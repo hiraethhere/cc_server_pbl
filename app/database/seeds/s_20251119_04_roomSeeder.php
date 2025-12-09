@@ -14,7 +14,8 @@ class s_20251119_04_roomSeeder extends Seeder {
             (2, NULL, 'Ruang Dosen Jurusan', 'DefaultRuangan.jpg','Ruang khusus dosen untuk diskusi internal dan bimbingan mahasiswa.', 'Ruang dosen', 2, 'active', 5, 7, NOW(), NOW()),
             (3, 1, 'Ruang Himpunan TIK', 'DefaultRuangan.jpg','Ruang Himpunan untuk presentasi dan workshop kapasitas menengah.','Ruang seminar', 1, 'active', 4, 6, NOW(), NOW()),
             (4, 1, 'Ruang Eksekutif Mahasiswa', 'DefaultRuangan.jpg','Ruang kecil untuk rapat Eksekutif Mahasiswa.','Hidup BEM PNJ, Hidup Perlawanan!', 1, 'active', 3, 5, NOW(), NOW()),
-            (5, 1, 'Ruang Duta', 'DefaultRuangan.jpg','Ruangan besar khusus untuk para duta PNJ. Kapasitas hingga 6 orang.','Hidup Duta PNJ! Hidup Duta PNJ!', 3, 'active', 3, 6, NOW(), NOW());
+            (5, 1, 'Ruang Duta', 'DefaultRuangan.jpg','Ruangan besar khusus untuk para duta PNJ. Kapasitas hingga 6 orang.','Hidup Duta PNJ! Hidup Duta PNJ!', 3, 'active', 3, 6, NOW(), NOW()),
+            (6, 1, 'Ruang Rapat', 'DefaultRuangan.jpg',NULL,'Ruang rapat yang hanya bisa dibooking oleh eksternal', 2, 'spesial', 10, 20, NOW(), NOW());
             ";
         $this->db->query($sql);
         $this->db->execute();

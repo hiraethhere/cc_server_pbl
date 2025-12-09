@@ -27,14 +27,15 @@ class FeedbackModel{
     }
 
     public function getAllFeedBackPaginated($limit, $start){
-        $query = "SELECT 
-                f.id_feedback, f.rating, f.comment, f.created_at, b.booking_code, b.booker_name, b.start_time, b.end_time, r.room_name, b.booker_name, u.username
-                FROM feedback f
-                JOIN bookings b ON f.id_booking = b.id_booking
-                JOIN rooms r ON b.id_room = r.id_room
-                JOIN users u ON f.id_user = u.id_user
-                ORDER BY b.start_time DESC 
-                LIMIT :limit OFFSET :start";
+            $query = "SELECT 
+                    f.id_feedback, f.rating, f.comment, f.created_at, b.booking_code, ub.username AS booker_name, u.username, b.start_time, b.end_time, r.room_name, u.username
+                    FROM feedback f
+                    JOIN bookings b ON f.id_booking = b.id_booking
+                    JOIN rooms r ON b.id_room = r.id_room
+                    JOIN users u ON f.id_user = u.id_user
+                    LEFT JOIN users ub ON b.id_user = ub.id_user
+                    ORDER BY b.start_time DESC 
+                    LIMIT :limit OFFSET :start";
         
         $this->db->query($query);
         

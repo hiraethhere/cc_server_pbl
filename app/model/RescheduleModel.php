@@ -31,6 +31,12 @@ class RescheduleModel {
         return $this->db->resultSet();
     }
 
+        public function getRescheduleById($id_reschedule){
+        $this->db->query("SELECT * FROM reschedule WHERE id_reschedule = :id_booking");
+        $this->db->bind('id_booking', $id_reschedule);
+        return $this->db->resultSet();
+    }
+
     public function getPendingReschedulebyBookingId($id_booking){
         $this->db->query("SELECT * FROM reschedule WHERE id_booking = :id_booking AND status = 'pending'");
         $this->db->bind('id_booking', $id_booking);
@@ -47,6 +53,18 @@ class RescheduleModel {
         $this->db->query($query);
         $this->db->bind('id_user', $id_user);
         return $this->db->resultSet();
+    }
+
+    public function getActiveRescheduleByBookingId($id_booking){
+        //ini cari yang statusnya bukan rejected
+        $query = "SELECT status_reschedule FROM reschedule 
+                WHERE id_booking = :id_booking 
+                AND status_reschedule != 'rejected'";
+                
+        $this->db->query($query);
+        $this->db->bind('id_booking', $id_booking);
+        
+        return $this->db->singleSet(); // Mengembalikan row jika ada, false jika tidak ada
     }
 
     public function checkUserHasReschedule($id_user){
@@ -86,15 +104,21 @@ class RescheduleModel {
 
 
     //ini ambil data buat detail reschedule
+    // untuk rating ini kita harus join berdasarkan ruangan ya tidak bisa per booking
     public function getRescheduleDetail($id_res) {
         $query = "SELECT rs.id_booking, rs.id_reschedule, rs.new_start_time, rs.new_end_time,rs.status_reschedule,
-         r.room_name, r.min_capacity, r.max_capacity, r.floor, r.description, b.booking_code,
+                r.room_name, r.min_capacity, r.max_capacity, r.floor, r.description, b.booking_code,
+                IFNULL(AVG(f.rating), 0) AS avg_rating,
+                COUNT(f.id_feedback) AS total_review,
                 u.username, u.jurusan_unit, u.nomor_induk 
                 FROM reschedule rs 
                 JOIN bookings b ON rs.id_booking = b.id_booking
                 JOIN rooms r ON b.id_room = r.id_room 
                 JOIN users u ON b.id_user = u.id_user
-                WHERE rs.id_reschedule = :id_res";
+                LEFT JOIN bookings b2 ON r.id_room = b2.id_room
+                LEFT JOIN feedback f ON b2.id_booking = f.id_booking
+                WHERE rs.id_reschedule = :id_res
+                GROUP BY r.id_room";
 
         $this->db->query($query);
         $this->db->bind('id_res', $id_res);
@@ -231,10 +255,14 @@ class RescheduleModel {
         return $this->db->rowCount();
     }
 
-    public function updateStatus($id_reschedule, $status) {
-        $query = "UPDATE reschedule SET status_reschedule = :status WHERE id_reschedule = :id";
+    public function updateStatus($id_reschedule, $status, $reason = NULL) {
+        $query = "UPDATE reschedule 
+                    SET status_reschedule = :status,
+                    cancel_reason = :reason
+                    WHERE id_reschedule = :id";
         $this->db->query($query);
         $this->db->bind('status', $status);
+        $this->db->bind('reason', $reason);
         $this->db->bind('id', $id_reschedule);
         $this->db->execute();
         return $this->db->rowCount();

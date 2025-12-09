@@ -73,7 +73,7 @@
                                 <button  type="button" id="buttonCancel" class="bg-red1 text-white px-6 py-2 rounded-sm text-sm hover:bg-red-700 hover:cursor-pointer">
                                     Batalkan Booking
                                 </button>
-                                <a href="Booking/Reschedule/<?= $booking['id_booking'] ?>" class="bg-blue-overlay text-white px-6 py-2 rounded-sm text-sm hover:bg-blue-700 hover:cursor-pointer">
+                                <a href="/Booking/Reschedule/<?= $booking['id_booking'] ?>" class="bg-blue-overlay text-white px-6 py-2 rounded-sm text-sm hover:bg-blue-700 hover:cursor-pointer">
                                     Reschedule
                                 </a>
                             </div>

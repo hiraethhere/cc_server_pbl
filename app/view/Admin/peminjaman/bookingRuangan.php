@@ -22,8 +22,8 @@
         <div class="order-2 lg:order-0 lg:col-span-2">
             <div class="bg-background2 rounded-xl shadow-xl p-6 md:p-8">
 
-                <form id="bookingForm" action="/Booking/handleBooking" method="POST">
-                    <input type="hidden" name="id_room" value="">
+                <form id="bookingForm" action="/admin/handleBooking" method="POST">
+                    <input type="hidden" id="id_room" name="id_room" value="<?= $detailRuangan['id_room'] ?>">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div class="relative">
                             <label class="block text-sm font-semibold text-dark-overlay7 mb-2 flex items-center">
@@ -74,17 +74,18 @@
                                     <span class="ml-2 font-medium text-sm text-blue-overlay">Penanggung Jawab</span>
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <input type="text" maxlength="10" max="10" value="2407411000" readonly
+                                    <input type="text" maxlength="10" max="10" placeholder="NIM/NIP Ketua" name="nim[]"
                                         class="nim-input w-full px-4 py-2.5 border border-dark-overlay4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-background2">
-                                    <input type="text" value="Muhammad Reza Arifin" name="nama[]" readonly
+                                    <input type="text" name="nama[] " placeholder="Nama Lengkap Ketua"
                                         class="nama-input w-full px-4 py-2.5 border border-dark-overlay4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-background2">
                                 </div>
                             </div>
-                            
+                            <!-- anggota booking -->
+                            <?php for ($p= 0; $p < $detailRuangan['min_capacity'] - 1 ; $p++) :?>
                             <div class="member-card p-4 bg-background2 rounded-xl border border-dark-overlay4">
                                 <div class="flex items-center justify-between mb-2">
                                     <div class="flex items-center">
-                                        <span class="inline-flex items-center justify-center w-7 h-7 bg-dark-overlay7 text-white rounded-full text-xs font-bold">2</span>
+                                        <span class="inline-flex items-center justify-center w-7 h-7 bg-dark-overlay7 text-white rounded-full text-xs font-bold"><?= $p + 2 ?></span>
                                         <span class="ml-2 font-medium text-sm text-dark-overlay7">Anggota</span>
                                     </div>
                                 </div>
@@ -95,9 +96,9 @@
                                         class="nama-input w-full px-4 py-2.5 border border-dark-overlay4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
                                 </div>
                             </div>
-                          
+                            <?php endfor ?>
                         </div>
-                        <button type="button" onclick="addMember()"
+                        <button type="button" onclick="addMember()" id="addMember"
                                 class="rounded-md mt-4 flex items-center bg-blue-overlay1 text-blue-overlay hover:text-blue-700 hover:bg-blue-200 hover:cursor-pointer text-sm font-medium transition px-4 py-1">
                             Tambah Anggota
                             <div class="ml-2 font-semibold">
@@ -114,7 +115,7 @@
                     </div>
 
                     <div class="flex flex-row justify-between gap-6">
-                        <button type="button"
+                        <button type="button" onclick="window.location.href='<?= BASEURL . 'admin/buatBooking' ?>'"
                                 class="w-full py-3 hover:cursor-pointer text-dark-overlay4 border border-dark-overlay4 font-bold rounded-xl hover:bg-dark-overlay1 transition shadow-sm text-base">
                             Batal
                         </button>
@@ -148,46 +149,40 @@
                         
                         <!-- Bintang -->
                         <div class="flex items-center gap-1">
-                            <svg class="w-7 h-7 text-yellow1 fill-current" viewBox="0 0 24 24">
-                                <path d="M12 2l2.4 7.3h7.7l-6.2 4.5 2.4 7.3-6.3-4.5-6.3 4.5 2.4-7.3-6.2-4.5h7.7z"/>
-                            </svg>
-                            <svg class="w-7 h-7 text-yellow1 fill-current" viewBox="0 0 24 24">
-                                <path d="M12 2l2.4 7.3h7.7l-6.2 4.5 2.4 7.3-6.3-4.5-6.3 4.5 2.4-7.3-6.2-4.5h7.7z"/>
-                            </svg>
-                            <svg class="w-7 h-7 text-yellow1 fill-current" viewBox="0 0 24 24">
-                                <path d="M12 2l2.4 7.3h7.7l-6.2 4.5 2.4 7.3-6.3-4.5-6.3 4.5 2.4-7.3-6.2-4.5h7.7z"/>
-                            </svg>
-                            <svg class="w-7 h-7 text-yellow1 fill-current" viewBox="0 0 24 24">
-                                <path d="M12 2l2.4 7.3h7.7l-6.2 4.5 2.4 7.3-6.3-4.5-6.3 4.5 2.4-7.3-6.2-4.5h7.7z"/>
-                            </svg>
-                            <svg class="w-7 h-7 text-white fill-current" viewBox="0 0 24 24">
-                                <path d="M12 2l2.4 7.3h7.7l-6.2 4.5 2.4 7.3-6.3-4.5-6.3 4.5 2.4-7.3-6.2-4.5h7.7z"/>
-                            </svg>
+                             <?php 
+                            $max = 5;
+                            for ($i = 1; $i <= $max; $i++):
+                            if ($i <= $detailRuangan['avg_rating']) {
+                                echo icon('starFill', 'w-5 h-5 text-yellow1');   // bintang terisi
+                            } else {
+                                echo icon('starFill', 'w-5 h-5 text-dark-overlay5'); // bintang kosong/gelap
+                            }
+                                endfor; ?>  
                         </div>
 
                         <!-- Teks rating -->
                         <div class="text-white">
-                            <span class="text-xl font-bold">4/5</span>
-                            <span class="text-sm font-medium text-white ml-2">(67 Respon)</span>
+                            <span class="text-xl font-bold"><?= round($detailRuangan['avg_rating']) ?>/5</span>
+                            <span class="text-sm font-medium text-white ml-2">(<?= $detailRuangan['total_review'] ?> Respon)</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="p-6">
-                        <h3 class="font-bold text-2xl text-black mb-4">Ruang Apa Aja Deh</h3>
+                        <h3 class="font-bold text-2xl text-black mb-4"><?= htmlspecialchars($detailRuangan['room_name'] ?? '-') ?></h3>
                         <div class="space-y-3 text-sm text-black3 mb-2 gap-4">
                             <div class="flex items-center">
                                 <div class="flex items-center text-black2">
                                     <?= icon('location', 'w-5 h-5 mr-3') ?> 
                                 </div>    
-                                <p class="">Lantai 2</p>
+                                <p class="">Lantai <?= htmlspecialchars($detailRuangan['floor'] ?? '-')  ?></p>
                             </div>
     
                             <div class="flex items-center text-black">
                                 <div class="flex items-center text-black2">
                                     <?= icon('userOutline', 'w-5 h-5 mr-3') ?> 
                                 </div>    
-                                <p >4 - 5 orang</p>
+                                <p ><?= htmlspecialchars($detailRuangan['min_capacity'] ?? '-') . '-' . htmlspecialchars($detailRuangan['max_capacity'] ?? '-')   ?>orang</p>
                             </div>
                             
                         </div>
@@ -199,7 +194,7 @@
                                 </div>
                             </summary>
                             <p class="mt-3 text-sm leading-relaxed text-justify">
-                                Ruangan (...) dengan luas xx m² yang berada di lantai x Perpustakaan Politeknik Negeri Jakarta ini dirancang untuk memberikan kenyamanan dan fasilitas lengkap bagi penggunanya. Ruangan ini dapat Anda gunakan bersama dengan rekan Anda untuk berbagai keperluan, seperti diskusi kelompok, presentasi, atau kegiatan pembelajaran lainnya yang memerlukan suasana tenang dan fokus.
+                                <?= htmlspecialchars($detailRuangan['short_description'] ?? '-')  ?>
                             </p>
                         </details>
                     </div>
@@ -209,24 +204,21 @@
     </div>
 </main>
 
-
-<script src="/js/bookingRoom.js"></script>
+<script> const BASEURL = '<?= BASEURL ?>'</script>    
 <script>
-    // Variabel untuk tracking jumlah anggota
-    let memberCount = 2; // Dimulai dari 2 karena sudah ada Penanggung Jawab + 1 Anggota
-
-    // Fungsi untuk menambah anggota
+    // Add member (WAJIB JS)
+    const addButton = document.getElementById('addMember');
+    addButton.addEventListener('click', addMember)
+    let memberCount = <?= $p + 1?>;
     function addMember() {
-        const container = document.getElementById('membersContainer');
         memberCount++;
-
+        const container = document.getElementById('membersContainer');
         const newCard = document.createElement('div');
         newCard.className = 'member-card p-4 bg-white1 rounded-xl border border-dark-overlay5';
-        
         newCard.innerHTML = `
             <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center">
-                    <span class="inline-flex items-center justify-center w-7 h-7 bg-dark-overlay7 text-white rounded-full text-xs font-bold">${memberCount}</span>
+                    <span class="inline-flex items-center justify-center w-7 h-7 bg-dark-overlay7 text-white rounded-full text-xs font-bold"><?= $p + 2?></span>
                     <span class="ml-2 font-medium text-sm text-dark-overlay7">Anggota</span>
                 </div>
                 <button type="button" onclick="removeMember(this)" class="text-red1 hover:text-red-800 transition hover:cursor-pointer">
@@ -242,30 +234,27 @@
                     class="nama-input w-full px-4 py-2.5 border border-dark-overlay5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-dark-overlay bg-white text-sm">
             </div>
         `;
-
         container.appendChild(newCard);
+        if (memberCount == <?= $detailRuangan['max_capacity'] ?>) {
+        addButton.classList.add('hidden'); // sembunyikan tombol
+        return; // hentikan eksekusi fungsi 
+        }
     }
 
-    // Fungsi untuk menghapus anggota
+    // Remove member (WAJIB JS)
     function removeMember(button) {
-        // Hapus kartu
-        button.closest('.member-card').remove();
-
-        // Update penomoran semua kartu setelah penghapusan
-        updateMemberNumbers();
-    }
-
-    // Fungsi untuk update penomoran kartu
-    function updateMemberNumbers() {
         const cards = document.querySelectorAll('.member-card');
-        memberCount = cards.length;
-        
-        cards.forEach((card, index) => {
-            const numberBadge = card.querySelector('span.rounded-full');
-            if (numberBadge) {
-                numberBadge.textContent = index + 1;
-            }
+        if (cards.length <= 2) {
+            // Mengganti showError() dengan alert sederhana
+            alert('Minimal harus ada 2 orang (perwakilan + 1 anggota).');
+            return;
+        }
+        button.closest('.member-card').remove();
+        document.querySelectorAll('.member-card').forEach((card, i) => {
+            card.querySelector('span.rounded-full').textContent = i + 1;
         });
+        memberCount = document.querySelectorAll('.member-card').length;
+        addButton.classList.remove('hidden')
     }
 
     function konfirmasiBooking() {
@@ -277,7 +266,7 @@
             document.getElementById('bookingForm').submit();
             },
             {
-            icon: <?= json_encode(icon("calendar", "w-12 h-12 text-green1")) ?>,
+            icon: <?= json_encode(icon("calendar", "w-12 h-12", "green1")) ?>,
             confirmText: 'Booking',
             confirmClass: 'w-full px-6 py-2 bg-green1 text-white rounded-lg font-semibold hover:bg-green-700 transition hover:cursor-pointer',
             cancelText: 'Batalkan'
@@ -285,3 +274,4 @@
         );
     }
 </script>
+<script src="/js/bookingRoom.js"></script>
