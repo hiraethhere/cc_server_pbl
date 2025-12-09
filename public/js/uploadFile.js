@@ -11,8 +11,8 @@ class UploadFile {
         input.addEventListener('change', () => {
             if (input.files && input.files[0]) {
                 display.textContent = input.files[0].name;
-                display.classList.remove('text-gray-500');
-                display.classList.add('text-blue-600', 'font-medium');
+                display.classList.remove('text-dark-overlay6');
+                display.classList.add('text-blue-overlay', 'font-semibold', 'underline');
 
                 // Munculin tombol silang + kasih ruang
                 clearBtn.classList.remove('opacity-0', 'pointer-events-none');
@@ -20,8 +20,8 @@ class UploadFile {
                 label.classList.add('pr-12');  // ← JS yang handle
             } else {
                 display.textContent = 'Belum ada file yang dipilih';
-                display.classList.remove('text-blue-600', 'font-medium');
-                display.classList.add('text-gray-500');
+                display.classList.remove('text-blue-overlay', 'font-semibold', 'underline');
+                display.classList.add('text-dark-overlay6');
 
                 clearBtn.classList.add('opacity-0', 'pointer-events-none');
                 clearBtn.classList.remove('opacity-100', 'pointer-events-auto');

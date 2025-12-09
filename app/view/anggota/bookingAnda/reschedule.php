@@ -116,7 +116,7 @@
                         <button type="submit"
                                 class="w-full py-3 hover:cursor-pointer bg-green1 text-white font-bold rounded-xl hover:bg-green-700 transition shadow-sm text-base">
                                 <input type="hidden" value="<?= $detailRuangan['id_booking'] ?>" name="id_booking" >
-                            Booking Ruangan Ini
+                            Reschedule
                         </button>
                     </form>
                 </div>
@@ -240,7 +240,7 @@
                     <span class="inline-flex items-center justify-center w-7 h-7 bg-dark-overlay7 text-white rounded-full text-xs font-bold"><?= $i + 2?></span>
                     <span class="ml-2 font-medium text-sm text-dark-overlay7">Anggota</span>
                 </div>
-                <button type="button" onclick="removeMember(this)" class="text-red1 hover:text-red-800 transition">
+                <button type="button" onclick="removeMember(this)" class="text-red1 hover:text-red-800 transition hover:cursor-pointer">
                     <div>
                         <?= icon('trash', 'w-6 h-6') ?>
                     </div>

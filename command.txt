@@ -12,3 +12,7 @@ contoh: docker exec -it ruanginPNJ_server bash
 docker exec -it ruanginPNJ_server bash
 php cli.php migrate:fresh
 
+#seeding data
+#kalo mau seeding
+php cli.php seed
+

@@ -63,13 +63,14 @@ class BookingModel {
 
     public function createBooking($data){
 
-        $query = "INSERT INTO bookings (id_room, id_user,total_person, booking_code, start_time, end_time, status, created_at) 
-                  VALUES (:id_room, :id_user, :total_person, :booking_code, :start, :end, 'pending', NOW())";
+        $query = "INSERT INTO bookings (id_room, id_user,total_person, booker_name, booking_code, start_time, end_time, status, created_at) 
+                  VALUES (:id_room, :id_user, :total_person, :booker_name, :booking_code, :start, :end, 'pending', NOW())";
         
         $this->db->query($query);
         $this->db->bind('id_room', $data['id_room']);
         $this->db->bind('id_user', $data['id_user']); // penanggung jawab
         $this->db->bind('total_person', $data['total_person']);
+        $this->db->bind('booker_name', $data['booker_name']);
         $this->db->bind('booking_code', $data['booking_code']);
         $this->db->bind('start', $data['start_time'], PDO::PARAM_STR);
         $this->db->bind('end', $data['end_time'], PDO::PARAM_STR);
@@ -94,31 +95,151 @@ class BookingModel {
     }
 
     public function getBookingIdByUser($id_user){
-    // Kita gunakan DISTINCT supaya jika ada join yang berulang, data booking tetap muncul sekali saja.
-    // Kita pakai LEFT JOIN ke booking_members agar booking dimana dia jadi Ketua (dan mungkin tidak ada anggota) tetap termuat.
-    
-    $query = "SELECT DISTINCT b.id_booking, b.start_time FROM bookings b
-              LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
-              WHERE (b.id_user = :uid OR bm.id_user = :uid)
-              ORDER BY b.start_time DESC";
+        // Kita gunakan DISTINCT supaya jika ada join yang berulang, data booking tetap muncul sekali saja.
+        // Kita pakai LEFT JOIN ke booking_members agar booking dimana dia jadi Ketua (dan mungkin tidak ada anggota) tetap termuat.
+        
+        $query = "SELECT DISTINCT b.id_booking, b.start_time FROM bookings b
+                LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
+                WHERE (b.id_user = :uid OR bm.id_user = :uid)
+                ORDER BY b.start_time DESC";
 
-    $this->db->query($query);
-    $this->db->bind('uid', $id_user);
+        $this->db->query($query);
+        $this->db->bind('uid', $id_user);
     
-    return $this->db->resultSet();
-    }
-
-    //ini gua masi bingung mau pake created_at atau start_time kalo start_time itu dia gak asli
-    public function getAllBookingByUser($id_user){
-        $this->db->query("SELECT DISTINCT b.id_booking, r.room_name, b.start_time, b.end_time, b.total_person, b.status, b.created_at 
-                            FROM bookings b
-                            JOIN  rooms r ON b.id_room = r.id_room
-                            LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking 
-                            WHERE b.id_user = :id_user OR bm.id_user = :id_user ORDER BY b.start_time DESC;");
-                
-        $this->db->bind('id_user', $id_user);
         return $this->db->resultSet();
     }
+
+
+public function getAllBookingByUser($id_user, $limit, $offset) {
+        $sql = "SELECT DISTINCT b.id_booking, r.room_name, b.start_time, b.end_time,
+                    b.total_person, b.status, b.created_at, f.rating
+                FROM bookings b
+                JOIN rooms r ON b.id_room = r.id_room
+                LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
+                LEFT JOIN feedback f ON b.id_booking = f.id_booking AND f.id_user = :id_user
+                WHERE b.id_user = :id_user OR bm.id_user = :id_user
+                ORDER BY b.start_time DESC
+                LIMIT :limit OFFSET :offset";
+
+        $this->db->query($sql);
+        $this->db->bind('id_user', $id_user);
+        $this->db->bind('limit', (int)$limit, PDO::PARAM_INT);
+        $this->db->bind('offset', (int)$offset, PDO::PARAM_INT);
+
+        return $this->db->resultSet();
+    }
+
+
+    public function countAllBookingByUser($id_user){
+        $this->db->query("SELECT COUNT(DISTINCT b.id_booking) AS total
+                        FROM bookings b
+                        LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
+                        WHERE b.id_user = :id_user OR bm.id_user = :id_user");
+        $this->db->bind('id_user', $id_user);
+        return $this->db->singleSet()['total'];
+    }
+
+    public function filterBookingByUser($id_user, $limit, $offset, $search = '', $status = '') {
+            $sql = "SELECT DISTINCT b.id_booking, r.room_name, b.start_time, b.end_time,
+                        b.total_person, b.status, b.created_at, f.rating
+                    FROM bookings b
+                    JOIN rooms r ON b.id_room = r.id_room
+                    LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
+                    LEFT JOIN feedback f ON b.id_booking = f.id_booking AND f.id_user = :id_user
+                    WHERE (b.id_user = :id_user OR bm.id_user = :id_user)";
+
+            // filter status
+            if (!empty($status)) {
+                if (!is_array($status)) {
+                    $status = [$status];
+                }
+
+                $in = [];
+                foreach ($status as $i => $s) {
+                    $key = ":status$i";
+                    $in[] = $key;
+                }
+                $sql .= " AND b.status IN (" . implode(',', $in) . ")";
+            }
+
+            // filter search
+            if (!empty($search)) {
+                $sql .= " AND (
+                    r.room_name LIKE :search OR
+                    b.status LIKE :search OR
+                    b.total_person LIKE :search OR
+                    DATE(b.start_time) LIKE :search
+                )";
+            }
+
+            $sql .= " ORDER BY b.start_time DESC LIMIT :limit OFFSET :offset";
+
+            $this->db->query($sql);
+            $this->db->bind('id_user', $id_user);
+
+            // bind status array
+            if (!empty($status)) {
+                foreach ($status as $i => $s) {
+                    $this->db->bind("status$i", $s);
+                }
+            }
+
+            if (!empty($search)) {
+                $this->db->bind('search', "%$search%");
+            }
+
+            $this->db->bind('limit', (int)$limit, PDO::PARAM_INT);
+            $this->db->bind('offset', (int)$offset, PDO::PARAM_INT);
+
+            return $this->db->resultSet();
+        }
+
+
+        public function countFilterBookingByUser($id_user, $search = '', $status = '') {
+        $sql = "SELECT COUNT(DISTINCT b.id_booking) AS total
+                FROM bookings b
+                JOIN rooms r ON b.id_room = r.id_room
+                LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
+                WHERE (b.id_user = :id_user OR bm.id_user = :id_user)";
+
+            if (!empty($status)) {
+                if (!is_array($status)) {
+                    $status = [$status];
+                }
+                $in = [];
+                foreach ($status as $i => $s) {
+                    $in[] = ":status$i";
+                }
+                $sql .= " AND b.status IN (" . implode(',', $in) . ")";
+            }
+
+        if (!empty($search)) {
+            $sql .= " AND (
+                r.room_name LIKE :search OR
+                b.status LIKE :search OR
+                b.start_time LIKE :search OR
+                b.end_time LIKE :search OR
+                b.total_person LIKE :search OR
+                DATE(b.start_time) LIKE :search
+            )";
+        }
+
+        $this->db->query($sql);
+        $this->db->bind('id_user', $id_user);
+
+         if (!empty($status)) {
+                foreach ($status as $i => $s) {
+                    $this->db->bind("status$i", $s);
+                }
+            }
+
+        if (!empty($search)) {
+            $this->db->bind('search', "%$search%");
+        }
+
+        return $this->db->singleSet()['total'];
+    }
+
 
     public function getActiveBookingJoinRoom($id_booking){
         $query = "SELECT b.id_booking, b.start_time, b.status, b.end_time, b.total_person, b.booking_code, r.room_name, r.short_description
@@ -220,33 +341,139 @@ class BookingModel {
         return $this->db->rowCount();
     }
 
-    public function getBookingTodayJoinRoomAndUser() {
-        $this->db->query("SELECT b.id_booking, u.username, b.start_time, b.end_time, b.booking_code, b.booker_name, b.status, r.room_name
-                        FROM bookings b JOIN rooms r ON b.id_room = r.id_room
-                        JOIN users u ON b.id_user = u.id_user
-                        WHERE DATE(start_time) = CURDATE() ORDER BY start_time DESC");
+    public function filterBookings($limit, $start, $search = '', $status = [], $dateMode = '')
+    {
+        // Base Query dengan JOIN User & Room
+        $sql = "SELECT b.*, r.room_name, u.username
+                FROM bookings b
+                JOIN rooms r ON b.id_room = r.id_room
+                JOIN users u ON b.id_user = u.id_user
+                WHERE 1=1";
+
+        // 1. FILTER DATE MODE (Kunci Logic Tab)
+        if ($dateMode == 'today') {
+            // Khusus Tab Hari Ini
+            $sql .= " AND DATE(b.start_time) = CURDATE()";
+        } 
+        elseif ($dateMode == 'upcoming') {
+            // Khusus Tab Berlangsung (Booking masa depan atau sedang jalan)
+            // Dan status bukan selesai/batal (opsional, tergantung logic kamu)
+            $sql .= " AND b.end_time >= NOW()"; 
+        }
+        // elseif ($dateMode == 'history') { ... logic lain jika perlu ... }
+
+        // 2. FILTER STATUS (Dynamic IN)
+        if (!empty($status)) {
+            if (!is_array($status)) $status = [$status];
+            $in = [];
+            foreach ($status as $i => $s) {
+                $in[] = ":status$i";
+            }
+            $sql .= " AND b.status IN (" . implode(',', $in) . ")";
+        }
+
+        // 3. FILTER SEARCH
+        if (!empty($search)) {
+            $sql .= " AND ( 
+                        u.username LIKE :search OR 
+                        r.room_name LIKE :search
+                    )";
+        }
+
+        // 4. ORDER & LIMIT
+        $sql .= " ORDER BY b.start_time DESC LIMIT :limit OFFSET :start";
+
+        $this->db->query($sql);
+
+        // 5. BINDING
+        if (!empty($status)) {
+            foreach ($status as $i => $s) {
+                $this->db->bind("status$i", $s);
+            }
+        }
+        if (!empty($search)) {
+            $this->db->bind('search', "%$search%");
+        }
+        
+        $this->db->bind('limit', (int)$limit, PDO::PARAM_INT);
+        $this->db->bind('start', (int)$start, PDO::PARAM_INT);
+
         return $this->db->resultSet();
     }
 
-    public function getBookingPendingjoinRoom() {
-        $this->db->query("SELECT b.id_booking, u.username, b.start_time, b.end_time, b.booking_code, b.booker_name, b.status, r.room_name
-                        FROM bookings b JOIN rooms r ON b.id_room = r.id_room
-                        JOIN users u ON b.id_user = u.id_user
-                        WHERE b.status = 'pending' ORDER BY start_time DESC");
+    // Function Count-nya (Wajib Ada)
+    public function countFilterBookings($search = '', $status = [], $dateMode = '')
+    {
+        $sql = "SELECT COUNT(*) as total 
+                FROM bookings b
+                JOIN rooms r ON b.id_room = r.id_room
+                JOIN users u ON b.id_user = u.id_user
+                WHERE 1=1";
+
+        if ($dateMode == 'today') {
+            $sql .= " AND DATE(b.start_time) = CURDATE()";
+        } elseif ($dateMode == 'upcoming') {
+            $sql .= " AND b.end_time >= NOW()";
+        }
+
+        if (!empty($status)) {
+            if (!is_array($status)) $status = [$status];
+            $in = [];
+            foreach ($status as $i => $s) {
+                $in[] = ":status$i";
+            }
+            $sql .= " AND b.status IN (" . implode(',', $in) . ")";
+        }
+
+        if (!empty($search)) {
+            $sql .= " AND (u.username LIKE :search OR r.room_name LIKE :search)";
+        }
+
+        $this->db->query($sql);
+
+        if (!empty($status)) {
+            foreach ($status as $i => $s) {
+                $this->db->bind("status$i", $s);
+            }
+        }
+        if (!empty($search)) {
+            $this->db->bind('search', "%$search%");
+        }
+
+        $result = $this->db->singleSet();
+        return $result['total'];
+    }
+
+    public function countBookingPending() {
+        $this->db->query("SELECT COUNT(*) AS total FROM bookings WHERE status = 'pending'");
+        return $this->db->singleSet()['total'];
+    }
+
+    public function getBookingDoneAndCancelledjoinRoom($limit, $offset) {
+        $query = "SELECT b.id_booking, u.username, b.start_time, 
+                b.end_time, b.booking_code, b.booker_name, b.status, 
+                r.room_name
+            FROM bookings b 
+            JOIN rooms r ON b.id_room = r.id_room
+            JOIN users u ON b.id_user = u.id_user
+            WHERE b.status IN ('done', 'cancelled')
+            ORDER BY b.start_time DESC
+            LIMIT :limit OFFSET :offset
+        ";
+
+        $this->db->query($query);
+        $this->db->bind('limit', (int)$limit);
+        $this->db->bind('offset', (int)$offset);
+
         return $this->db->resultSet();
     }
 
-    public function getBookingDoneAndCancelledjoinRoom() {
-        $this->db->query("SELECT b.id_booking, u.username, b.start_time, b.end_time, b.booking_code, b.booker_name, b.status, r.room_name
-                        FROM bookings b JOIN rooms r ON b.id_room = r.id_room
-                        JOIN users u ON b.id_user = u.id_user
-                        WHERE b.status IN ('done', 'cancelled') ORDER BY start_time DESC");
-        return $this->db->resultSet();
+    public function countBookingDoneAndCancelled() {
+        $this->db->query("SELECT COUNT(*) AS total FROM bookings WHERE status IN ('done', 'cancelled')");
+        return $this->db->singleSet()['total'];
     }
 
-    public function getAllBookingPaginated(){
-        $this->db->query("SELECT * FROM bookings ORDER BY start_time DESC LIMIT :limit OFFSET :offset;");
-    }
+
 
     public function getBookingByIdAndUser($id_booking, $id_user){
         // Ambil data booking DAN data ruangan sekaligus
@@ -263,15 +490,40 @@ class BookingModel {
         return $this->db->singleSet();
     }
 
+    public function isUserAssociatedWithBooking($id_booking, $id_user) {
+        // Query untuk mengecek apakah user adalah PEMBUAT atau ANGGOTA dari booking tersebut
+        $query = "SELECT b.id_booking 
+                FROM bookings b
+                LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
+                WHERE b.id_booking = :id_booking 
+                AND (b.id_user = :id_user OR bm.id_user = :id_user)
+                LIMIT 1";
+
+        $this->db->query($query);
+        $this->db->bind('id_booking', $id_booking);
+        $this->db->bind('id_user', $id_user);
+        
+        // Jika ada hasil, berarti user berhak. Jika false/kosong, berarti tidak berhak.
+        return $this->db->singleSet(); 
+    }
+
     
 
     public function autoCancelLateBookings()
     {
         
-        $query = "UPDATE " . $this->table . " 
-                  SET status = 'cancelled', cancel_by = 'system' 
-                  WHERE status = 'pending' 
-                  AND NOW() > DATE_ADD(start_time, INTERVAL 10 MINUTE)";
+        $query = "UPDATE bookings b
+                    LEFT JOIN reschedule r ON r.id_booking = b.id_booking
+                    SET 
+                        b.status = 'cancelled',
+                        b.cancel_by = 'system',
+                        r.cancel_by = 'system',
+                        r.status_reschedule = CASE 
+                            WHEN r.status_reschedule = 'pending' THEN 'cancelled'
+                            ELSE r.status_reschedule
+                        END
+                    WHERE b.status = 'pending'
+                    AND NOW() > DATE_ADD(b.start_time, INTERVAL 10 MINUTE);";
                   
         $this->db->query($query);
         $this->db->execute();

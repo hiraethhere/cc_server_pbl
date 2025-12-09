@@ -53,6 +53,7 @@ function toggleFilter(filterName, value, labelId, defaultLabel) {
     
     // PENTING: Panggil fungsi AJAX/Submit Form rekan Anda di sini
     // applyFilters(); 
+    // from backend: no ajax no fetch fak yu
 }
 
 /**
@@ -66,6 +67,40 @@ function updateButtonLabel(labelElement, values, defaultLabel) {
         labelElement.textContent = defaultLabel;
     }
 }
+
+function applyFilters() {
+    const params = new URLSearchParams(window.location.search);
+
+    const currentTab = params.get('tab');
+    params.set('page', 1);
+
+    const filterNames = ['status', 'jurusan', 'jenis', 'Status', 'Jurusan', 'Jenis', 'tab'];
+
+    // ambil semua hidden input filter
+    document.querySelectorAll('input[type="hidden"]').forEach(input => {
+            if (filterNames.includes(input.name)) {
+                params.delete(input.name);
+                // Hanya set jika ada isinya
+                if (input.value.trim() !== '') {
+                    params.set(input.name, input.value);
+                }
+            }
+        });
+
+    const searchInput = document.getElementById('search-input'); 
+    if (searchInput) {
+        params.delete('search'); // Hapus parameter search lama
+        if (searchInput.value.trim() !== '') {
+            params.set('search', searchInput.value.trim()); // Masukkan nilai baru
+        }
+    }
+
+    // return;
+
+
+    window.location.href = window.location.pathname + '?' + params.toString();
+}
+
 
 // === 3. LOGIKA UNTUK MENJAGA STATE SETELAH REFRESH (OPSIONAL TAPI BAIK) ===
 document.addEventListener('DOMContentLoaded', () => {
@@ -93,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Event listener untuk menutup dropdown saat klik di luar
-    document.addEventListener('click', (event) => {
+document.addEventListener('click', (event) => {
         let isDropdown = event.target.closest('.filter-dropdown-container');
         if (!isDropdown) {
             document.querySelectorAll('.filter-dropdown-menu').forEach(menu => {
@@ -101,5 +136,60 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
+
+    // === 4. FILTER ACTION BUTTON TOGGLE ICON (Check <-> Cross) ===
+    (function() {
+        const btn = document.getElementById('filter-action-btn');
+        const iconContainer = document.getElementById('filter-action-icon');
+        const form = document.getElementById('filterForm');
+
+        if (!btn || !iconContainer) return;
+
+        function filtersActiveFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            for (const [k, v] of params) {
+                if (v !== '' && k !== 'page' && k !== 'tab') return true;
+            }
+            return false;
+        }
+
+        function update() {
+            const active = filtersActiveFromURL();
+            const checkHTML = iconContainer.dataset.check || '';
+            const crossHTML = iconContainer.dataset.cross || '';
+
+            if (active) {
+                // 🔴 MODE RESET
+                if (crossHTML) iconContainer.innerHTML = crossHTML;
+
+                btn.onclick = function(e) {
+                    const url = new URL(window.location.href);
+                    e.preventDefault();
+
+                    // hapus semua filter kecuali search tertentu kalau mau
+                    const filtersToDelete = ['page', 'jenis', 'Jenis', 'status', 'Status', 'jurusan', 'Jurusan', 'url', 'search'];
+
+                    //Loop array di atas dan hapus dari URL
+                    filtersToDelete.forEach(p => url.searchParams.delete(p));
+                    // reset URL tanpa query
+                    window.location.href = url.toString();
+                };
+                btn.classList.remove('text-dark-overlay5');
+                btn.classList.add('text-red1');
+            } else {
+                // show check and make button apply/submit filters
+                if (checkHTML) iconContainer.innerHTML = checkHTML;
+                btn.onclick = function() {
+                    applyFilters();
+                };
+                btn.classList.remove('text-red1');
+                btn.classList.add('text-dark-overlay5');
+            }
+        }
+
+        // Initial update and also watch for history changes (back/forward)
+        update();
+        window.addEventListener('popstate', update);
+    })();
 });
 // Jangan lupa sertakan logika search dan clear filter Anda di file ini juga

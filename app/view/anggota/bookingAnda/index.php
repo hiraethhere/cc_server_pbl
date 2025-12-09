@@ -118,31 +118,66 @@
 
 
                         <?php $i = 1 ?>
-                        <?php foreach($reschedules as $reschedule) ?>
+                        <?php foreach($reschedules as $reschedule): ?>
                             <tr class="hover:bg-gray-50 transition border-b font-medium text-dark-overlay dark-overlay4ay-300">
                                 <td class="px-4 py-3 text-left text-sm border-b font-medium text-dark-overlay border-dark-overlay4"><?= $i ?></td>
                                 <td class="px-4 py-3 text-left text-sm border-b font-medium text-dark-overlay border-dark-overlay4"><?= htmlspecialchars(tanggal_indonesia($reschedule['new_start_time']) ?? '-') ?></td>
                                 <td class="px-4 py-3 text-left text-sm border-b font-medium text-dark-overlay border-dark-overlay4"><?= htmlspecialchars($reschedule['room_name']) ?? '-' ?></td>
                                 <td class="px-4 py-3 text-left text-sm border-b font-medium text-dark-overlay border-dark-overlay4"><?= htmlspecialchars_decode(waktu_indonesia($reschedule['new_start_time']) ?? '')?> - <?= htmlspecialchars_decode(waktu_indonesia($reschedule['new_end_time']) ?? '')?></td>
                                 <td class="px-4 py-3 text-left justify-center flex border-b font-medium text-dark-overlay border-dark-overlay4">
-                                    <div
-                                            class="flex <?= getStyleStatus($reschedule['status_reschedule']) ?> items-center justify-center text-white px-5 py-2 rounded-sm text-xs font-medium shadow-md min-w-1/2">
+                                    <div class="flex <?= getStyleStatus($reschedule['status_reschedule']) ?> items-center justify-center text-white px-5 py-2 rounded-sm text-xs font-medium shadow-md min-w-1/2">
                                         <span><?= htmlspecialchars(translateStatus($reschedule['status_reschedule']) ?? '')?></span>
                                     </div>
                                 </td>
                             </tr>
+                        <?php endforeach; ?>
                         </tbody>
-                    </table>
-
-                    
+                    </table>   
                 </div>
-                    <?php else: ?>
-                    <div class="text-center py-16 text-dark-overlay7">
-                        sepertinya kamu belum ada riwayat pengajuan reschedule.
+
+
+                <!-- **************************************************
+                INI TAMPILAN MOBILE
+                ******************************************************* --> 
+                <!-- Mobile Cards -->
+                <div id="mobile-cards" class="block md:hidden space-y-4 flex flex-col items-center mx-4 my-4">
+                <?php $i = 1 ?>
+                <?php foreach($reschedules as $reschedule): ?>
+                    <!-- Card Item -->
+                    <div class="bg-background2 rounded-xl shadow-lg border border-dark-overlay4 p-5 hover:shadow-md transition-shadow w-full">                    
+                        <div class="grid grid-cols-1 gap-x-4 gap-y-3 text-sm">
+                            <div class="grid grid-cols-1 border-b border-dark-overlay4">
+                                <div>
+                                    <div class="text-dark-overlay7 text-xs uppercase tracking-wider">Ruangan</div>
+                                    <div class="font-semibold text-lg text-dark-overlay"><?= htmlspecialchars($reschedule['room_name']) ?? '-' ?></div>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 border-b border-dark-overlay4">
+                                <div class="text-dark-overlay7 text-xs uppercase tracking-wider">Tanggal</div>
+                                <div class="font-semibold text-dark-overlay"><?= htmlspecialchars(tanggal_indonesia($reschedule['new_start_time']) ?? '-') ?></div>
+                            </div>
+
+                            <div class="grid grid-cols-2 border-b border-dark-overlay4">
+                                <div class="text-dark-overlay7 text-xs uppercase tracking-wider">Jam</div>
+                                <div class="font-semibold text-dark-overlay"><?= htmlspecialchars_decode(waktu_indonesia($reschedule['new_start_time']) ?? '')?> - <?= htmlspecialchars_decode(waktu_indonesia($reschedule['new_end_time']) ?? '')?></div>
+                            </div>
+
+                            <div class="grid grid-cols-2 items-center">
+                                <div class="text-dark-overlay7 text-xs uppercase tracking-wider">Status</div>
+                                <div class="<?= getStyleStatus($reschedule['status_reschedule']) ?> items-center justify-center text-white px-5 py-2 rounded-sm text-xs font-medium shadow-md min-w-1/2 text-center"><?= htmlspecialchars(translateStatus($reschedule['status_reschedule']) ?? '')?></div>
+                            </div>
+                        </div>
                     </div>
-                    <?php endif; ?>
+                <?php endforeach; ?>
+                </div>
+                
+                <?php else: ?>
+                <div class="text-center py-16 text-dark-overlay7">
+                    sepertinya kamu belum ada riwayat pengajuan reschedule.
                 </div>
                 <?php endif; ?>
+            <?php endif; ?>
             </div>
     </div>
 </main>

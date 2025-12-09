@@ -38,11 +38,13 @@ class RescheduleModel {
     }
 
     public function getAllRescheduleByIdUser($id_user){
-        $this->db->query("SELECT rs.new_start_time, rs.new_end_time, r.room_name, rs.status_reschedule 
-        FROM reschedule rs 
-        JOIN bookings b ON rs.id_booking =b.id_booking
-        JOIN rooms r ON b.id_room = r.id_room 
-        WHERE id_user = :id_user");
+        $query = "SELECT DISTINCT rs.new_start_time, rs.new_end_time, r.room_name, rs.status_reschedule
+            FROM reschedule rs
+            JOIN bookings b ON rs.id_booking = b.id_booking
+            JOIN rooms r ON b.id_room = r.id_room
+            LEFT JOIN reschedule_members rm ON rm.id_reschedule = rs.id_reschedule
+            WHERE b.id_user = :id_user OR rm.id_user = :id_user";
+        $this->db->query($query);
         $this->db->bind('id_user', $id_user);
         return $this->db->resultSet();
     }
@@ -97,6 +99,86 @@ class RescheduleModel {
         $this->db->query($query);
         $this->db->bind('id_res', $id_res);
         return $this->db->singleSet();
+    }
+
+    public function filterReschedules($limit, $start, $search = '', $status = [])
+    {
+        // Sesuaikan kolom dan join tabel reschedule kamu
+        $sql = "SELECT res.id_reschedule, res.new_start_time AS start_time, res.new_end_time AS end_time,
+                res.status_reschedule as status, b.booking_code, u.username, r.room_name
+                FROM reschedule res
+                JOIN bookings b ON res.id_booking = b.id_booking
+                JOIN rooms r ON b.id_room = r.id_room
+                JOIN users u ON b.id_user = u.id_user
+                WHERE 1=1";
+
+       if (!empty($status)) {
+            if (!is_array($status)) $status = [$status];
+            $in = [];
+            foreach ($status as $i => $s) {
+                $in[] = ":status$i";
+            }
+            $sql .= " AND res.status_reschedule IN (" . implode(',', $in) . ")";
+        }
+
+        if (!empty($search)) {
+            $sql .= " AND (u.username LIKE :search OR res.reason LIKE :search)";
+        }
+
+        $sql .= " ORDER BY res.created_at DESC LIMIT :limit OFFSET :start";
+
+        $this->db->query($sql);
+
+        if (!empty($status)) {
+            foreach ($status as $i => $s) {
+                $this->db->bind("status$i", $s);
+            }
+        }
+        if (!empty($search)) {
+            $this->db->bind('search', "%$search%");
+        }
+
+        $this->db->bind('limit', (int)$limit, PDO::PARAM_INT);
+        $this->db->bind('start', (int)$start, PDO::PARAM_INT);
+        
+        return $this->db->resultSet();
+    }
+
+    public function countFilterReschedules($search = '', $status = [])
+    {
+        // Sesuaikan kolom dan join tabel reschedule kamu
+        $sql = "SELECT COUNT(*) as total
+                FROM reschedule res
+                JOIN bookings b ON res.id_booking = b.id_booking
+                JOIN rooms r ON b.id_room = r.id_room
+                JOIN users u ON b.id_user = u.id_user
+                WHERE 1=1";
+
+       if (!empty($status)) {
+            if (!is_array($status)) $status = [$status];
+            $in = [];
+            foreach ($status as $i => $s) {
+                $in[] = ":status$i";
+            }
+            $sql .= " AND res.status_reschedule IN (" . implode(',', $in) . ")";
+        }
+
+        if (!empty($search)) {
+            $sql .= " AND (u.username LIKE :search OR res.reason LIKE :search)";
+        }
+
+        $this->db->query($sql);
+
+        if (!empty($status)) {
+            foreach ($status as $i => $s) {
+                $this->db->bind("status$i", $s);
+            }
+        }
+        if (!empty($search)) {
+            $this->db->bind('search', "%$search%");
+        }
+        
+        return $this->db->singleSet()['total'];
     }
 
 

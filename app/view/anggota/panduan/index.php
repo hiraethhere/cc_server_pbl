@@ -8,22 +8,22 @@
     <div class="space-y-4">
         
         <!-- FAQ Item 1 -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-lg shadow-sm border border-dark-overlay2 overflow-hidden">
             <button onclick="toggleAccordion(1)" 
-                    class="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition">
+                    class="w-full flex items-center justify-between p-5 text-left hover:bg-background1 transition">
                 <div class="flex items-center gap-4">
-                    <div class="flex-shrink-0">
-                        <?= icon('book', 'w-6 h-6 text-[#1E68FB]') ?>
+                    <div class="shrink-0">
+                        <?= icon('book', 'w-6 h-6 text-blue-overlay') ?>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-800">Bagaimana cara meminjam ruangan?</h3>
+                    <h3 class="lg:text-lg font-semibold text-dark-overlay">Bagaimana cara meminjam ruangan?</h3>
                 </div>
-                <div id="icon-1" class="flex-shrink-0 transition-transform duration-300">
-                    <?= icon('arrowDown', 'w-6 h-6 text-gray-600') ?>
+                <div id="icon-1" class="shrink-0 transition-transform duration-300">
+                    <?= icon('arrowDown', 'w-6 h-6 text-dark-overlay6') ?>
                 </div>
             </button>
             <div id="content-1" class="accordion-content hidden">
                 <div class="px-5 pb-5 pt-2">
-                    <div class="pl-10 text-gray-700 space-y-2">
+                    <div class="pl-10 text-dark-overlay7 space-y-2">
                         <ol class="list-decimal list-inside space-y-2">
                             <li>Pergi ke page ruangan</li>
                             <li>Pilih ruangan yang ingin dipinjam</li>
@@ -37,22 +37,22 @@
         </div>
 
         <!-- FAQ Item 2 -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-lg shadow-sm border border-dark-overlay2 overflow-hidden">
             <button onclick="toggleAccordion(2)" 
-                    class="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition">
+                    class="w-full flex items-center justify-between p-5 text-left hover:bg-background1 transition">
                 <div class="flex items-center gap-4">
-                    <div class="flex-shrink-0">
-                        <?= icon('book', 'w-6 h-6 text-[#1E68FB]') ?>
+                    <div class="shrink-0">
+                        <?= icon('book', 'w-6 h-6 text-blue-overlay') ?>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-800">Apa itu suspend?</h3>
+                    <h3 class="lg:text-lg text-md font-semibold text-dark-overlay">Apa itu suspend?</h3>
                 </div>
-                <div id="icon-2" class="flex-shrink-0 transition-transform duration-300">
-                    <?= icon('arrowDown', 'w-6 h-6 text-gray-600') ?>
+                <div id="icon-2" class="shrink-0 transition-transform duration-300">
+                    <?= icon('arrowDown', 'w-6 h-6 text-dark-overlay6') ?>
                 </div>
             </button>
             <div id="content-2" class="accordion-content hidden">
                 <div class="px-5 pb-5 pt-2">
-                    <div class="pl-10 text-gray-700">
+                    <div class="pl-10 text-dark-overlay7 text-justify">
                         <p>
                             Suspend adalah status ketika akun Anda dibekukan sementara. Hal ini terjadi jika Anda melakukan 
                             cancel peminjaman sebanyak 3 kali, atau jika sudah mencapai batas tersebut, maka akun Anda akan 
@@ -65,34 +65,34 @@
         </div>
 
         <!-- FAQ Item 3 -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-lg shadow-sm border border-dark-overlay2 overflow-hidden">
             <button onclick="toggleAccordion(3)" 
-                    class="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition">
+                    class="w-full flex items-center justify-between p-5 text-left hover:bg-background1 transition">
                 <div class="flex items-center gap-4">
-                    <div class="flex-shrink-0">
-                        <?= icon('book', 'w-6 h-6 text-[#1E68FB]') ?>
+                    <div class="shrink-0">
+                        <?= icon('book', 'w-6 h-6 text-blue-overlay') ?>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-800">Jadwal perpustakaan</h3>
+                    <h3 class="lg:text-lg text-md font-semibold text-dark-overlay">Jadwal perpustakaan</h3>
                 </div>
-                <div id="icon-3" class="flex-shrink-0 transition-transform duration-300">
-                    <?= icon('arrowDown', 'w-6 h-6 text-gray-600') ?>
+                <div id="icon-3" class="shrink-0 transition-transform duration-300">
+                    <?= icon('arrowDown', 'w-6 h-6 text-dark-overlay6') ?>
                 </div>
             </button>
             <div id="content-3" class="accordion-content hidden">
                 <div class="px-5 pb-5 pt-2">
-                    <div class="pl-10 text-gray-700">
+                    <div class="pl-10 text-dark-overlay7">
                         <div class="space-y-3">
                             <div>
-                                <p class="font-semibold text-gray-800">Senin - Jumat</p>
+                                <p class="font-semibold text-dark-overlay">Senin - Kamis</p>
                                 <p>08:00 - 16:00 WIB</p>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-800">Sabtu</p>
+                                <p class="font-semibold text-dark-overlay">Jumat</p>
                                 <p>08:00 - 12:00 WIB</p>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-800">Minggu</p>
-                                <p class="text-red-600">Tutup</p>
+                                <p class="font-semibold text-dark-overlay">Sabtu - Minggu</p>
+                                <p class="text-red1">Tutup</p>
                             </div>
                         </div>
                     </div>
@@ -101,29 +101,30 @@
         </div>
 
         <!-- FAQ Item 4 -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-lg shadow-sm border border-dark-overlay2 overflow-hidden">
             <button onclick="toggleAccordion(4)" 
-                    class="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition">
+                    class="w-full flex items-center justify-between p-5 text-left hover:bg-background1 transition">
                 <div class="flex items-center gap-4">
-                    <div class="flex-shrink-0">
-                        <?= icon('book', 'w-6 h-6 text-[#1E68FB]') ?>
+                    <div class="shrink-0">
+                        <?= icon('book', 'w-6 h-6 text-blue-overlay') ?>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-800">Berapa lama durasi peminjaman?</h3>
+                    <h3 class="lg:text-lg text-md font-semibold text-dark-overlay">Berapa lama durasi peminjaman?</h3>
                 </div>
-                <div id="icon-4" class="flex-shrink-0 transition-transform duration-300">
-                    <?= icon('arrowDown', 'w-6 h-6 text-gray-600') ?>
+                <div id="icon-4" class="shrink-0 transition-transform duration-300">
+                    <?= icon('arrowDown', 'w-6 h-6 text-dark-overlay6') ?>
                 </div>
             </button>
             <div id="content-4" class="accordion-content hidden">
                 <div class="px-5 pb-5 pt-2">
-                    <div class="pl-10 text-gray-700">
+                    <div class="pl-10 text-dark-overlay7">
                         <p>
                             Durasi peminjaman ruangan bervariasi tergantung kebutuhan dan ketersediaan ruangan:
                         </p>
                         <ul class="list-disc list-inside mt-2 space-y-1">
-                            <li>Minimal peminjaman: 1 jam</li>
-                            <li>Maksimal peminjaman: 4 jam per hari</li>
+                            <li>Minimal peminjaman: 1.5 jam/30 Menit</li>
+                            <li>Maksimal peminjaman: 3 jam per hari</li>
                             <li>Dapat memesan hingga 7 hari ke depan</li>
+                            <li>Dan tidak bisa meminjam ruangan jika ada peminjaman yang sedang aktif</li>
                         </ul>
                     </div>
                 </div>
@@ -131,26 +132,26 @@
         </div>
 
         <!-- FAQ Item 5 -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-lg shadow-sm border border-dark-overlay2 overflow-hidden">
             <button onclick="toggleAccordion(5)" 
-                    class="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition">
+                    class="w-full flex items-center justify-between p-5 text-left hover:bg-background1 transition">
                 <div class="flex items-center gap-4">
-                    <div class="flex-shrink-0">
-                        <?= icon('book', 'w-6 h-6 text-[#1E68FB]') ?>
+                    <div class="shrink-0">
+                        <?= icon('book', 'w-6 h-6 text-blue-overlay') ?>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-800">Bagaimana cara membatalkan peminjaman?</h3>
+                    <h3 class="lg:text-lg text-md font-semibold text-dark-overlay">Bagaimana cara membatalkan peminjaman?</h3>
                 </div>
-                <div id="icon-5" class="flex-shrink-0 transition-transform duration-300">
-                    <?= icon('arrowDown', 'w-6 h-6 text-gray-600') ?>
+                <div id="icon-5" class="shrink-0 transition-transform duration-300">
+                    <?= icon('arrowDown', 'w-6 h-6 text-dark-overlay6') ?>
                 </div>
             </button>
             <div id="content-5" class="accordion-content hidden">
                 <div class="px-5 pb-5 pt-2">
-                    <div class="pl-10 text-gray-700">
+                    <div class="pl-10 text-dark-overlay7">
                         <ol class="list-decimal list-inside space-y-2">
                             <li>Buka menu "Booking Anda"</li>
                             <li>Pilih booking yang ingin dibatalkan</li>
-                            <li>Klik tombol "Batalkan"</li>
+                            <li>Klik tombol "Cancel Booking"</li>
                             <li>Konfirmasi pembatalan</li>
                         </ol>
                         <div class="mt-3 p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded">
@@ -164,22 +165,22 @@
         </div>
 
         <!-- FAQ Item 6 -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div class="bg-white rounded-lg shadow-sm border border-dark-overlay2 overflow-hidden">
             <button onclick="toggleAccordion(6)" 
-                    class="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition">
+                    class="w-full flex items-center justify-between p-5 text-left hover:bg-background1 transition">
                 <div class="flex items-center gap-4">
-                    <div class="flex-shrink-0">
-                        <?= icon('book', 'w-6 h-6 text-[#1E68FB]') ?>
+                    <div class="shrink-0">
+                        <?= icon('book', 'w-6 h-6 text-blue-overlay') ?>
                     </div>
-                    <h3 class="text-lg font-semibold text-gray-800">Apa saja fasilitas yang tersedia?</h3>
+                    <h3 class="lg:text-lg text-md font-semibold text-dark-overlay">Apa saja fasilitas yang tersedia?</h3>
                 </div>
-                <div id="icon-6" class="flex-shrink-0 transition-transform duration-300">
-                    <?= icon('arrowDown', 'w-6 h-6 text-gray-600') ?>
+                <div id="icon-6" class="shrink-0 transition-transform duration-300">
+                    <?= icon('arrowDown', 'w-6 h-6 text-dark-overlay6') ?>
                 </div>
             </button>
             <div id="content-6" class="accordion-content hidden">
                 <div class="px-5 pb-5 pt-2">
-                    <div class="pl-10 text-gray-700">
+                    <div class="pl-10 text-dark-overlay7">
                         <p class="mb-3">Setiap ruangan dilengkapi dengan fasilitas berikut:</p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                             <div class="flex items-center gap-2">
@@ -215,24 +216,24 @@
     </div>
 
     <!-- Contact Section -->
-    <div class="mt-12 p-6 bg-blue-50 rounded-lg border border-blue-200">
+    <div class="mt-12 p-6 bg-blue-overlay1 rounded-lg border border-blue-overlay2">
         <div class="flex items-start gap-4">
-            <div class="flex-shrink-0">
-                <?= icon('info', 'w-8 h-8 text-[#1E68FB]') ?>
+            <div class="shrink-0">
+                <?= icon('info', 'w-8 h-8 text-blue-overlay') ?>
             </div>
             <div>
-                <h3 class="text-lg font-semibold text-gray-800 mb-2">Butuh Bantuan Lebih Lanjut?</h3>
-                <p class="text-gray-700 mb-3">
+                <h3 class="lg:text-lg text-md font-semibold text-dark-overlay mb-2">Butuh Bantuan Lebih Lanjut?</h3>
+                <p class="text-dark-overlay7 mb-3">
                     Jika Anda memiliki pertanyaan lain yang belum terjawab, silakan hubungi admin perpustakaan.
                 </p>
                 <div class="space-y-2">
                     <div class="flex items-center gap-2 text-sm">
-                        <?= icon('email', 'w-4 h-4 text-gray-600') ?>
-                        <span class="text-gray-700">perpustakaan@pnj.ac.id</span>
+                        <?= icon('email', 'w-4 h-4 text-dark-overlay6') ?>
+                        <span class="text-dark-overlay7">perpustakaan@pnj.ac.id</span>
                     </div>
                     <div class="flex items-center gap-2 text-sm">
-                        <?= icon('phone', 'w-4 h-4 text-gray-600') ?>
-                        <span class="text-gray-700">(021) 1234-5678</span>
+                        <?= icon('phone', 'w-4 h-4 text-dark-overlay6') ?>
+                        <span class="text-dark-overlay7">(021) 1234-5678</span>
                     </div>
                 </div>
             </div>
@@ -241,56 +242,5 @@
 
 </main>
 
-<script>
-// Fungsi untuk toggle accordion
-function toggleAccordion(id) {
-    const content = document.getElementById(`content-${id}`);
-    const icon = document.getElementById(`icon-${id}`);
-    
-    // Toggle visibility
-    if (content.classList.contains('hidden')) {
-        // Tutup semua accordion lain
-        document.querySelectorAll('.accordion-content').forEach(item => {
-            item.classList.add('hidden');
-        });
-        
-        // Reset semua icon
-        document.querySelectorAll('[id^="icon-"]').forEach(item => {
-            item.classList.remove('rotate-180');
-        });
-        
-        // Buka accordion yang diklik
-        content.classList.remove('hidden');
-        icon.classList.add('rotate-180');
-    } else {
-        // Tutup accordion yang diklik
-        content.classList.add('hidden');
-        icon.classList.remove('rotate-180');
-    }
-}
-
-// Optional: Auto-scroll ke accordion yang dibuka
-document.querySelectorAll('[onclick^="toggleAccordion"]').forEach(button => {
-    button.addEventListener('click', function() {
-        setTimeout(() => {
-            this.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 300);
-    });
-});
-</script>
-
-<style>
-/* Smooth transition untuk accordion */
-.accordion-content {
-    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
-}
-
-/* Smooth rotation untuk icon */
-[id^="icon-"] {
-    transition: transform 0.3s ease;
-}
-
-.rotate-180 {
-    transform: rotate(180deg);
-}
-</style>
+<link rel="stylesheet" href="/css/panduan.css">
+<script src="/js/panduan.js"></script>

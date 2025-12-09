@@ -1,5 +1,5 @@
 <!-- Main Content -->
-<main class="container mx-auto px-6 py-8 max-w-2xl">
+<main class="container mx-auto md:px-6 lg:px-6 px-4 py-8 max-w-2xl">
     <h2 class="text-3xl font-bold text-dark-overlay mb-10 text-center">Akun</h2>
 
     <!-- Avatar Section -->
@@ -24,7 +24,7 @@
                 
                 <!-- Violation Count Badge -->
                 <div class="absolute bottom-4 right-0 text-xs mt-4 bg-dark-overlay6 text-white1 px-2 py-1 rounded-lg shadow-md">
-                    <p class="text-xs">Pelanggaran: <span class="font-semibold">2</span></p>
+                    <p class="text-xs">Pelanggaran: <span class="font-semibold"><?= $suspend_count ?></span></p>
                 </div>
             </div>
         </div>

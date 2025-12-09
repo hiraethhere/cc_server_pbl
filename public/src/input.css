@@ -46,6 +46,7 @@
   /* blue */
   --color-blue-overlay: #1e68fb;
   --color-blue-overlay1: #1e68fb1a;
+  --color-blue-overlay-15: #1e68fb26;
   --color-blue-overlay2: #1e68fb33;
   --color-blue-overlay-25: #1e68fb40;
   --color-blue-overlay3: #1e68fb4d;
@@ -63,9 +64,12 @@
 
   /* green */
   --color-green1: #38C55C;
+  --color-green-overlay-25: #38c55c40;
+  --color-green-overlay4: #38c55c66;
 
   /* red */
   --color-red1: #C90B0B;
+  --color-red-overlay3: #c90b0b4d;
 
   /* yellow */
   --color-yellow1: #FDDF30;

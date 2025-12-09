@@ -1,4 +1,4 @@
-<main class="flex-1 p-8 overflow-y-auto bg-background1">
+<main class="flex-1 p-8 overflow-y-auto bg-[#F9FAFC]">
     <!-- Breadcrumb -->
     <nav class="mb-6 text-sm flex">
         <a href="/Admin/Peminjaman" class="text-blue-overlay hover:text-blue-700">Data Peminjaman Ruangan</a>
@@ -7,16 +7,16 @@
                 <?= icon('arrowRight', 'w-5 h-5') ?>
             </div>
         </span>
-        <a href="/Admin/Peminjaman?tab=riwayat" class="text-blue-overlay hover:text-blue-700">Riwayat</a>
+        <a href="/Admin/Peminjaman?tab=berlangsung" class="text-blue-overlay hover:text-blue-700">Hari ini</a>
         <span class="mx-2 text-dark-overlay6">
             <div>
                 <?= icon('arrowRight', 'w-5 h-5') ?>
             </div>
         </span>
-        <span class="font-medium text-dark-overlay6">Detail Booking</span>
+        <span class="font-medium text-gray-900">Detail Booking</span>
     </nav>
 
-    <h2 class="text-2xl font-bold text-dark-overlay">Detail Riwayat Peminjaman</h2>
+    <h2 class="text-2xl font-bold text-dark-overlay">Booking Hari ini</h2>
 
     <div class="flex flex-col gap-8 lg:grid lg:grid-cols-[3fr_2fr] lg:gap-8 mt-2">
         <div class="bg-background2 rounded-2xl shadow-lg p-6 md:p-8 w-full">
@@ -216,11 +216,62 @@
                             <div class="flex items-center gap-2 text-green1">
                                 <?= icon('circleFill', 'w-3 h-3 mr-2') ?>        
                             </div>
-                            <h2 class="text-md inline-block font-semibold text-green1">Selesai</h2>
+                            <h2 class="text-md inline-block font-semibold text-green1">Diterima</h2>
                         </a>
                     </div>
+                </div>
+
+                <!-- Tombol Aksi -->
+                <div class="gap-4 pt-6 grid grid-cols-1">
+                    <div class="grid grid-cols-2 gap-8">
+                        <button onclick="konfirmasiCancel()" class="flex-1 bg-red1 hover:bg-red-700 text-white font-medium py-2.5 rounded-lg transition hover:cursor-pointer">
+                            Cancel Booking
+                        </button>
+                        <button onclick="konfirmasiMulai()" class="flex-1 bg-green1 hover:bg-green-700 text-white font-medium py-2.5 rounded-lg transition hover:cursor-pointer">
+                            Mulai Peminjaman
+                        </button>
+                    </div>
+                    
+                    <button class="flex-1 bg-blue-overlay hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition hover:cursor-pointer">
+                    Selesaikan Peminjaman
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 </main>
+
+<script>
+    function konfirmasiMulai() {
+        Modal.confirm(
+            'Mulai peminjaman',
+            'Anda yakin ingin memulai peminjaman?',
+            function() {
+            // ini yang benar untuk POST form, bukan window.location.href
+            // document.getElementById('bookingForm').submit();
+            },
+            {
+            icon: <?= json_encode(icon("calendar", "w-12 h-12 text-green1")) ?>,
+            confirmText: 'Mulai',
+            confirmClass: 'w-full px-6 py-2 bg-green1 text-white rounded-lg font-semibold hover:bg-green-700 transition hover:cursor-pointer',
+            cancelText: 'Batalkan'
+            }
+        );
+    }
+
+    function konfirmasiCancel() {
+    Modal.confirm(
+        'Cancel Booking',
+        'Apakah Anda yakin ingin membatalkan booking?',
+        function() {
+            window.location.href = '#';
+        },
+        {
+            icon: <?= json_encode(icon("crossCircle", "w-12 h-12 text-red1")) ?>,
+            confirmText: 'Ya',
+            confirmClass: 'w-full px-6 py-2 bg-red1 text-white rounded-lg font-semibold hover:bg-red-700 transition hover:cursor-pointer',
+            cancelText: 'Batalkan'
+        }
+    );
+}
+</script>

@@ -36,26 +36,51 @@ class Admin extends Controller {
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $start = ($page > 1) ? ($page * $data['limit']) - $data['limit'] : 0;
 
-        if ($data['tab'] == 'approval') {
-            $data['users'] = $this->model('UserModel')->getUserForAdminPaginated($data['limit'], $start);
-            $total_data = $this->model('UserModel')->countPendingUsers()['total'];
-            $data['total_page'] = ceil($total_data / $data['limit']);
-            $data['current_page'] = $page;
-           $data['link'] = 'selesaikan';
-        } else {
-            $data['users'] = $this->model('UserModel')->getAllUsersPaginated($data['limit'], $start);
-            $total_data = $this->model('UserModel')->countAllUsers()['total'];
-            $data['total_page'] = ceil($total_data / $data['limit']);
-            $data['current_page'] = $page;
-            $data['link'] = 'detailAnggota';
+        $statusFilter = ''; 
+        if (isset($_GET['status'])) {
+            if (is_array($_GET['status'])) {
+                $statusFilter = $_GET['status']; 
+            } else {
+                $statusFilter = explode(',', $_GET['status']);
+            }
         }
 
-        foreach ($data['users'] as &$user) {
-            $user['createdDate'] = tanggal_indonesia($user['created_at']);
-            $user['statusStyle'] = getStyleStatus($user['status']);
-            $user['status'] = translateStatusUser($user['status']);
+        $jurusanFilter = '';
+        if (isset($_GET['jurusan'])) { 
+            if (is_array($_GET['jurusan'])) {
+                $jurusanFilter = $_GET['Jurusan']; 
+            } else {
+                $jurusanFilter = explode(',', $_GET['jurusan']);
+            }
+        }
+
+        $jenisFilter = '';
+        if (isset($_GET['jenis'])) {
+            if (is_array($_GET['jenis'])) {
+                $jenisFilter = $_GET['jenis']; 
+            } else {
+                $jenisFilter = explode(',', $_GET['jenis']);
+            }
+        }
+
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+        $userModel = $this->model('UserModel');
+
+        if ($data['tab'] == 'approval') {
+            $forcedStatus = 'pending'; 
+
+            $data['users'] = $userModel->filterUsers($data['limit'], $start, $search, $forcedStatus, $jurusanFilter, $jenisFilter);
+
+            $total_data = $userModel->countFilterUsers($search, $forcedStatus, $jurusanFilter, $jenisFilter);
+            $data['link'] = 'selesaikan';
+        } else {
+            $data['users'] = $userModel->filterUsers($data['limit'], $start, $search, $statusFilter, $jurusanFilter, $jenisFilter);
+            $total_data = $userModel->countFilterUsers($search, $statusFilter, $jurusanFilter, $jenisFilter);;
+            $data['link'] = 'detailAnggota';
         }
         
+        $data['total_page'] = ceil($total_data / $data['limit']);
+        $data['current_page'] = $page;
         $data['judul'] = 'Data Anggota';
         $data['navbar'] = 'Anggota';
         $this->view('layout/sidebar', $data);
@@ -65,7 +90,16 @@ class Admin extends Controller {
     public function detailAnggota($id = null){
 
         $id = param_number($id, "ID user tidak valid");
-        $data['user'] = $this->model('UserModel')->getUserById($id);
+
+        if ($id  === false || $id  < 1) {
+            Flasher::setModalInfo('Parameter Salah', 'hayooo ubah-ubah parameter yaa?', 'error');
+            header('Location: /admin'); // Redirect ke halaman admin
+            exit;
+        }
+        $data['user'] = $this->model('UserModel')->getUserAndRoleById($id);
+        $date1 = new DateTime($data['user']['created_at'] ?? '');
+        $date2 = new DateTime($data['user']['expired_at'] ?? '');
+        $data['masaAktif'] = $date1->diff($date2)->y; 
         $data['judul'] = 'Detail Anggota';
         $data['navbar'] = 'Anggota';
         $this->view('layout/sidebar', $data);
@@ -82,16 +116,46 @@ class Admin extends Controller {
             exit;
         }
 
-        $data['user'] = $this->model('userModel')->getUserJoinRoleById($id_user);
+        $data['user'] = $this->model('UserModel')->getPendingUserJoinRoleById($id_user);
+
+        if (!$data['user']) {
+            Flasher::setModalInfo('Parameter Salah', 'hayooo ubah-ubah parameter yaa?', 'error');
+            header('Location: /admin'); // Redirect ke halaman login
+            exit;
+        }
+
         $data['createdDate'] = tanggal_indonesia($data['user']['created_at']);
         $data['judul'] = 'Selesaikan Peminjaman';
         $data['navbar'] = 'Anggota';
+
         $this->view('layout/sidebar', $data);
-        $this->view('admin/anggota/selesaikan', $data);
+        switch ($data['user']['role_name']) {
+            case 'Mahasiswa':
+                $this->view('admin/anggota/selesaikan', $data);
+                break;
+            case 'Dosen':
+                $this->view('admin/anggota/selesaikanDosen', $data);
+                break;
+            default:
+                $this->view('admin/anggota/selesaikanDosen', $data);
+                break;
+        }
+        $this->view('layout/sidebar', $data);
     }
 
-    public function selesaikanDosen(){
-        $data['judul'] = 'Selesaikan Doses';
+    public function selesaikanDosen($id_user = NULL){
+
+        $id = param_number($id_user, "ID ruangan tidak valid");
+
+        if ($id  === false || $id  < 1) {
+            Flasher::setModalInfo('Parameter Salah', 'hayooo ubah-ubah parameter yaa?', 'error');
+            header('Location: /admin'); // Redirect ke halaman login
+            exit;
+        }
+
+        $data['user'] = $this->model('userModel')->getPendingUserJoinRoleById($id_user);
+        $data['createdDate'] = tanggal_indonesia($data['user']['created_at']);
+        $data['judul'] = 'Selesaikan Dosen/Tendik';
         $data['navbar'] = 'Anggota';
         $this->view('layout/sidebar', $data);
         $this->view('admin/anggota/selesaikanDosen');
@@ -100,40 +164,91 @@ class Admin extends Controller {
     public function tambahAnggota(){
         $data['judul'] = 'Tambah Anggota Baru';
         $data['navbar'] = 'Anggota';
+        $data['dataJurusan'] = getJurusan();
+        $data['dataProdi'] = getProdi();
         $this->view('layout/sidebar', $data);
-        $this->view('admin/anggota/tambahAnggota');
+        $this->view('admin/anggota/tambahAnggota', $data);
     }
     
     public function peminjaman(){
 
-        $tab = isset($_GET['tab']) ? $_GET['tab'] : 'hariIni';
-
-        switch ($tab) {
-            case 'hariIni':
-                $data['bookings'] = $this->model('BookingModel')->getBookingTodayJoinRoomAndUser();
-                $data['link'] = 'hariIni';
-                $data['id_column'] = 'id_booking';
-                break;
-            case 'berlangsung':
-                $data['bookings'] = $this->model('BookingModel')->getBookingPendingJoinRoom();
-                $data['link'] = 'detailBerlangsung';
-                $data['id_column'] = 'id_booking';
-                break;
-            case 'reschedule':
-                $data['bookings'] = $this->model('RescheduleModel')->getAllRescheduleRequests();
-                $data['link'] = 'detailReschedule';
-                $data['id_column'] = 'id_reschedule';
-                break;
-            case 'riwayat':
-                $data['bookings'] = $this->model('BookingModel')->getBookingDoneAndCancelledJoinRoom();
-                $data['link'] = 'detailRiwayat';
-                $data['id_column'] = 'id_booking';
-                break;
-            default:
-                Flasher::setModalInfo('Tab tidak diketahui', 'hayoo ubah ubah parameter yaa', 'error');
-                header('location: /admin/peminjaman');
-                break;
+        $data['tab'] = isset($_GET['tab']) ? $_GET['tab'] : 'hariIni';
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+        $data['limit'] = 5;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $start = ($page > 1) ? ($page * $data['limit']) - $data['limit'] : 0;
+        $statusFilter = ''; 
+        if (isset($_GET['status'])) {
+            if (is_array($_GET['status'])) {
+                $statusFilter = $_GET['status']; 
+            } else {
+                $statusFilter = explode(',', $_GET['status']);
+            }
         }
+
+        if ($data['tab'] == 'reschedule') {
+            // --- LOGIKA RESCHEDULE ---
+            $data['id_column'] = 'id_reschedule';
+            $data['link'] = 'detailReschedule';
+
+            // Panggil fungsi filter khusus Reschedule
+            $data['bookings'] = $this->model('RescheduleModel')->filterReschedules(
+                $data['limit'], $start, $search, $statusFilter
+            );
+            $total_data = $this->model('RescheduleModel')->countFilterReschedules($search, $statusFilter);
+
+        } else {
+            // --- LOGIKA BOOKING (hariIni, berlangsung, riwayat) ---
+            $data['id_column'] = 'id_booking';
+            
+            // Tentukan aturan (Constraint) berdasarkan Tab
+            $dateMode = '';     // 'today', 'upcoming', 'all'
+            $forcedStatus = []; // Jika tab memaksa status tertentu
+
+            switch ($data['tab']) {
+                case 'hariIni':
+                    $dateMode = 'today'; 
+                    // Status biasanya yang aktif saja, atau semua status di hari ini? Sesuaikan kebutuhan.
+                    $data['link'] = 'hariIni';
+                    break;
+
+                case 'berlangsung':
+                    // Biasanya status 'approved' atau 'pending' dan tanggal >= hari ini
+                    $dateMode = 'upcoming';
+                    // Jika user tidak milih filter status, kita paksa status 'active'
+                    if (empty($statusFilter)) {
+                        $forcedStatus = ['approved', 'pending', 'on_going']; 
+                    }
+                    $data['link'] = 'detailBerlangsung';
+                    break;
+
+                case 'riwayat':
+                    // Status selesai/batal/rejected
+                    $dateMode = 'all'; // atau 'all'
+                    if (empty($statusFilter)) {
+                        $forcedStatus = ['done', 'cancelled', 'rejected', 'pending', 'active'];
+                    }
+                    $data['link'] = 'detailRiwayat';
+                    break;
+                    
+                default:
+                    // Fallback ke hari ini
+                    $dateMode = 'today';
+                    $data['link'] = 'hariIni';
+                    break;
+            }
+
+            // Jika ada forcedStatus (dari logika tab), gunakan itu. 
+            // Jika tidak, gunakan $statusFilter (dari checkbox user).
+            $finalStatus = !empty($forcedStatus) ? $forcedStatus : $statusFilter;
+
+            // Panggil SATU fungsi model untuk semua tab Booking
+            $data['bookings'] = $this->model('BookingModel')->filterBookings($data['limit'], $start, $search, $finalStatus, $dateMode);
+
+            $total_data = $this->model('BookingModel')->countFilterBookings($search, $finalStatus, $dateMode);
+        }
+        $data['total_page'] = ceil($total_data / $data['limit']);
+        $data['current_page'] = $page;
 
         $data['judul'] = 'Peminjaman';
         $data['navbar'] = 'Peminjaman';
@@ -164,6 +279,13 @@ class Admin extends Controller {
         $data['navbar'] = 'Peminjaman';
         $this->view('layout/sidebar', $data);
         $this->view('admin/peminjaman/detailReschedule', $data);
+    }
+
+    public function detailBerlangsung(){
+        $data['judul'] = 'Detail Peminjaman yang Berlangsung';
+        $data['navbar'] = 'Peminjaman';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/peminjaman/detailBerlangsung');
     }
 
     public function detailRiwayat(){
@@ -215,12 +337,37 @@ class Admin extends Controller {
         $this->view('admin/ruangan/editDataRuangan');
     }
 
+    public function EditTataTertib(){
+        $data['judul'] = 'Edit Tata Tertib';
+        $data['navbar'] = 'Ruangan';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/ruangan/editTataTertib');
+    }
+
     public function dataRuangan(){
         // $data['ruangan'] = $this->model('RuanganModel')->getAllRooms 
         $data['judul'] = 'Detail Ruangan';
         $data['navbar'] = 'Ruangan';
         $this->view('layout/sidebar', $data);
         $this->view('admin/ruangan/dataRuangan');
+    }
+
+    public function Feedback(){
+
+        $data['limit'] = 2;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $start = ($page > 1) ? ($page * $data['limit']) - $data['limit'] : 0;
+
+        $data['feedbacks'] = $this->model('FeedbackModel')->getAllFeedbackPaginated($data['limit'], $start);
+        $total_data = $this->model('FeedbackModel')->getTotalFeedbackCount();
+        $data['total_page'] = ceil($total_data / $data['limit']);
+        $data['current_page'] = $page;
+
+
+        $data['judul'] = 'Feedback Pengguna';
+        $data['navbar'] = 'Feedback';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/feedback/index', $data);
     }
 
     public function Akun(){
@@ -248,10 +395,13 @@ class Admin extends Controller {
 
         try{
 
-        if (empty($_POST['id_user'])) {
-            throw new Exception('Error id_user tidak ada');
+        if (empty($_POST['id_user']) || empty($_POST['email'])|| empty($_POST['username']) ) {
+            throw new Exception('Error, data tidak lengkap ');
         }
 
+        if ($this->model('UserModel')->getStatusUserById($_POST['id_user'])['status'] === 'active') {
+            throw new Exception('Anggota sudah aktif');
+        }
 
         $result = $this->model('UserModel')->activateUser($_POST['id_user']);
         if ($result === 0 ) {
@@ -263,7 +413,7 @@ class Admin extends Controller {
         exit();
 
         }catch(Throwable $e){
-            Flasher::setModalInfo('Gagal Aktivasi User', $e->getMessage());
+            Flasher::setModalInfo('Gagal Aktivasi User', $e->getMessage(), 'error');
             header('location: /admin/anggota');
             exit();
         }
@@ -292,13 +442,156 @@ class Admin extends Controller {
             header('location: /admin/anggota');
             exit();
         }
+    }
+
+    public function handleSuspend(){
+        try{
+
+        if (empty($_POST['id_user']) || empty($_POST['email'])|| empty($_POST['username'])) {
+            throw new Exception('Error id_user tidak ada');
+        }
+
+        $result = $this->model('UserModel')->addSuspendCount($_POST['id_user']);
+        if ($result === 0 ) {
+            throw new Exception('internal sql error');
+        }
+
+        sendEmail($_POST['email'], $_POST['username'], "suspend count anda telah bertambah 1", "Merasa tidak adil? segera hubungi admin untuk informasi lebih lanjut");
+        Flasher::setModalInfo('Berhasil Menambahkan Suspend Anggota', 'suspend count anggota telah ditambahkan');
+        header('location: /admin/anggota?tab=anggota');
+        exit();
+
+        }catch(Throwable $e){
+            Flasher::setModalInfo('Gagal Suspend user', $e->getMessage(), 'error');
+            header('location: /admin/anggota?tab=semua');
+            exit();
+        }
+    }
+
+    public function handleNonActivate(){
+        try {
+            if (empty($_POST['id_user']) || empty($_POST['email'])|| empty($_POST['username'])) {
+                throw new Exception('Error, data tidak lengkap');
+            }
+
+            $result = $this->model('UserModel')->nonActivateUser($_POST['id_user']);
+            if ($result === 0 ) {
+                throw new Exception('internal sql error');
+            }
+            sendEmail($_POST['email'] ?? 'email user', $_POST['username' ?? 'user'], "Akun anda di nonaktifkan admin! kembali", "Silahkan Hubungi Admin" );
+            Flasher::setModalInfo('Berhasil nonaktifkan akun anggota', 'Akun anggota telah suspended');
+            header('location: /admin/anggota');
+            exit();
+
+        } catch (\Throwable $e) {
+            Flasher::setModalInfo('Gagal Aktivasi user', $e->getMessage(), 'error');
+            header('location: /admin/anggota?tab=anggota');
+            exit();
+        }
 
     }
 
-        public function handlePasswordChange(){
+    public function handleActivate(){
+        try {
+            if (empty($_POST['id_user']) || empty($_POST['email'])|| empty($_POST['username'])) {
+                throw new Exception('Error, data tidak lengkap');
+            }
+
+        
+        if ($this->model('UserModel')->getStatusUserById($_POST['id_user'])['status'] === 'active') {
+            throw new Exception('Anggota sudah aktif');
+        }
+
+        $result = $this->model('UserModel')->activateUser($_POST['id_user']);
+        if ($result === 0 ) {
+            throw new Exception('internal sql error');
+        }
+        sendEmail($_POST['email'] ?? 'email user', $_POST['username' ?? 'user'], "Akun anda telah aktif kembali", "anda sekarang bisa login ke ruanginPNJ" );
+        Flasher::setModalInfo('Berhasil Approve Anggota', 'Akun anggota sudah bisa aktif kembali');
+        header('location: /admin/anggota');
+        exit();
+
+        } catch (\Throwable $e) {
+            Flasher::setModalInfo('Gagal Aktivasi user', $e->getMessage(), 'error');
+            header('location: /admin/anggota?tab=anggota');
+            exit();
+        }
+    }
+
+    public function handleRegisterByAdmin(){
+        try {
+
+            if (!$_POST['username'] || !$_POST['password'] || !$_POST['email'] || !$_POST['nomor_induk']) {
+                throw new Exception('Data tidak lengkap');
+            }
+
+            $role = $_POST['jenis_anggota'] ?? NULL;
+
+            switch ($role) {
+                case "mahasiswa":
+                    $id_role = 3;
+                    break;
+                case "dosen":
+                    $id_role = 4;
+                    break;
+                case "tendik":
+                    $id_role = 5;
+                    break;
+                default:
+                    throw new Exception("Error Internal", 1);
+                break;
+            }
+
+            if ($id_role === 3) {
+                if (!validateEmail($_POST['email'])) {
+                    throw new Exception('Email tidak valid');
+                }
+                $jurusan_unit = $_POST['jurusan_unit'];
+                $expiredDate = countExpiredAt($_POST['email'], $_POST['prodi']);
+            } else {
+                $jurusan_unit = $_POST['jurusan_text'];
+            }
+
+            $data = [
+                'id_role' => $id_role,
+                'username' => $_POST['username'],
+                'password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
+                'nomor_induk' => $_POST['nomor_induk'],
+                'email' => $_POST['email'],
+                'jurusan_unit' => $jurusan_unit,
+                'prodi' => $_POST['prodi'] ?? NULL,
+                'status' => 'active',
+                'kubaca_photo' => NULL,
+                'profile_photo' => 'DefaultProfilePicture.jpg',
+                'suspend_count' => 0,
+                'email_verified' => true,
+                'expired_at' => $expiredDate ?? NULL,
+                'now' => date('Y-m-d H:i:s')
+            ];
+
+            if ($this->model('UserModel')->findUserByEmailorNomor_Induk($data['email'], $data['nomor_induk'])) {
+                throw new Exception('Email atau NIM sudah terdaftar!');
+            }
+
+            $result = $this->model('UserModel')->createUser($data);
+            if ($result <= 0) {
+                throw new Exception('Something Went Wrong');
+            }
+
+            Flasher::setModalInfo('Berhasil', 'Membuat Anggota Baru', 'success');
+            header('location: /admin/anggota');
+            exit();
+        } catch (\Throwable $e) {
+            Flasher::setModalInfo('Gagal Daftarkan Anggota', $e->getMessage(), 'error');
+            header('location: /admin/anggota');
+            exit();
+        }
+    }
+
+    public function handlePasswordChange(){
 
         //ga boleh kosong
-        if (empty($_POST['passwordBaru']) || empty($_POST['passwordLama'])) {
+        if (empty($_POST['passwordBaru']) || empty($_POST['password']) || empty($_POST['passwordBaruConfirm'])) {
             Flasher::setModalInfo('Password tidak boleh kosong', 'Silahkan isi password', 'error');
             header('location: /admin/akun');
             exit();
@@ -312,14 +605,18 @@ class Admin extends Controller {
         }
 
         $oldPassword = $this->model('UserModel')->getPasswordByEmail($_SESSION['user']['email']);
+        // var_dump($_SESSION['user']['email']);
         // var_dump($oldPassword);
+        // var_dump($_POST['password']);
+        // var_dump(password_verify($_POST['passwordBaru'], $oldPassword['password']));
+        // die();
         if (!$oldPassword) {
             Flasher::setModalInfo('Akun tidak ditemukan', 'Internal server error', 'error');
             header('location: /admin/akun');
             exit();
         }
 
-        if (!password_verify($_POST['passwordBaru'], $oldPassword['password'])) {
+        if (!password_verify($_POST['password'], $oldPassword['password'])) {
             Flasher::setModalInfo('Password lama salah', 'Silahkan masukan password yang benar', 'error');
             header('location: /admin/akun');
             exit();

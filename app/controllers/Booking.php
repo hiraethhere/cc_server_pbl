@@ -11,6 +11,16 @@ class Booking extends Controller {
             header('Location: /auth/formLogin'); // Redirect ke halaman login
             exit; //Hentikan eksekusi script
             }
+
+            $user = $this->model('UserModel')->getSuspendCount($_SESSION['user']['user_id']);
+
+            if ($user >= 3) {
+                Flasher::setModalInfo('Suspend_count anda < 3 hayoo looo', 'silahkan hubungi admin', 'error');
+                session_destroy();
+                header('Location: /auth/formLogin'); // Redirect ke halaman login
+
+                exit;
+            }
         }
 
     // public function index()
@@ -202,6 +212,7 @@ class Booking extends Controller {
             $dataBooking = [
                         'id_room' => $id_room,
                         'id_user' => $id_ketua,
+                        'booker_name' => $_SESSION['user']['username'],
                         'total_person' => $total_person,
                         'booking_code' => $bookingCode,
                         'start_time' => $start_datetime,
@@ -244,17 +255,19 @@ class Booking extends Controller {
         $bookingModel->beginTransaction();
 
         //ini dia update status ke cancelled
+        $existingBooking = $bookingModel->getBookingByIdAndUser($_POST['id_booking'], $_SESSION['user']['user_id']);
+        if (!$existingBooking) {
+            throw new Exception('Hanya ketua yang bisa membatalkan peminjaman!');
+        }
         $result = $bookingModel->cancelBooking($_POST['id_booking']);
         //menambahkan suspend ke user
         $suspend = $userModel->addSuspendCount($_SESSION['user']['user_id']);
         //ini dia nge cancel atau nge declined reschedule yang masih pending (kalo ada)
         $rescheduleModel->cancelRescheduleByUser($_POST['id_booking']);
 
-            if ($result <= 0 || $suspend <= 0) {
+            if ($result <= 0 || $suspend <= 0 || $suspend <= 0) {
                 throw new Exception("internal server error", 1);
             }
-
-
 
         $bookingModel->commit();
         Flasher::setModalInfo('Cancel Peminjaman Berhasil', 'Peminjaman berhasil dibatalkan', 'success');
@@ -263,8 +276,8 @@ class Booking extends Controller {
 
         }catch(Throwable $e){
             $bookingModel->rollback();
-            Flasher::setModalInfo('Gagal cancel', $e->getMessage(), 'error');
-            header('location: /dashboard');
+            Flasher::setModalInfo('Gagal Membatalkan Booking', $e->getMessage(), 'error');
+            header('location: /Booking');
             exit();
         }
     }

@@ -8,7 +8,7 @@ class m_20251119_07_create_table_reschedule extends Migration{
                 id_reschedule INT AUTO_INCREMENT PRIMARY KEY,
                 id_booking INT NOT NULL,
                 cancel_reason VARCHAR(255),
-                status_reschedule ENUM('pending', 'approved', 'declined') NOT NULL DEFAULT 'pending',
+                status_reschedule ENUM('pending', 'approved', 'declined', 'cancelled') NOT NULL DEFAULT 'pending',
                 cancel_by ENUM('user', 'system', 'admin') NULL,
                 new_start_time DATETIME,
                 new_end_time DATETIME,

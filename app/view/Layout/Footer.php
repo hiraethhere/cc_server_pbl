@@ -1,5 +1,6 @@
 <?php Flasher::Flash() ?>
 <?php Flasher::modalInfo(); ?>
+<?php include __DIR__ . '/../template/iconComponent.php'; ?>
        
     </section>
     
