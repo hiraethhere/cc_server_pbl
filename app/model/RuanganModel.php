@@ -40,6 +40,11 @@ class RuanganModel {
         return $this->db->singleSet();
     }
 
+    public function getAllRoomNames(){
+        $this->db->query("SELECT room_name FROM rooms ");
+        return $this->db->resultSet();
+    }
+
     public function getRuanganWithRating($id_room){
         $query = "SELECT r.*, a.announcement_content,
                 IFNULL(AVG(f.rating), 0) AS avg_rating,

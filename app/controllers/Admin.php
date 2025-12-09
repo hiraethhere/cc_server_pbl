@@ -468,19 +468,73 @@ class Admin extends Controller {
     }
 
     public function Feedback(){
-
-        $data['limit'] = 2;
+        $data['limit'] = 2; // Limit data per halaman
+        
+        // 1. Logika Halaman (Pagination)
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $start = ($page > 1) ? ($page * $data['limit']) - $data['limit'] : 0;
 
-        $data['feedbacks'] = $this->model('FeedbackModel')->getAllFeedbackPaginated($data['limit'], $start);
-        $total_data = $this->model('FeedbackModel')->getTotalFeedbackCount();
+        // 2. Logika Filter
+        // Filter Ruangan
+        $ruanganFilter = [];
+        if (isset($_GET['ruangan']) && $_GET['ruangan'] !== '') {
+            if (is_array($_GET['ruangan'])) {
+                $ruanganFilter = $_GET['ruangan'];
+            } else {
+                $ruanganFilter = explode(',', $_GET['ruangan']);
+            }
+        }
+
+        // Filter Bulan
+        $bulanFilter = [];
+        if (isset($_GET['bulan']) && $_GET['bulan'] !== '') {
+            if (is_array($_GET['bulan'])) {
+                $bulanFilter = $_GET['bulan'];
+            } else {
+                $bulanFilter = explode(',', $_GET['bulan']);
+            }
+        }
+
+        // Filter Tahun
+        $tahunFilter = [];
+        if (isset($_GET['tahun']) && $_GET['tahun'] !== '') {
+            if (is_array($_GET['tahun'])) {
+                $tahunFilter = $_GET['tahun'];
+            } else {
+                $tahunFilter = explode(',', $_GET['tahun']);
+            }
+        }
+
+        // 3. Panggil Model
+        // Kita mengirimkan variabel filter ke Model
+        $feedbackModel = $this->model('FeedbackModel');
+
+        // Ambil data feedback dengan filter
+        $data['feedbacks'] = $feedbackModel->getFeedbackFiltered(
+            $data['limit'], 
+            $start,
+            $ruanganFilter, 
+            $bulanFilter, 
+            $tahunFilter
+        );
+
+        // Hitung total data (harus memuat filter juga agar pagination akurat)
+        $total_data = $feedbackModel->countFeedbackFiltered(
+            $ruanganFilter, 
+            $bulanFilter, 
+            $tahunFilter
+        );
+
+        // 4. Kelengkapan Data View
         $data['total_page'] = ceil($total_data / $data['limit']);
         $data['current_page'] = $page;
-
+        
+        // Kirim opsi filter kembali ke view (agar checkbox tetap tercentang setelah reload)
+        $data['list_ruangan'] = $this->model('RuanganModel')->getAllRoomNames();
 
         $data['judul'] = 'Feedback Pengguna';
         $data['navbar'] = 'Feedback';
+        
         $this->view('layout/sidebar', $data);
         $this->view('admin/feedback/index', $data);
     }
