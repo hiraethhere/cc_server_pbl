@@ -342,12 +342,14 @@ class Admin extends Controller {
         // Hitung START (Offset) sesuai rumus kamu
         $start = ($page > 1) ? ($page * $data['limit']) - $data['limit'] : 0;
 
-        // 4. Panggil Model (DIPISAH)
+        $statusFilter = ['active', 'non-active'];
+
+        // Panggil Model (DIPISAH)
         // Ambil data baris ruangan
-        $data['rooms'] = $this->model('RuanganModel')->getRuanganForAdmin($search, $data['limit'], $start);
+        $data['rooms'] = $this->model('RuanganModel')->getRuanganForAdmin($search, $statusFilter ,  $data['limit'], $start);
 
         // Hitung total data untuk pagination
-        $total_data = $this->model('RuanganModel')->countRuanganForAdmin($search);
+        $total_data = $this->model('RuanganModel')->countRuanganForAdmin($search, $statusFilter);
 
         // 5. Hitung Total Halaman
         $data['total_page'] = ceil($total_data / $data['limit']);
@@ -391,10 +393,40 @@ class Admin extends Controller {
     }
 
     public function Ruangan(){
+        $data['limit'] = 6; // Jumlah data per halaman
+        
+        // Ambil Search Key
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+        
+        // Logika Halaman (Pagination)
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        
+        // Hitung offset
+        $start = ($page > 1) ? ($page * $data['limit']) - $data['limit'] : 0;
+
+        //ini buat filter status
+        $statusFilter = ''; 
+        if (isset($_GET['status']) && $_GET['status'] !== '') {
+            if (is_array($_GET['status'])) {
+                $statusFilter = $_GET['status']; 
+            } else {
+                $statusFilter = explode(',', $_GET['status']);
+            }
+        }
+        // 4. Panggil Model (DIPISAH)
+        // Ambil data baris ruangan
+        $data['rooms'] = $this->model('RuanganModel')->getRuanganForAdmin($search, $statusFilter, $data['limit'], $start);
+
+        // Hitung total data untuk pagination
+        $total_data = $this->model('RuanganModel')->countRuanganForAdmin($search);
+
+
+        $data['total_page'] = ceil($total_data / $data['limit']);
+        $data['current_page'] = $page;
         $data['judul'] = 'Data Ruangan';
         $data['navbar'] = 'Ruangan';
         $this->view('layout/sidebar', $data);
-        $this->view('admin/ruangan/index');
+        $this->view('admin/ruangan/index', $data);
     }
 
     public function tambahDataRuangan(){
@@ -412,10 +444,11 @@ class Admin extends Controller {
     }
 
     public function EditTataTertib(){
+        $data['tatib'] = $this->model('AnnouncementModel')->getAnnouncement(1);
         $data['judul'] = 'Edit Tata Tertib';
         $data['navbar'] = 'Ruangan';
         $this->view('layout/sidebar', $data);
-        $this->view('admin/ruangan/editTataTertib');
+        $this->view('admin/ruangan/editTataTertib', $data);
     }
 
     public function dataRuangan(){
@@ -1009,9 +1042,7 @@ class Admin extends Controller {
         try {
             $bookingModel->beginTransaction();
 
-            // -----------------------------------------------------------
             // VALIDASI RUANGAN (CRITICAL)
-            // -----------------------------------------------------------
             // Hanya ini pengecekan logikanya: Apakah ruangan kosong di jam itu?
             $cekRoom = $bookingModel->roomCheck($id_room, $end_datetime, $start_datetime);
             
@@ -1019,9 +1050,7 @@ class Admin extends Controller {
                 throw new Exception("Mohon maaf, ruangan sudah ter-booking pada tanggal dan jam tersebut.");
             }
 
-            // -----------------------------------------------------------
             // UPLOAD FILE
-            // -----------------------------------------------------------
             // Menggunakan helper uploadDocument yang sudah dibuat sebelumnya
             // Pastikan path folder 'uploads/dokumen' sudah ada dan writable
             try {
@@ -1053,9 +1082,7 @@ class Admin extends Controller {
                 throw new Exception("internal sql error");
             }
 
-            // -----------------------------------------------------------
             // CLEANUP (Opsional)
-            // -----------------------------------------------------------
             // Jika booking ini approve langsung (atau memblokir slot),
             // batalkan reschedule lain yang pending di jam yang sama.
             $rescheduleModel->autoCancelRescheduleConflict($id_room, $start_datetime, $end_datetime);
@@ -1195,5 +1222,43 @@ class Admin extends Controller {
             exit();
         }
     }
+
+    public function updateTataTertib(){
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                header("Location: /admin/ruangan");
+                exit;
+            }
+
+            try {
+                $id_announcement = $_POST['id_announcement'] ?? null;
+                $tataTertib     = $_POST['tata_tertib'] ?? '';
+
+                if (empty($id_announcement)) {
+                    throw new Exception("ID pengumuman tidak ditemukan.");
+                }
+
+                $tataTertib = trim($tataTertib);
+
+                if ($tataTertib === '') {
+                    throw new Exception("Tata tertib tidak boleh kosong.");
+                }
+
+                $result = $this->model('AnnouncementModel')->updateAnnouncement($id_announcement, $tataTertib);
+
+                if ($result <= 0) {
+                    throw new Exception('Internal Server Error');
+                }
+
+                Flasher::setModalInfo('Berhasil', "Berhasil Update Tata Tertib", 'success');
+                header("Location: /admin/announcement");
+                exit;
+            } catch (Exception $e) {
+                Flasher::setModalInfo('Gagal', $e->getMessage(), 'error');
+            }
+
+            header("Location: /admin/ruangan");
+            exit;
+        }
+
 
 }

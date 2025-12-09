@@ -85,7 +85,7 @@
                             <div class="flex items-center gap-2 text-green1">
                                 <?= icon('circleFill', 'w-3 h-3 mr-2') ?>        
                             </div>
-                            <h2 class="text-sm inline-block font-medium text-green1"><?= translateStatus($room['status']) ?></h2>
+                            <h2 class="text-sm inline-block font-medium text-green1"><?= translateStatusRoom($room['status']) ?></h2>
                         </a>
                     </div>           
                 </div>
