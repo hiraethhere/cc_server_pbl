@@ -51,13 +51,13 @@
 
                 <div>
                     <label class="block text-sm font-medium text-dark-overlay7 mb-2">Nama Ruangan</label>
-                    <input type="text" placeholder="Ruangan Lentera Edukasi" name="room_name"
+                    <input type="text" placeholder="Ruangan Lentera Edukasi" name="room_name" required
                             class="w-full px-4 py-2 border border-dark-overlay4 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay transition">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-dark-overlay7 mb-2">Lokasi (lantai)</label>
-                    <input type="text" placeholder="2" name="floor"
+                    <input type="text" placeholder="2" name="floor" required
                             class="w-full px-4 py-2 border border-dark-overlay4 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay">
                 </div>
 
@@ -72,9 +72,9 @@
                 <div>
                     <label class="block text-sm font-medium text-dark-overlay7 mb-2">Kapasitas Ruangan</label>
                     <div class="flex justify-between items-center gap-4">
-                        <input type="number" name="min_capacity" placeholder="4" min="1" class="w-full px-4 py-2 border border-dark-overlay4 rounded-lg text-center">
+                        <input type="number" required name="min_capacity" placeholder="4" min="1" class="w-full px-4 py-2 border border-dark-overlay4 rounded-lg text-center">
                             <span class="text-dark-overlay7">Sampai</span>
-                        <input type="number" name="max_capacity" placeholder="8" min="1" class="w-full px-4 py-2 border border-dark-overlay4 rounded-lg text-center">
+                        <input type="number" required name="max_capacity" placeholder="8" min="1" class="w-full px-4 py-2 border border-dark-overlay4 rounded-lg text-center">
                     </div>
                 </div>
             </div>
@@ -87,7 +87,7 @@
             <label class="block text-sm font-medium text-dark-overlay7 mb-2">
             Deskripsi Lengkap
             </label>
-            <textarea rows="6" placeholder="Tuliskan deskripsi lengkap ruangan..." name="description"
+            <textarea rows="6" placeholder="Tuliskan deskripsi lengkap ruangan..." name="description" required
                     class="w-full px-5 py-4 border border-dark-overlay4 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay"></textarea>
         </div>
 
@@ -95,7 +95,7 @@
             <label class="block text-sm font-medium text-dark-overlay7 mb-2">
             Deskripsi Singkat
             </label>
-            <textarea rows="3" placeholder="Tuliskan deskripsi singkat yang muncul di kartu ruangan..." name="short_description"
+            <textarea rows="3" placeholder="Tuliskan deskripsi singkat yang muncul di kartu ruangan...(max 100)" name="short_description" required maxlength="100"
                 class="w-full px-5 py-4 border border-dark-overlay4 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay"></textarea>
         </div>
 

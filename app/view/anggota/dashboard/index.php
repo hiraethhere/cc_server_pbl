@@ -11,8 +11,13 @@
 
         <div class="bg-white1 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
             <div class="relative h-48 bg-white1">
-                <img src="/img/<?= $r['img_room'] ?>" 
-                    alt="Ruang Lentera Edukasi" class="w-full h-full object-cover">
+                <?php if($r['img_room'] !== 'DefaultRuangan.jpg'): ?>
+                    <img src="<?= BASEURL; ?>/File/showPhoto/<?= $r['img_room']; ?>"
+                        alt="<?= $r['room_name'] ?>" class="w-full h-full object-cover">
+                <?php else: ?>
+                    <img src="/img/DefaultRuangan.jpg" 
+                        alt="<?= $r['room_name'] ?>" class="w-full h-full object-cover">
+                <?php endif ?>
             </div>
             <div class="grid grid-rows-[2fr_1fr] px-5 pt-5 pb-3">
                 <div>

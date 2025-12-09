@@ -255,6 +255,23 @@ class RescheduleModel {
         return $this->db->rowCount();
     }
 
+    public function cancelPendingReschedulesByRoom($id_room){
+    // Kita perlu join ke tabel bookings (b) untuk tahu reschedule ini milik ruangan mana
+    $query = "UPDATE reschedule r
+              JOIN bookings b ON r.id_booking = b.id_booking
+              SET r.status_reschedule = 'cancelled',
+                  r.cancel_reason = 'ruangan dihapus admin',
+                  r.cancel_by = 'system'
+              WHERE b.id_room = :id_room 
+              AND r.status_reschedule = 'pending'";
+
+    $this->db->query($query);
+    $this->db->bind('id_room', $id_room);
+    
+    $this->db->execute();
+    return $this->db->rowCount();
+}
+
     public function updateStatus($id_reschedule, $status, $reason = NULL) {
         $query = "UPDATE reschedule 
                     SET status_reschedule = :status,

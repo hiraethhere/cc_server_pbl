@@ -547,6 +547,20 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
         return $this->db->singleSet(); 
     }
 
+    public function cancelPendingBookingsByRoom($id_room){
+        $query = "UPDATE bookings 
+                SET status = 'cancelled', 
+                    cancel_by = 'system' 
+                WHERE id_room = :id_room 
+                AND status = 'pending'";
+
+        $this->db->query($query);
+        $this->db->bind('id_room', $id_room);
+        
+        $this->db->execute();
+        return $this->db->rowCount();
+    }
+
     
 
     public function autoCancelLateBookings()
