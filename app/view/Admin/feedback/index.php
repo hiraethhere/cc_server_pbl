@@ -140,7 +140,10 @@
 
         
         <?php endforeach ?>
-        <?php endif; ?>
+
+
+
+        <!-- <?php //endif; ?> -->
     </div>
 
     <?php if ($total_page >= 1): ?>
@@ -210,6 +213,7 @@
                         <button type="submit" class="hidden"></button>
                     </form>
         </div>
+        <?php endif; ?>
 </main>
 
 <script src="/js/filterDropdown.js" defer></script>

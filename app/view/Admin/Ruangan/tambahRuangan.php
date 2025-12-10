@@ -51,19 +51,19 @@
 
                 <div>
                     <label class="block text-sm font-medium text-dark-overlay7 mb-2">Nama Ruangan</label>
-                    <input type="text" placeholder="Ruangan Lentera Edukasi" name="room_name" required
-                            class="w-full px-4 py-2 border border-dark-overlay4 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay transition">
+                    <input type="text" placeholder="Nama Ruangan" name="room_name" required
+                            class="w-full px-4 py-2 border border-dark-overlay4 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay4 transition">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-dark-overlay7 mb-2">Lokasi (lantai)</label>
-                    <input type="text" placeholder="2" name="floor" required
-                            class="w-full px-4 py-2 border border-dark-overlay4 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay">
+                    <input type="text" placeholder="Lantai Ruangan" name="floor" required
+                            class="w-full px-4 py-2 border border-dark-overlay4 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay4">
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-dark-overlay7 mb-2">Status</label>
-                    <select name="status" class="w-full px-4 py-2 border border-dark-overlay4 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay">
+                    <select name="status" class="w-full px-4 py-2 border border-dark-overlay4 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay4">
                         <option value="active">Tersedia</option>
                         <option value="non-active">Tidak Tersedia</option>
                     </select>
@@ -88,7 +88,7 @@
             Deskripsi Lengkap
             </label>
             <textarea rows="6" placeholder="Tuliskan deskripsi lengkap ruangan..." name="description" required
-                    class="w-full px-5 py-4 border border-dark-overlay4 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay"></textarea>
+                    class="w-full px-5 py-4 border border-dark-overlay4 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay4"></textarea>
         </div>
 
         <div>
@@ -96,7 +96,7 @@
             Deskripsi Singkat
             </label>
             <textarea rows="3" placeholder="Tuliskan deskripsi singkat yang muncul di kartu ruangan...(max 100)" name="short_description" required maxlength="100"
-                class="w-full px-5 py-4 border border-dark-overlay4 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay"></textarea>
+                class="w-full px-5 py-4 border border-dark-overlay4 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay4"></textarea>
         </div>
 
         <!-- Tombol Aksi -->
@@ -153,7 +153,7 @@ function konfirmasiTambah() {
         },
         {
             icon: <?= json_encode(icon("calendar", "w-12 h-12", "green1")) ?>,
-            confirmText: 'Taambah',
+            confirmText: 'Tambah',
             confirmClass: 'w-full px-6 py-2 bg-green1 text-white rounded-lg font-semibold hover:bg-green-700 transition hover:cursor-pointer',
             cancelText: 'Batalkan'
         }

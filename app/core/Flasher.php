@@ -41,7 +41,7 @@ class Flasher {
                         flash.style.opacity = "0"; 
                         setTimeout(() => flash.parentElement.remove(), 500); 
                     }
-                }, 3000);
+                }, 1000);
             </script>
             ';
             unset($_SESSION['flash']);
