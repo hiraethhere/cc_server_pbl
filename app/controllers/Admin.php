@@ -1232,8 +1232,32 @@ class Admin extends Controller {
         $id_booking = $_POST['id_booking'];
         $bookingModel = $this->model('BookingModel');
 
+        $bookingDetail = $bookingModel->getBookingById($id_booking);
+
+        if (!$bookingDetail) {
+            Flasher::setModalInfo('Error', 'Data booking tidak ditemukan.', 'error');
+            header('Location: ' . BASEURL . '/admin/peminjaman');
+            exit;
+        }
+
+        // --- LOGIKA CEK WAKTU ---
+        // Gunakan timezone yang sesuai (misal WIB)
+        date_default_timezone_set('Asia/Jakarta'); 
+        
+        $waktuSekarang = time(); // Timestamp detik saat ini
+        $waktuJadwal   = strtotime($bookingDetail['start_time']);
+
+        // Toleransi waktu, boleh mulai 15 menit sebelum jadwal
+        $toleransi = 15 * 60; // 15 menit dalam detik
+
+        // Jika Waktu Sekarang < (Jadwal - Toleransi), maka tolak
+        if ($waktuSekarang < ($waktuJadwal - $toleransi)) {
+            Flasher::setModalInfo('Gagal', 'Belum waktunya mulai. Harap tunggu sesuai jadwal.', 'error');
+            header('Location: ' . BASEURL . '/admin/peminjaman');
+            exit;
+        }
+
         try {
-            // 2. Eksekusi Update ke 'ongoing'
             // Parameter ke-3 ($reason) tidak kita isi, jadi otomatis NULL (aman)
             $result = $bookingModel->updateStatusBooking($id_booking, 'ongoing');
 
@@ -1567,7 +1591,6 @@ public function handleDeleteRoom(){
             // 5. Rollback (Batalkan SEMUA perubahan jika terjadi error di langkah manapun)
             // Data ruangan akan kembali 'aktif' jika proses cancel booking error
             $ruanganModel->db->rollBack();
-
             Flasher::setModalInfo('Gagal', $e->getMessage(), 'error');
         }
 
