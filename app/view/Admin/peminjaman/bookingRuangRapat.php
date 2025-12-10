@@ -116,5 +116,6 @@
     </div>
 
 </main>
-<script> const BASEURL = '<?= BASEURL ?>'</script>    
+<script> const BASEURL = '<?= BASEURL ?>'</script>
+<script src="/js/uploadFile.js" defer></script>
 <script src="/js/bookingRapat.js"></script>

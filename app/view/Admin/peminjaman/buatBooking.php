@@ -58,19 +58,23 @@
             </button>
         </div>
     </div>
-
     <!-- Rooms Grid -->
     <div id="rooms-container" class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 md:grid-cols-2 mb-8 mt-6 md:gap-10 lg:gap-12 gap-5">
         <?php foreach ($rooms as $room): ?>
         <div class="bg-background2 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
             <div class="relative h-48 from-dark-overlay4 to-dark-overlay7">
-                <img src="/img/DefaultRuangan.jpg" 
-                    alt="Ruang Lentera Edukasi" class="w-full h-full object-cover">
+                <?php if($room['img_room'] !== 'DefaultRuangan.jpg'): ?>
+                <img src="<?= BASEURL; ?>File/showPhoto/<?= $room['img_room']; ?>"
+                    alt="<?= $room['room_name'] ?>" class="w-full h-full object-cover">
+                <?php else: ?>
+                 <img src="/img/DefaultRuangan.jpg" 
+                    alt="<?= $room['room_name'] ?>" class="w-full h-full object-cover">
+                <?php endif ?>
             </div>
             <div class="grid grid-rows-[2fr_1fr] px-5 p-3">
                 <div>
                     <h3 class="font-bold text-lg text-black3 mb-1"><?= htmlspecialchars($room['room_name'] ?? '-') ?></h3>
-                    <p class="text-dark-overlay8 mb-2 text-justify text-sm"><?= htmlspecialchars($room['short_description']) ?></p>
+                    <p class="text-dark-overlay8 mb-2 text-justify text-sm"><?= htmlspecialchars($room['short_description']?? '-') ?></p>
                     <hr class="border-t border-dark-overlay">
                 </div>
                 <div class="grid grid-cols-[1fr_2fr] mb-2 md:text-md text-xs">

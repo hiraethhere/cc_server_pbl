@@ -74,7 +74,7 @@ function applyFilters() {
     const currentTab = params.get('tab');
     params.set('page', 1);
 
-    const filterNames = ['status', 'jurusan', 'jenis', 'Status', 'Jurusan', 'Jenis', 'tab'];
+    const filterNames = ['status', 'jurusan', 'jenis', 'Status', 'Jurusan', 'Jenis', 'tab', 'Tahun', 'Bulan', 'Ruangan', 'ruangan', 'bulan', 'tahun'];
 
     // ambil semua hidden input filter
     document.querySelectorAll('input[type="hidden"]').forEach(input => {
@@ -174,7 +174,7 @@ document.addEventListener('click', (event) => {
                     e.preventDefault();
 
                     // hapus semua filter kecuali search tertentu kalau mau
-                    const filtersToDelete = ['page', 'jenis', 'Jenis', 'status', 'Status', 'jurusan', 'Jurusan', 'url', 'search'];
+                    const filtersToDelete = ['page', 'jenis', 'Jenis', 'status', 'Status', 'jurusan', 'Jurusan', 'url', 'search', 'ruangan', 'bulan', 'tahun'];
 
                     //Loop array di atas dan hapus dari URL
                     filtersToDelete.forEach(p => url.searchParams.delete(p));

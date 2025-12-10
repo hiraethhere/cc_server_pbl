@@ -4,26 +4,46 @@
     </nav>
     <h2 class="text-xl font-bold text-dark-overlay mb-6">Data Feedback</h2>
     
-
-    <div class="flex items-center gap-3 pb-2">
+    <form method="POST" id="filterForm">
+    <div class="flex items-center gap-3 pb-2 ">
         <?php 
-            $filter_id = 'Ruangan'; 
+            $filter_id = 'ruangan'; 
             $label = 'Ruangan'; 
-            $options = ['Ruang Duta' => 'Ruang Duta', 'Ruang Meeting Kecil' => 'Ruang Meeting Kecil']; 
+            $options = [];
+            if (isset($data['list_ruangan'])) {
+                foreach ($data['list_ruangan'] as $row) {
+                    // Format: 'Label yang muncul' => 'Value yang dikirim'
+                    // Karena logic filter kamu pakai room_name, maka value-nya juga room_name
+                    $options[$row['room_name']] = $row['room_name'];
+                }
+            }
             $current_values = $_GET[$filter_id] ?? ''; 
             include __DIR__ . '/../../template/filterDropDown.php';
             ?>
 
         <?php 
-            $filter_id = 'Bulan'; 
+            $filter_id = 'bulan'; 
             $label = 'Bulan'; 
-            $options = ['Januari' => 'Januari', 'Februari' => 'Februari']; 
+           $options = [
+                        'Januari'   => '1',
+                        'Februari'  => '2',
+                        'Maret'     => '3',
+                        'April'     => '4',
+                        'Mei'       => '5',
+                        'Juni'      => '6',
+                        'Juli'      => '7',
+                        'Agustus'   => '8',
+                        'September' => '9',
+                        'Oktober'   => '10',
+                        'November'  => '11',
+                        'Desember'  => '12',
+                    ];
             $current_values = $_GET[$filter_id] ?? ''; 
             include __DIR__ . '/../../template/filterDropDown.php';
             ?>
 
         <?php 
-            $filter_id = 'Tahun'; 
+            $filter_id = 'tahun'; 
             $label = 'Tahun'; 
             $options = ['2025' => '2025', '2024' => '2024']; 
             $current_values = $_GET[$filter_id] ?? ''; 
@@ -31,14 +51,21 @@
             ?>
 
         <button type="button" id="filter-action-btn"
-                class="p-2 text-dark-overlay5 hover:text-dark-overlay7 hover:bg-dark-overlay1 rounded-lg transition border border-dark-overlay5 bg-white">
+                class="flex items-center px-3 py-1.5 hover:cursor-pointer text-dark-overlay5 hover:text-dark-overlay7 hover:bg-dark-overlay1 rounded-lg transition border border-dark-overlay5 bg-white">
             <div id="filter-action-icon" class="text-dark-overlay5"
                     data-check="<?= htmlspecialchars(icon('check', 'w-4 h-4 text-blue-overlay'), ENT_QUOTES) ?>"
                     data-cross="<?= htmlspecialchars(icon('cross', 'w-4 h-4 text-red1'), ENT_QUOTES) ?>">
                 <?= icon('check', 'w-4 h-4 text-blue-overlay') ?>
             </div>
+             <span id="filter-action-text" 
+                        class="ms-2" 
+                        data-text-check="Terapkan" 
+                        data-text-cross="Reset">
+                        Terapkan
+            </span> 
         </button>
     </div>
+    </form>
 
 
     <!-- Feedback Cards Grid -->
@@ -184,3 +211,6 @@
                     </form>
         </div>
 </main>
+
+<script src="/js/filterDropdown.js" defer></script>
+<script src="/js/search.js" defer></script>

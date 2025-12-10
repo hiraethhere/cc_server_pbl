@@ -132,8 +132,8 @@
                             <div class="flex items-center gap-1">
                             <?php 
                             $max = 5;
-                            for ($i = 1; $i <= $max; $i++):
-                            if ($i <= $detailRuangan['avg_rating']) {
+                            for ($p = 1; $p <= $max; $p++):
+                            if ($p <= $detailRuangan['avg_rating']) {
                                 echo icon('starFill', 'w-5 h-5 text-yellow1');   // bintang terisi
                             } else {
                                 echo icon('starFill', 'w-5 h-5 text-dark-overlay5'); // bintang kosong/gelap
@@ -201,14 +201,14 @@
         </div>
     </div>
 </main>
-
+<?php echo $i ?>
 <script>const BASEURL = "<?= BASEURL ?>";</script>
 <script src="/js/bookingRoom.js?"v=<?php echo time(); ?>></script>
 <script>
     // Add member (WAJIB JS)
     const addButton = document.getElementById('addMember');
     addButton.addEventListener('click', addMember)
-    let memberCount = <?= $i + 1?>;
+    let memberCount = <?= $i + 1 ?>;
     function addMember() {
 
         memberCount++;
@@ -218,7 +218,7 @@
         newCard.innerHTML = `
             <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center">
-                    <span class="inline-flex items-center justify-center w-7 h-7 bg-dark-overlay7 text-white rounded-full text-xs font-bold"><?= $i + 2?></span>
+                    <span class="inline-flex items-center justify-center w-7 h-7 bg-dark-overlay7 text-white rounded-full text-xs font-bold">${memberCount}</span>
                     <span class="ml-2 font-medium text-sm text-dark-overlay7">Anggota</span>
                 </div>
                 <button type="button" onclick="removeMember(this)" class="text-red1 hover:text-red-800 transition hover:cursor-pointer">

@@ -112,7 +112,7 @@ function isActive($current, $check) {
                         <?php 
                         $filter_id = 'status'; 
                         $label = 'Status'; 
-                        $options = ['Aktif' => 'ongoing', 'Menunggu' => 'pending', 'Dibatalkan' => 'cancelled']; 
+                        $options = ['Aktif' => 'ongoing', 'Menunggu' => 'pending', 'Selesai' => 'done',  'Dibatalkan' => 'cancelled']; 
                         $current_values = $_GET[$filter_id] ?? ''; 
                         include __DIR__ . '/../../template/filterDropDown.php';
                         ?>
@@ -157,7 +157,6 @@ function isActive($current, $check) {
                 </div>
                 </form>
             </div>
-
             <?php if (!empty($bookings)): ?>
             <div class="rounded-lg shadow-sm border border-dark-overlay4 overflow-hidden mx-8">
                 <div class="overflow-x-auto">
@@ -205,7 +204,7 @@ function isActive($current, $check) {
                 </div>
             </div>
 
-         <?php if (!empty($bookings) && $total_page >= 1): ?>   
+         <?php if ($total_page >= 1): ?>   
         <div class="flex items-center justify-center px-6 py-4 bg-white mx-8">
             
             <div class="flex items-center gap-2">

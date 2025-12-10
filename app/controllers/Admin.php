@@ -19,11 +19,61 @@ class Admin extends Controller {
     }
 
     public function index(){
+        $data['bookings'] = $this->model('BookingModel')->getAllActiveBookingJoinRoom();
+
+        $bulanFilter = isset($_GET['bulan']) && $_GET['bulan'] !== '' ? $_GET['bulan'] : date('m'); // Default bulan ini
+        $tahunFilter = isset($_GET['tahun']) && $_GET['tahun'] !== '' ? $_GET['tahun'] : date('Y'); // Default tahun ini
+
+        $jurusanFilter = [];
+        if (isset($_GET['jurusan']) && $_GET['jurusan'] !== '') {
+            if (is_array($_GET['jurusan'])) {
+                $jurusanFilter = $_GET['jurusan'];
+            } else {
+                $jurusanFilter = explode(',', $_GET['jurusan']);
+            }
+        }
+
+        $dashboardModel = $this->model('DashboardModel');
+
+
+
+        // A. Data Booking (Statistik Kartu Atas)
+        // Kita kirim filter bulan & tahun
+        $data['stats_booking'] = $dashboardModel->getBookingStats($bulanFilter, $tahunFilter);
+
+        // B. Data Anggota (Statistik Kartu Tengah)
+        // Kita kirim filter jurusan
+        $data['stats_anggota'] = $dashboardModel->getUserStats($jurusanFilter);
+
+        // C. Data Ruangan (Statistik Kartu Bawah)
+        // Ruangan biasanya datanya global, tapi Populer bisa berdasarkan bulan/tahun aktif
+        $data['stats_ruangan'] = $dashboardModel->getRoomStats($bulanFilter, $tahunFilter);
         $data['judul'] = 'Dashboard Admin';
         $data['navbar'] = 'dashboard';
         $this->view('layout/sidebar', $data);
-        $this->view('admin/index');
+        $this->view('admin/index', $data);
+    }
 
+    // app/controllers/Admin.php
+
+    public function cetakLaporan()
+    {
+        $data['judul'] = 'Laporan Peminjaman';
+        // Panggil model yang tadi kita buat
+        $data['laporan'] = $this->model('BookingModel')->getAllBooking();
+        
+        // Load view khusus cetak (kita buat setelah ini)
+        $this->view('Admin/cetak', $data);
+    }
+
+    public function cetakRuangan()
+    {
+        $data['judul'] = 'Laporan Peminjaman';
+        // Panggil model yang tadi kita buat
+        $data['laporan'] = $this->model('RuanganModel')->getLaporanRuangan();
+        
+        // Load view khusus cetak (kita buat setelah ini)
+        $this->view('Admin/cetakRuangan', $data);
     }
     
     public function Anggota(){
@@ -217,7 +267,7 @@ class Admin extends Controller {
                     $dateMode = 'upcoming';
                     // Jika user tidak milih filter status, kita paksa status 'active'
                     if (empty($statusFilter)) {
-                        $forcedStatus = ['approved', 'pending', 'ongoing']; 
+                        $forcedStatus = ['approved', 'pending', 'ongoing', 'ongoing']; 
                     }
                     $data['link'] = 'detailBerlangsung';
                     break;
@@ -367,7 +417,7 @@ class Admin extends Controller {
 
         if ($id_room === false || $id_room < 1) {
                 Flasher::setModalInfo('Parameter Salah', 'hayooo ubah-ubah parameter yaa?', 'error');
-                header('Location: /dashboard'); // Redirect ke halaman login
+                header('Location: /admin/buatBooking'); // Redirect ke halaman login
                 exit;
             }
 
@@ -436,11 +486,19 @@ class Admin extends Controller {
         $this->view('admin/ruangan/tambahRuangan');
     }
 
-    public function EditDataRuangan(){
+    public function EditDataRuangan($id_room = NULL){
+         $id = param_number($id_room, "ID ruangan tidak valid");
+
+        if ($id_room === false || $id_room < 1) {
+                Flasher::setModalInfo('Parameter Salah', 'hayooo ubah-ubah parameter yaa?', 'error');
+                header('Location: /admin/ruangan'); // Redirect ke halaman login
+                exit;
+            }
+        $data['room'] = $this->model('RuanganModel')->getRuanganWithRating($id_room);
         $data['judul'] = 'Edit Data Ruangan';
         $data['navbar'] = 'Ruangan';
         $this->view('layout/sidebar', $data);
-        $this->view('admin/ruangan/editDataRuangan');
+        $this->view('admin/ruangan/editDataRuangan', $data);
     }
 
     public function EditTataTertib(){
@@ -460,19 +518,73 @@ class Admin extends Controller {
     }
 
     public function Feedback(){
-
-        $data['limit'] = 2;
+        $data['limit'] = 2; // Limit data per halaman
+        
+        // 1. Logika Halaman (Pagination)
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $start = ($page > 1) ? ($page * $data['limit']) - $data['limit'] : 0;
 
-        $data['feedbacks'] = $this->model('FeedbackModel')->getAllFeedbackPaginated($data['limit'], $start);
-        $total_data = $this->model('FeedbackModel')->getTotalFeedbackCount();
+        // 2. Logika Filter
+        // Filter Ruangan
+        $ruanganFilter = [];
+        if (isset($_GET['ruangan']) && $_GET['ruangan'] !== '') {
+            if (is_array($_GET['ruangan'])) {
+                $ruanganFilter = $_GET['ruangan'];
+            } else {
+                $ruanganFilter = explode(',', $_GET['ruangan']);
+            }
+        }
+
+        // Filter Bulan
+        $bulanFilter = [];
+        if (isset($_GET['bulan']) && $_GET['bulan'] !== '') {
+            if (is_array($_GET['bulan'])) {
+                $bulanFilter = $_GET['bulan'];
+            } else {
+                $bulanFilter = explode(',', $_GET['bulan']);
+            }
+        }
+
+        // Filter Tahun
+        $tahunFilter = [];
+        if (isset($_GET['tahun']) && $_GET['tahun'] !== '') {
+            if (is_array($_GET['tahun'])) {
+                $tahunFilter = $_GET['tahun'];
+            } else {
+                $tahunFilter = explode(',', $_GET['tahun']);
+            }
+        }
+
+        // 3. Panggil Model
+        // Kita mengirimkan variabel filter ke Model
+        $feedbackModel = $this->model('FeedbackModel');
+
+        // Ambil data feedback dengan filter
+        $data['feedbacks'] = $feedbackModel->getFeedbackFiltered(
+            $data['limit'], 
+            $start,
+            $ruanganFilter, 
+            $bulanFilter, 
+            $tahunFilter
+        );
+
+        // Hitung total data (harus memuat filter juga agar pagination akurat)
+        $total_data = $feedbackModel->countFeedbackFiltered(
+            $ruanganFilter, 
+            $bulanFilter, 
+            $tahunFilter
+        );
+
+        // 4. Kelengkapan Data View
         $data['total_page'] = ceil($total_data / $data['limit']);
         $data['current_page'] = $page;
-
+        
+        // Kirim opsi filter kembali ke view (agar checkbox tetap tercentang setelah reload)
+        $data['list_ruangan'] = $this->model('RuanganModel')->getAllRoomNames();
 
         $data['judul'] = 'Feedback Pengguna';
         $data['navbar'] = 'Feedback';
+        
         $this->view('layout/sidebar', $data);
         $this->view('admin/feedback/index', $data);
     }
@@ -881,7 +993,7 @@ class Admin extends Controller {
 
         if (!$id_room || !$bookingDate || !$startTime || !$endTime) {
             Flasher::setModalInfo('Gagal!', 'Semua field wajib diisi', 'error');
-            header("Location: /dashboard");
+            header("Location: /admin/buatBooking");
         exit;
         }
 
@@ -889,7 +1001,7 @@ class Admin extends Controller {
         if (!isset($_POST['nim']) || !is_array($_POST['nim'])) {
             // Handle jika tidak ada input NIM sama sekali
             Flasher::setModalInfo('Gagal!', 'Data anggota tidak valid', 'error');
-            header("Location: /dashboard");
+            header("Location: /admin/buatBooking");
             exit;
         }
 
@@ -1054,7 +1166,7 @@ class Admin extends Controller {
             // Menggunakan helper uploadDocument yang sudah dibuat sebelumnya
             // Pastikan path folder 'uploads/dokumen' sudah ada dan writable
             try {
-                $namaFileDokumen = uploadFile($file_proposal, 'storage/documents');
+                $namaFileDokumen = uploadDocument($file_proposal, 'storage/documents');
             } catch (Exception $uploadError) {
                 throw new Exception($uploadError->getMessage());
             }
@@ -1098,7 +1210,7 @@ class Admin extends Controller {
 
             // Hapus file jika database gagal save
             if (isset($namaFileDokumen)) {
-                $filePath = dirname($_SERVER['DOCUMENT_ROOT']) . '/public/uploads/dokumen/' . $namaFileDokumen;
+                $filePath = dirname($_SERVER['DOCUMENT_ROOT']) . 'storage/documents/' . $namaFileDokumen;
                 if (file_exists($filePath)) unlink($filePath);
             }
 
@@ -1258,7 +1370,209 @@ class Admin extends Controller {
 
             header("Location: /admin/ruangan");
             exit;
+            
         }
 
+    public function handleAddRoom(){
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: /admin/ruangan");
+            exit;
+        }
 
+        try {
+            
+            if (empty($_POST['room_name']) || empty($_POST['floor']) || empty($_POST['status']) || empty($_POST['description']) || empty($_POST['short_description']) || empty($_POST['max_capacity']) || empty($_POST['min_capacity'])) {
+                throw new Exception("Data tidak lengkap");
+            }
+
+            if ($_POST['max_capacity'] < $_POST['min_capacity']) {
+                throw new Exception('isi yang bener kapasitas ruangannya');
+            }
+
+            // 4. Logika Upload Gambar
+            $namaFileGambar = 'defaultRuangan.jpg'; // Gambar default jika user tidak upload
+
+            // Cek apakah ada file yang diupload dan tidak ada error
+            if (isset($_FILES['roomPhoto']) && $_FILES['roomPhoto']['error'] !== 4) {
+                // Panggil helper 'uploadImage' yang kamu buat
+                // Parameter 2: folder tujuan (tanpa slash di depan karena helper pakai trim)
+                $namaFileGambar = uploadImage($_FILES['roomPhoto'], 'storage/roomsImage/');
+                
+            }
+
+            // Susun Data untuk Model
+            $data = [
+                'room_name' => $_POST['room_name'],
+                'floor' => $_POST['floor'],
+                'status' => $_POST['status'],
+                'min_capacity' => $_POST['min_capacity'],
+                'max_capacity' => $_POST['max_capacity'],
+                'description' => $_POST['description'],
+                'short_description' => $_POST['short_description'],
+                'img_room' => $namaFileGambar
+            ];
+
+            // Panggil Model untuk Insert Data
+            // Asumsi nama method di model adalah 'tambahDataRuangan'
+            $result = $this->model('RuanganModel')->createRoom($data);
+
+            if ($result <= 0) {
+                // Jika gagal insert, dan tadi upload gambar baru, hapus gambar yang sudah terlanjur diupload
+                if ($namaFileGambar !== 'default.jpg' && file_exists('storage/roomsImage/' . $namaFileGambar)) {
+                    unlink('storage/roomsImage/' . $namaFileGambar);
+                }
+                throw new Exception('Gagal menambahkan data ruangan ke database.');
+            }
+
+            // 7. Sukses
+            Flasher::setModalInfo('Berhasil', "Ruangan berhasil ditambahkan", 'success');
+            header("Location: /admin/ruangan");
+            exit;
+
+        } catch (Exception $e) {
+            // 8. Error Handling
+            Flasher::setModalInfo('Gagal', $e->getMessage(), 'error');
+            // Redirect kembali ke halaman list atau form tambah (sesuaikan routingmu)
+            header("Location: /admin/tambahDataRuangan"); 
+            exit;
+        }
+    }
+
+    public function handleUpdateRoom(){
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: /admin/ruangan");
+            exit;
+        }
+
+        try {
+            // 1. Validasi Input Dasar
+            if (
+                empty($_POST['id_room']) || 
+                empty($_POST['room_name']) || 
+                empty($_POST['floor']) || 
+                empty($_POST['status']) || 
+                empty($_POST['description']) || 
+                empty($_POST['short_description']) || 
+                empty($_POST['max_capacity']) || 
+                empty($_POST['min_capacity'])
+            ) {
+                throw new Exception("Data tidak lengkap. Pastikan semua field terisi.");
+            }
+
+            // 2. Validasi Logika
+            if ($_POST['max_capacity'] < $_POST['min_capacity']) {
+                throw new Exception('Kapasitas maksimum tidak boleh lebih kecil dari minimum.');
+            }
+
+            // 3. Logika Upload Gambar (Update Version)
+            // Ambil nama gambar lama dari input hidden di form
+            $namaFileGambar = $_POST['old_roomPhoto']; 
+
+            // Cek apakah user mengupload gambar BARU
+            if (isset($_FILES['roomPhoto']) && $_FILES['roomPhoto']['error'] !== 4) {
+                
+                // Upload gambar baru
+                $gambarBaru = uploadImage($_FILES['roomPhoto'], 'storage/roomsImage/');
+                
+                // Jika upload berhasil, set nama file baru
+                if ($gambarBaru) {
+                    $namaFileGambar = $gambarBaru;
+
+                    // [OPSIONAL] Hapus gambar lama dari server jika bukan gambar default
+                    // Pastikan kamu mengirim hidden input 'old_roomPhoto' di view
+                    if ($_POST['old_roomPhoto'] !== 'defaultRuangan.jpg' && file_exists('storage/roomsImage/' . $_POST['old_roomPhoto'])) {
+                        unlink('storage/roomsImage/' . $_POST['old_roomPhoto']);
+                    }
+                }
+            }
+
+            // 4. Susun Data untuk Model
+            $data = [
+                'id_room' => $_POST['id_room'], // ID untuk klausa WHERE
+                'room_name' => $_POST['room_name'],
+                'floor' => $_POST['floor'],
+                'status' => $_POST['status'],
+                'min_capacity' => $_POST['min_capacity'],
+                'max_capacity' => $_POST['max_capacity'],
+                'description' => $_POST['description'],
+                'short_description' => $_POST['short_description'],
+                'img_room' => $namaFileGambar // Bisa gambar baru, atau gambar lama
+            ];
+
+            // 5. Panggil Model Update
+            // rowCount akan mengembalikan jumlah baris yang berubah.
+            // Note: Jika data yang disave SAMA PERSIS dengan database, rowCount bisa 0.
+            // Jadi kita hanya perlu cek apakah terjadi error SQL.
+            $this->model('RuanganModel')->updateRoom($data);
+
+            // 6. Sukses
+            Flasher::setModalInfo('Berhasil', "Data ruangan berhasil diperbarui", 'success');
+            header("Location: /admin/ruangan");
+            exit;
+
+        } catch (Exception $e) {
+            // 7. Error Handling
+            Flasher::setModalInfo('Gagal', $e->getMessage(), 'error');
+            
+            // Redirect kembali ke halaman edit dengan membawa ID (jika routing mendukung)
+            // Atau kembali ke list
+            header("Location: /admin/ruangan"); 
+            exit;
+        }
+    }
+
+public function handleDeleteRoom(){
+
+    if (empty($_POST['id_room'])) {
+        Flasher::setModalInfo('Gagal Hapus Ruangan', "Data tidak lengkap", 'error');
+        header("Location: /admin/ruangan");
+        exit;
+    }
+
+    try {
+            // Inisialisasi Model
+            $ruanganModel = $this->model('RuanganModel');
+            $bookingModel = $this->model('BookingModel');
+            $rescheduleModel = $this->model('RescheduleModel');
+
+            // 1. Mulai Transaksi
+            // (Pastikan class Database wrapper kamu support method beginTransaction)
+            $ruanganModel->db->beginTransaction(); 
+
+            // 2. Eksekusi Soft Delete Ruangan
+            $deleted = $ruanganModel->deleteRoom($_POST['id_room']);
+
+            // Kalau tidak ada baris yang berubah (misal ID salah), lempar Exception
+            if ($deleted <= 0) {
+                throw new Exception("Gagal menghapus ruangan atau ID tidak ditemukan.");
+            }
+
+            // 3. Eksekusi Cancel Booking & Reschedule (Otomatis)
+            $canceledBookings = $bookingModel->cancelPendingBookingsByRoom($_POST['id_room']);
+            $canceledReschedules = $rescheduleModel->cancelPendingReschedulesByRoom($_POST['id_room']);
+
+            // 4. Commit (Simpan semua perubahan secara permanen)
+            $ruanganModel->db->commit();
+
+            // Siapkan pesan sukses
+            $msg = "Ruangan berhasil dinonaktifkan.";
+            if ($canceledBookings > 0 || $canceledReschedules > 0) {
+                $total = $canceledBookings + $canceledReschedules;
+                $msg .= " Sistem juga otomatis membatalkan $total reservasi pending terkait.";
+            }
+
+            Flasher::setModalInfo('Berhasil', $msg, 'success');
+
+        } catch (Exception $e) {
+            // 5. Rollback (Batalkan SEMUA perubahan jika terjadi error di langkah manapun)
+            // Data ruangan akan kembali 'aktif' jika proses cancel booking error
+            $ruanganModel->db->rollBack();
+
+            Flasher::setModalInfo('Gagal', $e->getMessage(), 'error');
+        }
+
+        // Redirect
+        header("Location: /admin/ruangan");
+        exit;
+    }
 }
