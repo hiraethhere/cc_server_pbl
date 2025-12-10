@@ -45,7 +45,7 @@ class Booking extends Controller {
         $data['reschedule'] = null; // Default null
         $data['currentTab'] = $_GET['tab'] ?? 'booking'; // Default tab 'booking'
 
-        if ($bookingId) {
+        if ($bookingId) {   
         //selalu ambil detail booking lengkap (Join Room) 
         //Alasannya: Di tab reschedule pun, kamu mungkin butuh info "Reschedule untuk Ruang Apa & Jam Berapa"
             $data['activeBooking'] = $this->model('BookingModel')->getActiveBookingJoinRoom($bookingId);
@@ -151,8 +151,6 @@ class Booking extends Controller {
         $end_datetime   = "$bookingDate $endTime";
 
         $ts = strtotime($bookingDate);
-        $range_start = date('Y-m-d 00:00:00', strtotime('monday this week', $ts));
-        $range_end   = date('Y-m-d 23:59:59', strtotime('sunday this week', $ts));
 
         $bookingCode = generateBookingCode(8);
 
@@ -168,9 +166,9 @@ class Booking extends Controller {
                 throw new Exception('Nomor Induk ketua tidak ditemukan');
             }
 
-            if (!$bookingModel->checkUserQuota($userKetua['id_user'], $range_start, $range_end)) {
-                throw new Exception('Ketua sudah ada booking');
-            }
+            if ($bookingModel->hasActiveBooking($userKetua['id_user'])) {
+                throw new Exception('Anda masih memiliki peminjaman yang sedang berjalan/pending. Selesaikan dulu sebelum meminjam lagi.');
+                }
 
             $id_ketua = $userKetua['id_user'];
 
@@ -195,7 +193,7 @@ class Booking extends Controller {
                 }
 
             // Cek Kuota Anggota
-                if (!$bookingModel->checkUserQuota($userAnggota['id_user'], $range_start, $range_end)) {
+                if ($bookingModel->hasActiveBooking($userAnggota['id_user'])) {
                     throw new Exception("Anggota (" . $userAnggota['username'] . ") sudah ada jadwal minggu ini.");
                 }
 
@@ -254,13 +252,17 @@ class Booking extends Controller {
         $bookingModel->beginTransaction();
 
         //ini dia update status ke cancelled
+        $existingBooking = $bookingModel->getBookingByIdAndUser($_POST['id_booking'], $_SESSION['user']['user_id']);
+        if (!$existingBooking) {
+            throw new Exception('Hanya ketua yang bisa membatalkan peminjaman!');
+        }
         $result = $bookingModel->cancelBooking($_POST['id_booking']);
         //menambahkan suspend ke user
         $suspend = $userModel->addSuspendCount($_SESSION['user']['user_id']);
         //ini dia nge cancel atau nge declined reschedule yang masih pending (kalo ada)
         $rescheduleModel->cancelRescheduleByUser($_POST['id_booking']);
 
-            if ($result <= 0 || $suspend <= 0) {
+            if ($result <= 0 || $suspend <= 0 || $suspend <= 0) {
                 throw new Exception("internal server error", 1);
             }
 
@@ -271,8 +273,8 @@ class Booking extends Controller {
 
         }catch(Throwable $e){
             $bookingModel->rollback();
-            Flasher::setModalInfo('Gagal cancel', $e->getMessage(), 'error');
-            header('location: /dashboard');
+            Flasher::setModalInfo('Gagal Membatalkan Booking', $e->getMessage(), 'error');
+            header('location: /Booking');
             exit();
         }
     }
@@ -365,6 +367,16 @@ class Booking extends Controller {
         $existingBooking = $bookingModel->getBookingByIdAndUser($id_booking, $_SESSION['user']['user_id']);
         if (!$existingBooking) {
             throw new Exception('Data booking tidak ditemukan atau akses ditolak.');
+        }
+
+        $existingReschedule = $rescheduleModel->getActiveRescheduleByBookingId($id_booking);
+
+        if ($existingReschedule) {
+            if ($existingReschedule['status_reschedule'] == 'pending') {
+                throw new Exception("Booking ini sedang dalam proses reschedule (Status: Pending). Tunggu konfirmasi admin.");
+            } else {
+                throw new Exception("Booking ini sudah berhasil di-reschedule sebelumnya. Tidak dapat diubah lagi.");
+            }
         }
 
         // -----------------------------------------------------------

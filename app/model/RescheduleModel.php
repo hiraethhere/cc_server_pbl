@@ -31,6 +31,12 @@ class RescheduleModel {
         return $this->db->resultSet();
     }
 
+        public function getRescheduleById($id_reschedule){
+        $this->db->query("SELECT * FROM reschedule WHERE id_reschedule = :id_booking");
+        $this->db->bind('id_booking', $id_reschedule);
+        return $this->db->resultSet();
+    }
+
     public function getPendingReschedulebyBookingId($id_booking){
         $this->db->query("SELECT * FROM reschedule WHERE id_booking = :id_booking AND status = 'pending'");
         $this->db->bind('id_booking', $id_booking);
@@ -47,6 +53,18 @@ class RescheduleModel {
         $this->db->query($query);
         $this->db->bind('id_user', $id_user);
         return $this->db->resultSet();
+    }
+
+    public function getActiveRescheduleByBookingId($id_booking){
+        //ini cari yang statusnya bukan rejected
+        $query = "SELECT status_reschedule FROM reschedule 
+                WHERE id_booking = :id_booking 
+                AND status_reschedule != 'rejected'";
+                
+        $this->db->query($query);
+        $this->db->bind('id_booking', $id_booking);
+        
+        return $this->db->singleSet(); // Mengembalikan row jika ada, false jika tidak ada
     }
 
     public function checkUserHasReschedule($id_user){
@@ -86,19 +104,105 @@ class RescheduleModel {
 
 
     //ini ambil data buat detail reschedule
+    // untuk rating ini kita harus join berdasarkan ruangan ya tidak bisa per booking
     public function getRescheduleDetail($id_res) {
         $query = "SELECT rs.id_booking, rs.id_reschedule, rs.new_start_time, rs.new_end_time,rs.status_reschedule,
-         r.room_name, r.min_capacity, r.max_capacity, r.floor, r.description, b.booking_code,
+                r.room_name, r.min_capacity, r.max_capacity, r.floor, r.description, b.booking_code,
+                IFNULL(AVG(f.rating), 0) AS avg_rating,
+                COUNT(f.id_feedback) AS total_review,
                 u.username, u.jurusan_unit, u.nomor_induk 
                 FROM reschedule rs 
                 JOIN bookings b ON rs.id_booking = b.id_booking
                 JOIN rooms r ON b.id_room = r.id_room 
                 JOIN users u ON b.id_user = u.id_user
-                WHERE rs.id_reschedule = :id_res";
+                LEFT JOIN bookings b2 ON r.id_room = b2.id_room
+                LEFT JOIN feedback f ON b2.id_booking = f.id_booking
+                WHERE rs.id_reschedule = :id_res
+                GROUP BY r.id_room";
 
         $this->db->query($query);
         $this->db->bind('id_res', $id_res);
         return $this->db->singleSet();
+    }
+
+    public function filterReschedules($limit, $start, $search = '', $status = [])
+    {
+        // Sesuaikan kolom dan join tabel reschedule kamu
+        $sql = "SELECT res.id_reschedule, res.new_start_time AS start_time, res.new_end_time AS end_time,
+                res.status_reschedule as status, b.booking_code, u.username, r.room_name
+                FROM reschedule res
+                JOIN bookings b ON res.id_booking = b.id_booking
+                JOIN rooms r ON b.id_room = r.id_room
+                JOIN users u ON b.id_user = u.id_user
+                WHERE 1=1";
+
+       if (!empty($status)) {
+            if (!is_array($status)) $status = [$status];
+            $in = [];
+            foreach ($status as $i => $s) {
+                $in[] = ":status$i";
+            }
+            $sql .= " AND res.status_reschedule IN (" . implode(',', $in) . ")";
+        }
+
+        if (!empty($search)) {
+            $sql .= " AND (u.username LIKE :search OR res.reason LIKE :search)";
+        }
+
+        $sql .= " ORDER BY res.created_at DESC LIMIT :limit OFFSET :start";
+
+        $this->db->query($sql);
+
+        if (!empty($status)) {
+            foreach ($status as $i => $s) {
+                $this->db->bind("status$i", $s);
+            }
+        }
+        if (!empty($search)) {
+            $this->db->bind('search', "%$search%");
+        }
+
+        $this->db->bind('limit', (int)$limit, PDO::PARAM_INT);
+        $this->db->bind('start', (int)$start, PDO::PARAM_INT);
+        
+        return $this->db->resultSet();
+    }
+
+    public function countFilterReschedules($search = '', $status = [])
+    {
+        // Sesuaikan kolom dan join tabel reschedule kamu
+        $sql = "SELECT COUNT(*) as total
+                FROM reschedule res
+                JOIN bookings b ON res.id_booking = b.id_booking
+                JOIN rooms r ON b.id_room = r.id_room
+                JOIN users u ON b.id_user = u.id_user
+                WHERE 1=1";
+
+       if (!empty($status)) {
+            if (!is_array($status)) $status = [$status];
+            $in = [];
+            foreach ($status as $i => $s) {
+                $in[] = ":status$i";
+            }
+            $sql .= " AND res.status_reschedule IN (" . implode(',', $in) . ")";
+        }
+
+        if (!empty($search)) {
+            $sql .= " AND (u.username LIKE :search OR res.reason LIKE :search)";
+        }
+
+        $this->db->query($sql);
+
+        if (!empty($status)) {
+            foreach ($status as $i => $s) {
+                $this->db->bind("status$i", $s);
+            }
+        }
+        if (!empty($search)) {
+            $this->db->bind('search', "%$search%");
+        }
+        
+        return $this->db->singleSet()['total'];
     }
 
 
@@ -151,10 +255,31 @@ class RescheduleModel {
         return $this->db->rowCount();
     }
 
-    public function updateStatus($id_reschedule, $status) {
-        $query = "UPDATE reschedule SET status_reschedule = :status WHERE id_reschedule = :id";
+    public function cancelPendingReschedulesByRoom($id_room){
+    // Kita perlu join ke tabel bookings (b) untuk tahu reschedule ini milik ruangan mana
+    $query = "UPDATE reschedule r
+              JOIN bookings b ON r.id_booking = b.id_booking
+              SET r.status_reschedule = 'cancelled',
+                  r.cancel_reason = 'ruangan dihapus admin',
+                  r.cancel_by = 'system'
+              WHERE b.id_room = :id_room 
+              AND r.status_reschedule = 'pending'";
+
+    $this->db->query($query);
+    $this->db->bind('id_room', $id_room);
+    
+    $this->db->execute();
+    return $this->db->rowCount();
+}
+
+    public function updateStatus($id_reschedule, $status, $reason = NULL) {
+        $query = "UPDATE reschedule 
+                    SET status_reschedule = :status,
+                    cancel_reason = :reason
+                    WHERE id_reschedule = :id";
         $this->db->query($query);
         $this->db->bind('status', $status);
+        $this->db->bind('reason', $reason);
         $this->db->bind('id', $id_reschedule);
         $this->db->execute();
         return $this->db->rowCount();

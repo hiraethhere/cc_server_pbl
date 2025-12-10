@@ -2,22 +2,6 @@
 <main class="container mx-auto md:px-6 lg:px-6 px-1 py-8">
     <h2 class="lg:text-3xl md:text-2xl text-2xl font-bold text-black1 mb-8 text-center">Ruangan Yang Bisa Dipinjam</h2>
 
-    <!-- Capacity Filters -->
-    <div class="flex justify-start mb-6 space-x-4 mx-5">
-        <button id="filter-all" 
-                class="px-4 py-2 bg-blue-overlay text-white1 rounded-full font-medium text-sm hover:bg-blue-700 transition duration-200 hover:cursor-pointer shadow-md">
-            Semua
-        </button>
-        <button id="filter-2-4" 
-                class="px-4 py-2 bg-white1 text-dark-overlay rounded-full font-medium text-sm hover:bg-dark-overlay1 transition duration-200 hover:cursor-pointer shadow-md">
-            2-4 Orang
-        </button>
-        <button id="filter-4-8" 
-                class="px-4 py-2 bg-white text-dark-overlay rounded-full font-medium text-sm hover:bg-dark-overlay1 transition duration-200 hover:cursor-pointer shadow-md">
-            4-8 Orang
-        </button>
-    </div>
-
     <!-- Rooms Grid -->
     <div id="rooms-container" class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 md:grid-cols-2 mb-8 mx-5 md:gap-10 lg:gap-12 gap-5">
         <!-- **************************************************
@@ -27,8 +11,13 @@
 
         <div class="bg-white1 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
             <div class="relative h-48 bg-white1">
-                <img src="/img/<?= $r['img_room'] ?>" 
-                    alt="Ruang Lentera Edukasi" class="w-full h-full object-cover">
+                <?php if($r['img_room'] !== 'DefaultRuangan.jpg'): ?>
+                    <img src="<?= BASEURL; ?>/File/showPhoto/<?= $r['img_room']; ?>"
+                        alt="<?= $r['room_name'] ?>" class="w-full h-full object-cover">
+                <?php else: ?>
+                    <img src="/img/DefaultRuangan.jpg" 
+                        alt="<?= $r['room_name'] ?>" class="w-full h-full object-cover">
+                <?php endif ?>
             </div>
             <div class="grid grid-rows-[2fr_1fr] px-5 pt-5 pb-3">
                 <div>

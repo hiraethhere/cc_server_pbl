@@ -96,8 +96,45 @@ class Auth extends Controller {
     public function handleRegister(){
         try {
 
+             //Cek apakah token dikirim dari form
+            if (!isset($_POST['cf-turnstile-response'])) {
+                throw new Exception('Mohon selesaikan verifikasi keamanan (CAPTCHA).');
+            }
+
+            // Persiapkan data untuk verifikasi ke Cloudflare
+            $turnstileResponse = $_POST['cf-turnstile-response'];
+            $remoteIp = $_SERVER['REMOTE_ADDR'];
+            $url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+            
+            $data = [
+                'secret' => TURNSTILE_SECRET_KEY,
+                'response' => $turnstileResponse,
+                'remoteip' => $remoteIp
+            ];
+
+            // Kirim request verifikasi menggunakan cURL
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($ch);
+            curl_close($ch);    
+
+            // Cek hasil verifikasi
+            $result = json_decode($response);
+            
+            if (!$result || !$result->success) {
+                throw new Exception('Verifikasi keamanan gagal. Silakan coba lagi.');
+            }
+
             if ($_POST['password'] != $_POST['confirmPassword']) {
                 throw new Exception('Password tidak sama');
+            }
+
+            $role = $_SESSION['regisRole'] ?? null;
+            if (!$role) {
+                throw new Exception('Role tidak ditemukan, silakan ulangi proses registrasi.');
             }
 
             if ($_SESSION['regisRole'] === '3') {
@@ -114,8 +151,11 @@ class Auth extends Controller {
                 } else {
                     throw new Exception('Mohon upload file bukti');
                 }
+            } else {
+                if (!validateEmailPHP($_POST['email'])) {
+                    throw new Exception('email tidak valid');
+                }
             }
-
             $data = [
                 'id_role' => $_SESSION['regisRole'],
                 'username' => $_POST['username'],
@@ -133,15 +173,38 @@ class Auth extends Controller {
                 'now' => date('Y-m-d H:i:s')
             ];
 
-            if ($this->model('UserModel')->findUserByEmailorNomor_Induk($data['email'], $data['nomor_induk'])) {
-                throw new Exception('Email atau NIM sudah terdaftar!');
+           $existingUser = $this->model('UserModel')->findUserByEmailorNomor_Induk($data['email'], $data['nomor_induk']);
+
+            if ($existingUser) {
+                // 2. Jika user ada, CEK STATUSNYA
+                if ($existingUser['status'] === 'rejected') {
+                    
+                    // KASUS: User pernah daftar tapi ditolak.
+                    
+                    // Tambahkan ID user lama ke array data agar model tahu siapa yang diupdate
+                    $data['id_user'] = $existingUser['id_user']; 
+
+                    // Panggil fungsi update khusus
+                    $result = $this->model('UserModel')->resubmitRejectedUser($data);
+                    
+                    if ($result <= 0) {
+                         throw new Exception('Gagal memperbarui data pendaftaran.');
+                    }
+                } else {
+                    // KASUS: User ada dan statusnya 'pending', 'active', atau 'banned'
+                    // SOLUSI: Lempar error seperti biasa
+                    throw new Exception('Email atau NIM sudah terdaftar dan sedang diproses/aktif!');
+                }
+
+            } else {
+                // 3. Jika user BELUM ada, buat baru (INSERT)
+                $result = $this->model('UserModel')->createUser($data);
+                
+                if ($result <= 0) {
+                    throw new Exception('Something Went Wrong');
+                }
             }
             
-
-            $result = $this->model('UserModel')->createUser($data);
-            if ($result <= 0) {
-                throw new Exception('Something Went Wrong');
-            }
 
             header('Location: /auth/pending');
             exit;
