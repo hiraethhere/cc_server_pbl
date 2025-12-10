@@ -25,7 +25,10 @@ class m_20251119_02_create_table_users extends Migration{
                 updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 CONSTRAINT fk_users_role FOREIGN KEY (id_role)
                 REFERENCES roles(id_role)
-                ON DELETE SET NULL ON UPDATE CASCADE
+                ON DELETE SET NULL ON UPDATE CASCADE,
+
+                CONSTRAINT unique_email UNIQUE (email),
+                CONSTRAINT unique_nomor_induk UNIQUE (nomor_induk)
                 );";
 
             $this->db->query($query);

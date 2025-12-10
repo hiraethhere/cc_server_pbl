@@ -63,3 +63,7 @@ function validateEmail($email){
         return false;
     }
 
+function validateEmailPHP($email) {
+    return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+}
+

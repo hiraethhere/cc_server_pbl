@@ -48,7 +48,7 @@ class Dashboard extends Controller
             exit;
         }
 
-        $data['detailRuangan'] = $this->model('RuanganModel')->getRuanganById($id);
+        $data['detailRuangan'] = $this->model('RuanganModel')->getRuanganWithRating($id);
 
     if (!$data['detailRuangan']) {
         http_response_code(404);

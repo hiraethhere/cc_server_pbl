@@ -113,11 +113,13 @@
         
                 <!-- KARTU RUANGAN (TIDAK STICKY) -->
                 <div class="bg-background2 rounded-2xl shadow-lg overflow-hidden">
-                    <?php 
-                        // Ambil URL gambar dari array PHP
-                        $imageUrl = "/img/" . $detailRuangan['img_room'];
-                    ?>
-
+                    <?php
+                        // Tentukan URL gambar dengan logika seperti yang bawah
+                        if ($detailRuangan['img_room'] !== 'DefaultRuangan.jpg' && !empty($detailRuangan['img_room'])) {
+                            $imageUrl = BASEURL . '/File/showPhoto/' . $detailRuangan['img_room'];
+                        } else {
+                            $imageUrl = BASEURL . '/img/DefaultRuangan.jpg';
+                    }?>
                     <div class="h-56 relative overflow-hidden bg-background2" 
                         style="background-image: url('<?= htmlspecialchars($imageUrl) ?>'); 
                                 background-size: cover; 
@@ -130,27 +132,21 @@
                             
                             <!-- Bintang -->
                             <div class="flex items-center gap-1">
-                                <svg class="w-7 h-7 text-yellow1 fill-current" viewBox="0 0 24 24">
-                                    <path d="M12 2l2.4 7.3h7.7l-6.2 4.5 2.4 7.3-6.3-4.5-6.3 4.5 2.4-7.3-6.2-4.5h7.7z"/>
-                                </svg>
-                                <svg class="w-7 h-7 text-yellow1 fill-current" viewBox="0 0 24 24">
-                                    <path d="M12 2l2.4 7.3h7.7l-6.2 4.5 2.4 7.3-6.3-4.5-6.3 4.5 2.4-7.3-6.2-4.5h7.7z"/>
-                                </svg>
-                                <svg class="w-7 h-7 text-yellow1 fill-current" viewBox="0 0 24 24">
-                                    <path d="M12 2l2.4 7.3h7.7l-6.2 4.5 2.4 7.3-6.3-4.5-6.3 4.5 2.4-7.3-6.2-4.5h7.7z"/>
-                                </svg>
-                                <svg class="w-7 h-7 text-yellow1 fill-current" viewBox="0 0 24 24">
-                                    <path d="M12 2l2.4 7.3h7.7l-6.2 4.5 2.4 7.3-6.3-4.5-6.3 4.5 2.4-7.3-6.2-4.5h7.7z"/>
-                                </svg>
-                                <svg class="w-7 h-7 text-background2 fill-current" viewBox="0 0 24 24">
-                                    <path d="M12 2l2.4 7.3h7.7l-6.2 4.5 2.4 7.3-6.3-4.5-6.3 4.5 2.4-7.3-6.2-4.5h7.7z"/>
-                                </svg>
+                            <?php 
+                            $max = 5;
+                            for ($p = 1; $p <= $max; $p++):
+                            if ($p <= $detailRuangan['avg_rating']) {
+                                echo icon('starFill', 'w-5 h-5 text-yellow1');   // bintang terisi
+                            } else {
+                                echo icon('starFill', 'w-5 h-5 text-dark-overlay5'); // bintang kosong/gelap
+                            }
+                                endfor; ?>
                             </div>
 
                             <!-- Teks rating -->
                             <div class="text-background2">
-                                <span class="text-xl font-bold">4/5</span>
-                                <span class="text-sm font-medium text-background2 ml-2">(67 Respon)</span>
+                                <span class="text-xl font-bold"><?= round($detailRuangan['avg_rating']) ?>/5</span>
+                                <span class="text-sm font-medium text-background2 ml-2">(<?= $detailRuangan['total_review'] ?> Respon)</span>
                             </div>
                         </div>
                     </div>
@@ -180,7 +176,7 @@
                                 </div>
                             </summary>
                             <p class="mt-3 text-sm leading-relaxed text-justify">
-                                <?=  $detailRuangan['description'] ?>
+                                <?=  htmlspecialchars($detailRuangan['description'] ?? '-') ?>x
                             </p>
                         </details>
                     </div>
@@ -200,21 +196,21 @@
                         </div>
                     </summary>
                     <p class="mt-3 text-sm leading-relaxed text-justify">
-                        <?=  $detailRuangan['description'] ?>
+                        <?= nl2br(htmlspecialchars($detailRuangan['announcement_content'] ?? '-')) ?>
                     </p>
                 </details>
             </div>
         </div>
     </div>
 </main>
-
+<?php echo $i ?>
 <script>const BASEURL = "<?= BASEURL ?>";</script>
 <script src="/js/bookingRoom.js?"v=<?php echo time(); ?>></script>
 <script>
     // Add member (WAJIB JS)
     const addButton = document.getElementById('addMember');
     addButton.addEventListener('click', addMember)
-    let memberCount = <?= $i + 1?>;
+    let memberCount = <?= $i + 1 ?>;
     function addMember() {
 
         memberCount++;
@@ -224,7 +220,7 @@
         newCard.innerHTML = `
             <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center">
-                    <span class="inline-flex items-center justify-center w-7 h-7 bg-dark-overlay7 text-white rounded-full text-xs font-bold"><?= $i + 2?></span>
+                    <span class="inline-flex items-center justify-center w-7 h-7 bg-dark-overlay7 text-white rounded-full text-xs font-bold">${memberCount}</span>
                     <span class="ml-2 font-medium text-sm text-dark-overlay7">Anggota</span>
                 </div>
                 <button type="button" onclick="removeMember(this)" class="text-red1 hover:text-red-800 transition hover:cursor-pointer">

@@ -6,13 +6,13 @@ class m_20251119_04_create_table_rooms extends Migration{
         {
             $query = "CREATE TABLE IF NOT EXISTS rooms (
                     id_room INT AUTO_INCREMENT PRIMARY KEY,
-                    id_announcement INT,
+                    id_announcement INT DEFAULT 1,
                     room_name VARCHAR(255),
                     img_room VARCHAR(255),
                     description TEXT,
                     short_description VARCHAR(101),
                     floor TINYINT,
-                    status ENUM('active', 'non-active', 'deleted') DEFAULT 'active',
+                    status ENUM('active', 'non-active', 'deleted', 'spesial') DEFAULT 'active',
                     min_capacity TINYINT,
                     max_capacity TINYINT,
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

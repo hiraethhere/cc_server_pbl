@@ -6,7 +6,7 @@
     <link rel="icon" type="image/png" href="/img/LOGO PNJ FIX 1.png">
     <title>RuanginPNJ - Registrasi Mahasiswa</title>
     <link href="/css/output.css" rel="stylesheet">
-
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body class="font-sf-pro" >
     
@@ -136,6 +136,11 @@
 
                     <p class="mt-2 text-xs text-gray-500">Format: JPG, PNG • Maksimal 5MB</p>
                 </div>
+
+                <!-- cloudflare brooo -->
+                    <div class="mb-7 flex justify-left">
+                        <div class="cf-turnstile" data-sitekey="<?= TURNSTILE_SITE_KEY ?>"></div>
+                    </div>
 
                 <!-- <div class="mt-6">
                     <label class="block text-xs font-medium text-gray-700 mb-1">

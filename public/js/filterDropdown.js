@@ -53,6 +53,7 @@ function toggleFilter(filterName, value, labelId, defaultLabel) {
     
     // PENTING: Panggil fungsi AJAX/Submit Form rekan Anda di sini
     // applyFilters(); 
+    // from backend: no ajax no fetch fak yu
 }
 
 /**
@@ -66,6 +67,40 @@ function updateButtonLabel(labelElement, values, defaultLabel) {
         labelElement.textContent = defaultLabel;
     }
 }
+
+function applyFilters() {
+    const params = new URLSearchParams(window.location.search);
+
+    const currentTab = params.get('tab');
+    params.set('page', 1);
+
+    const filterNames = ['status', 'jurusan', 'jenis', 'Status', 'Jurusan', 'Jenis', 'tab', 'Tahun', 'Bulan', 'Ruangan', 'ruangan', 'bulan', 'tahun'];
+
+    // ambil semua hidden input filter
+    document.querySelectorAll('input[type="hidden"]').forEach(input => {
+            if (filterNames.includes(input.name)) {
+                params.delete(input.name);
+                // Hanya set jika ada isinya
+                if (input.value.trim() !== '') {
+                    params.set(input.name, input.value);
+                }
+            }
+        });
+
+    const searchInput = document.getElementById('search-input'); 
+    if (searchInput) {
+        params.delete('search'); // Hapus parameter search lama
+        if (searchInput.value.trim() !== '') {
+            params.set('search', searchInput.value.trim()); // Masukkan nilai baru
+        }
+    }
+
+    // return;
+
+
+    window.location.href = window.location.pathname + '?' + params.toString();
+}
+
 
 // === 3. LOGIKA UNTUK MENJAGA STATE SETELAH REFRESH (OPSIONAL TAPI BAIK) ===
 document.addEventListener('DOMContentLoaded', () => {
@@ -93,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Event listener untuk menutup dropdown saat klik di luar
-    document.addEventListener('click', (event) => {
+document.addEventListener('click', (event) => {
         let isDropdown = event.target.closest('.filter-dropdown-container');
         if (!isDropdown) {
             document.querySelectorAll('.filter-dropdown-menu').forEach(menu => {
@@ -106,6 +141,8 @@ document.addEventListener('DOMContentLoaded', () => {
     (function() {
         const btn = document.getElementById('filter-action-btn');
         const iconContainer = document.getElementById('filter-action-icon');
+        const textContainer = document.getElementById('filter-action-text');
+        
         const form = document.getElementById('filterForm');
 
         if (!btn || !iconContainer) return;
@@ -113,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function filtersActiveFromURL() {
             const params = new URLSearchParams(window.location.search);
             for (const [k, v] of params) {
-                if (v !== '' && k !== 'page' && k !== 'search') return true;
+                if (v !== '' && k !== 'page' && k !== 'tab') return true;
             }
             return false;
         }
@@ -123,28 +160,35 @@ document.addEventListener('DOMContentLoaded', () => {
             const checkHTML = iconContainer.dataset.check || '';
             const crossHTML = iconContainer.dataset.cross || '';
 
+            const textCheck = textContainer ? (textContainer.dataset.textCheck || 'Terapkan') : '';
+            const textCross = textContainer ? (textContainer.dataset.textCross || 'Reset') : '';
+
+
             if (active) {
-                // show cross and make button clear filters
+                // 🔴 MODE RESET
                 if (crossHTML) iconContainer.innerHTML = crossHTML;
-                btn.onclick = function() {
-                    if (form) {
-                        form.querySelectorAll('input, select').forEach(el => {
-                            if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
-                            else el.value = '';
-                        });
-                        form.submit();
-                    } else {
-                        window.location.href = window.location.pathname;
-                    }
+                if (textContainer) textContainer.textContent = textCross;
+
+                btn.onclick = function(e) {
+                    const url = new URL(window.location.href);
+                    e.preventDefault();
+
+                    // hapus semua filter kecuali search tertentu kalau mau
+                    const filtersToDelete = ['page', 'jenis', 'Jenis', 'status', 'Status', 'jurusan', 'Jurusan', 'url', 'search', 'ruangan', 'bulan', 'tahun'];
+
+                    //Loop array di atas dan hapus dari URL
+                    filtersToDelete.forEach(p => url.searchParams.delete(p));
+                    // reset URL tanpa query
+                    window.location.href = url.toString();
                 };
                 btn.classList.remove('text-dark-overlay5');
                 btn.classList.add('text-red1');
             } else {
                 // show check and make button apply/submit filters
                 if (checkHTML) iconContainer.innerHTML = checkHTML;
+                if (textContainer) textContainer.textContent = textCheck;
                 btn.onclick = function() {
-                    if (form) form.submit();
-                    else window.location.reload();
+                    applyFilters();
                 };
                 btn.classList.remove('text-red1');
                 btn.classList.add('text-dark-overlay5');

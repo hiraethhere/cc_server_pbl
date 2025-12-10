@@ -6,6 +6,7 @@
     <link rel="icon" type="image/png" href="/img/LOGO PNJ FIX 1.png">
     <title>RuanginPNJ - Registrasi Dosen</title>
     <link href="/css/output.css" rel="stylesheet">
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
 </head>
 <body class="font-sf-pro" >
@@ -93,6 +94,10 @@
                                 <img src="/icon/eye-on.svg" alt="Show Password" class="w-5 h-5 hover:cursor-pointer">
                             </button>
                         </div>
+                    </div>
+                    <!-- cloudflare brooo -->
+                    <div class="mb-7 flex justify-left">
+                        <div class="cf-turnstile" data-sitekey="<?= TURNSTILE_SITE_KEY ?>"></div>
                     </div>
                 </div>
 
