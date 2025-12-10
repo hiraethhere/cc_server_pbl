@@ -93,8 +93,31 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- LOGIC: ISI JAM MULAI ---
     function populateJamMulai() {
         jamMulai.innerHTML = '<option value="" disabled selected hidden>Pilih jam mulai</option>';
+
+        const now = new Date();
+        const currentMinutes = (now.getHours() * 60) + now.getMinutes();
+
+        const selectedDateVal = tanggalPinjam.value; // format yyyy-mm-dd
+        
+        // Format tanggal hari ini jadi yyyy-mm-dd juga untuk perbandingan
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const todayString = `${year}-${month}-${day}`;
+        const breakStart = 12 * 60; // 12:00 (720 menit)
+        const breakEnd   = 13 * 60; // 13:00 (780 menit)
+
+        const isToday = (selectedDateVal === todayString);
         
         for (let time = operationalStart; time < operationalEnd; time += interval) {
+
+            if (time >= breakStart && time < breakEnd) {
+                continue; 
+            }
+
+            if (isToday && time <= currentMinutes) {
+                continue; // Skip loop ini (jangan tampilkan option)
+            }
             // Cek apakah jam ini bentrok dengan booking orang lain
             const isConflict = todaysBookings.some(booking => {
                 return time >= booking.start && time < booking.end;
@@ -117,9 +140,15 @@ jamMulai.addEventListener('change', function() {
         if (!startVal) return;
 
         const startTime = timeToMinutes(startVal);
+
+        const breakStart = 12 * 60;
         
         // Hitung batas akhir (Max 3 jam atau Jam Tutup)
         let limitTime = Math.min(operationalEnd, startTime + maxDuration);
+
+        if (startTime < breakStart) {
+            limitTime = Math.min(limitTime, breakStart);
+        }
 
         // Cek booking terdekat di depan user ini
         const nextBooking = todaysBookings.filter(b => b.start > startTime).sort((a, b) => a.start - b.start)[0];

@@ -63,7 +63,7 @@
                         <?= icon('search', 'w-5 h-5') ?>
                     </div>
                 </div>
-                <input type="text" id="search-input" placeholder="Cari"
+                <input type="text" id="search-input" placeholder="Cari Nama Ruangan"
                     class="block w-full pl-10 pr-10 py-2 border border-dark-overlay4 rounded-lg 
                             bg-white text-dark-overlay7 placeholder-dark-overlay7 text-sm
                             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 

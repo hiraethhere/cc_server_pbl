@@ -61,6 +61,23 @@ class BookingModel {
         return $this->db->singleSet();
     }
 
+    public function getAllBooking(){
+        $query = "SELECT
+                    b.id_booking,   
+                    u.username AS nama_penanggung_jawab,
+                    r.room_name AS nama_ruangan,
+                    b.start_time,
+                    b.end_time,
+                    b.status
+                FROM bookings b
+                JOIN users u ON b.id_user = u.id_user
+                JOIN rooms r ON b.id_room = r.id_room
+                ORDER BY b.start_time DESC;";
+        $this->db->query($query);
+        return $this->db->resultSet();
+    }
+
+    //ini buat bikin booking baru
     public function createBooking($data){
 
         $query = "INSERT INTO bookings (id_room, id_user,total_person, booking_code, start_time, end_time, status, external_email, institution_name, purpose, booking_letter, created_at) 
@@ -253,6 +270,14 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
         $this->db->bind('id_booking', $id_booking);
         $this->db->execute();
         return $this->db->singleSet();
+    }
+
+        public function getAllActiveBookingJoinRoom(){
+        $query = "SELECT b.id_booking, b.start_time, b.status, b.end_time, b.total_person, b.booking_code, r.room_name, r.short_description
+                FROM bookings b JOIN rooms r ON b.id_room = r.id_room
+                WHERE b.status = 'ongoing'";
+        $this->db->query($query);
+        return $this->db->resultSet();
     }
 
     //ini buat masukin anggota ke booking members
@@ -561,6 +586,43 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
         return $this->db->rowCount();
     }
 
+    public function getAllBookingFiltered($limit, $start, $ruangan = [], $bulan = [], $tahun = [])
+    {
+        // Query Dasar
+        $query = "SELECT b.id, u.name as nama_peminjam, r.name as nama_ruangan, b.start_time, b.end_time, b.status 
+                FROM bookings b 
+                JOIN users u ON b.user_id = u.id 
+                JOIN rooms r ON b.room_id = r.id 
+                WHERE 1=1 "; // Trik agar bisa nambahin AND secara dinamis
+
+        // Tambah Filter Ruangan (Jika ada)
+        if (!empty($ruangan)) {
+            // Mengubah array menjadi string dipisah koma, cth: 'Ruang A','Ruang B'
+            $ruanganStr = implode("','", $ruangan); 
+            $query .= " AND r.name IN ('$ruanganStr')";
+        }
+
+        // Tambah Filter Bulan
+        if (!empty($bulan)) {
+            $bulanStr = implode(",", $bulan);
+            $query .= " AND MONTH(b.start_time) IN ($bulanStr)";
+        }
+
+        // Tambah Filter Tahun
+        if (!empty($tahun)) {
+            $tahunStr = implode(",", $tahun);
+            $query .= " AND YEAR(b.start_time) IN ($tahunStr)";
+        }
+
+        // Order dan Limit (Wajib di akhir)
+        $query .= " ORDER BY b.start_time DESC LIMIT :limit OFFSET :offset";
+
+        $this->db->query($query);
+        $this->db->bind('limit', $limit);
+        $this->db->bind('offset', $start);
+        
+        return $this->db->resultSet();
+    }
     
 
     public function autoCancelLateBookings()

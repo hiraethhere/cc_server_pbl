@@ -100,6 +100,11 @@ class Auth extends Controller {
                 throw new Exception('Password tidak sama');
             }
 
+            $role = $_SESSION['regisRole'] ?? null;
+            if (!$role) {
+                throw new Exception('Role tidak ditemukan, silakan ulangi proses registrasi.');
+            }
+
             if ($_SESSION['regisRole'] === '3') {
             // Validasi email hanya untuk mahasiswa
                 if (!validateEmail($_POST['email'])) {
@@ -114,8 +119,11 @@ class Auth extends Controller {
                 } else {
                     throw new Exception('Mohon upload file bukti');
                 }
+            } else {
+                if (!validateEmailPHP($_POST['email'])) {
+                    throw new Exception('email tidak valid');
+                }
             }
-
             $data = [
                 'id_role' => $_SESSION['regisRole'],
                 'username' => $_POST['username'],

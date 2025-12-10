@@ -22,6 +22,10 @@ class UserModel {
         return $this->db->singleSet();
     }
 
+    public function getAllJurusan(){
+        $this->db->query("SELECT jurusan_unit FROM ");
+    }
+
     public function getUserByNomor_Induk($nomor_induk){
         $this->db->query("SELECT * FROM users WHERE nomor_induk = :nomor_induk AND id_role in (4, 5, 3)  limit 1");
         $this->db->bind(':nomor_induk', $nomor_induk, PDO::PARAM_STR);

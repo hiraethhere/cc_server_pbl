@@ -44,6 +44,30 @@ class RuanganModel {
         $this->db->query("SELECT room_name FROM rooms ");
         return $this->db->resultSet();
     }
+    public function getLaporanRuangan()
+    {
+        // Query ini mengambil:
+        // 1. Data detail ruangan
+        // 2. Jumlah berapa kali dipinjam (COUNT)
+        // 3. Rata-rata rating (AVG) dari tabel feedback
+        
+        $query = "SELECT 
+                    r.id_room,
+                    r.room_name,
+                    r.status,
+                    r.min_capacity,
+                    r.max_capacity,
+                    COUNT(b.id_booking) AS total_peminjaman,
+                    IFNULL(AVG(f.rating), 0) AS average_rating
+                  FROM rooms r
+                  LEFT JOIN bookings b ON r.id_room = b.id_room
+                  LEFT JOIN feedback f ON b.id_booking = f.id_booking
+                  GROUP BY r.id_room
+                  ORDER BY total_peminjaman DESC"; // Diurutkan dari yang paling sering dipinjam
+
+        $this->db->query($query);
+        return $this->db->resultSet(); // Mengembalikan banyak baris data
+    }
 
     public function getRuanganWithRating($id_room){
         $query = "SELECT r.*, a.announcement_content,

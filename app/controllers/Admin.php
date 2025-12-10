@@ -19,11 +19,61 @@ class Admin extends Controller {
     }
 
     public function index(){
+        $data['bookings'] = $this->model('BookingModel')->getAllActiveBookingJoinRoom();
+
+        $bulanFilter = isset($_GET['bulan']) && $_GET['bulan'] !== '' ? $_GET['bulan'] : date('m'); // Default bulan ini
+        $tahunFilter = isset($_GET['tahun']) && $_GET['tahun'] !== '' ? $_GET['tahun'] : date('Y'); // Default tahun ini
+
+        $jurusanFilter = [];
+        if (isset($_GET['jurusan']) && $_GET['jurusan'] !== '') {
+            if (is_array($_GET['jurusan'])) {
+                $jurusanFilter = $_GET['jurusan'];
+            } else {
+                $jurusanFilter = explode(',', $_GET['jurusan']);
+            }
+        }
+
+        $dashboardModel = $this->model('DashboardModel');
+
+
+
+        // A. Data Booking (Statistik Kartu Atas)
+        // Kita kirim filter bulan & tahun
+        $data['stats_booking'] = $dashboardModel->getBookingStats($bulanFilter, $tahunFilter);
+
+        // B. Data Anggota (Statistik Kartu Tengah)
+        // Kita kirim filter jurusan
+        $data['stats_anggota'] = $dashboardModel->getUserStats($jurusanFilter);
+
+        // C. Data Ruangan (Statistik Kartu Bawah)
+        // Ruangan biasanya datanya global, tapi Populer bisa berdasarkan bulan/tahun aktif
+        $data['stats_ruangan'] = $dashboardModel->getRoomStats($bulanFilter, $tahunFilter);
         $data['judul'] = 'Dashboard Admin';
         $data['navbar'] = 'dashboard';
         $this->view('layout/sidebar', $data);
-        $this->view('admin/index');
+        $this->view('admin/index', $data);
+    }
 
+    // app/controllers/Admin.php
+
+    public function cetakLaporan()
+    {
+        $data['judul'] = 'Laporan Peminjaman';
+        // Panggil model yang tadi kita buat
+        $data['laporan'] = $this->model('BookingModel')->getAllBooking();
+        
+        // Load view khusus cetak (kita buat setelah ini)
+        $this->view('Admin/cetak', $data);
+    }
+
+    public function cetakRuangan()
+    {
+        $data['judul'] = 'Laporan Peminjaman';
+        // Panggil model yang tadi kita buat
+        $data['laporan'] = $this->model('RuanganModel')->getLaporanRuangan();
+        
+        // Load view khusus cetak (kita buat setelah ini)
+        $this->view('Admin/cetakRuangan', $data);
     }
     
     public function Anggota(){

@@ -218,7 +218,7 @@
         newCard.innerHTML = `
             <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center">
-                    <span class="inline-flex items-center justify-center w-7 h-7 bg-dark-overlay7 text-white rounded-full text-xs font-bold"><?= $p + 2?></span>
+                    <span class="inline-flex items-center justify-center w-7 h-7 bg-dark-overlay7 text-white rounded-full text-xs font-bold">${memberCount}</span>
                     <span class="ml-2 font-medium text-sm text-dark-overlay7">Anggota</span>
                 </div>
                 <button type="button" onclick="removeMember(this)" class="text-red1 hover:text-red-800 transition hover:cursor-pointer">
