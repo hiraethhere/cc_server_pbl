@@ -245,4 +245,75 @@ class DashboardModel {
             'rating_terendah_nilai' => isset($resultWorst['rata_rata']) ? number_format($resultWorst['rata_rata'], 1) : '0.0'
         ];
     }
+
+    public function getAllBooking($bulan = [], $tahun = [])
+    {
+        // --- 1. NORMALISASI INPUT (Wajib Array) ---
+        // Kita rapikan dulu di awal biar codingan bawahnya rapi
+        if (!empty($bulan) && !is_array($bulan)) {
+            $bulan = [$bulan];
+        }
+        if (!empty($tahun) && !is_array($tahun)) {
+            $tahun = [$tahun];
+        }
+
+        // --- 2. BUILD STRING QUERY ---
+        $sql = "SELECT
+                    b.id_booking,   
+                    u.username AS nama_penanggung_jawab,
+                    r.room_name AS nama_ruangan,
+                    b.start_time,
+                    b.end_time,
+                    b.status
+                FROM bookings b
+                JOIN users u ON b.id_user = u.id_user
+                JOIN rooms r ON b.id_room = r.id_room
+                WHERE 1=1";
+
+        // Logic string SQL untuk Bulan
+        if (!empty($bulan)) {
+            $inBulan = [];
+            foreach ($bulan as $i => $b) {
+                $inBulan[] = ":bulan$i"; // Cuma bikin string ":bulan0", ":bulan1"
+            }
+            $sql .= " AND MONTH(b.start_time) IN (" . implode(',', $inBulan) . ")";
+        }
+
+        // Logic string SQL untuk Tahun
+        if (!empty($tahun)) {
+            $inTahun = [];
+            foreach ($tahun as $i => $t) {
+                $inTahun[] = ":tahun$i"; // Cuma bikin string ":tahun0", ":tahun1"
+            }
+            $sql .= " AND YEAR(b.start_time) IN (" . implode(',', $inTahun) . ")";
+        }
+
+        $sql .= " ORDER BY b.start_time DESC";
+
+        // --- 3. PREPARE STATEMENT ---
+        // Query harus di-prepare dulu sebelum di-bind
+        $this->db->query($sql);
+
+
+        // --- 4. BINDING VALUES (Sesuai request kamu) ---
+        
+        // Bind Bulan
+        if (!empty($bulan)) {
+            foreach ($bulan as $i => $b) {
+                // Ini gaya binding request kamu
+                $this->db->bind("bulan$i", $b); 
+            }
+        }
+
+        // Bind Tahun
+        if (!empty($tahun)) {
+            foreach ($tahun as $i => $t) {
+                // Ini gaya binding request kamu
+                $this->db->bind("tahun$i", $t);
+            }
+        }
+
+        // --- 5. EKSEKUSI & RETURN ---
+        return $this->db->resultSet();
+    }
 }

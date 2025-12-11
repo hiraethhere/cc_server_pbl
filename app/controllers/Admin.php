@@ -21,7 +21,7 @@ class Admin extends Controller {
     public function index(){
         $data['bookings'] = $this->model('BookingModel')->getAllActiveBookingJoinRoom();
 
-        $bulanInput = isset($_GET['bulan']) && $_GET['bulan'] !== '' ? $_GET['bulan'] : date('m'); // Default bulan ini
+        $bulanInput = isset($_GET['bulan']) && $_GET['bulan'] !== '' ? $_GET['bulan'] : []; // Default 1 tahun ini
         $tahunInput = isset($_GET['tahun']) && $_GET['tahun'] !== '' ? $_GET['tahun'] : date('Y'); // Default tahun ini
 
         if (!is_array($bulanInput)) {
@@ -73,11 +73,55 @@ class Admin extends Controller {
     public function cetakLaporan()
     {
         $data['judul'] = 'Laporan Peminjaman';
-        // Panggil model yang tadi kita buat
-        $data['laporan'] = $this->model('BookingModel')->getAllBooking();
+
+            //Ambil Filter (Sama seperti sebelumnya)
+        if (isset($_GET['bulan']) && $_GET['bulan'] !== '') {
+
+            if (is_array($_GET['bulan'])) {
+                $bulanFilter = $_GET['bulan'];
+            } else {
+                // bulan=2,1 → ["2","1"]
+                $bulanFilter = explode(',', $_GET['bulan']);
+            }
+        } else {
+            $bulanFilter = []; // kosong = setahun penuh
+        }
+
+        if (isset($_GET['tahun']) && $_GET['tahun'] !== '') {
+            if (is_array($_GET['tahun'])) {
+                $tahunFilter = $_GET['tahun'];
+            } else {
+                // tahun=2023,2022 → ["2023","2022"]
+                $tahunFilter = explode(',', $_GET['tahun']);
+            }
+        } else {
+            $tahunFilter = [date('Y')]; // default tahun ini
+        }
+
+        $data['selected_bulan'] = $bulanFilter; 
+        $data['selected_tahun'] = $tahunFilter;
+        // 2. Ambil Data
+        $data['laporan'] = $this->model('DashboardModel')->getAllBooking($bulanFilter, $tahunFilter);
         
-        // Load view khusus cetak (kita buat setelah ini)
-        $this->view('Admin/cetak', $data);
+        // 3. LOGIKA EXCEL vs PRINT
+        $mode = isset($_GET['mode']) ? $_GET['mode'] : 'print';
+        $data['mode'] = $mode; // Kirim mode ke view
+
+        if ($mode == 'excel') {
+            // Header khusus agar browser menganggap ini file Excel (.xls)
+            $filename = "Laporan_Peminjaman_" . date('Ymd') . ".xls";
+            
+            header("Content-Type: application/vnd.ms-excel");
+            header("Content-Disposition: attachment; filename=\"$filename\"");
+            header("Pragma: no-cache");
+            header("Expires: 0");
+            
+            // Load view yang sama, tapi nanti di view kita matikan CSS/JS yang tidak perlu
+            $this->view('Admin/cetak', $data);
+        } else {
+            // Mode Print Biasa
+            $this->view('Admin/cetak', $data);
+        }
     }
 
     public function cetakRuangan()

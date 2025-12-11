@@ -61,9 +61,20 @@ class BookingModel {
         return $this->db->singleSet();
     }
 
-    public function getAllBooking(){
-        $query = "SELECT
-                    b.id_booking,   
+    public function getAllBooking($bulan = [], $tahun = [])
+    {
+        // --- 1. NORMALISASI INPUT (pastikan array) ---
+        if (!empty($bulan) && !is_array($bulan)) {
+            $bulan = explode(',', $bulan); // ← penting kalau datang dari "2,1"
+        }
+
+        if (!empty($tahun) && !is_array($tahun)) {
+            $tahun = explode(',', $tahun);
+        }
+
+        // --- 2. BASE QUERY ---
+        $sql = "SELECT
+                    b.id_booking,
                     u.username AS nama_penanggung_jawab,
                     r.room_name AS nama_ruangan,
                     b.start_time,
@@ -72,10 +83,56 @@ class BookingModel {
                 FROM bookings b
                 JOIN users u ON b.id_user = u.id_user
                 JOIN rooms r ON b.id_room = r.id_room
-                ORDER BY b.start_time DESC;";
-        $this->db->query($query);
+                WHERE 1=1";
+
+
+        // --- 3. FILTER BULAN ---
+        if (!empty($bulan)) {
+            $inBulan = [];
+            foreach ($bulan as $i => $b) {
+                $inBulan[] = ":bulan$i"; // :bulan0, :bulan1
+            }
+            $sql .= " AND MONTH(b.start_time) IN (" . implode(',', $inBulan) . ")";
+        }
+
+        // --- 4. FILTER TAHUN ---
+        if (!empty($tahun)) {
+            $inTahun = [];
+            foreach ($tahun as $i => $t) {
+                $inTahun[] = ":tahun$i"; // :tahun0, :tahun1
+            }
+            $sql .= " AND YEAR(b.start_time) IN (" . implode(',', $inTahun) . ")";
+        }
+
+        // --- 5. ORDER ---
+        $sql .= " ORDER BY b.start_time DESC";
+
+
+        // --- 6. PREPARE QUERY ---
+        $this->db->query($sql);
+
+
+        // --- 7. BINDING (SESUAI PERMINTAAN: tetap 1–1) ---
+
+        // Bind bulan
+        if (!empty($bulan)) {
+            foreach ($bulan as $i => $b) {
+                $this->db->bind("bulan$i", intval($b));
+            }
+        }
+
+        // Bind tahun
+        if (!empty($tahun)) {
+            foreach ($tahun as $i => $t) {
+                $this->db->bind("tahun$i", intval($t));
+            }
+        }
+
+
+        // --- 8. RETURN RESULT ---
         return $this->db->resultSet();
     }
+
 
     public function getBookingById($id)
     {

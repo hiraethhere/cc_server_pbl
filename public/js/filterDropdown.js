@@ -201,19 +201,23 @@ document.addEventListener('click', (event) => {
     })();
 });
 
-function exportData(baseUrl) {
-    // Ambil parameter URL saat ini (misal: ?bulan=10&tahun=2024&jurusan=TI)
+function exportData(baseUrl, mode) {
+    // Ambil parameter URL saat ini dari browser
     const currentParams = new URLSearchParams(window.location.search);
 
-    // (Opsional) Hapus parameter yang tidak relevan untuk laporan cetak
-    // Biasanya pagination tidak dipakai saat cetak karena kita mau cetak SEMUA data
+    // Bersihkan parameter yang tidak perlu
     currentParams.delete('page'); 
     currentParams.delete('tab'); 
+    
+    // TAMBAHKAN MODE (Excel / Print)
+    // Jika mode diisi, kita tambahkan ke parameter URL
+    if (mode) {
+        currentParams.set('mode', mode);
+    }
 
-    // Gabungkan Base URL tujuan dengan parameter yang sudah disaring
-    // Hasilnya: http://localhost/.../cetakLaporan?bulan=10&tahun=2024
+    // Gabungkan Base URL dengan parameter
     const finalUrl = `${baseUrl}?${currentParams.toString()}`;
 
-    // 4. Buka di tab baru
+    // Buka di tab baru
     window.open(finalUrl, '_blank');
 }
