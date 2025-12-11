@@ -24,10 +24,10 @@
                             <div class="relative lg:h-96 md:h-96 h-48">
                                 <?php if($activeBooking['img_room'] !== 'DefaultRuangan.jpg'): ?>
                                     <img loading="lazy" src="<?= BASEURL; ?>/File/showPhoto/<?= $activeBooking['img_room']; ?>"
-                                        alt="<?= $activeBooking['room_name'] ?>" class="w-full h-full object-cover">
+                                        alt="<?= $activeBooking['room_name'] ?>" class="w-full h-full object-cover rounded-xl">
                                 <?php else: ?>
                                     <img loading="lazy" src="/img/DefaultRuangan.jpg" 
-                                        alt="<?= $activeBooking['room_name'] ?>" class="w-full h-full object-cover">
+                                        alt="<?= $activeBooking['room_name'] ?>" class="w-full h-full object-cover rounded-xl">
                                 <?php endif ?>
                             </div>
                             <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 lg:justify-center justify-start items-center border border-dark-overlay7 mt-6 p-3 rounded-md pb-4 lg-pb-0">
