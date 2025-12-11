@@ -21,8 +21,22 @@ class Admin extends Controller {
     public function index(){
         $data['bookings'] = $this->model('BookingModel')->getAllActiveBookingJoinRoom();
 
-        $bulanFilter = isset($_GET['bulan']) && $_GET['bulan'] !== '' ? $_GET['bulan'] : date('m'); // Default bulan ini
-        $tahunFilter = isset($_GET['tahun']) && $_GET['tahun'] !== '' ? $_GET['tahun'] : date('Y'); // Default tahun ini
+        $bulanInput = isset($_GET['bulan']) && $_GET['bulan'] !== '' ? $_GET['bulan'] : date('m'); // Default bulan ini
+        $tahunInput = isset($_GET['tahun']) && $_GET['tahun'] !== '' ? $_GET['tahun'] : date('Y'); // Default tahun ini
+
+        if (!is_array($bulanInput)) {
+            // Jika input dipisah koma (misal: ?bulan=01,02) atau single value
+            $bulanFilter = explode(',', $bulanInput); 
+        } else {
+            $bulanFilter = $bulanInput;
+        }
+
+        // Paksa jadi array agar konsisten
+        if (!is_array($tahunInput)) {
+            $tahunFilter = explode(',', $tahunInput);
+        } else {
+            $tahunFilter = $tahunInput;
+        }
 
         $jurusanFilter = [];
         if (isset($_GET['jurusan']) && $_GET['jurusan'] !== '') {

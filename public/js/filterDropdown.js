@@ -200,4 +200,20 @@ document.addEventListener('click', (event) => {
         window.addEventListener('popstate', update);
     })();
 });
-// Jangan lupa sertakan logika search dan clear filter Anda di file ini juga
+
+function exportData(baseUrl) {
+    // Ambil parameter URL saat ini (misal: ?bulan=10&tahun=2024&jurusan=TI)
+    const currentParams = new URLSearchParams(window.location.search);
+
+    // (Opsional) Hapus parameter yang tidak relevan untuk laporan cetak
+    // Biasanya pagination tidak dipakai saat cetak karena kita mau cetak SEMUA data
+    currentParams.delete('page'); 
+    currentParams.delete('tab'); 
+
+    // Gabungkan Base URL tujuan dengan parameter yang sudah disaring
+    // Hasilnya: http://localhost/.../cetakLaporan?bulan=10&tahun=2024
+    const finalUrl = `${baseUrl}?${currentParams.toString()}`;
+
+    // 4. Buka di tab baru
+    window.open(finalUrl, '_blank');
+}

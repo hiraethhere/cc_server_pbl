@@ -274,7 +274,7 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
 
 
     public function getActiveBookingJoinRoom($id_booking){
-        $query = "SELECT b.id_booking, b.start_time, b.status, b.end_time, b.total_person, b.booking_code, r.room_name, r.short_description
+        $query = "SELECT b.id_booking, b.start_time, b.status, b.end_time, b.total_person, b.booking_code, r.room_name, r.img_room, r.short_description
                 FROM bookings b JOIN rooms r ON b.id_room = r.id_room
                 WHERE b.status IN ('pending', 'active', 'ongoing') AND b.id_booking = :id_booking";
         $this->db->query($query);

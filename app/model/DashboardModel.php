@@ -8,60 +8,84 @@ class DashboardModel {
         $this->db = new Database;
     }
 
-    // -----------------------------------------------------------
-    // 1. STATISTIK BOOKING (Updated dengan tabel Reschedule)
-    // -----------------------------------------------------------
     public function getBookingStats($bulan = null, $tahun = null)
     {
-        // Bagian 1: Hitung status dari tabel BOOKINGS utama
+        // --- 1. NORMALISASI INPUT ---
+        // Pastikan input selalu berbentuk array agar logikanya seragam
+        // Jika null/kosong, set jadi array kosong. Jika single value, bungkus jadi array.
+        if (!empty($bulan) && !is_array($bulan)) {
+            $bulan = [$bulan];
+        }
+        if (!empty($tahun) && !is_array($tahun)) {
+            $tahun = [$tahun];
+        }
+
+        // --- 2. PERSIAPAN FILTER (DYNAMIC BINDING) ---
+        $conditions = [];
+        $params = [];
+
+        // Logika Filter Bulan (Menggunakan IN)
+        if (!empty($bulan)) {
+            $bulanPlaceholders = [];
+            foreach ($bulan as $key => $val) {
+                $placeholder = ":bulan_" . $key; // bikin nama unik misal :bulan_0, :bulan_1
+                $bulanPlaceholders[] = $placeholder;
+                $params[$placeholder] = $val;
+            }
+            // Hasil string: MONTH(start_time) IN (:bulan_0, :bulan_1)
+            $conditions[] = "MONTH(start_time) IN (" . implode(', ', $bulanPlaceholders) . ")";
+        }
+
+        // Logika Filter Tahun (Menggunakan IN)
+        if (!empty($tahun)) {
+            $tahunPlaceholders = [];
+            foreach ($tahun as $key => $val) {
+                $placeholder = ":tahun_" . $key;
+                $tahunPlaceholders[] = $placeholder;
+                $params[$placeholder] = $val;
+            }
+            $conditions[] = "YEAR(start_time) IN (" . implode(', ', $tahunPlaceholders) . ")";
+        }
+
+        // Gabungkan kondisi WHERE jika ada
+        $whereClause = "";
+        if (!empty($conditions)) {
+            $whereClause = " WHERE " . implode(" AND ", $conditions);
+        }
+
+        // --- 3. QUERY UTAMA (BOOKINGS) ---
         $query = "SELECT 
                     COUNT(*) AS total_booking,
                     SUM(CASE WHEN status = 'ongoing' THEN 1 ELSE 0 END) AS dipinjam,
                     SUM(CASE WHEN status = 'done' THEN 1 ELSE 0 END) AS selesai,
                     SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) AS dibatalkan
-                  FROM bookings";
-
-        // Bagian 2: Persiapkan Filter Waktu
-        $conditions = [];
-        $params = [];
-
-        if (!empty($bulan)) {
-            $conditions[] = "MONTH(start_time) = :bulan";
-            $params['bulan'] = $bulan;
-        }
-
-        if (!empty($tahun)) {
-            $conditions[] = "YEAR(start_time) = :tahun";
-            $params['tahun'] = $tahun;
-        }
-
-        // Pasang WHERE untuk query Booking
-        if (!empty($conditions)) {
-            $query .= " WHERE " . implode(" AND ", $conditions);
-        }
+                FROM bookings" . $whereClause;
 
         $this->db->query($query);
+        
+        // Binding parameter dinamis
         foreach ($params as $key => $value) {
             $this->db->bind($key, $value);
         }
+        
         $bookingData = $this->db->singleSet();
 
-        // Bagian 3: Hitung data RESCHEDULE (Dari tabel reschedule)
-        // Kita hitung berapa banyak request reschedule pada periode booking ini
-        // Kita perlu JOIN ke bookings untuk tahu tanggal booking aslinya
+
+        // --- 4. QUERY KEDUA (RESCHEDULE) ---
+        // Kita gunakan $whereClause dan $params yang SAMA persis
+        // Karena filternya juga berdasarkan waktu booking asli
+        
         $queryReschedule = "SELECT COUNT(*) as total_reschedule 
                             FROM reschedule r
-                            JOIN bookings b ON r.id_booking = b.id_booking";
+                            JOIN bookings b ON r.id_booking = b.id_booking" . $whereClause;
         
-        // Gunakan filter waktu yang sama (berdasarkan start_time booking)
-        if (!empty($conditions)) {
-            $queryReschedule .= " WHERE " . implode(" AND ", $conditions);
-        }
-
         $this->db->query($queryReschedule);
+        
+        // Binding ulang parameter (karena ini query baru)
         foreach ($params as $key => $value) {
             $this->db->bind($key, $value);
         }
+        
         $rescheduleData = $this->db->singleSet();
 
         // Gabungkan hasil
@@ -111,54 +135,101 @@ class DashboardModel {
     // -----------------------------------------------------------
     public function getRoomStats($bulan = null, $tahun = null)
     {
-        // A. Statistik Umum (Tersedia/Tidak)
+        // --- 1. NORMALISASI INPUT (Agar selalu Array) ---
+        if (!empty($bulan) && !is_array($bulan)) {
+            $bulan = [$bulan];
+        }
+        if (!empty($tahun) && !is_array($tahun)) {
+            $tahun = [$tahun];
+        }
+
+        // --- 2. PERSIAPAN FILTER DINAMIS (WHERE IN) ---
+        $conditions = [];
+        $params = [];
+
+        // Filter Bulan
+        if (!empty($bulan)) {
+            $bulanPlaceholders = [];
+            foreach ($bulan as $key => $val) {
+                $placeholder = ":bulan_r_" . $key; // Nama parameter unik
+                $bulanPlaceholders[] = $placeholder;
+                $params[$placeholder] = $val;
+            }
+            $conditions[] = "MONTH(b.start_time) IN (" . implode(', ', $bulanPlaceholders) . ")";
+        }
+
+        // Filter Tahun
+        if (!empty($tahun)) {
+            $tahunPlaceholders = [];
+            foreach ($tahun as $key => $val) {
+                $placeholder = ":tahun_r_" . $key;
+                $tahunPlaceholders[] = $placeholder;
+                $params[$placeholder] = $val;
+            }
+            $conditions[] = "YEAR(b.start_time) IN (" . implode(', ', $tahunPlaceholders) . ")";
+        }
+
+        // String WHERE clause yang akan dipakai di Query B, C, dan D
+        $whereClause = "";
+        if (!empty($conditions)) {
+            $whereClause = " AND " . implode(" AND ", $conditions);
+        }
+
+
+        // --- A. Statistik Umum (Tersedia/Tidak) ---
+        // Note: Query ini biasanya snapshot real-time tabel rooms, 
+        // jadi tidak dipengaruhi filter bulan/tahun (kecuali ada log status harian)
         $queryUmum = "SELECT 
                         COUNT(*) AS total_ruangan,
                         SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) AS tersedia,
                         SUM(CASE WHEN status != 'active' THEN 1 ELSE 0 END) AS tidak_tersedia
-                      FROM rooms";
+                    FROM rooms";
         $this->db->query($queryUmum);
         $resultUmum = $this->db->singleSet();
 
-        // Persiapkan kondisi Filter untuk Sub-query
-        $conditions = [];
-        $params = [];
-        if (!empty($bulan)) { $conditions[] = "MONTH(b.start_time) = :bulan"; $params['bulan'] = $bulan; }
-        if (!empty($tahun)) { $conditions[] = "YEAR(b.start_time) = :tahun"; $params['tahun'] = $tahun; }
-        $whereClause = !empty($conditions) ? " AND " . implode(" AND ", $conditions) : "";
 
-        // B. Ruangan Terpopuler
+        // --- B. Ruangan Terpopuler ---
+        // Menggunakan $whereClause
         $queryPopuler = "SELECT r.room_name, COUNT(b.id_booking) as jumlah
-                         FROM bookings b
-                         JOIN rooms r ON b.id_room = r.id_room
-                         WHERE 1=1 $whereClause
-                         GROUP BY b.id_room ORDER BY jumlah DESC LIMIT 1";
+                        FROM bookings b
+                        JOIN rooms r ON b.id_room = r.id_room
+                        WHERE 1=1 $whereClause
+                        GROUP BY b.id_room ORDER BY jumlah DESC LIMIT 1";
         
         $this->db->query($queryPopuler);
         foreach ($params as $key => $value) $this->db->bind($key, $value);
         $resultPopuler = $this->db->singleSet();
 
-        // C. Rating Terbaik (Dari tabel Feedback)
+
+        // --- C. Rating Terbaik (Dari tabel Feedback) ---
+        // Filter juga diterapkan disini agar rating sesuai periode yang dipilih
         $queryBest = "SELECT r.room_name, AVG(f.rating) as rata_rata
-                      FROM feedback f
-                      JOIN bookings b ON f.id_booking = b.id_booking
-                      JOIN rooms r ON b.id_room = r.id_room
-                      GROUP BY r.id_room ORDER BY rata_rata DESC LIMIT 1";
+                    FROM feedback f
+                    JOIN bookings b ON f.id_booking = b.id_booking
+                    JOIN rooms r ON b.id_room = r.id_room
+                    WHERE 1=1 $whereClause
+                    GROUP BY r.id_room ORDER BY rata_rata DESC LIMIT 1";
 
         $this->db->query($queryBest);
+        foreach ($params as $key => $value) $this->db->bind($key, $value);
         $resultBest = $this->db->singleSet();
 
-        // D. Rating Terendah
-        $queryWorst = "SELECT r.room_name, AVG(f.rating) as rata_rata, r.img_room
-                       FROM feedback f
-                       JOIN bookings b ON f.id_booking = b.id_booking
-                       JOIN rooms r ON b.id_room = r.id_room
-                       GROUP BY r.id_room ORDER BY rata_rata ASC LIMIT 1";
+
+        // --- D. Rating Terendah ---
+        // Filter juga diterapkan disini
+        $queryWorst = "SELECT r.room_name, AVG(f.rating) as rata_rata
+                    FROM feedback f
+                    JOIN bookings b ON f.id_booking = b.id_booking
+                    JOIN rooms r ON b.id_room = r.id_room
+                    WHERE 1=1 $whereClause
+                    GROUP BY r.id_room ORDER BY rata_rata ASC LIMIT 1";
 
         $this->db->query($queryWorst);
+        foreach ($params as $key => $value) $this->db->bind($key, $value);
         $resultWorst = $this->db->singleSet();
 
-        // Gabungkan semua data array
+
+        // --- RETURN DATA ---
         return [
             'total_ruangan' => $resultUmum['total_ruangan'],
             'tersedia' => $resultUmum['tersedia'],

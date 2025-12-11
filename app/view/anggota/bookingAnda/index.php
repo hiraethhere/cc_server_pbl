@@ -22,8 +22,13 @@
                     <div class="w-full mx-auto bg-background2 rounded-b-xl shadow-xl lg:p-12 p-4">
                         <div class="">
                             <div class="relative lg:h-96 md:h-96 h-48">
-                                <img src="/img/DefaultRuangan.jpg" 
-                                    alt="Ruang Lentera Edukasi" class="w-full h-full object-cover rounded-xl">
+                                <?php if($activeBooking['img_room'] !== 'DefaultRuangan.jpg'): ?>
+                                    <img src="<?= BASEURL; ?>/File/showPhoto/<?= $activeBooking['img_room']; ?>"
+                                        alt="<?= $activeBooking['room_name'] ?>" class="w-full h-full object-cover">
+                                <?php else: ?>
+                                    <img src="/img/DefaultRuangan.jpg" 
+                                        alt="<?= $activeBooking['room_name'] ?>" class="w-full h-full object-cover">
+                                <?php endif ?>
                             </div>
                             <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 lg:justify-center justify-start items-center border border-dark-overlay7 mt-6 p-3 rounded-md pb-4 lg-pb-0">
                                 <div class="">
