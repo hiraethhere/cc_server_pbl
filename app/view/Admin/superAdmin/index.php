@@ -9,7 +9,7 @@
         <h2 class="text-2xl font-bold text-dark-overlay">Data Admin</h2>
 
         <div class="flex justify-between items-center gap-8">
-            <a href="/Admin/tambahAdmin"
+            <a href="/Superadmin/tambahAdmin"
                 class="flex items-center gap-2 px-3 py-1.5 bg-blue-overlay hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm hover:shadow-md transition duration-200">
                 Tambah Admin
                 <div>
@@ -56,18 +56,21 @@
                 
                 <tbody class="divide-y divide-dark-overlay4">
                     <?php $i = 1 ?>
+                    <?php foreach ($data['admins'] as $admin): ?>
                     <tr class="hover:bg-gray-50 bg-white transition-colors duration-150">
                         <td class="px-4 py-4 text-xs font-medium text-dark-overlay"><?= $i ?></td>
-                        <td class="px-12 py-4 text-xs font-medium text-dark-overlay">Muhammad Reza Arifin</td>
-                        <td class="px-12 py-4 text-xs font-medium text-dark-overlay">2221112121</td>
-                        <td class="px-12 py-4 text-xs font-medium text-dark-overlay">rezalagi@example.admin.com</td>
+                        <td class="px-12 py-4 text-xs font-medium text-dark-overlay"><?= $admin['username'] ?></td>
+                        <td class="px-12 py-4 text-xs font-medium text-dark-overlay"><?= $admin['nomor_induk'] ?></td>
+                        <td class="px-12 py-4 text-xs font-medium text-dark-overlay"><?= $admin['email'] ?></td>
                         <td class="px-12 py-4 text-center">
-                            <a href="/Admin/detailAdmin"
+                            <a href="/SuperAdmin/detailAdmin"
                                 class="items-center gap-2 px-6 py-2 bg-blue-overlay hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm hover:shadow-md transition duration-200">
                                 Lihat Detail
                             </a>
                         </td>
                     </tr>
+                    <?php $i++ ?>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>

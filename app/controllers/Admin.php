@@ -647,13 +647,6 @@ class Admin extends Controller {
         $this->view('admin/feedback/index', $data);
     }
 
-    public function superAdmin(){
-        $data['judul'] = 'Data Admin';
-        $data['navbar'] = 'superAdmin';
-        $this->view('layout/sidebar', $data);
-        $this->view('admin/superAdmin/index', $data);
-    }
-
     public function detailAdmin(){
         $data['judul'] = 'Detail Data Admin';
         $data['navbar'] = 'superAdmin';
