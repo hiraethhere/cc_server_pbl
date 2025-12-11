@@ -19,6 +19,7 @@
         </div>
     </div>
 
+    <form action="" method="GET">
     <div class="pb-2">
         <div class="relative max-w-xs">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -26,7 +27,9 @@
                     <?= icon('search', 'w-5 h-5') ?>
                 </div>
             </div>
-            <input type="text" id="search-input" placeholder="Cari..."
+         
+            <input type="text" id="search-input" placeholder="Cari Nama atau Email" name="keyword" id="search-input"
+                value="<?= isset($_GET['keyword']) ? $_GET['keyword'] : '' ?>"
                 class="block w-full pl-10 pr-10 py-2 border border-dark-overlay4 rounded-lg 
                         bg-white text-dark-overlay7 placeholder-dark-overlay7 text-sm
                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent 
@@ -37,8 +40,10 @@
                     <?= icon('cross', 'w-4 h-4 hover:cursor-pointer') ?>
                 </div>
             </button>
+            
         </div>
     </div>
+    </form>
 
 
     <div class="rounded-lg shadow-sm border border-dark-overlay4 overflow-hidden mt-4">
@@ -77,4 +82,4 @@
     </div>
 </main>
 
-<script src="/js/search.js"></script>
+<script src="/js/searchAdmin.js"></script>

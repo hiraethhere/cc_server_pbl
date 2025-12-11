@@ -20,7 +20,9 @@ class SuperAdmin extends Controller{
 
     public function index(){
 
-        $data['admins'] = $this->model('AdminModel')->getAllAdmin();
+        $keyword = $_GET['keyword'] ?? null;
+
+        $data['admins'] = $this->model('AdminModel')->getAllAdmin($keyword);
         $data['judul'] = 'Data Admin';
         $data['navbar'] = 'superAdmin';
         $this->view('layout/sidebar', $data);
