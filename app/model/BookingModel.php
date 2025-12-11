@@ -77,6 +77,17 @@ class BookingModel {
         return $this->db->resultSet();
     }
 
+    public function getBookingById($id)
+    {
+        $this->db->query('SELECT * FROM ' . $this->table . ' WHERE id_booking = :id');
+        
+        // Binding data untuk mencegah SQL Injection
+        $this->db->bind('id', $id);
+        
+        // Mengembalikan satu baris data saja (array associative)
+        return $this->db->singleSet();
+    }
+
     //ini buat bikin booking baru
     public function createBooking($data){
 
@@ -107,7 +118,7 @@ class BookingModel {
               LEFT JOIN booking_members bm ON b.id_booking = bm.id_booking
               WHERE (b.id_user = :uid OR bm.id_user = :uid)
               AND b.status IN ('pending', 'ongoing')
-              ORDER BY b.start_time DESC LIMIT 1";
+              ORDER BY b.start_time ASC LIMIT 1";
 
     $this->db->query($query);
     $this->db->bind('uid', $id_user);
@@ -273,8 +284,10 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
     }
 
         public function getAllActiveBookingJoinRoom(){
-        $query = "SELECT b.id_booking, b.start_time, b.status, b.end_time, b.total_person, b.booking_code, r.room_name, r.short_description
-                FROM bookings b JOIN rooms r ON b.id_room = r.id_room
+        $query = "SELECT b.id_booking, b.start_time, u.username, b.status, b.end_time, b.total_person, b.booking_code, r.room_name, r.short_description
+                FROM bookings b 
+                JOIN rooms r ON b.id_room = r.id_room
+                JOIN users u ON b.id_user = u.id_user
                 WHERE b.status = 'ongoing'";
         $this->db->query($query);
         return $this->db->resultSet();
@@ -306,7 +319,25 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
         return $this->db->resultSet();
     }
 
-    // ini dia cek apakah dia ada booking minggu ini
+
+    public function hasActiveBooking($id_user) {
+        // Kita hapus filter range tanggal (start_time/end_time)
+        // Kita hanya peduli statusnya: PENDING atau ONGOING
+        $sql = "SELECT 1
+                FROM bookings b
+                LEFT JOIN booking_members bm 
+                ON bm.id_booking = b.id_booking
+                WHERE (b.id_user = :uid OR bm.id_user = :uid)
+                AND b.status IN ('pending', 'ongoing')";
+
+        $this->db->query($sql);
+        $this->db->bind("uid", $id_user);
+
+        // Jika ada hasil (row), berarti return TRUE (Punya booking aktif)
+        return $this->db->singleSet() ? true : false;
+    }
+
+    // ini dia cek apakah dia ada booking minggu ini. ini dia per minggu
     public function checkUserQuota($id_user, $range_start, $range_end, $exclude_id = NULL){
         $sql = "SELECT 1
             FROM bookings b

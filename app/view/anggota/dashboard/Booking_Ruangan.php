@@ -113,11 +113,13 @@
         
                 <!-- KARTU RUANGAN (TIDAK STICKY) -->
                 <div class="bg-background2 rounded-2xl shadow-lg overflow-hidden">
-                    <?php 
-                        // Ambil URL gambar dari array PHP
-                        $imageUrl = "/img/" . $detailRuangan['img_room'];
-                    ?>
-
+                    <?php
+                        // Tentukan URL gambar dengan logika seperti yang bawah
+                        if ($detailRuangan['img_room'] !== 'DefaultRuangan.jpg' && !empty($detailRuangan['img_room'])) {
+                            $imageUrl = BASEURL . '/File/showPhoto/' . $detailRuangan['img_room'];
+                        } else {
+                            $imageUrl = BASEURL . '/img/DefaultRuangan.jpg';
+                    }?>
                     <div class="h-56 relative overflow-hidden bg-background2" 
                         style="background-image: url('<?= htmlspecialchars($imageUrl) ?>'); 
                                 background-size: cover; 

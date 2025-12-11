@@ -22,9 +22,7 @@
             Tata Tertib (maksimal 500 karakter)
             </label>
             <textarea rows="6" placeholder="Tuliskan deskripsi lengkap ruangan..." maxlength="500" name="tata_tertib"
-                    class="w-full px-5 py-4 border border-dark-overlay4 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay">
-                    <?= (htmlspecialchars($tatib['announcement_content'])) ?>
-                </textarea>
+                    class="w-full px-5 py-4 border border-dark-overlay4 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay"><?= (htmlspecialchars($tatib['announcement_content'])) ?></textarea>
         </div>
 
         <!-- Tombol Aksi -->

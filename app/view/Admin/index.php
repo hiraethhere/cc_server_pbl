@@ -15,8 +15,8 @@
             <!-- Kartu 1 -->
             <div class="p-4 rounded-lg shadow-md border border-dark-overlay5">
                 <h3 class="text-lg font-medium text-dark-overlay"><?= htmlspecialchars($booking['room_name'] ?? '-') ?></h3>
-                <p class="text-sm text-dark-overlay7"><?= $booking['start_time'] . '-' . $booking['end_time'] ?></p>
-                <span class="inline-block bg-blue-overlay text-background2 px-2 py-1 rounded-xl text-sm font-semibold mt-2"><?= $booking['total_person'] ?></span>
+                <p class="text-sm text-dark-overlay7"><?= waktu_indonesia($booking['start_time']) . '-' . waktu_indonesia($booking['end_time']) ?></p>
+                <span class="inline-block bg-blue-overlay text-background2 px-2 py-1 rounded-xl text-sm font-semibold mt-2"><?= $booking['total_person'] ?> Orang</span>
                 <p class="text-sm text-dark-overlay mt-2">Penanggung Jawab: <?= $booking['username'] ?></p>
             </div>
         <?php endforeach ?>

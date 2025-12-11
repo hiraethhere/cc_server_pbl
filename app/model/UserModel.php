@@ -111,6 +111,31 @@ class UserModel {
         return $this->db->rowCount();
     }
 
+    public function resubmitRejectedUser($data) {
+        $query = "UPDATE " . $this->table . " SET 
+                    username = :username,
+                    password = :password,
+                    jurusan_unit = :jurusan_unit,
+                    prodi = :prodi,
+                    kubaca_photo = :kubaca_photo,
+                    status = 'pending',  -- Reset status jadi pending
+                    created_at = :now    -- Update waktu agar naik ke atas di list admin
+                  WHERE id_user = :id_user";
+
+        $this->db->query($query);
+        
+        $this->db->bind('username', $data['username']);
+        $this->db->bind('password', $data['password']);
+        $this->db->bind('jurusan_unit', $data['jurusan_unit']);
+        $this->db->bind('prodi', $data['prodi']);
+        $this->db->bind('kubaca_photo', $data['kubaca_photo']);
+        $this->db->bind('now', $data['now']); // Pastikan 'now' ada di array $data controller
+        $this->db->bind('id_user', $data['id_user']);
+
+        $this->db->execute();
+        return $this->db->rowCount();
+    }
+
     public function updatePassword($data){
         $this->db->query("UPDATE users SET password = :password WHERE email = :email");
         $this->db->bind(':password', $data['password']);

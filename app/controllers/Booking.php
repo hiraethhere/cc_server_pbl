@@ -151,8 +151,6 @@ class Booking extends Controller {
         $end_datetime   = "$bookingDate $endTime";
 
         $ts = strtotime($bookingDate);
-        $range_start = date('Y-m-d 00:00:00', strtotime('monday this week', $ts));
-        $range_end   = date('Y-m-d 23:59:59', strtotime('sunday this week', $ts));
 
         $bookingCode = generateBookingCode(8);
 
@@ -168,9 +166,9 @@ class Booking extends Controller {
                 throw new Exception('Nomor Induk ketua tidak ditemukan');
             }
 
-            if (!$bookingModel->checkUserQuota($userKetua['id_user'], $range_start, $range_end)) {
-                throw new Exception('Ketua sudah ada booking');
-            }
+            if ($bookingModel->hasActiveBooking($userKetua['id_user'])) {
+                throw new Exception('Anda masih memiliki peminjaman yang sedang berjalan/pending. Selesaikan dulu sebelum meminjam lagi.');
+                }
 
             $id_ketua = $userKetua['id_user'];
 
@@ -195,7 +193,7 @@ class Booking extends Controller {
                 }
 
             // Cek Kuota Anggota
-                if (!$bookingModel->checkUserQuota($userAnggota['id_user'], $range_start, $range_end)) {
+                if ($bookingModel->hasActiveBooking($userAnggota['id_user'])) {
                     throw new Exception("Anggota (" . $userAnggota['username'] . ") sudah ada jadwal minggu ini.");
                 }
 
