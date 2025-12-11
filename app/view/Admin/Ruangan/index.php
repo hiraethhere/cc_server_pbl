@@ -85,10 +85,10 @@
         <div class="bg-background2 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
             <div class="relative h-48 from-dark-overlay4 to-dark-overlay7">
                 <?php if($room['img_room'] !== 'DefaultRuangan.jpg'): ?>
-                    <img src="<?= BASEURL; ?>/File/showPhoto/<?= $room['img_room']; ?>"
+                    <img loading="lazy" src="<?= BASEURL; ?>/File/showPhoto/<?= $room['img_room']; ?>"
                         alt="<?= $room['room_name'] ?>" class="w-full h-full object-cover">
                 <?php else: ?>
-                    <img src="/img/DefaultRuangan.jpg" 
+                    <img loading="lazy" src="/img/DefaultRuangan.jpg" 
                         alt="<?= $room['room_name'] ?>" class="w-full h-full object-cover">
                 <?php endif ?>
             </div>
