@@ -10,14 +10,14 @@ class s_20251119_04_roomSeeder extends Seeder {
             status, min_capacity, max_capacity,
             created_at, updated_at
             ) VALUES
-            (1, 1, 'Galeri Literasi', 'GaleriLiterasi1.jpg','Ruang besar untuk rapat tingkat institusi. Dilengkapi projector dan AC.','Ruang rapat besar', 1, 'active', 2, 4, NOW(), NOW()),
-            (2, 1, 'Lentera Edukasi', 'LenteraEdukasi1.jpg','Ruang besar untuk rapat tingkat institusi. Dilengkapi projector dan AC.','Ruang rapat besar', 1, 'active', 2, 4, NOW(), NOW()),
-            (3, 1, 'Pusat Prancis', 'PusatPrancis1.jpg','Ruang besar untuk rapat tingkat institusi. Dilengkapi projector dan AC.','Ruang rapat besar', 1, 'active', 2, 4, NOW(), NOW()),
-            (4, 1, 'Ruang Cendikia', 'RuangCendikia1.jpg','Ruang besar untuk rapat tingkat institusi. Dilengkapi projector dan AC.','Ruang rapat besar', 1, 'active', 2, 4, NOW(), NOW()),
-            (5, 1, 'Ruang Rapat', 'RuangRapat1.jpg','Ruang besar untuk rapat tingkat institusi. Dilengkapi projector dan AC.','Ruang rapat besar', 1, 'active', 2, 4, NOW(), NOW()),
-            (6, 1, 'Ruang Sinergi', 'RuangSinergi1.jpg','Ruang besar untuk rapat tingkat institusi. Dilengkapi projector dan AC.','Ruang rapat besar', 1, 'active', 2, 4, NOW(), NOW()),
-            (7, 1, 'Sudut Pustaka', 'SudutPustaka1.jpg','Ruang besar untuk rapat tingkat institusi. Dilengkapi projector dan AC.','Ruang rapat besar', 1, 'active', 2, 4, NOW(), NOW()),
-            (8, 1, 'Zona Interaktif', 'ZonaInteraktif1.jpg','Ruang besar untuk rapat tingkat institusi. Dilengkapi projector dan AC.','Ruang rapat besar', 1, 'active', 2, 4, NOW(), NOW()),
+            (1, 1, 'Galeri Literasi', 'GaleriLiterasi1.webp','deskripsi ruangannn','Ruang rapat besar', 1, 'active', 2, 4, NOW(), NOW()),
+            (2, 1, 'Lentera Edukasi', 'LenteraEdukasi1.webp','deskripsi ruangannn','Ruang rapat besar', 1, 'active', 2, 4, NOW(), NOW()),
+            (3, 1, 'Pusat Prancis', 'PusatPrancis1.webp','deskripsi ruangannn.','Ruang rapat besar', 1, 'active', 2, 4, NOW(), NOW()),
+            (4, 1, 'Ruang Cendikia', 'RuangCendikia1.webp','deskripsi ruangannn','Ruang rapat besar', 1, 'active', 2, 4, NOW(), NOW()),
+            (5, 1, 'Ruang Rapat', 'RuangRapat1.webp','deskripsi ruangannn','Ruang rapat besar', 1, 'active', 2, 4, NOW(), NOW()),
+            (6, 1, 'Ruang Sinergi', 'RuangSinergi1.webp','deskripsi ruangannn','Ruang rapat besar', 1, 'active', 2, 4, NOW(), NOW()),
+            (7, 1, 'Sudut Pustaka', 'SudutPustaka1.webp','deskripsi ruangannn','Ruang rapat besar', 1, 'active', 2, 4, NOW(), NOW()),
+            (8, 1, 'Zona Interaktif', 'ZonaInteraktif1.webp','deskripsi ruangannn','Ruang rapat besar', 1, 'active', 2, 4, NOW(), NOW()),
 
             (9, 1, 'Ruang Rapat Utama', 'DefaultRuangan.jpg','Ruang besar untuk rapat tingkat institusi. Dilengkapi projector dan AC.','Ruang rapat besar', 1, 'active', 2, 4, NOW(), NOW()),
             (10, NULL, 'Ruang Dosen Jurusan', 'DefaultRuangan.jpg','Ruang khusus dosen untuk diskusi internal dan bimbingan mahasiswa.', 'Ruang dosen', 2, 'active', 5, 7, NOW(), NOW()),
