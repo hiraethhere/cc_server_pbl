@@ -589,6 +589,27 @@ class Admin extends Controller {
         $this->view('admin/feedback/index', $data);
     }
 
+    public function superAdmin(){
+        $data['judul'] = 'Data Admin';
+        $data['navbar'] = 'superAdmin';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/superAdmin/index', $data);
+    }
+
+    public function detailAdmin(){
+        $data['judul'] = 'Detail Data Admin';
+        $data['navbar'] = 'superAdmin';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/superAdmin/detailAdmin', $data);
+    }
+
+    public function tambahAdmin(){
+        $data['judul'] = 'Tambah Data Admin';
+        $data['navbar'] = 'superAdmin';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/superAdmin/tambahAdmin', $data);
+    }
+
     public function Akun(){
         $data['judul'] = 'Profile Admin';
         $data['navbar'] = 'Akun';
