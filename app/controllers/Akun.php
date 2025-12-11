@@ -96,7 +96,11 @@ class Akun extends Controller{
             }
 
             // Sukses
-            Flasher::setModalInfo('Berhasil', 'Password berhasil diubah', 'success', '/akun');
+            Flasher::setModalInfo('Berhasil', 'Password berhasil diubah', 'success');
+            unset($_SESSION['user']); // Hapus session user
+            unset($_SESSION['role']);
+            // session_destroy(); // Hancurkan session
+            header('location: /auth/'); // Logout paksa setelah ganti password
             exit;
 
         } catch (Exception $e) {

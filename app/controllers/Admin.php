@@ -869,8 +869,11 @@ class Admin extends Controller {
             exit();
         }
 
-        Flasher::setModalInfo('Berhasil mengubah Password', 'Password berhasil diubah', 'success', '/admin');
-        header('location: /admin/akun');
+            Flasher::setModalInfo('Berhasil', 'Password berhasil diubah', 'success');
+            unset($_SESSION['user']); // Hapus session user
+            unset($_SESSION['role']);
+            // session_destroy(); // Hancurkan session
+            header('location: /auth/'); // Logout paksa setelah ganti password
         exit();
     }
 
