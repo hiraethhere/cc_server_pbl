@@ -26,6 +26,11 @@ services:
       # ini akan berjalan setiap 5 menit untuk mengecek apakah ada booking yang sudah selesai tapi statusnya belum berubah
       ofelia.job-exec.complete-job.schedule: "@every 2m"
       ofelia.job-exec.complete-job.command: "php /var/www/html/cli.php bookings:autocomplete"
+      # ini untuk otomasi reminder
+      ofelia.job-exec.reminder-start.schedule: "@every 2m"
+      ofelia.job-exec.reminder-start.command: "php /var/www/html/cli.php reminders:start"
+      ofelia.job-exec.reminder-end.schedule: "@every 2m"
+      ofelia.job-exec.reminder-end.command: "php /var/www/html/cli.php reminders:end"
 
   # Service 2: Database (MySQL)
   db:

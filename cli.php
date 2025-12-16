@@ -7,6 +7,12 @@ require_once 'app/core/Seeder.php';
 // Cek argumen terminal (contoh: php cli.php migrate)
 $command = $argv[1] ?? null;
 
+require_once __DIR__ . '/vendor/autoload.php';
+if (file_exists(__DIR__ . '/.env')) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->safeLoad();
+}
+
 if ($command === 'migrate') {
     runMigrations();
 } elseif ($command === 'migrate:fresh') {
@@ -22,13 +28,19 @@ if ($command === 'migrate') {
     runAutoCancel();
 } elseif($command == 'bookings:autocomplete'){
     runAutoComplete();
-}else {
+}elseif($command == 'reminders:start'){
+    startReminder();
+} elseif($command == 'reminders:end'){
+    endReminder();
+} else {
     echo "Perintah tidak dikenal. Gunakan: \n";
     echo "php cli.php migrate \n";
     echo "php cli.php migrate:fresh  (Reset total database) \n"; 
     echo "php cli.php seed \n";
     echo "php cli.php bookings:autocancel (Membatalkan booking telat 10 menit) \n";
     echo "php cli.php bookings:autocomplete (Menyelesaikan booking yang sudah lewat) \n";
+    echo 'php cli.php reminders:start (Kirim reminder booking yang akan mulai) \n';
+    echo 'php cli.php reminders:end (Kirim reminder booking yang akan berakhir) \n';
 }
 
 function runMigrations() {
@@ -171,3 +183,120 @@ function runAutoComplete() {
         echo "Tidak ada booking yang perlu diselesaikan saat ini.\n";
     }
 }
+
+function startReminder(){
+    require_once 'app/model/ReminderModel.php';
+    require_once 'app/helper/sendEmail.php';
+    
+    $reminderModel = new ReminderModel();
+    echo "Mengecek booking yang akan dimulai dalam 10 menit...\n";
+    
+    $bookings = $reminderModel->getUpcomingBookings(10);
+
+    if (empty($bookings)) {
+        echo "Tidak ada booking yang akan dimulai sebentar lagi.\n";
+        return;
+    }
+    
+    foreach($bookings as $booking){
+        $members = $reminderModel->getBookingMembers($booking['id_booking']);
+        $sentEmails = [];
+
+        // 1. KIRIM KE KETUA (Datanya sudah ada di $booking, tidak perlu query lagi)
+        if (!empty($booking['email'])) {
+            $to = $booking['email'];
+            $username = $booking['username'];
+            
+            $subject = "Reminder: Peminjaman Ruangan Anda Akan Dimulai";
+            $message = "Halo " . $username . ",\n\n".
+                       "Booking ruangan yang Anda ajukan akan dimulai pada " . $booking['start_time'] . ".\n".
+                       "Mohon pastikan ruangan digunakan sesuai jadwal.\n\n".
+                       "Terima kasih.";
+            
+            try {
+                sendEmail($to, $username, $subject, $message);
+                echo "Reminder (Ketua) dikirim ke: " . $to . "\n";
+                $sentEmails[] = $to; 
+            } catch (Exception $e) {
+                echo "Gagal kirim ke Ketua ($to): " . $e->getMessage() . "\n";
+            }
+        }
+
+        //kirim email ke masing-masing anggota
+        foreach($members as $member){
+            $to = $member['email'];
+            $subject = "Reminder: Peminjaman Ruangan Akan Dimulai";
+            $message = "Halo " . $member['username'] . ",\n\n".
+                       "Ini adalah pengingat bahwa booking ruangan tim Anda akan dimulai pada " . $booking['start_time'] . ".\n".
+                       "Silakan bersiap-siap.\n\n".
+                       "Terima kasih.";
+            try {
+            sendEmail($to, $member['username'], $subject, $message);
+            echo "Reminder dikirim ke: " . $to . "\n";
+            } catch (Exception $e) {
+                echo "Gagal kirim ke Anggota ($to): " . $e->getMessage() . "\n";
+            }
+        }
+        
+        //update flag start_reminder jadi 1
+        $reminderModel->markStartReminderSent($booking['id_booking']);
+    }
+}
+
+function endReminder(){
+    require_once 'app/model/ReminderModel.php';
+    require_once 'app/helper/sendEmail.php';
+    
+    $reminderModel = new ReminderModel();
+    echo "Mengecek booking yang akan berakhir dalam 10 menit...\n";
+    
+    $bookings = $reminderModel->getEndingBookings(10);
+
+    if (empty($bookings)) {
+        echo "Tidak ada booking yang akan selesai sebentar lagi.\n";
+        return;
+    }
+    
+    foreach($bookings as $booking){
+        $members = $reminderModel->getBookingMembers($booking['id_booking']);
+
+        if (!empty($booking['email'])) {
+            $to = $booking['email'];
+            $username = $booking['username'];
+            
+            $subject = "Reminder: Booking Room Anda Akan Berakhir";
+            $message = "Halo " . $username . ",\n\n".
+                       "Booking ruangan yang Anda ajukan akan berakhir pada " . $booking['end_time'] . ".\n".
+                       "Mohon persiapkan diri untuk meninggalkan ruangan tersebut tepat waktu.\n\n".
+                       "Terima kasih.";
+            
+            try {
+                sendEmail($to, $username, $subject, $message);
+                echo "Reminder (Ketua) dikirim ke: " . $to . "\n";
+            } catch (Exception $e) {
+                echo "Gagal kirim ke Ketua ($to): " . $e->getMessage() . "\n";
+            };
+        }
+        
+        //kirim email ke masing-masing anggota
+        foreach($members as $member){
+            $to = $member['email'];
+            $subject = "Reminder: Booking Room Akan Berakhir";
+            $message = "Halo " . $member['username'] . ",\n\n".
+                       "Ini adalah pengingat bahwa booking ruangan Anda akan berakhir pada " . $booking['end_time'] . ".\n".
+                       "Silakan persiapkan diri untuk meninggalkan ruangan tersebut tepat waktu.\n\n".
+                       "Terima kasih.";
+    
+            try {
+                sendEmail($to, $member['username'], $subject, $message);
+                echo "Reminder dikirim ke: " . $to . "\n";
+            } catch (Exception $e) {
+                echo "Gagal kirim ke Anggota ($to): " . $e->getMessage() . "\n";
+            };
+        }
+        
+        //update flag end_reminder jadi 1
+        $reminderModel->markEndReminderSent($booking['id_booking']);
+    }
+}
+
