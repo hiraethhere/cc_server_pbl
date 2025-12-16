@@ -103,7 +103,7 @@
 
                         <button type="button" onclick="konfirmasiBooking()"
                                 class="w-full py-3 hover:cursor-pointer bg-green1 text-white font-bold rounded-xl hover:bg-green-700 transition shadow-sm text-base">
-                            Booking Ruangan Ini
+                            Ajukan Peminjaman
                         </button>
                     </form>
                 </div>

@@ -81,7 +81,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-dark-overlay7 mb-2">Lokasi (lantai)</label>
+                    <label class="block text-sm font-medium text-dark-overlay7 mb-2">Lantai</label>
                     <input type="text" value="<?= htmlspecialchars($room['floor']) ?>" name="floor"
                             class="w-full px-4 py-2 border border-dark-overlay4 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none placeholder:text-dark-overlay">
                 </div>

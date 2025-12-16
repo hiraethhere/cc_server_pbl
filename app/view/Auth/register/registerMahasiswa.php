@@ -10,7 +10,7 @@
 </head>
 <body class="font-sf-pro" >
     
-    <div class="bg-cover bg-center min-h-screen flex flex-col items-center justify-center"
+    <div class="bg-cover bg-center min-h-screen flex flex-col items-center justify-center p-4"
          style="background-image: url('/img/Background 1.png'); 
              background-color: rgba(139, 92, 113, 0.7); background-blend-mode: multiply;">
 
@@ -210,6 +210,8 @@
             </div>
         </div>
     </div>
+</body>
+</html>
 
     <script src="/js/togglePassword.js" defer></script>
     <script src="/js/uploadFile.js" defer></script>
@@ -217,39 +219,3 @@
         window.registerDataProdi = <?= json_encode($dataProdi); ?>;
     </script>
     <script src="/js/registerForm.js" defer></script>
-
-
-
-
-    <!-- <script>
-
-        // Ambil data dari PHP Helper, convert ke JSON biar bisa dibaca JS
-    const dataKampus = <?= json_encode($dataProdi); ?>; 
-
-    const jurusanSelect = document.getElementById('jurusan');
-    const prodiSelect = document.getElementById('prodi');
-
-    jurusanSelect.addEventListener('change', function() {
-        const selectedJurusan = this.value;
-        const listProdi = dataKampus[selectedJurusan]; // Ambil array prodi dari key jurusan
-
-        // Reset dropdown prodi
-        prodiSelect.innerHTML = '<option value="" disabled selected hidden>Pilih Prodi</option>';
-
-
-        if (listProdi) {
-            listProdi.forEach(function(prodiName) {
-                const option = document.createElement('option');
-                option.value = prodiName;
-                option.textContent = prodiName;
-                prodiSelect.appendChild(option);
-                prodiSelect.classList.remove('disabled:opacity-75')
-                prodiSelect.removeAttribute('disabled')
-            });
-        } else {
-            // KUNCI LAGI: Jika entah kenapa datanya kosong/error
-            prodiSelect.disabled = true;
-        }
-    });
-
-    </script> -->
