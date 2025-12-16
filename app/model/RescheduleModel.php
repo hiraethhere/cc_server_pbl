@@ -106,11 +106,11 @@ class RescheduleModel {
     //ini ambil data buat detail reschedule
     // untuk rating ini kita harus join berdasarkan ruangan ya tidak bisa per booking
     public function getRescheduleDetail($id_res) {
-        $query = "SELECT rs.id_booking, rs.id_reschedule, rs.new_start_time, rs.new_end_time,rs.status_reschedule,
+        $query = "SELECT rs.id_booking, rs.id_reschedule, rs.new_start_time, rs.new_end_time, rs.status_reschedule,
                 r.room_name, r.min_capacity, r.max_capacity, r.floor, r.description, b.booking_code,
                 IFNULL(AVG(f.rating), 0) AS avg_rating,
                 COUNT(f.id_feedback) AS total_review,
-                u.username, u.jurusan_unit, u.nomor_induk 
+                u.username, u.email, u.jurusan_unit, u.nomor_induk 
                 FROM reschedule rs 
                 JOIN bookings b ON rs.id_booking = b.id_booking
                 JOIN rooms r ON b.id_room = r.id_room 

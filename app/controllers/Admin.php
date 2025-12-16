@@ -935,19 +935,24 @@ class Admin extends Controller {
         exit();
     }
 
-    public function approveReschedule($id_reschedule = null){
+    public function approveReschedule(){
 
-            if ($id_reschedule === NULL) {
-                Flasher::setModalInfo('Parameternya gaada 🥲🥲🥲', 'please kasih aku parameter', 'error', '/admin');
-                header('location: /admin/akun');
-                exit();
-                }
-            // Inisialisasi Model
-                $modelReschedule = $this->model('RescheduleModel');
-                $modelBooking = $this->model('BookingModel');
+       if (!isset($_POST['id_reschedule']) || !isset($_POST['email']) || !isset($_POST['username'])) {
+        Flasher::setModalInfo('Data tidak lengkap', 'ID, Email, atau Username tidak ditemukan.', 'error');
+        header('location: ' . BASEURL . '/admin/Peminjaman?tab=reschedule');
+        exit();
+    }
 
-            //Mulai Transaksi Database
-            $modelBooking->beginTransaction();
+        $id_reschedule = $_POST['id_reschedule'];
+        $email = $_POST['email'];
+        $username = $_POST['username'];
+
+        // Inisialisasi Model
+        $modelReschedule = $this->model('RescheduleModel');
+        $modelBooking = $this->model('BookingModel');
+
+        // Mulai Transaksi Database
+        $modelBooking->beginTransaction();
 
         try {
             // VALIDASI DATA & STATUS
@@ -962,23 +967,23 @@ class Admin extends Controller {
                 throw new Exception("Request ini sudah tidak valid (bukan pending).");
             }
 
+            // Cek Bentrok Jadwal Baru
             $conflict = $modelBooking->roomCheck(
                 $resData['id_room'],
                 $resData['new_end_time'],
-                $resData['new_start_time'],
-                // $resData['id_booking']
+                $resData['new_start_time']
+                // $resData['id_booking'] // Opsional: exclude booking sendiri jika logic query membutuhkannya
             );
 
-
             if ($conflict['total'] > 0) {
-                throw new Exception("Gagal! Ruangan sudah terisi oleh jadwal lain.");
+                throw new Exception("Gagal! Ruangan sudah terisi oleh jadwal lain pada jam tersebut.");
             }
 
             // Hitung total orang baru (Member + 1 Ketua)
             $totalMembers = $modelReschedule->countRescheduleMembers($id_reschedule);
             $totalPerson = $totalMembers + 1;
 
-            // Update Total Orang di Booking
+            // Update Jadwal & Total Orang di Tabel Booking
             $modelBooking->updateScheduleAndTotalPerson(
                 $resData['id_booking'],
                 $resData['new_start_time'],
@@ -986,36 +991,49 @@ class Admin extends Controller {
                 $totalPerson
             );
 
-
-            //SINKRONISASI ANGGOTA
-            
-            // Hapus anggota lama
+            // SINKRONISASI ANGGOTA
+            // 1. Hapus anggota lama di booking
             $modelBooking->clearBookingMembers($resData['id_booking']);
             
-            // Masukkan anggota baru dari tabel reschedule
+            // 2. Masukkan anggota baru dari tabel reschedule ke tabel booking_members
             $modelBooking->importMembersFromReschedule($resData['id_booking'], $id_reschedule);
 
-            // FINALISASI (Update Status)
+            // FINALISASI (Update Status Reschedule jadi Approved)
             $modelReschedule->updateStatus($id_reschedule, 'approved');
-
-            // Jika sampai sini tidak ada error, SIMPAN PERMANEN
-            $modelBooking->commit();
             
-            Flasher::setModalInfo('Berhasil', 'Reschedule disetujui.', 'success');
-            header('location: /admin/Peminjaman?tab=reschedule');
+            // Format Waktu untuk Email (Opsional, biar cantik)
+            $tglBaru = date('d F Y', strtotime($resData['new_start_time']));
+            $jamMulai = date('H:i', strtotime($resData['new_start_time']));
+            $jamSelesai = date('H:i', strtotime($resData['new_end_time']));
+
+            $emailSubject = "Pengajuan Reschedule Anda Disetujui!";
+            $emailBody = "Halo $username,\n\n" .
+                        "Kabar baik! Pengajuan reschedule Anda telah DISETUJUI oleh admin.\n" .
+                        "Jadwal peminjaman Anda telah diperbarui menjadi:\n\n" .
+                        "Tanggal: $tglBaru\n" .
+                        "Jam: $jamMulai - $jamSelesai WIB\n\n" .
+                        "Silakan cek detail peminjaman Anda di aplikasi.";
+
+            sendEmail($email, $username, $emailSubject, $emailBody);
+            //kalo berhasiil kirim email ya commit
+            $modelBooking->commit();
+
+            Flasher::setModalInfo('Berhasil', 'Reschedule disetujui dan jadwal telah diperbarui.', 'success');
+            header('location: ' . BASEURL . '/admin/Peminjaman?tab=reschedule');
             exit;
 
         } catch (Exception $e) {
             // Jika ada error di tahap manapun, BATALKAN SEMUA
             $modelBooking->rollback();
+            
             Flasher::setModalInfo('Gagal', $e->getMessage(), 'error');
+            // Redirect kembali ke detail jika gagal, atau ke list
+            header('Location: ' . BASEURL . '/admin/Peminjaman?tab=reschedule');
+            exit;
         }
-        // Redirect
-        header('Location: ' . BASEURL . '/Admin/detailReschedule/' . $id_reschedule);
-        exit;
     }
 
-    public function declineReschedule($id_reschedule = NULL){
+    public function declineReschedule(){
         // 1. Cek parameter ID & Alasan
         if (!isset($_POST['id_reschedule']) || !isset($_POST['alasan'])) {
             Flasher::setModalInfo('Data tidak lengkap', 'ID atau Alasan harus diisi', 'error');
@@ -1025,6 +1043,8 @@ class Admin extends Controller {
 
         $id_reschedule = $_POST['id_reschedule'];
         $alasan = $_POST['alasan']; // Tangkap alasannya
+        $email = $_POST['email'];
+        $username = $_POST['username'];
         
         // Validasi sederhana: Alasan tidak boleh kosong stringnya
         if (trim($alasan) == '') {
@@ -1049,10 +1069,10 @@ class Admin extends Controller {
         
         if ($result > 0) {
             Flasher::setModalInfo('Berhasil', 'Reschedule ditolak dengan alasan.', 'success');
+            sendEmail($email, $username, "Pengajuan Reschedule Anda Ditolak", "Pengajuan reschedule Anda telah ditolak oleh admin dengan alasan berikut:\n\n" . $alasan );
         } else {
             Flasher::setModalInfo('Gagal', 'Tidak ada perubahan data.', 'error');
         }
-        
         header('Location: ' . BASEURL . '/admin/Peminjaman?tab=reschedule');
         exit;
     }
