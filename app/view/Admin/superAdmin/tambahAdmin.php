@@ -18,15 +18,13 @@
     <div class="bg-background2 rounded-2xl w-full shadow-xl p-6">
         <h3 class="text-xl font-semibold text-dark-overlay mb-6">Isi Data Admin</h3>
             
-        <form class="space-y-4" id="formDaftar" method="POST"> 
+        <form class="space-y-4" id="formDaftar" method="POST" action="/superadmin/handleTambahAdmin"> 
             <div>
                 <label for="nama_lengkap" class="block text-sm font-medium text-dark-overlay mb-2">Nama Lengkap</label>
                 <input type="text" id="nama_lengkap" placeholder="Input nama" name="username"
                         class="w-full px-4 py-2 border border-dark-overlay4 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition">
             </div>
             
-            
-                
             <div>
                 <label for="email" class="block text-sm font-medium text-dark-overlay mb-2">Email</label>
                 <input type="email" id="email" placeholder="Input Email" name="email"
