@@ -98,7 +98,8 @@ function applyFilters() {
     // return;
 
 
-    window.location.href = window.location.pathname + '?' + params.toString();
+    const newUrl = window.location.origin + window.location.pathname + '?' + params.toString();
+    window.location.href = newUrl
 }
 
 
