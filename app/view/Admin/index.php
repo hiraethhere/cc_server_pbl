@@ -5,12 +5,20 @@
     <h2 class="text-xl font-bold text-dark-overlay mb-6">Dashboard Laporan</h2>
 
     <!-- Section Booking yang Sedang Berjalan -->
-    <div class="bg-background2 p-6 shadow-xl rounded-lg">
-        <h2 class="text-xl font-semibold text-dark-overlay mb-4">Booking yang Sedang Berjalan</h2>
-        
+    <div class="bg-background2 p-6 shadow-md rounded-lg">
+        <div class="flex flex-row justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-dark-overlay mb-4">Booking yang Sedang Berjalan</h2>
+            <?php if(!empty($bookings)): ?>
+            <a href="<?= BASEURL; ?>/Admin/cetakLaporan" target="_blank" class="bg-blue-overlay hover:bg-blue-700 text-white1 font-medium my-1 px-3 py-2 rounded-lg flex items-center gap-2 shadow-md transition text-sm hover:cursor-pointer ml-auto w-fit mt-2">
+                <?= icon('documentExport', 'w-5 h-5') ?>
+                        Export Laporan Peminjaman
+            </a>
+            <?php endif ?>
+        </div>
+        <?php if(!empty($bookings)): ?>
         <!-- Grid untuk kartu-kartu booking (2 kolom di layar besar, 1 di kecil) -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <?php if(!empty($bookings)): ?>
+        
         <?php foreach($bookings as $booking): ?>
             <!-- Kartu 1 -->
             <div class="p-4 rounded-lg shadow-md border border-dark-overlay5">
@@ -20,32 +28,33 @@
                 <p class="text-sm text-dark-overlay mt-2">Penanggung Jawab: <?= $booking['username'] ?></p>
             </div>
         <?php endforeach ?>
+        </div>
         <?php else: ?>
-            <div class="p-4 rounded-lg shadow-md border border-dark-overlay5">Belum ada Booking yang aktif</div>
+            <div class="p-12 rounded-lg shadow-sm border border-dark-overlay2 flex flex-col items-center gap-6">
+                <?= icon('fileList', 'w-20 h-20') ?>
+                <p>Belum ada Peminjaman yang sedang berlangsung</p>
+            </div>
         <?php endif ?>
             
-        </div>
-        <a href="<?= BASEURL; ?>/Admin/cetakLaporan" target="_blank" class="bg-blue-overlay hover:bg-blue-700 text-white1 font-medium my-1 px-3 py-2 rounded-lg flex items-center gap-2 shadow-md transition text-sm hover:cursor-pointer ml-auto w-fit mt-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentcolor" d="m8 19.425l-2.25 2.25q-.3.3-.7.288t-.7-.313q-.275-.3-.287-.7t.287-.7L6.6 18H5.35q-.425 0-.712-.287T4.35 17t.288-.712T5.35 16H9q.425 0 .713.288T10 17v3.65q0 .425-.288.713T9 21.65t-.712-.287T8 20.65zM13 22q-.425 0-.712-.288T12 21v-4q0-1.25-.875-2.125T9 14H5q-.425 0-.712-.288T4 13V4q0-.825.588-1.412T6 2h8l6 6v12q0 .825-.587 1.413T18 22zm0-13h5l-5-5l5 5l-5-5z"/></svg>
-                    Export Laporan Peminjaman
-        </a>
+        
+        
     </div>
 
 
-    <div class="bg-background2 p-6 shadow-xl mt-12 rounded-lg">
+    <div class="bg-background2 p-6 shadow-md mt-12 rounded-lg">
         <div class="max-w-7xl mx-auto">
             <!-- Header -->
-            <div class="flex justify-between items-center mb-4">
+            <div class="flex flex-row justify-between items-center mb-4">
                 <h1 class="text-xl font-semibold text-dark-overlay">Booking</h1>
-                <div>
-                  <a onclick="exportData('<?= BASEURL; ?>/Admin/cetakLaporan')" target="_blank" class="bg-blue-overlay hover:bg-blue-700 text-white1 font-medium my-1 px-3 py-2 rounded-lg flex items-center gap-2 shadow-md transition text-sm hover:cursor-pointer ml-auto w-fit mt-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentcolor" d="m8 19.425l-2.25 2.25q-.3.3-.7.288t-.7-.313q-.275-.3-.287-.7t.287-.7L6.6 18H5.35q-.425 0-.712-.287T4.35 17t.288-.712T5.35 16H9q.425 0 .713.288T10 17v3.65q0 .425-.288.713T9 21.65t-.712-.287T8 20.65zM13 22q-.425 0-.712-.288T12 21v-4q0-1.25-.875-2.125T9 14H5q-.425 0-.712-.288T4 13V4q0-.825.588-1.412T6 2h8l6 6v12q0 .825-.587 1.413T18 22zm0-13h5l-5-5l5 5l-5-5z"/></svg>
-                    Export PDF Laporan Peminjaman
-                </a>
-                <a onclick="exportData('<?= BASEURL; ?>/Admin/cetakLaporan', 'excel')" target="_blank" class="bg-blue-overlay hover:bg-blue-700 text-white1 font-medium my-1 px-3 py-2 rounded-lg flex items-center gap-2 shadow-md transition text-sm hover:cursor-pointer ml-auto w-fit mt-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentcolor" d="m8 19.425l-2.25 2.25q-.3.3-.7.288t-.7-.313q-.275-.3-.287-.7t.287-.7L6.6 18H5.35q-.425 0-.712-.287T4.35 17t.288-.712T5.35 16H9q.425 0 .713.288T10 17v3.65q0 .425-.288.713T9 21.65t-.712-.287T8 20.65zM13 22q-.425 0-.712-.288T12 21v-4q0-1.25-.875-2.125T9 14H5q-.425 0-.712-.288T4 13V4q0-.825.588-1.412T6 2h8l6 6v12q0 .825-.587 1.413T18 22zm0-13h5l-5-5l5 5l-5-5z"/></svg>
-                    Download Excel Laporan Peminjaman
-                </a>
+                <div class="flex gap-4">
+                    <a onclick="exportData('<?= BASEURL; ?>/Admin/cetakLaporan')" target="_blank" class="bg-blue-overlay hover:bg-blue-700 text-white1 font-medium my-1 px-3 py-2 rounded-lg flex items-center gap-2 shadow-md transition text-sm hover:cursor-pointer ml-auto w-fit mt-2">
+                <?= icon('documentExport', 'w-5 h-5') ?>
+                        Export PDF Laporan Peminjaman
+                    </a>
+                    <a onclick="exportData('<?= BASEURL; ?>/Admin/cetakLaporan', 'excel')" target="_blank" class="bg-blue-overlay hover:bg-blue-700 text-white1 font-medium my-1 px-3 py-2 rounded-lg flex items-center gap-2 shadow-md transition text-sm hover:cursor-pointer ml-auto w-fit mt-2">
+                <?= icon('documentExport', 'w-5 h-5') ?>
+                        Download Excel Laporan Peminjaman
+                    </a>
                 </div>
             </div>
 
@@ -94,7 +103,7 @@
                     </div>
 
                 <span id="filter-action-text" 
-                        class="ms-2" 
+                        class="ms-2 text-blue-overlay" 
                         data-text-check="Terapkan" 
                         data-text-cross="Reset">
                         Terapkan
@@ -143,13 +152,13 @@
     </div>
 
 
-    <div class="bg-background2 p-6 shadow-xl mt-12 rounded-lg">
+    <div class="bg-background2 p-6 shadow-md mt-12 rounded-lg">
         <div class="max-w-7xl mx-auto">
             <!-- Header -->
             <div class="flex justify-between items-center mb-4">
                 <h1 class="text-xl font-semibold text-dark-overlay">Anggota</h1>
                 <a href="<?= BASEURL; ?>/Admin/cetakLaporan" target="_blank" class="bg-blue-overlay hover:bg-blue-700 text-white1 font-medium my-1 px-3 py-2 rounded-lg flex items-center gap-2 shadow-md transition text-sm hover:cursor-pointer ml-auto w-fit mt-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentcolor" d="m8 19.425l-2.25 2.25q-.3.3-.7.288t-.7-.313q-.275-.3-.287-.7t.287-.7L6.6 18H5.35q-.425 0-.712-.287T4.35 17t.288-.712T5.35 16H9q.425 0 .713.288T10 17v3.65q0 .425-.288.713T9 21.65t-.712-.287T8 20.65zM13 22q-.425 0-.712-.288T12 21v-4q0-1.25-.875-2.125T9 14H5q-.425 0-.712-.288T4 13V4q0-.825.588-1.412T6 2h8l6 6v12q0 .825-.587 1.413T18 22zm0-13h5l-5-5l5 5l-5-5z"/></svg>
+            <?= icon('documentExport', 'w-5 h-5') ?>
                     Export Laporan Peminjaman
                 </a>
             </div>
@@ -244,13 +253,13 @@
     </div>
 
 
-    <div class="bg-background2 p-6 shadow-xl mt-12 rounded-lg">
+    <div class="bg-background2 p-6 shadow-md mt-12 rounded-lg">
         <div class="max-w-7xl mx-auto">
             <!-- Header -->
             <div class="flex justify-between items-center mb-4">
                 <h1 class="text-xl font-semibold text-dark-overlay">Ruangan</h1>
                 <a onclick="exportData('<?= BASEURL; ?>/Admin/cetakRuangan')" target="_blank" class="bg-blue-overlay hover:bg-blue-700 text-white1 font-medium my-1 px-3 py-2 rounded-lg flex items-center gap-2 shadow-md transition text-sm hover:cursor-pointer ml-auto w-fit mt-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentcolor" d="m8 19.425l-2.25 2.25q-.3.3-.7.288t-.7-.313q-.275-.3-.287-.7t.287-.7L6.6 18H5.35q-.425 0-.712-.287T4.35 17t.288-.712T5.35 16H9q.425 0 .713.288T10 17v3.65q0 .425-.288.713T9 21.65t-.712-.287T8 20.65zM13 22q-.425 0-.712-.288T12 21v-4q0-1.25-.875-2.125T9 14H5q-.425 0-.712-.288T4 13V4q0-.825.588-1.412T6 2h8l6 6v12q0 .825-.587 1.413T18 22zm0-13h5l-5-5l5 5l-5-5z"/></svg>
+            <?= icon('documentExport', 'w-5 h-5') ?>
                     Export Laporan Peminjaman
                 </a>
             </div>

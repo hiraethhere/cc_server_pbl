@@ -74,22 +74,11 @@
                     <button type="submit" class="w-full bg-[#38C55C] text-white py-3 text-sm rounded-lg font-medium hover:bg-green-600 transition duration-200 hover:cursor-pointer mb-2">
                         Login - Explore Ruangan Sekarang
                     </button>
-
-                    <div class="flex items-center text-center w-full max-w-md py-2">
-                        <div class="flex-1 border-t border-gray-300 mx-3"></div>
-                        <span class="text-xs text-gray-600 font-normal px-2">atau lanjut dengan</span>
-                        <div class="flex-1 border-t border-gray-300 mx-3"></div>
-                    </div>
-
-                    <!-- Booking Ruang Rapat Link -->
-                    <div class="text-center mt-2">
-                        <a href="/RuangRapat/index" class="w-full inline-block bg-[#1E68FB] text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-blue-700 transition shadow-[0_1px_2.7px_0_rgba(0,0,0,0.15)] duration-200">
-                            Booking Ruang Rapat
-                        </a>
-                    </div>
                 </form>
             </div>
         </div>    
     </div>
+</body>
+</html>
 
-    <script src="/js/togglePassword.js" defer></script>
+<script src="/js/togglePassword.js" defer></script>

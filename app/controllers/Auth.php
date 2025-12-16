@@ -33,7 +33,6 @@ class Auth extends Controller {
         }
         unset($_SESSION['regisRole']);
         $this->view('Auth/login');
-        $this->view('Layout/Footer');
     }
 
     // public function registerForm(){
@@ -72,7 +71,6 @@ class Auth extends Controller {
             
                 break;
             }
-            $this->view('Layout/Footer');
     }
 
     // public function 
@@ -363,7 +361,6 @@ class Auth extends Controller {
             }
         }
         $this->view('Auth/forgetPassword');
-        $this->view('Layout/Footer');
     }
 
     // ini buat lupa password ya bukan password biasa
@@ -498,6 +495,5 @@ class Auth extends Controller {
 
     public function pending(){
         $this->view('Auth/pending');
-        $this->view('Layout/Footer');
     }
 }

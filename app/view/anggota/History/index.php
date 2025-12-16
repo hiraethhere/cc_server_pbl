@@ -2,6 +2,7 @@
 <main class="container mx-auto px-4 w-97/100 lg:px-6 sm:px-6 py-6 sm:py-8 flex-1">
     <h2 class="text-2xl sm:text-3xl text-center font-bold text-dark-overlay mb-10 pt-5 left-align">Riwayat Peminjaman</h2>
 
+    <?php if(!empty($bookings)): ?>
     <!-- Time Filters -->
     <div class="flex md:flex-row flex-col md:justify-between mb-6 gap-4">
         <form method="GET" id="filterForm" class="flex md:flex-row flex-col md:justify-between mb-6 gap-4">
@@ -316,6 +317,15 @@
                 </div>
             </div>
     </div>
+    <?php else: ?>
+            <div class="p-12 rounded-lg shadow-sm border border-dark-overlay1 flex flex-col items-center gap-6">
+                <?= icon('fileList', 'w-20 h-20 text-dark-overlay2') ?>
+                <p class="text-center">Kamu belum pernah meminjam ruangan.</p>
+                <a href="/Dashboard" class="bg-blue-overlay text-white px-6 py-2 rounded-md text-sm hover:bg-blue-700 transition">
+                    Pinjam Ruangan Sekarang
+                </a>
+            </div>
+    <?php endif ?>
 </main>
 
 

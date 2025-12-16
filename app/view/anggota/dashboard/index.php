@@ -44,7 +44,7 @@
                     <div class="w-full flex justify-end">
                         <a href="/Dashboard/Booking/<?= $r['id_room'] ?>"
                             class="flex items-center justify-center w-full bg-blue-overlay text-white1 text-center rounded-xl font-semibold text-xs hover:bg-green1 transition duration-200 py-3">
-                            Booking Sekarang
+                            Pinjam Sekarang
                         </a>
                     </div>
                 </div>
