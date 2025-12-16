@@ -22,7 +22,16 @@ class SuperAdmin extends Controller{
 
         $keyword = $_GET['keyword'] ?? null;
 
-        $data['admins'] = $this->model('AdminModel')->getAllAdmin($keyword);
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $data['limit'] = 2;
+        $total_data = $this->model('AdminModel')->countAdmin($keyword);
+        
+        // Hitung START (Offset) sesuai rumus kamu
+        $start = ($page > 1) ? ($page * $data['limit']) - $data['limit'] : 0;
+        $data['total_page'] = ceil($total_data / $data['limit']);
+        $data['current_page'] = $page;
+
+        $data['admins'] = $this->model('AdminModel')->getAllAdmin($data['limit'], $start, $keyword);
         $data['judul'] = 'Data Admin';
         $data['navbar'] = 'superAdmin';
         $this->view('layout/sidebar', $data);

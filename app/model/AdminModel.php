@@ -9,17 +9,68 @@ class AdminModel {
         $this->db = new Database;
     }
 
-    public function getAllAdmin($search = null){
-        $query = "SELECT * FROM users u JOIN roles r ON u.id_role = r.id_role WHERE (r.role_name = 'Admin' OR r.role_name = 'Superadmin')";
-        if ($search !== null) {
-            $query .= " AND (u.username LIKE :search OR u.email LIKE :search OR u.nomor_induk LIKE :search)";
+    public function getAllAdmin( $limit = 10, $offset = 0, $search = null )
+    {
+        $query = "SELECT *
+            FROM users u
+            JOIN roles r ON u.id_role = r.id_role
+            WHERE (r.role_name = 'Admin' OR r.role_name = 'Superadmin')
+        ";
+
+        if ($search !== null && $search !== '') {
+            $query .= "
+                AND (
+                    u.username LIKE :search
+                    OR u.email LIKE :search
+                    OR u.nomor_induk LIKE :search
+                )
+            ";
         }
+
+        $query .= " ORDER BY u.id_user DESC LIMIT :limit OFFSET :offset";
+
         $this->db->query($query);
-        if ($search !== null) {
-            $this->db->bind(':search', "%$search%");
+
+        if ($search !== null && $search !== '') {
+            $this->db->bind('search', "%$search%");
         }
+
+        // LIMIT & OFFSET HARUS INTEGER
+        $this->db->bind('limit', (int)$limit);
+        $this->db->bind('offset', (int)$offset);
+
         return $this->db->resultSet();
     }
+
+    public function countAdmin($search = null)
+    {
+        $query = "
+            SELECT COUNT(*) as total
+            FROM users u
+            JOIN roles r ON u.id_role = r.id_role
+            WHERE (r.role_name = 'Admin' OR r.role_name = 'Superadmin')
+        ";
+
+        if ($search !== null && $search !== '') {
+            $query .= "
+                AND (
+                    u.username LIKE :search
+                    OR u.email LIKE :search
+                    OR u.nomor_induk LIKE :search
+                )
+            ";
+        }
+
+        $this->db->query($query);
+
+        if ($search !== null && $search !== '') {
+            $this->db->bind('search', "%$search%");
+        }
+
+        return $this->db->singleSet()['total'];
+    }
+
+
 
     public function createAdmin($data){
         $query = "INSERT INTO users (username, email, password, nomor_induk, id_role, status) 
