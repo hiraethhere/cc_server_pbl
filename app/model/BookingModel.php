@@ -736,6 +736,28 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
         return $this->db->rowCount();
     }
 
+    public function getLateBookings(){
+        $query = "SELECT b.id_booking, b.booking_code, b.start_time, u.username, u.id_user
+                  FROM bookings b
+                  JOIN users u ON b.id_user = u.id_user
+                  WHERE b.status = 'pending'
+                  AND NOW() > DATE_ADD(b.start_time, INTERVAL 10 MINUTE)";
+        
+        $this->db->query($query);
+        return $this->db->resultSet();  
+    }
+
+    public function cancelBookingSystem($id_booking)
+    {
+        $query = "UPDATE bookings SET status = 'cancelled', cancel_by = 'system' WHERE id_booking = :id_booking";
+        $this->db->query($query);
+        $this->db->bind('id_booking', $id_booking);
+        $this->db->execute();
+        return $this->db->rowCount();
+    }
+
+
+
     public function autoCompleteFinishedBookings()
     {
         //ini untuk mengubah status ke done saat dia masih ongoing

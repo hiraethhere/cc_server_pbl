@@ -156,17 +156,65 @@ function dropAllTables() {
 function runAutoCancel() {
     // Kita perlu load modelnya manual karena ini CLI (bukan lewat index.php/Controller)
     require_once 'app/model/BookingModel.php';
-    
+    require_once 'app/model/UserModel.php';
+    require_once 'app/model/RescheduleModel.php';
+
+
     $bookingModel = new BookingModel();
+    $userModel = new UserModel();
+    $rescheduleModel = new RescheduleModel();
     echo "Mengecek booking yang telat lebih dari 10 menit...\n";
+
+    $lateBookings = $bookingModel->getLateBookings();
     
-    $affected = $bookingModel->autoCancelLateBookings();
-    
-    if ($affected > 0) {
-        echo "Berhasil membatalkan $affected booking yang expired.\n";
-    } else {
+    if (empty($lateBookings)) {
         echo "Tidak ada booking yang perlu dibatalkan saat ini.\n";
+        return;
     }
+    
+    $count = 0;
+    foreach ($lateBookings as $booking) {
+        $idBooking = $booking['id_booking'];
+        $ketuaId = $booking['id_user'];
+        
+        echo "---------------------------------------------------\n";
+        echo "Memproses Booking ID: $idBooking\n";
+
+        // --- PROSES KUMPULKAN USER (KETUA + ANGGOTA) ---
+        $usersToSuspend = [$ketuaId]; // Masukkan ketua
+
+        // Ambil anggota dari tabel booking_members (Query 2)
+        $members = $bookingModel->getBookingMembers($idBooking);
+        foreach ($members as $m) {
+            $usersToSuspend[] = $m['id_user'];
+        }
+        
+        // // Hapus duplikat user (jika ketua masuk sebagai anggota juga)
+        // $usersToSuspend = array_unique($usersToSuspend);
+
+        // --- PROSES SUSPEND (Looping Query per User) ---
+        foreach ($usersToSuspend as $uid) {
+            // langsung suspend user
+            // $userModel->nonActivateUser($uid); 
+            
+            //tambah count suspend
+            $userModel->addSuspendCount($uid);
+
+            echo "-> User ID $uid telah disuspend.\n";
+        }
+
+        // --- PROSES CANCEL BOOKING (Query Update Booking) ---
+        $bookingModel->cancelBookingSystem($idBooking);
+        
+        // --- PROSES CANCEL RESCHEDULE (Query Update Reschedule - jika ada) ---
+        $rescheduleModel->cancelRelatedReschedule($idBooking);
+
+        echo "   -> Status Booking & Reschedule diupdate ke cancelled.\n";
+        $count++;
+    }
+    
+    echo "---------------------------------------------------\n";
+    echo "Selesai. Total $count booking dibatalkan & anggotanya disuspend.\n";
 }
 
 function runAutoComplete() {
