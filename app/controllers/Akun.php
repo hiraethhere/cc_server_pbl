@@ -72,7 +72,6 @@ class Akun extends Controller{
                 throw new Exception('Data akun tidak ditemukan.');
             }
 
-            // Cek Password LAMA vs Database (Perbaikan Logic: pakai passwordLama)
             if (!password_verify($_POST['passwordLama'], $oldPassword['password'])) {
                 Flasher::setModalInfo('Password lama salah', 'Verifikasi gagal', 'error');
                 header('location: /akun/gantiPassword');
@@ -96,7 +95,7 @@ class Akun extends Controller{
             }
 
             // Sukses
-            Flasher::setModalInfo('Berhasil', 'Password berhasil diubah', 'success');
+            Flasher::setModalInfo('Ganti Password Berhasil', 'Silahkan login kembali', 'success');
             unset($_SESSION['user']); // Hapus session user
             unset($_SESSION['role']);
             // session_destroy(); // Hancurkan session
@@ -104,10 +103,6 @@ class Akun extends Controller{
             exit;
 
         } catch (Exception $e) {
-            // Tangkap Error Sistem (Misal: DB mati, Query salah syntax)
-            
-            // Opsional: Log error asli untuk developer (jangan tampilkan ke user)
-            // error_log($e->getMessage()); 
 
             Flasher::setModalInfo('Terjadi Kesalahan', 'Gagal memproses permintaan (Server Error)', 'error');
             header('location: /akun/gantiPassword');
