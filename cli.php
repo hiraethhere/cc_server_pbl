@@ -209,7 +209,7 @@ function runAutoCancel() {
         // --- PROSES CANCEL RESCHEDULE (Query Update Reschedule - jika ada) ---
         $rescheduleModel->cancelRelatedReschedule($idBooking);
 
-        echo "   -> Status Booking & Reschedule diupdate ke cancelled.\n";
+        echo "-> Status Booking & Reschedule diupdate ke cancelled.\n";
         $count++;
     }
     

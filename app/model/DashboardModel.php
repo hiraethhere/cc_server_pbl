@@ -97,7 +97,7 @@ class DashboardModel {
     // -----------------------------------------------------------
     // 2. STATISTIK ANGGOTA (Tetap sama seperti sebelumnya)
     // -----------------------------------------------------------
-    public function getUserStats($jurusanFilter = [])
+    public function getUserStats($jurusanFilter = [], $prodiFilter = [])
     {
         // Asumsi relasi user -> role
         $query = "SELECT 
@@ -109,14 +109,23 @@ class DashboardModel {
                     SUM(CASE WHEN u.status = 'rejected' THEN 1 ELSE 0 END) AS ditolak,
                     SUM(CASE WHEN u.status = 'pending' THEN 1 ELSE 0 END) AS menunggu
                   FROM users u
-                  LEFT JOIN roles r ON u.id_role = r.id_role";
+                  LEFT JOIN roles r ON u.id_role = r.id_role
+                  WHERE 1=1";
 
         if (!empty($jurusanFilter)) {
             $placeholders = [];
             foreach ($jurusanFilter as $key => $val) {
                 $placeholders[] = ":jurusan_$key";
             }
-            $query .= " WHERE u.jurusan_unit IN (" . implode(',', $placeholders) . ")";
+            $query .= " AND u.jurusan_unit IN (" . implode(',', $placeholders) . ")";
+        }
+
+        if (!empty($prodiFilter)) {
+            $placeholders = [];
+            foreach ($prodiFilter as $key => $val) {
+                $placeholders[] = ":prodi_$key";
+            }
+            $query .= " AND u.prodi_unit IN (" . implode(',', $placeholders) . ")";
         }
 
         $this->db->query($query);
@@ -124,6 +133,12 @@ class DashboardModel {
         if (!empty($jurusanFilter)) {
             foreach ($jurusanFilter as $key => $val) {
                 $this->db->bind(":jurusan_$key", $val);
+            }
+        }
+
+        if (!empty($prodiFilter)) {
+            foreach ($prodiFilter as $key => $val) {
+                $this->db->bind(":prodi_$key", $val);
             }
         }
 
@@ -314,6 +329,73 @@ class DashboardModel {
         }
 
         // --- 5. EKSEKUSI & RETURN ---
+        return $this->db->resultSet();
+    }
+
+    public function getAllUsers($jurusan = [], $roleName = [], $prodi = [])
+    {
+
+        if (!empty($jurusan) && !is_array($jurusan)) {
+            $jurusan = [$jurusan];
+        }
+
+        if (!empty($prodi) && !is_array($prodi)) {
+            $prodi = [$prodi];
+        }
+
+        if (!empty($roleName) && !is_array($roleName)) {
+            $roleName = [$roleName];
+        }
+
+        $query = "SELECT u.id_user, u.username, r.role_name, u.jurusan_unit, u.prodi,u.nomor_induk , u.status
+                  FROM users u
+                  LEFT JOIN roles r ON u.id_role = r.id_role
+                  WHERE r.id_role NOT IN (1,2)"; // Exclude Admin
+
+        if (!empty($jurusan)) {
+            $inJurusan = [];
+            foreach ($jurusan as $i => $j) {
+                $inJurusan[] = ":jurusan$i";
+            }
+            $query .= " AND u.jurusan_unit IN (" . implode(',', $inJurusan) . ")";
+        }
+
+        if (!empty($prodi)) {
+            $inProdi = [];
+            foreach ($prodi as $i => $p) {
+                $inProdi[] = ":prodi$i";
+            }
+            $query .= " AND u.prodi IN (" . implode(',', $inProdi) . ")";
+        }
+
+        if (!empty($roleName)) {
+            $inRole = [];
+            foreach ($roleName as $i => $role) {
+                $inRole[] = ":role$i";
+            }
+            $query .= " AND r.role_name IN (" . implode(',', $inRole) . ")";
+        }
+
+        $this->db->query($query);
+
+        if (!empty($jurusan)) {
+            foreach ($jurusan as $i => $j) {
+                $this->db->bind("jurusan$i", $j); 
+            }
+        }
+
+        if (!empty($prodi)) {
+            foreach ($prodi as $i => $p) {
+                $this->db->bind("prodi$i", $p); 
+            }
+        }
+
+        if (!empty($roleName)) {
+            foreach ($roleName as $i => $role) {
+                $this->db->bind("role$i", $role); 
+            }
+        }
+        
         return $this->db->resultSet();
     }
 }

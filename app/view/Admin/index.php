@@ -62,7 +62,7 @@
         </div>
 
         <form method="GET" id="filterForm">
-        <div class="flex items-center gap-3 pb-2">
+        <div class=" filter-scope flex items-center gap-3 pb-2">
             <!-- Filter Hari Ini -->
 
            <?php 
@@ -94,16 +94,17 @@
                 include __DIR__ . '/../template/filterDropDown.php';
             ?>
 
-            <button type="button" id="filter-action-btn"
-                    class="px-3 py-1.5 flex items-center hover:cursor-pointer text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition border border-gray-300 bg-white">
-                    <div id="filter-action-icon" class="text-dark-overlay5"
+            <button type="button"
+                    class="filter-action-btn px-3 py-1.5 flex items-center hover:cursor-pointer text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition border border-gray-300 bg-white"
+                    data-filter-list="bulan,tahun">
+                    <div id="filter-action-icon" class="filter-action-icon text-dark-overlay5"
                         data-check="<?= htmlspecialchars(icon('check', 'w-4 h-4 text-blue-overlay'), ENT_QUOTES) ?>"
                         data-cross="<?= htmlspecialchars(icon('cross', 'w-4 h-4 text-red1'), ENT_QUOTES) ?>">
                         <?= icon('check', 'w-4 h-4 text-blue-overlay') ?>
                     </div>
 
-                <span id="filter-action-text" 
-                        class="ms-2 text-blue-overlay" 
+                <span
+                        class="filter-action-text ms-2 text-blue-overlay" 
                         data-text-check="Terapkan" 
                         data-text-cross="Reset">
                         Terapkan
@@ -157,45 +158,71 @@
             <!-- Header -->
             <div class="flex justify-between items-center mb-4">
                 <h1 class="text-xl font-semibold text-dark-overlay">Anggota</h1>
-                <a href="<?= BASEURL; ?>/Admin/cetakLaporan" target="_blank" class="bg-blue-overlay hover:bg-blue-700 text-white1 font-medium my-1 px-3 py-2 rounded-lg flex items-center gap-2 shadow-md transition text-sm hover:cursor-pointer ml-auto w-fit mt-2">
-            <?= icon('documentExport', 'w-5 h-5') ?>
-                    Export Laporan Peminjaman
-                </a>
+                <div class="flex gap-4">
+                    <a onclick="exportData('<?= BASEURL; ?>/Admin/cetakAnggota')" target="_blank" class="bg-blue-overlay hover:bg-blue-700 text-white1 font-medium my-1 px-3 py-2 rounded-lg flex items-center gap-2 shadow-md transition text-sm hover:cursor-pointer ml-auto w-fit mt-2">
+                <?= icon('documentExport', 'w-5 h-5') ?>
+                        Export PDF Laporan Anggota
+                    </a>
+                    <a onclick="exportData('<?= BASEURL; ?>/Admin/cetakAnggota', 'excel')" target="_blank" class="bg-blue-overlay hover:bg-blue-700 text-white1 font-medium my-1 px-3 py-2 rounded-lg flex items-center gap-2 shadow-md transition text-sm hover:cursor-pointer ml-auto w-fit mt-2">
+                <?= icon('documentExport', 'w-5 h-5') ?>
+                        Download Excel Laporan Anggota
+                    </a>
+                </div>
             </div>
         </div>
 
         <form method="GET" id="filterForm">
-        <div class="flex items-center gap-3 pb-2">
-            <!-- Filter Hari Ini -->
-            <!-- <?php 
-                // $filter_id = 'Jurusan'; 
-                // $label = 'Jurusan'; 
-                // $options = ['TIK' => 'TIK', 'Teknik Elektro' => 'Teknik Elektro']; 
-                // $current_values = $_GET[$filter_id] ?? ''; 
-                // include __DIR__ . '/../template/filterDropDown.php';
-                ?>
+        <div class="filter-scope flex items-center gap-3 pb-2">
+            <!-- program studi -->
+
             <?php 
                 // $filter_id = 'Prodi'; 
                 // $label = 'Prodi'; 
-                // $options = ['Ruang Duta' => 'Ruang Duta', 'Ruang Meeting Kecil' => 'Ruang Meeting Kecil']; 
+                // $options = ['' => 'Ruang Duta', 'Ruang Meeting Kecil' => 'Ruang Meeting Kecil']; 
                 // $current_values = $_GET[$filter_id] ?? ''; 
                 // include __DIR__ . '/../template/filterDropDown.php';
                 ?>
-            <button type="button" id="filter-action-btn" 
-                    class="px-3 py-1.5 flex items-center hover:cursor-pointer text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition border border-gray-300 bg-white">
-                    <div id="filter-action-icon" class="text-dark-overlay5"
+
+            <?php 
+                $filter_id = 'Role'; 
+                $label = 'Peran'; 
+                $options = ['Dosen' => 'Dosen', 'Mahasiswa' => 'Mahasiswa', 'Tendik' => 'Tendik']; 
+                $current_values = $_GET[$filter_id] ?? ''; 
+                include __DIR__ . '/../template/filterDropDown.php';
+            ?>
+
+            <!-- jurusan -->
+            <?php 
+                $filter_id = 'Jurusan'; 
+                $label = 'Jurusan'; 
+                $options = [
+                    'Teknik Informatika dan Komputer' => 'Teknik Informatika dan Komputer', 
+                    'Teknik Elektro' => 'Teknik Elektro', 
+                    'Teknik Mesin' => 'Teknik Mesin',
+                    'Teknik Sipil' => 'Teknik Sipil',
+                    'Akutansi' => 'Akutansi',
+                    'Administrasi Niaga' => 'Administrasi Niaga',
+                    'Teknik Grafik dan Penerbitan' => 'Teknik Grafik dan Penerbitan'
+                ]; 
+                $current_values = $_GET[$filter_id] ?? ''; 
+                include __DIR__ . '/../template/filterDropDown.php';
+                ?>
+            <button type="button"
+                    class="filter-action-btn px-3 py-1.5 flex items-center hover:cursor-pointer text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition border border-gray-300 bg-white"
+                    data-filter-list="Prodi, Jurusan, Role">
+                    <div class="filter-action-btn text-dark-overlay5"
                         data-check="<?= htmlspecialchars(icon('check', 'w-4 h-4 text-blue-overlay'), ENT_QUOTES) ?>"
                         data-cross="<?= htmlspecialchars(icon('cross', 'w-4 h-4 text-red1'), ENT_QUOTES) ?>">
                         <?= icon('check', 'w-4 h-4 text-blue-overlay') ?>
                     </div>
-            
-                <span id="filter-action-text" 
-                        class="ms-2" 
+
+                <span
+                        class="filter-action-text ms-2 text-blue-overlay" 
                         data-text-check="Terapkan" 
                         data-text-cross="Reset">
                         Terapkan
                 </span> 
-            </button> -->
+            </button>
         </div>
         </form>
 
@@ -258,10 +285,16 @@
             <!-- Header -->
             <div class="flex justify-between items-center mb-4">
                 <h1 class="text-xl font-semibold text-dark-overlay">Ruangan</h1>
-                <a onclick="exportData('<?= BASEURL; ?>/Admin/cetakRuangan')" target="_blank" class="bg-blue-overlay hover:bg-blue-700 text-white1 font-medium my-1 px-3 py-2 rounded-lg flex items-center gap-2 shadow-md transition text-sm hover:cursor-pointer ml-auto w-fit mt-2">
-            <?= icon('documentExport', 'w-5 h-5') ?>
-                    Export Laporan Peminjaman
-                </a>
+                 <div class="flex gap-4">
+                    <a onclick="exportData('<?= BASEURL; ?>/Admin/cetakRuangan')" target="_blank" class="bg-blue-overlay hover:bg-blue-700 text-white1 font-medium my-1 px-3 py-2 rounded-lg flex items-center gap-2 shadow-md transition text-sm hover:cursor-pointer ml-auto w-fit mt-2">
+                <?= icon('documentExport', 'w-5 h-5') ?>
+                        Export PDF Laporan Ruangan
+                    </a>
+                    <a onclick="exportData('<?= BASEURL; ?>/Admin/cetakRuangan', 'excel')" target="_blank" class="bg-blue-overlay hover:bg-blue-700 text-white1 font-medium my-1 px-3 py-2 rounded-lg flex items-center gap-2 shadow-md transition text-sm hover:cursor-pointer ml-auto w-fit mt-2">
+                <?= icon('documentExport', 'w-5 h-5') ?>
+                        Download Excel Laporan Ruangan
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -303,6 +336,6 @@
         
 </main>
 
-<script src="/js/filterDropDown.js" defer></script>
+<script src="/js/filterAdmin.js" defer></script>
 </body>
 </html>

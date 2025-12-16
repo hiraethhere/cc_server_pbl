@@ -47,6 +47,15 @@ class Admin extends Controller {
             }
         }
 
+        $prodiFilter = [];
+        if (isset($_GET['prodi']) && $_GET['prodi'] !== '') {
+            if (is_array($_GET['prodi'])) {
+                $prodiFilter = $_GET['prodi'];
+            } else {
+                $prodiFilter = explode(',', $_GET['prodi']);
+            }
+        }
+
         $dashboardModel = $this->model('DashboardModel');
 
 
@@ -57,7 +66,7 @@ class Admin extends Controller {
 
         // B. Data Anggota (Statistik Kartu Tengah)
         // Kita kirim filter jurusan
-        $data['stats_anggota'] = $dashboardModel->getUserStats($jurusanFilter);
+        $data['stats_anggota'] = $dashboardModel->getUserStats($jurusanFilter, $prodiFilter);
 
         // C. Data Ruangan (Statistik Kartu Bawah)
         // Ruangan biasanya datanya global, tapi Populer bisa berdasarkan bulan/tahun aktif
@@ -129,9 +138,76 @@ class Admin extends Controller {
         $data['judul'] = 'Laporan Peminjaman';
         // Panggil model yang tadi kita buat
         $data['laporan'] = $this->model('RuanganModel')->getLaporanRuangan();
+
+        $mode = isset($_GET['mode']) ? $_GET['mode'] : 'print';
+
+        $data['mode'] = $mode; // Kirim mode ke view
+
+        if ($mode == 'excel') {
+            // Header khusus agar browser menganggap ini file Excel (.xls)
+            $filename = "Laporan_Ruangan_" . date('Ymd') . ".xls";
+            
+            header("Content-Type: application/vnd.ms-excel");
+            header("Content-Disposition: attachment; filename=\"$filename\"");
+
+            $this->view('Admin/cetakRuangan', $data);
+        } else {
+            // Mode Print Biasa
+            $this->view('Admin/cetakRuangan', $data);
+        }
+    }
+
+    public function cetakAnggota()
+    {
+        $data['judul'] = 'Laporan Anggota';
+        //Ambil Filter (Sama seperti sebelumnya)
+        if (isset($_GET['Jurusan']) && $_GET['Jurusan'] !== '') {
+
+            if (is_array($_GET['Jurusan'])) {
+                $jurusanFilter = $_GET['Jurusan'];
+            } else {
+                // bulan=2,1 → ["2","1"]
+                $jurusanFilter = explode(',', $_GET['Jurusan']);
+            }
+        } else {
+            $jurusanFilter = [];
+        }
+        //ambil role
+        if (isset($_GET['Role']) && $_GET['Role'] !== '') {
+
+            if (is_array($_GET['Role'])) {
+                $roleFilter = $_GET['Role'];
+            } else {
+                $roleFilter = explode(',', $_GET['Role']);
+            }
+        } else {
+            $roleFilter = []; // kosong
+        }
+
+
+        $data['laporan'] = $this->model('DashboardModel')->getAllUsers($jurusanFilter, $roleFilter);
+
+        $mode = isset($_GET['mode']) ? $_GET['mode'] : 'print';
+        $data['mode'] = $mode; // Kirim mode ke view
+
+        if ($mode == 'excel') {
+            // Header khusus agar browser menganggap ini file Excel (.xls)
+            $filename = "Laporan_Peminjaman_" . date('Ymd') . ".xls";
+            
+            header("Content-Type: application/vnd.ms-excel");
+            header("Content-Disposition: attachment; filename=\"$filename\"");
+            header("Pragma: no-cache");
+            header("Expires: 0");
+            
+            // Load view yang sama, tapi nanti di view kita matikan CSS/JS yang tidak perlu
+            $this->view('Admin/cetakAnggota', $data);
+        } else {
+            // Mode Print Biasa
+            $this->view('Admin/cetakAnggota', $data);
+        }
         
         // Load view khusus cetak (kita buat setelah ini)
-        $this->view('Admin/cetakRuangan', $data);
+        $this->view('Admin/cetakAnggota', $data);
     }
     
     public function Anggota(){
@@ -1045,7 +1121,6 @@ class Admin extends Controller {
         $alasan = $_POST['alasan']; // Tangkap alasannya
         $email = $_POST['email'];
         $username = $_POST['username'];
-        
         // Validasi sederhana: Alasan tidak boleh kosong stringnya
         if (trim($alasan) == '') {
             Flasher::setModalInfo('Alasan Kosong', 'Harap isi alasan penolakan', 'warning');
