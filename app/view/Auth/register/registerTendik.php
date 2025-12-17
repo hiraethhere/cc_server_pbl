@@ -11,9 +11,8 @@
 </head>
 <body class="font-sf-pro" >
     
-    <div class="bg-cover bg-center min-h-screen flex flex-col items-center justify-center"
-         style="background-image: url('/img/Background 1.png'); 
-             background-color: rgba(139, 92, 113, 0.7); background-blend-mode: multiply;">
+    <div class="bg-cover bg-center min-h-screen flex flex-col items-center justify-center p-4"
+         style="background-image: url('/img/Background 1.png'); ">
 
         <div class="bg-[#F3F5FA] rounded-2xl shadow-2xl p-8 w-full max-w-xl">
             <!-- Header -->
@@ -62,7 +61,7 @@
                     <div class="col-span-2 sm:col-span-1">
                         <label class="block text-xs font-medium text-gray-700 mb-2">Jurusan/Unit</label>
                         <select name="jurusan_unit" 
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs appearance-none">
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs">
                             <option value="" disabled selected hidden>Jurusan/Unit</option>
                             <option value="Teknik Informatika">Teknik Informatika</option>
                             <option value="Teknik Elektro">Teknik Elektro</option>

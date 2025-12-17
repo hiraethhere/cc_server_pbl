@@ -14,11 +14,11 @@
 </head>
 <body class="font-sf-pro" >
     
-    <div class="bg-cover bg-center min-h-screen flex flex-col items-center justify-center"
+    <div class="bg-cover bg-center min-h-screen flex flex-col items-center justify-center p-6"
          style="background-image: url('/img/Background 1.png');">   
 
         <div class="flex items-center justify-center h-fit max-w-lg w-full my-8"> 
-            <div class="bg-[#F9FAFC] rounded-2xl shadow-2xl p-8 w-lg h-fit max-w-lg md:h-fit sm:h-full mb-5 mt-1">
+            <div class="bg-background1 rounded-2xl shadow-2xl p-8 w-lg h-fit max-w-lg md:h-fit sm:h-full mb-5 mt-1">
                 <!-- Logo & Header -->
                 <div class="text-center mb-5">
                     <div class="flex items-start justify-start mb-3">

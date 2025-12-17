@@ -65,9 +65,9 @@
     <!-- Table Content -->
     <div class="">
         <!-- Desktop Table -->
-        <div id="desktop-table" class="md:block hidden overflow-x-auto bg-background2 rounded-t-xl">
-            <table class="w-full text-sm border-separate border-spacing-0 border border-dark-overlay4 rounded-t-xl">
-                <thead class="bg-blue-overlay1 rounded-t-xl">
+        <div id="desktop-table" class="md:block hidden overflow-x-auto bg-background2 rounded-xl">
+            <table class="w-full text-sm border-separate border-spacing-0 border border-dark-overlay4 rounded-xl">
+                <thead class="bg-blue-overlay1 rounded-xl">
                     <tr>
                         <th class="px-6 py-4 text-left font-semibold text-dark-overlay7 rounded-tl-xl">No.</th>
                         <th class="px-6 py-4 text-left font-semibold text-dark-overlay7">Tanggal</th>
@@ -213,7 +213,7 @@
         $baseUrl = http_build_query($query); ?>
         <?php if ($total_page >= 1): ?>
             
-        <div class="flex items-center justify-center px-6 py-4  border-t border-gray-200 mx-8">
+        <div class="flex items-center justify-center px-6 py-4 mx-8">
             
             <div class="flex items-center gap-2">
                 
