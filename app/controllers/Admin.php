@@ -911,6 +911,14 @@ class Admin extends Controller {
                 break;
             }
 
+            if (!validateNIM($_POST['nomor_induk'])) {
+                throw new Exception('NIM hanya boleh berisi angka');
+            }
+
+            if (!validatePassword($_POST['password'])) {
+                throw new Exception('Password minimal 6 huruf dan 1 angka');
+            }
+
             if ($id_role === 3) {
                 if (!validateEmail($_POST['email'])) {
                     throw new Exception('Email tidak valid');
@@ -920,6 +928,8 @@ class Admin extends Controller {
             } else {
                 $jurusan_unit = $_POST['jurusan_text'];
             }
+
+            
 
             $data = [
                 'id_role' => $id_role,

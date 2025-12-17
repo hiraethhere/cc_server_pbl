@@ -134,6 +134,10 @@ class Auth extends Controller {
                 throw new Exception('Password minimal 6 huruf dan 1 angka');
             }
 
+            if (!validateNIM($_POST['nomor_induk'])) {
+                throw new Exception('NIM hanya boleh berisi angka');
+            }
+
             $role = $_SESSION['regisRole'] ?? null;
             if (!$role) {
                 throw new Exception('Role tidak ditemukan, silakan ulangi proses registrasi.');

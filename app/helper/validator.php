@@ -81,3 +81,11 @@ function validatePassword($password) {
         return false; // Tidak Valid
     }
 }
+
+/**
+ * Helper untuk validasi NIM agar hanya berisi digit
+ */
+function validateNIM($value): bool {
+    // Pastikan input tidak kosong dan benar-benar hanya angka
+    return !empty($value) && ctype_digit((string)$value);
+}
