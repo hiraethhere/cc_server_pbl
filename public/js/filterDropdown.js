@@ -8,17 +8,68 @@
  */
 function toggleDropdown(dropdownId) {
     const dropdownMenu = document.getElementById(dropdownId);
-    if (dropdownMenu) {
-        // Toggle class 'hidden' untuk menampilkan/menyembunyikan menu
-        dropdownMenu.classList.toggle('hidden');
-        
-        // Logika untuk menutup dropdown lain saat dropdown ini dibuka (opsional tapi disarankan)
+    if (!dropdownMenu) return;
+
+    // find container and toggle button arrow
+    const container = dropdownMenu.closest('.filter-dropdown-container');
+    const toggleBtn = container ? container.querySelector('.filter-dropdown-toggle') : null;
+    const arrow = container ? container.querySelector('.filter-dropdown-arrow') : null;
+
+    // If hidden -> open with animation; else close with animation
+    if (dropdownMenu.classList.contains('hidden')) {
+        // Close other menus with animation
         document.querySelectorAll('.filter-dropdown-menu').forEach(menu => {
-            if (menu.id !== dropdownId) {
-                menu.classList.add('hidden');
+            if (menu.id !== dropdownId && !menu.classList.contains('hidden')) {
+                const otherContainer = menu.closest('.filter-dropdown-container');
+                const otherArrow = otherContainer ? otherContainer.querySelector('.filter-dropdown-arrow') : null;
+                closeDropdown(menu, otherArrow);
             }
         });
+        openDropdown(dropdownMenu, arrow);
+        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+    } else {
+        closeDropdown(dropdownMenu, arrow);
+        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
     }
+}
+
+function openDropdown(menu, arrow) {
+    menu.classList.remove('hidden');
+    menu.style.overflow = 'hidden';
+    menu.style.transition = 'max-height 260ms ease, opacity 200ms ease';
+    menu.style.maxHeight = '0px';
+    menu.style.opacity = '0';
+    // force reflow
+    // eslint-disable-next-line no-unused-expressions
+    menu.offsetHeight;
+    menu.style.maxHeight = menu.scrollHeight + 'px';
+    menu.style.opacity = '1';
+    if (arrow) arrow.classList.add('rotate-180');
+
+    const cleanup = () => {
+        menu.style.maxHeight = '';
+        menu.style.opacity = '';
+        menu.removeEventListener('transitionend', cleanup);
+    };
+    menu.addEventListener('transitionend', cleanup);
+}
+
+function closeDropdown(menu, arrow) {
+    menu.style.maxHeight = menu.scrollHeight + 'px';
+    // force reflow
+    // eslint-disable-next-line no-unused-expressions
+    menu.offsetHeight;
+    menu.style.maxHeight = '0px';
+    menu.style.opacity = '0';
+    if (arrow) arrow.classList.remove('rotate-180');
+
+    const onEnd = () => {
+        menu.classList.add('hidden');
+        menu.style.maxHeight = '';
+        menu.style.opacity = '';
+        menu.removeEventListener('transitionend', onEnd);
+    };
+    menu.addEventListener('transitionend', onEnd);
 }
 
 // === 2. LOGIKA STATE (CHECKBOX DAN HIDDEN INPUT) ===
@@ -126,14 +177,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
              });
         }
+        // Set initial aria-expanded and arrow rotation based on visibility
+        const menu = container.querySelector('.filter-dropdown-menu');
+        const btn = container.querySelector('.filter-dropdown-toggle');
+        const arrow = container.querySelector('.filter-dropdown-arrow');
+        if (btn) btn.setAttribute('aria-expanded', menu && !menu.classList.contains('hidden') ? 'true' : 'false');
+        if (arrow) {
+            if (menu && !menu.classList.contains('hidden')) arrow.classList.add('rotate-180');
+            else arrow.classList.remove('rotate-180');
+        }
     });
 
-    // Event listener untuk menutup dropdown saat klik di luar
-document.addEventListener('click', (event) => {
+    // Event listener untuk menutup dropdown saat klik di luar (gunakan animasi)
+    document.addEventListener('click', (event) => {
         let isDropdown = event.target.closest('.filter-dropdown-container');
         if (!isDropdown) {
             document.querySelectorAll('.filter-dropdown-menu').forEach(menu => {
-                menu.classList.add('hidden');
+                if (!menu.classList.contains('hidden')) {
+                    const otherContainer = menu.closest('.filter-dropdown-container');
+                    const otherArrow = otherContainer ? otherContainer.querySelector('.filter-dropdown-arrow') : null;
+                    closeDropdown(menu, otherArrow);
+                    const btn = otherContainer ? otherContainer.querySelector('.filter-dropdown-toggle') : null;
+                    if (btn) btn.setAttribute('aria-expanded', 'false');
+                }
             });
         }
     });
