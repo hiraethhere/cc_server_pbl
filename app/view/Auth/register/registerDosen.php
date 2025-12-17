@@ -63,11 +63,13 @@
                         <select name="jurusan_unit" 
                             class="bg-white w-full text-xs px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none">
                             <option value="" disabled selected hidden>Jurusan</option>
-                            <option value="Teknik Informatika">Teknik Informatika</option>
+                            <option value="Teknik Informatika">Teknik Informatika dan Komputer</option>
                             <option value="Teknik Elektro">Teknik Elektro</option>
                             <option value="Teknik Mesin">Teknik Mesin</option>
                             <option value="Teknik Sipil">Teknik Sipil</option>
                             <option value="Akuntansi">Akuntansi</option>
+                            <option value="Administrasi Niaga">Administrasi Niaga</option>
+                            <option value="Teknik Grafika Penerbitan">Teknik Grafika Penerbitan</option>
                         </select>
                     </div>
 

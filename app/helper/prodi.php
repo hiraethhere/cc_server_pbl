@@ -3,7 +3,7 @@
 
 function getProdi() {
     return [
-        "Teknik Informatika" => [
+        "Teknik Informatika dan Komputer" => [
             "D4 Teknik Informatika",
             "D4 Teknik Multimedia Digital",
             "D4 Teknik Multimedia Jaringan",
@@ -30,8 +30,13 @@ function getProdi() {
             "D4 Manajemen Keuangan"
         ],
         "Administrasi Niaga" => [
-            "D4 Administrasi Bisnis",
+            "D4 Administrasi Bisnis Terapan",
             "D4 MICE"
+
+        ],
+
+        "Teknik Grafika Penerbitan" => [
+            "D4 Teknik Grafika Penerbitan"
         ]
     ];
 }

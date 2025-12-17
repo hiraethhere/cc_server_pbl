@@ -62,12 +62,14 @@
                         <label class="block text-xs font-medium text-gray-700 mb-1">Jurusan</label>
                         <select name="jurusan_unit" id="jurusan"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-xs appearance-none">
-                            <option value=""disabled selected hidden>Jurusan</option>
-                            <option value="Teknik Informatika">Teknik Informatika</option>
+                            <option value="" disabled selected hidden>Jurusan</option>
+                            <option value="Teknik Informatika dan Komputer">Teknik Informatika dan Komputer</option>
                             <option value="Teknik Elektro">Teknik Elektro</option>
                             <option value="Teknik Mesin">Teknik Mesin</option>
                             <option value="Teknik Sipil">Teknik Sipil</option>
                             <option value="Akuntansi">Akuntansi</option>
+                            <option value="Administrasi Niaga">Administrasi Niaga</option>
+                            <option value="Teknik Grafika Penerbitan">Teknik Grafika Penerbitan</option>
                         </select>
                     </div>
 
