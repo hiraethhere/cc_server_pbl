@@ -55,6 +55,7 @@
                         <th class="px-12 py-4 text-left text-xs font-semibold text-dark-overlay7 uppercase tracking-wider">Nama</th>
                         <th class="px-12 py-4 text-left text-xs font-semibold text-dark-overlay7 uppercase tracking-wider">NIP</th>
                         <th class="px-12 py-4 text-left text-xs font-semibold text-dark-overlay7 uppercase tracking-wider">Email</th>
+                        <th class="px-12 py-4 text-left text-xs font-semibold text-dark-overlay7 uppercase tracking-wider">Status</th>
                         <th class="px-12 py-4 text-center text-xs font-semibold text-dark-overlay7 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
@@ -67,8 +68,10 @@
                         <td class="px-12 py-4 text-xs font-medium text-dark-overlay"><?= $admin['username'] ?></td>
                         <td class="px-12 py-4 text-xs font-medium text-dark-overlay"><?= $admin['nomor_induk'] ?></td>
                         <td class="px-12 py-4 text-xs font-medium text-dark-overlay"><?= $admin['email'] ?></td>
+                        <td class="px-12 py-4 text-xs font-medium text-dark-overlay"><?= translateStatus($admin['status']) ?></td>
+                        
                         <td class="px-12 py-4 text-center">
-                            <a href="/SuperAdmin/detailAdmin"
+                            <a href="/SuperAdmin/detailAdmin/<?= $admin['id_user'] ?>"
                                 class="items-center gap-2 px-6 py-2 bg-blue-overlay hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm hover:shadow-md transition duration-200">
                                 Lihat Detail
                             </a>

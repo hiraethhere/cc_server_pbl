@@ -9,9 +9,9 @@
         ******************************************************* -->
         <?php foreach($ruangan as $r) : ?>
         <div class="bg-white1 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
-            <div class="relative h-48 bg-white1">
+            <div class="relative h-48 bg-gray-200">
                 <?php if($r['img_room'] !== 'DefaultRuangan.jpg'): ?>
-                    <img loading="lazy" src="<?= BASEURL; ?>/File/showPhoto/<?= $r['img_room']; ?>"
+                    <img loading="lazy" decoding="async" src="<?= BASEURL; ?>/File/showPhoto/<?= $r['img_room']; ?>"
                         alt="<?= $r['room_name'] ?>" class="w-full h-full object-cover">
                 <?php else: ?>
                     <img loading="lazy" src="/img/DefaultRuangan.jpg" 

@@ -70,6 +70,16 @@ class AdminModel {
         return $this->db->singleSet()['total'];
     }
 
+    public function getAdminById($id){
+        $query = "SELECT *
+                  FROM users u
+                  JOIN roles r ON u.id_role = r.id_role
+                  WHERE u.id_user = :id_user AND (r.role_name = 'Admin' OR r.role_name = 'Superadmin')";
+        $this->db->query($query);
+        $this->db->bind(':id_user', (int)$id);
+        return $this->db->singleSet();
+    }
+
 
 
     public function createAdmin($data){
@@ -87,7 +97,7 @@ class AdminModel {
         return $this->db->rowCount();
     }
 
-    public function updateAdmin($id, $data){
+    public function updateAdmin($data){
         $query = "UPDATE users SET 
                   username = :username, 
                   email = :email, 
@@ -101,14 +111,14 @@ class AdminModel {
         $this->db->bind(':nomor_induk', $data['nomor_induk']);
         $this->db->bind(':id_role', $data['id_role']);
         $this->db->bind(':status', $data['status']);
-        $this->db->bind(':id_user', (int)$id);
+        $this->db->bind(':id_user', (int)$data['id_user']);
 
         $this->db->execute();
         return $this->db->rowCount();
-    }
+    } 
 
     public function deleteAdmin($id){
-        $query = "DELETE FROM users WHERE id_user = :id_user AND (id_role = 2 OR id_role = 3)";
+        $query = "DELETE FROM users WHERE id_user = :id_user AND id_role = 2";
 
         $this->db->query($query);
         $this->db->bind(':id_user', (int)$id);

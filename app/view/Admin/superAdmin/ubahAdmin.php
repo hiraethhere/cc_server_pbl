@@ -18,45 +18,49 @@
     <div class="bg-background2 rounded-2xl w-full shadow-xl p-6">
         <h3 class="text-xl font-semibold text-dark-overlay mb-6">Isi Data Admin</h3>
             
-        <form class="space-y-4" id="formDaftar" method="POST" action="/superadmin/handleTambahAdmin"> 
+        <form class="space-y-4" id="formUbah" method="POST" action="/superadmin/handleUbahAdmin"> 
+        <input type="hidden" name="id_user" value="<?= $admin['id_user'] ?>">
             <div>
                 <label for="nama_lengkap" class="block text-sm font-medium text-dark-overlay mb-2">Nama Lengkap</label>
-                <input type="text" id="nama_lengkap" placeholder="Input nama" name="username"
+                <input type="text" id="nama_lengkap" placeholder="Input nama" value="<?= htmlspecialchars($admin['username'] ?? '') ?>" name="username"
                         class="w-full px-4 py-2 border border-dark-overlay4 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition">
             </div>
             
             <div>
                 <label for="email" class="block text-sm font-medium text-dark-overlay mb-2">Email</label>
-                <input type="email" id="email" placeholder="Input Email" name="email"
+                <input type="email" id="email" placeholder="Input Email" value="<?= htmlspecialchars($admin['email'] ?? '') ?>" name="email"
                         class="w-full px-4 py-2 border border-dark-overlay4 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition">
             </div>
 
             <div>
                 <label for="nim_nip" class="block text-sm font-medium text-dark-overlay mb-2">NIP</label>
-                <input type="text" id="nim_nip" placeholder="Input NIP" name="nomor_induk"
+                <input type="text" id="nim_nip" placeholder="Input NIP" value="<?= htmlspecialchars($admin['nomor_induk'] ?? '-') ?>" name="nomor_induk"
                         class="w-full px-4 py-2 border border-dark-overlay4 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none transition">
             </div>
                 
-            <!-- Password -->
-            <div class="mb-5" data-toggle-password>
-                <label class="block text-sm font-medium text-dark-overlay mb-2">Password</label>
-                <div class="relative">
-                    <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="new-password"
-                        class="w-full px-4 py-2 border border-dark-overlay4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
-                    <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-dark-overlay5">
-                        <img src="/icon/eye-on.svg" alt="Show Password" class="w-5 h-5 hover:cursor-pointer">
-                    </button>
-                </div>
+            <div>
+                <label for="status" class="block text-sm font-medium text-dark-overlay mb-2">Status</label>
+                <select id="status" name="status">
+                <option value="active">Aktif</option>
+                <option value="suspended">Nonaktif</option>
+                </select>
             </div>
             
             <div class="flex justify-between gap-8 mt-8">
                 <button type="button" onclick="window.location.href='/superadmin'" class="px-6 py-2 border border-dark-overlay4 text-dark-overlay7 font-semibold rounded-lg hover:bg-dark-overlay1 transition shadow-sm w-full hover:cursor-pointer">
                     Batal
                 </button>
-                <button onclick="konfirmasiTambahAdmin()" type="button" class="px-6 py-2 bg-green1 text-white font-semibold rounded-lg hover:bg-green-600 transition shadow-sm w-full hover:cursor-pointer">
-                    Tambah Admin
+                 <button onclick="konfirmasiHapusAdmin()" type="button" class="px-6 py-2 bg-red1 text-white font-semibold rounded-lg hover:bg-green-600 transition shadow-sm w-full hover:cursor-pointer">
+                    Hapus Admin
                 </button>
+                <button onclick="konfirmasiUbahAdmin()" type="button" class="px-6 py-2 bg-green1 text-white font-semibold rounded-lg hover:bg-green-600 transition shadow-sm w-full hover:cursor-pointer">
+                    Ubah Admin
+                </button>
+            
             </div>
+        </form>
+        <form id="formHapus" method="POST" action="/superadmin/hapusAdmin">
+        <input type="hidden" name="id_user" value="<?= $admin['id_user'] ?>">
         </form>
     </div>
 </main>
@@ -64,17 +68,33 @@
 <script src="/js/togglePassword.js" defer></script> 
 <script src="/js/modal.js" defer></script>
 <script>
-    function konfirmasiTambahAdmin() {
+    function konfirmasiUbahAdmin() {
     Modal.confirm(
-        'Tambah Admin?',
-        'Anda yakin ingin tambah Admin?',
+        'Ubah Admin?',
+        'Anda yakin ingin ubah Admin?',
         function() {
-            document.getElementById('formDaftar').submit();
+            document.getElementById('formUbah').submit();
         },
         {
             icon: <?= json_encode(icon("usersAdmin", "w-24 h-24 text-green1")) ?>,
             confirmText: 'Tambah',
             confirmClass: 'w-full px-6 py-2 bg-green1 text-white rounded-lg font-semibold hover:bg-green-600 transition hover:cursor-pointer',
+            cancelText: 'Batalkan'
+        }
+    );
+}
+
+function konfirmasiHapusAdmin() {
+    Modal.confirm(
+        'Hapus Admin?',
+        'Anda yakin ingin menghapus Admin ini?',
+        function() {
+            document.getElementById('formHapus').submit();
+        },
+        {
+            icon: <?= json_encode(icon("usersAdmin", "w-24 h-24 text-green1")) ?>,
+            confirmText: 'Hapus',
+            confirmClass: 'w-full px-6 py-2 bg-red1 text-white rounded-lg font-semibold hover:bg-green-600 transition hover:cursor-pointer',
             cancelText: 'Batalkan'
         }
     );

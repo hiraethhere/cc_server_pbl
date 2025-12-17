@@ -208,7 +208,7 @@ class Auth extends Controller {
             exit;
 
         } catch (\Exception $e ) {
-            Flasher::setFlash($e->getMessage(), 'Gagal Registrasi', 'danger');
+            Flasher::setModalInfo( 'Gagal Registrasi',$e->getMessage(), 'error');
             header('Location: /auth/registerForms');
             exit;
         }

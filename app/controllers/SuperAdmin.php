@@ -38,11 +38,19 @@ class SuperAdmin extends Controller{
         $this->view('admin/superAdmin/index', $data);
     }
 
-    public function detailAdmin(){
+    public function detailAdmin($id_user = null){
+
+        if ($id_user === null) {
+            Flasher::setModalInfo('Terjadi kesalahan', 'ID Admin tidak ditemukan.', 'error');
+            header('Location: /superadmin');
+            exit;
+        }
+        $data['admin'] = $this->model('AdminModel')->getAdminById($id_user);
+
         $data['judul'] = 'Detail Data Admin';
         $data['navbar'] = 'superAdmin';
         $this->view('layout/sidebar', $data);
-        $this->view('admin/superAdmin/detailAdmin', $data);
+        $this->view('admin/superAdmin/ubahAdmin', $data);
     }
 
     public function tambahAdmin(){
@@ -50,6 +58,13 @@ class SuperAdmin extends Controller{
         $data['navbar'] = 'superAdmin';
         $this->view('layout/sidebar', $data);
         $this->view('admin/superAdmin/tambahAdmin', $data);
+    }
+
+    public function ubahAdmin(){
+        $data['judul'] = 'Ubah Data Admin';
+        $data['navbar'] = 'superAdmin';
+        $this->view('layout/sidebar', $data);
+        $this->view('admin/superAdmin/ubahAdmin', $data);
     }
 
     public function handleTambahAdmin(){
@@ -101,11 +116,65 @@ class SuperAdmin extends Controller{
         }
     }
 
-    public function handleEditAdmin(){
+    public function handleUbahAdmin(){
         try {
+
+            if (
+                empty($_POST['username']) ||
+                empty($_POST['email']) ||
+                empty($_POST['nomor_induk']) ||
+                empty($_POST['status'])
+            ) {
+                throw new \Exception('Semua field harus diisi.');
+            }
+
+            if (!validateEmailPHP($_POST['email'])) {
+                throw new \Exception('Format email tidak valid.');
+            }
+
+            $data = [
+                'id_user' => $_POST['id_user'],
+                'username' => $_POST['username'],
+                'email' => $_POST['email'],
+                'nomor_induk' => $_POST['nomor_induk'],
+                'status' => $_POST['status'],
+                'id_role' => 2 // Pastikan id_role tetap 2 untuk Admin
+            ];
+
+            if($this->model('AdminModel')->updateAdmin($data) > 0 ){
+                Flasher::setModalInfo('Berhasil', 'Data berhasil diubah', 'success');
+                header('Location: /superAdmin');
+                exit;
+            } else {
+                throw new \Exception('Gagal mengubah admin, tidak ada perubahan data.');
+            }
             
         } catch (\Throwable $e) {
-            //throw $th;
+            Flasher::setModalInfo('Terjadi kesalahan', $e->getMessage(), 'error');
+            header('Location: /superAdmin');
+            exit;
+        }
+    }
+
+    public function hapusAdmin(){
+
+        try {
+            if (empty($_POST['id_user'])) {
+                throw new Exception('ID Admin tidak ditemukan.');
+            }
+
+            if($this->model('AdminModel')->deleteAdmin($_POST['id_user']) > 0 ){
+                    Flasher::setModalInfo('Berhasil', 'Admin berhasil dihapus', 'success');
+                    header('Location: /superAdmin');
+                    exit;
+            } else {
+                    throw new \Exception('Gagal mengubah admin, tidak ada perubahan data.');
+                }
+
+        }catch(Exception $e){
+            Flasher::setModalInfo('Gagal Menghapus', $e->getMessage(), 'error');
+            header('location: /superadmin');
+            exit();
         }
     }
 }
