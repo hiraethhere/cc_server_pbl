@@ -17,9 +17,11 @@ function getProdi() {
             "D4 Broadband Multimedia"
         ],
         "Teknik Mesin" => [
-            "D4 Teknik Mesin",
-            "D4 Teknik Konversi Energi",
-            "D4 Alat Berat"
+            "D3 Teknik Mesin",
+            "D4 Teknik Rekayasa Manufaktur",
+            "D4 Teknik Rekayasa Pembangkit Energi",
+            "D4 Teknik Rekayasa Konversi Energi",
+            "D4 Teknik Rekayasa Pemeliharaan Alat Berat"
         ],
         "Teknik Sipil" => [
             "D4 Teknik Peranjangan Jalan & Jembatan",
@@ -34,8 +36,12 @@ function getProdi() {
             "D4 Teknologi Industri Cetak Kemasan"
         ],
         "Akuntansi" => [
-            "D4 Akuntansi",
-            "D4 Keuangan dan Perbankan",
+            "D3 Akuntansi",
+            "D3 Keuangan dan Perbankan",
+            "D3 Manajemen Pemasaran",
+            "D4 Akuntansi Keuangan",
+            "D3 Keuangan dan Perbankan",
+            "D4 Keuangan dan Perbankan Syariah",
             "D4 Manajemen Keuangan"
         ],
         "Administrasi Niaga" => [
