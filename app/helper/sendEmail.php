@@ -70,9 +70,10 @@ function sendEmail($toEmail, $toName, $subject, $body) {
         $mail->Port       = (int)$_ENV['SMTP_PORT'];
 
         // Pengaturan Enkripsi
-        if ($_ENV['SMTP_SECURE'] === 'tls') {
+        $smtpSecure = $_ENV['SMTP_SECURE'] ?? '';
+        if ($smtpSecure === 'tls') {
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        } elseif ($_ENV['SMTP_SECURE'] === 'ssl') {
+        } elseif ($smtpSecure === 'ssl') {
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         } else {
             $mail->SMTPSecure = false;
