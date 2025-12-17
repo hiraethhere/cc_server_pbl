@@ -11,8 +11,7 @@
 <body class="font-sf-pro" >
     
     <div class="bg-cover bg-center min-h-screen flex flex-col items-center justify-center p-4"
-         style="background-image: url('/img/Background 1.png'); 
-             background-color: rgba(139, 92, 113, 0.7); background-blend-mode: multiply;">
+         style="background-image: url('/img/Background 1.png'); ">
 
         <div class="bg-[#F3F5FA] rounded-2xl shadow-2xl p-8 w-full max-w-xl">
             <!-- Header -->
@@ -61,13 +60,15 @@
                     <div class="col-span-2 sm:col-span-1">
                         <label class="block text-xs font-medium text-gray-700 mb-1">Jurusan</label>
                         <select name="jurusan_unit" id="jurusan"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-xs appearance-none">
-                            <option value=""disabled selected hidden>Jurusan</option>
-                            <option value="Teknik Informatika">Teknik Informatika</option>
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-xs">
+                            <option value="" disabled selected hidden>Jurusan</option>
+                            <option value="Teknik Informatika dan Komputer">Teknik Informatika dan Komputer</option>
                             <option value="Teknik Elektro">Teknik Elektro</option>
                             <option value="Teknik Mesin">Teknik Mesin</option>
                             <option value="Teknik Sipil">Teknik Sipil</option>
                             <option value="Akuntansi">Akuntansi</option>
+                            <option value="Administrasi Niaga">Administrasi Niaga</option>
+                            <option value="Teknik Grafika Penerbitan">Teknik Grafika Penerbitan</option>
                         </select>
                     </div>
 
@@ -75,7 +76,7 @@
                     <div class="col-span-2 sm:col-span-1">
                         <label class="block text-xs font-medium text-gray-700 mb-1">Prodi</label>
                         <select name="prodi" id="prodi" disabled
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-xs disabled:opacity-50 select-none appearance-none">
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-xs disabled:opacity-50 select-none">
                             <option value="" disabled selected hidden>Prodi</option>
                         </select>
                     </div>

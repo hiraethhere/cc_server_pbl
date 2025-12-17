@@ -12,7 +12,7 @@
 
     <!-- Header dengan Title dan Button -->
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-dark-overlay">Detail Admin</h2>
+        <h2 class="text-2xl font-bold text-dark-overlay">Detail Admin iniloh</h2>
     </div>
 
     <div class="bg-background2 rounded-2xl w-full shadow-xl p-6">
@@ -40,14 +40,44 @@
                 </div>           
             </div>
 
-            <div class="py-4">         
+            <div class="py-4">
                 <p class="text-dark-overlay7 text-sm">Status</p>
-                <a class="inline-flex justify-start items-center bg-green-overlay-25 mt-2 rounded-lg py-2 px-4">
-                    <div class="text-green1">
-                        <?= icon('circleFill', 'w-4 h-4 mr-2') ?>
+
+                <div class="relative inline-block mt-2">
+                    <!-- Toggle button -->
+                    <button id="statusToggle" type="button"
+                        class="flex items-center gap-3 bg-white border border-dark-overlay5 rounded-lg py-2 px-3 shadow-sm hover:shadow-md transition focus:outline-none"
+                        aria-haspopup="true" aria-expanded="false" onclick="toggleStatusDropdown()">
+                        <span id="statusIcon" class="text-green1">
+                            <?= icon('circleFill', 'w-4 h-4') ?>
+                        </span>
+                        <span id="statusLabel" class="text-sm font-semibold text-dark-overlay pl-1">Aktif</span>
+                        <span class="ml-2 transform transition-transform duration-300" id="statusArrow">
+                            <?= icon('arrowDown', 'w-4 h-4 text-dark-overlay6') ?>
+                        </span>
+                    </button>
+
+                    <!-- Dropdown menu -->
+                    <div id="statusMenu" class="hidden absolute right-0 mt-2 w-40 bg-white border border-dark-overlay5 rounded-lg shadow-xl overflow-hidden z-30">
+                        <button type="button" class="w-full text-left px-4 py-2 hover:bg-dark-overlay1 transition flex items-center gap-3"
+                                onclick="selectStatus('Aktif')">
+                            <span class="text-green1"><?= icon('circleFill', 'w-4 h-4') ?></span>
+                            <span class="text-sm">Aktif</span>
+                        </button>
+                        <button type="button" class="w-full text-left px-4 py-2 hover:bg-dark-overlay1 transition flex items-center gap-3"
+                                onclick="selectStatus('Nonaktif')">
+                            <span class="text-red1"><?= icon('circleFill', 'w-4 h-4') ?></span>
+                            <span class="text-sm">Nonaktif</span>
+                        </button>
+                        <button type="button" class="w-full text-left px-4 py-2 hover:bg-dark-overlay1 transition flex items-center gap-3"
+                                onclick="selectStatus('Suspend')">
+                            <span class="text-yellow-500"><?= icon('circleFill', 'w-4 h-4') ?></span>
+                            <span class="text-sm">Suspend</span>
+                        </button>
                     </div>
-                    <h2 class="text-sm inline-block font-semibold text-green1">Aktif</h2>
-                </a>           
+
+                    <input type="hidden" id="statusValue" name="status" value="Aktif">
+                </div>
             </div>
         </div>
 
@@ -115,5 +145,63 @@
     if(buttonNonAktif) {
         buttonNonAktif.addEventListener('click', konfirmasiNonAktif);
     }
+
+        // Status dropdown behavior
+        function toggleStatusDropdown() {
+            const menu = document.getElementById('statusMenu');
+            const arrow = document.getElementById('statusArrow');
+            const btn = document.getElementById('statusToggle');
+            if (!menu) return;
+            const isHidden = menu.classList.contains('hidden');
+            if (isHidden) {
+                menu.classList.remove('hidden');
+                arrow.classList.add('rotate-180');
+                if (btn) btn.setAttribute('aria-expanded','true');
+            } else {
+                menu.classList.add('hidden');
+                arrow.classList.remove('rotate-180');
+                if (btn) btn.setAttribute('aria-expanded','false');
+            }
+        }
+
+        function selectStatus(value) {
+            const label = document.getElementById('statusLabel');
+            const icon = document.getElementById('statusIcon');
+            const hidden = document.getElementById('statusValue');
+            const menu = document.getElementById('statusMenu');
+            const arrow = document.getElementById('statusArrow');
+
+            if (label) label.textContent = value;
+            if (hidden) hidden.value = value;
+
+            // update color class on icon/label
+            if (icon) {
+                icon.classList.remove('text-green1','text-red1','text-yellow-500');
+                if (value === 'Aktif') icon.classList.add('text-green1');
+                else if (value === 'Nonaktif') icon.classList.add('text-red1');
+                else if (value === 'Suspend') icon.classList.add('text-yellow-500');
+            }
+
+            // close menu
+            if (menu) menu.classList.add('hidden');
+            if (arrow) arrow.classList.remove('rotate-180');
+            const btn = document.getElementById('statusToggle');
+            if (btn) btn.setAttribute('aria-expanded','false');
+        }
+
+        // Close status dropdown when clicking outside
+        document.addEventListener('click', function(e){
+            const container = e.target.closest && e.target.closest('div.relative');
+            const menu = document.getElementById('statusMenu');
+            const btn = document.getElementById('statusToggle');
+            const arrow = document.getElementById('statusArrow');
+            if (!menu || !btn) return;
+            const isInside = e.target.closest && e.target.closest('#statusMenu, #statusToggle');
+            if (!isInside) {
+                menu.classList.add('hidden');
+                arrow.classList.remove('rotate-180');
+                btn.setAttribute('aria-expanded','false');
+            }
+        });
 
 </script>

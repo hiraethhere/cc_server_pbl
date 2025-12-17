@@ -3,7 +3,7 @@
 
 function getProdi() {
     return [
-        "Teknik Informatika" => [
+        "Teknik Informatika dan Komputer" => [
             "D4 Teknik Informatika",
             "D4 Teknik Multimedia Digital",
             "D4 Teknik Multimedia dan Jaringan",
