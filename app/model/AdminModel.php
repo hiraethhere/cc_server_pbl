@@ -86,4 +86,34 @@ class AdminModel {
         $this->db->execute();
         return $this->db->rowCount();
     }
+
+    public function updateAdmin($id, $data){
+        $query = "UPDATE users SET 
+                  username = :username, 
+                  email = :email, 
+                  nomor_induk = :nomor_induk, 
+                  id_role = :id_role, 
+                  status = :status
+                  WHERE id_user = :id_user";
+        $this->db->query($query);
+        $this->db->bind(':username', $data['username']);
+        $this->db->bind(':email', $data['email']);
+        $this->db->bind(':nomor_induk', $data['nomor_induk']);
+        $this->db->bind(':id_role', $data['id_role']);
+        $this->db->bind(':status', $data['status']);
+        $this->db->bind(':id_user', (int)$id);
+
+        $this->db->execute();
+        return $this->db->rowCount();
+    }
+
+    public function deleteAdmin($id){
+        $query = "DELETE FROM users WHERE id_user = :id_user AND (id_role = 2 OR id_role = 3)";
+
+        $this->db->query($query);
+        $this->db->bind(':id_user', (int)$id);
+        $this->db->execute();
+        return $this->db->rowCount();
+    }
+
 }

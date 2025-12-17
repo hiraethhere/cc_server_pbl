@@ -198,14 +198,14 @@ function isActive($current, $check) {
                                 </td>
                             </tr>
                             <?php $i++ ?>
-                            <?php endforeach ?>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
             </div>
 
          <?php if ($total_page >= 1): ?>   
-        <div class="flex items-center justify-center px-6 py-4 bg-white mx-8">
+        <div class="flex items-center justify-center px-6 py-4 mx-8">
             
             <div class="flex items-center gap-2">
                 

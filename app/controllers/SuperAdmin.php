@@ -100,4 +100,12 @@ class SuperAdmin extends Controller{
             exit;
         }
     }
+
+    public function handleEditAdmin(){
+        try {
+            
+        } catch (\Throwable $e) {
+            //throw $th;
+        }
+    }
 }

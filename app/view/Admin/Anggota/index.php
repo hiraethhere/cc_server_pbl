@@ -316,7 +316,7 @@ $nomor = ($current_page - 1) * $limit + 1
         
         <!-- pagination total euyy -->
         <?php if (!empty($users) && $total_page >= 1): ?>   
-        <div class="flex items-center justify-center px-6 py-4 bg-white mx-8">
+        <div class="flex items-center justify-center px-6 py-4 mx-8">
             
             <div class="flex items-center gap-2">
                 
