@@ -10,10 +10,9 @@
 <body class="font-sf-pro" >
 
 
-<div class="bg-cover bg-center min-h-screen flex flex-col items-center justify-center"
-         style="background-image: url('/img/Background 1.png'); 
-             background-color: rgba(139, 92, 113, 0.7); background-blend-mode: multiply;">
-    <div id="successModal" class="fixed inset-0 flex items-center justify-center z-50">
+<div class="bg-cover bg-center min-h-screen flex flex-col items-center justify-center p-4"
+         style="background-image: url('/img/Background 1.png'); ">
+    <div id="successModal" class="flex items-center justify-center">
             <div class="bg-white rounded-2xl p-8 w-full max-w-sm mx-4 text-center border border-[#8E97A6]">
                 <div class="mb-4">
                     <i class="fas fa-check-circle text-green-500 text-5xl"></i>
