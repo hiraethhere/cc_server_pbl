@@ -183,7 +183,7 @@ function isActive($current, $check) {
                                     <span><?= waktu_indonesia($Peminjaman['start_time']) . '-' . waktu_indonesia($Peminjaman['end_time']) ?></span>
                                 </td>
                                 <td class="px-4 py-4 text-xs text-dark-overlay"><?= htmlspecialchars( $Peminjaman['room_name'] ?? '-') ?></td>
-                                <td class="px-4 py-4 text-xs text-dark-overlay"><?= $Peminjaman['Peminjaman_code']?></td>
+                                <td class="px-4 py-4 text-xs text-dark-overlay"><?= $Peminjaman['booking_code']?></td>
                                 <td class="px-4 py-4 text-xs text-dark-overlay"><?= $Peminjaman['username'] ?></td>
                                 <td class="px-4 py-4">
                                     <span class="inline-flex px-3 py-1 text-xs min-w-5/6 justify-center font-medium rounded-sm <?= getStyleStatus($Peminjaman['status']) ?> text-background2">

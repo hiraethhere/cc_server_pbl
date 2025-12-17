@@ -34,7 +34,7 @@ class s_20251127_04_bookingSeeder extends Seeder{
             (4, 1, 6, 3, NULL, '2025-12-04 10:00:00', '2025-12-04 13:00:00', 'BK001', 'cancelled', NULL, NULL, NOW(), NOW()),
             (5, 3, 7, 5, NULL, '2025-12-20 09:00:00', '2025-12-20 11:00:00', 'BK-NEXT', 'pending', NULL, NULL, NOW(), NOW()),
             (6, 1, 8, 4, NULL, '2025-12-21 13:00:00', '2025-12-21 15:00:00', 'DUTAPNJ', 'pending', NULL, NULL, NOW(), NOW()),
-            (7, 1, 6, 4, NULL, '2025-12-17 08:00:00', '2025-12-17 10:00:00', 'DNIWW987', 'cancelled', NULL, NULL, NOW(), NOW()),
+            (7, 1, 6, 4, NULL, '2025-12-17 08:00:00', '2025-12-17 10:00:00', 'DNIWW987', 'pending', NULL, NULL, NOW(), NOW()),
             (8, 2, 6, 4, NULL, '2026-01-15 14:00:00', '2026-01-15 17:00:00', 'BK1002', 'done', NULL, NULL, NOW(), NOW()),
             (9, 3, 6, 5, NULL, '2026-01-29 09:00:00', '2026-01-29 11:00:00', 'BK1003', 'done', NULL, NULL, NOW(), NOW()),
             (10, 1, 6, 4, NULL, '2026-02-12 13:00:00', '2026-02-12 16:00:00', 'BK1004', 'cancelled', NULL, NULL, NOW(), NOW()),

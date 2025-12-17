@@ -376,7 +376,7 @@ class Admin extends Controller {
             $data['link'] = 'detailReschedule';
 
             // Panggil fungsi filter khusus Reschedule
-            $data['bookings'] = $this->model('RescheduleModel')->filterReschedules(
+            $data['Peminjamans'] = $this->model('RescheduleModel')->filterReschedules(
                 $data['limit'], $start, $search, $statusFilter
             );
             $total_data = $this->model('RescheduleModel')->countFilterReschedules($search, $statusFilter);
@@ -427,7 +427,7 @@ class Admin extends Controller {
             $finalStatus = !empty($forcedStatus) ? $forcedStatus : $statusFilter;
 
             // Panggil SATU fungsi model untuk semua tab Booking
-            $data['bookings'] = $this->model('BookingModel')->filterBookings($data['limit'], $start, $search, $finalStatus, $dateMode);
+            $data['Peminjamans'] = $this->model('BookingModel')->filterBookings($data['limit'], $start, $search, $finalStatus, $dateMode);
 
             $total_data = $this->model('BookingModel')->countFilterBookings($search, $finalStatus, $dateMode);
         }
@@ -876,7 +876,7 @@ class Admin extends Controller {
             throw new Exception('internal sql error');
         }
         sendEmail($_POST['email'] ?? 'email user', $_POST['username' ?? 'user'], "Akun anda telah aktif kembali", "anda sekarang bisa login ke ruanginPNJ" );
-        Flasher::setModalInfo('Berhasil Approve Anggota', 'Akun anggota sudah bisa aktif kembali');
+        Flasher::setModalInfo('Berhasil Aktifkan Anggota', 'Akun anggota sudah bisa aktif kembali');
         header('location: /admin/anggota');
         exit();
 
