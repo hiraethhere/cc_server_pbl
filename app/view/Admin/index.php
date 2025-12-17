@@ -185,7 +185,7 @@
 
             <?php 
                 $filter_id = 'Role'; 
-                $label = 'Peran'; 
+                $label = 'Jenis Anggota'; 
                 $options = ['Dosen' => 'Dosen', 'Mahasiswa' => 'Mahasiswa', 'Tendik' => 'Tendik']; 
                 $current_values = $_GET[$filter_id] ?? ''; 
                 include __DIR__ . '/../template/filterDropDown.php';
@@ -202,7 +202,7 @@
                     'Teknik Sipil' => 'Teknik Sipil',
                     'Akutansi' => 'Akutansi',
                     'Administrasi Niaga' => 'Administrasi Niaga',
-                    'Teknik Grafik dan Penerbitan' => 'Teknik Grafik dan Penerbitan'
+                    'Teknik Grafika dan Penerbitan' => 'Teknik Grafika dan Penerbitan'
                 ]; 
                 $current_values = $_GET[$filter_id] ?? ''; 
                 include __DIR__ . '/../template/filterDropDown.php';

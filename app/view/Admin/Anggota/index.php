@@ -197,7 +197,15 @@ $nomor = ($current_page - 1) * $limit + 1
                         <?php 
                         $filter_id = 'jurusan'; 
                         $label = 'Jurusan/Unit Kerja'; 
-                        $options = ['Teknik Informatika & Komputer' => 'Teknik Informatika dan Komputer', 'Teknik Elektro' => 'Teknik Elektro', 'Teknik Mesin' => 'Teknik Mesin', 'Teknik Sipil' => 'Teknik Sipil'];
+                        $options = [
+                            'Teknik Informatika & Komputer' => 'Teknik Informatika dan Komputer', 
+                            'Teknik Elektro' => 'Teknik Elektro', 
+                            'Teknik Mesin' => 'Teknik Mesin', 
+                            'Teknik Sipil' => 'Teknik Sipil',
+                            'Akuntansi' => 'Akuntansi',
+                            'Administrasi Niaga' => 'Administrasi Niaga',
+                            'Teknik Grafika Penerbitan' => 'Teknik Grafika Penerbitan'
+                        ];
                         $current_values = $_GET[$filter_id] ?? ''; 
                         include __DIR__ . '/../../template/filterDropDown.php';
                         ?>

@@ -221,37 +221,37 @@ class Auth extends Controller {
     public function handleLogin(){
         try{
 
-            //Cek apakah token dikirim dari form
-            if (!isset($_POST['cf-turnstile-response'])) {
-                throw new Exception('Mohon selesaikan verifikasi keamanan (CAPTCHA).');
-            }
+            // //Cek apakah token dikirim dari form
+            // if (!isset($_POST['cf-turnstile-response'])) {
+            //     throw new Exception('Mohon selesaikan verifikasi keamanan (CAPTCHA).');
+            // }
 
-            // Persiapkan data untuk verifikasi ke Cloudflare
-            $turnstileResponse = $_POST['cf-turnstile-response'];
-            $remoteIp = $_SERVER['REMOTE_ADDR'];
-            $url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+            // // Persiapkan data untuk verifikasi ke Cloudflare
+            // $turnstileResponse = $_POST['cf-turnstile-response'];
+            // $remoteIp = $_SERVER['REMOTE_ADDR'];
+            // $url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
             
-            $data = [
-                'secret' => TURNSTILE_SECRET_KEY,
-                'response' => $turnstileResponse,
-                'remoteip' => $remoteIp
-            ];
+            // $data = [
+            //     'secret' => TURNSTILE_SECRET_KEY,
+            //     'response' => $turnstileResponse,
+            //     'remoteip' => $remoteIp
+            // ];
 
-            // Kirim request verifikasi menggunakan cURL
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $response = curl_exec($ch);
-            curl_close($ch);    
+            // // Kirim request verifikasi menggunakan cURL
+            // $ch = curl_init();
+            // curl_setopt($ch, CURLOPT_URL, $url);
+            // curl_setopt($ch, CURLOPT_POST, true);
+            // curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+            // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            // $response = curl_exec($ch);
+            // curl_close($ch);    
 
-            // Cek hasil verifikasi
-            $result = json_decode($response);
+            // // Cek hasil verifikasi
+            // $result = json_decode($response);
             
-            if (!$result || !$result->success) {
-                throw new Exception('Verifikasi keamanan gagal. Silakan coba lagi.');
-            }
+            // if (!$result || !$result->success) {
+            //     throw new Exception('Verifikasi keamanan gagal. Silakan coba lagi.');
+            // }
 
             $data = [
             'email' => $_POST['email'],
