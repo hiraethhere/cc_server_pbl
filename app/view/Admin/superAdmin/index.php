@@ -70,7 +70,7 @@
                         <td class="px-12 py-4 text-xs font-medium text-dark-overlay"><?= $admin['email'] ?></td>
                         <td class="px-12 py-4 text-xs font-medium text-dark-overlay"><?= translateStatus($admin['status']) ?></td>
                         
-                        <td class="px-12 py-4 text-center">
+                        <td class="px-4 py-4 text-center">
                             <a href="/SuperAdmin/detailAdmin/<?= $admin['id_user'] ?>"
                                 class="items-center gap-2 px-6 py-2 bg-blue-overlay hover:bg-blue-700 text-white text-xs font-medium rounded-lg shadow-sm hover:shadow-md transition duration-200">
                                 Lihat Detail
