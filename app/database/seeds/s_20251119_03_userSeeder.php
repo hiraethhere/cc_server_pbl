@@ -32,7 +32,7 @@ class s_20251119_03_userSeeder extends Seeder{
             (13, 3, 'Fadhil Ramadhan', '$passwordUser', 'fadhil.tik24@stu.pnj.ac.id', '2407411048', 'Teknik Elektro', 'D3 Listrik Kantor', 'active', 0, 1, NULL, NULL, NULL, '$expired3Years', NOW(), NOW()),
             (14, 4, 'Sabrina Aulia', '$passwordUser', 'sabrina.sekret@pnj.ac.id', '2407411049', 'Administrasi', 'Sekretariat', 'active', 0, 1, NULL, NULL, NULL, NULL, NOW(), NOW()),
             (15, 5, 'Dimas Pranata', '$passwordUser', 'dimas.staff@pnj.ac.id', '2407411050', 'Staff', 'Perpustakaan', 'active', 0, 1, NULL, NULL, NULL, NULL, NOW(), NOW()),
-            (16, 3, 'Farhan Rizky Mahendra', '$passwordUser', 'farhan.tik24@stu.pnj.ac.id', '2407411051', 'Teknik Informatika dan Komputer', 'D4 Teknik Multimedia Jaringan', 'active', 0, 1, NULL, NULL, NULL, '$expired4Years', NOW(), NOW()),
+            (16, 3, 'Farhan Mecca', '$passwordUser', 'farhan.mecca.tik24@stu.pnj.ac.id', '2407411051', 'Teknik Informatika dan Komputer', 'D4 Teknik Multimedia Jaringan', 'active', 0, 1, NULL, NULL, NULL, '$expired4Years', NOW(), NOW()),
             (17, 3, 'Antonio Gonzalez', '$passwordUser', 'antonio.tm24@stu.pnj.ac.id', '2407411052', 'Teknik Mesin', 'D4 Alat Berat', 'pending', 0, 1, NULL, NULL, NULL, '$expired4Years', NOW(), NOW()),
             
             (18, 3, 'Rina Agustina', '$passwordUser', 'rina.tik24@stu.pnj.ac.id', '1111111111', 'Teknik Informatika dan Komputer', 'D4 Teknik Informatika', 'active', 0, 1, NULL, NULL, NULL, '$expired4Years', NOW(), NOW()),
