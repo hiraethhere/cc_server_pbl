@@ -269,7 +269,7 @@
             },
             {
             icon: <?= json_encode(icon("calendar", "w-12 h-12", "green1")) ?>,
-            confirmText: 'Booking',
+            confirmText: 'Ya',
             confirmClass: 'w-full px-6 py-2 bg-green1 text-white rounded-lg font-semibold hover:bg-green-700 transition hover:cursor-pointer',
             cancelText: 'Batalkan'
             }

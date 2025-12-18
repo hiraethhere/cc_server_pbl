@@ -74,7 +74,7 @@
 
                     <!-- Password -->
                     <div class="mb-5" data-toggle-password>
-                        <label class="block text-xs font-medium text-gray-700 mb-2">Password</label>
+                        <label class="block text-xs font-medium text-gray-700 mb-2">Password (minimal 6 huruf dan 1 angka)</label>
                         <div class="relative">
                             <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="new-password"
                                 class="bg-white w-full text-xs px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">

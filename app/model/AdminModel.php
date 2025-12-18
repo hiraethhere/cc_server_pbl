@@ -14,7 +14,7 @@ class AdminModel {
         $query = "SELECT *
             FROM users u
             JOIN roles r ON u.id_role = r.id_role
-            WHERE (r.role_name = 'Admin' OR r.role_name = 'Superadmin')
+            WHERE (r.role_name = 'Admin')
         ";
 
         if ($search !== null && $search !== '') {
@@ -48,7 +48,7 @@ class AdminModel {
             SELECT COUNT(*) as total
             FROM users u
             JOIN roles r ON u.id_role = r.id_role
-            WHERE (r.role_name = 'Admin' OR r.role_name = 'Superadmin')
+            WHERE (r.role_name = 'Admin')
         ";
 
         if ($search !== null && $search !== '') {
