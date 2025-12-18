@@ -44,14 +44,14 @@ class Auth extends Controller {
 
         if (isset($_POST['backToRole'])) {
             unset($_SESSION['regisRole']);
+            unset($_SESSION['input']);
         }
 
         if (isset($_POST['role'])) {
-            $_SESSION['regisRole'] = $_POST['role'];
+            $data['role'] =  $_POST['role'];
         }
 
-        $forms = $_SESSION['regisRole'] ?? null;
-
+        $forms = $_POST['role'] ?? null;
         switch ($forms) {
             case "3":
                 $data['dataProdi'] = getProdi();
@@ -59,12 +59,12 @@ class Auth extends Controller {
 
                 break;
             case "4":
-                $this->view('Auth/register/registerDosen');
+                $this->view('Auth/register/registerDosen', $data);
 
                 break;
             case "5":
-                $this->view('Auth/register/registerTendik');
-        
+                $this->view('Auth/register/registerTendik', $data);
+
                 break;
             default:
                 $this->view('Auth/register/index');
@@ -126,6 +126,10 @@ class Auth extends Controller {
             //     throw new Exception('Verifikasi keamanan gagal. Silakan coba lagi.');
             // }
 
+            $_SESSION['input'] = $_POST;
+            // var_dump($_SESSION['input']);
+            // die();
+
             if ($_POST['password'] != $_POST['confirmPassword']) {
                 throw new Exception('Password tidak sama');
             }
@@ -138,12 +142,12 @@ class Auth extends Controller {
                 throw new Exception('NIM hanya boleh berisi angka');
             }
 
-            $role = $_SESSION['regisRole'] ?? null;
+            $role = $_POST['role'] ?? null;
             if (!$role) {
                 throw new Exception('Role tidak ditemukan, silakan ulangi proses registrasi.');
             }
 
-            if ($_SESSION['regisRole'] === '3') {
+            if ($_POST['role'] === '3') {
             // Validasi email hanya untuk mahasiswa
                 if (!validateEmail($_POST['email'])) {
                     throw new Exception('Email tidak valid');
@@ -153,7 +157,11 @@ class Auth extends Controller {
 
                 // Upload bukti hanya untuk mahasiswa
                 if (isset($_FILES['buktiKubaca']) && $_FILES['buktiKubaca']['error'] === 0) {
+
                     $buktiKubaca = uploadImage($_FILES['buktiKubaca'], 'storage/FotoBukti/');
+                    if (!$buktiKubaca) {
+                        throw new Exception('Error mengupload File');
+                    }
                 } else {
                     throw new Exception('Mohon upload file bukti');
                 }
@@ -163,7 +171,7 @@ class Auth extends Controller {
                 }
             }
             $data = [
-                'id_role' => $_SESSION['regisRole'],
+                'id_role' => $_POST['role'],
                 'username' => $_POST['username'],
                 'password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
                 'nomor_induk' => $_POST['nomor_induk'],
@@ -211,7 +219,7 @@ class Auth extends Controller {
                 }
             }
             
-
+            unset($_SESSION['input']);
             header('Location: /auth/pending');
             exit;
 

@@ -70,7 +70,8 @@ class Admin extends Controller {
 
         // C. Data Ruangan (Statistik Kartu Bawah)
         // Ruangan biasanya datanya global, tapi Populer bisa berdasarkan bulan/tahun aktif
-        $data['stats_ruangan'] = $dashboardModel->getRoomStats($bulanFilter, $tahunFilter);
+        $data['stats_ruangan'] = $dashboardModel->getRoomStats();
+        // var_dump($data['stats_ruangan']);
         $data['judul'] = 'Dashboard Admin';
         $data['navbar'] = 'dashboard';
         $this->view('layout/sidebar', $data);

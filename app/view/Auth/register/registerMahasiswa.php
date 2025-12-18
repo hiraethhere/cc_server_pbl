@@ -33,11 +33,13 @@
 
             <!-- Form -->
             <form action="/auth/handleRegister" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="role" value="<?= $role ?>">
+                
                 
                 <!-- Nama -->
                 <div class="col-span-2 sm:col-span-1 mb-3">
                     <label class="block text-xs font-medium text-gray-700 mb-1">Nama Lengkap</label>
-                    <input type="text" name="username" placeholder="Input nama" 
+                    <input type="text" name="username" placeholder="Input nama" value="<?=  $_SESSION['input']['username'] ?? '' ?>" 
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-xs">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
@@ -45,21 +47,21 @@
                     <!-- NIM -->
                     <div class="col-span-2 sm:col-span-1">
                         <label class="block text-xs font-medium text-gray-700 mb-1">NIM</label>
-                        <input type="text" name="nomor_induk" placeholder="Input NIM" 
+                        <input type="text" name="nomor_induk" placeholder="Input NIM" value="<?=  $_SESSION['input']['nomor_induk'] ?? '' ?>" 
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-xs">
                     </div>
 
                     <!-- Email PNJ -->
                     <div class="col-span-2 sm:col-span-1">
                         <label class="block text-xs font-medium text-gray-700 mb-1">Email PNJ</label>
-                        <input type="email" name="email" placeholder="Input email (email PNJ)" 
+                        <input type="email" name="email" placeholder="Input email (email PNJ)" value="<?=  $_SESSION['input']['email'] ?? '' ?>" 
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-xs">
                     </div>
 
                     <!-- Jurusan -->
                     <div class="col-span-2 sm:col-span-1">
                         <label class="block text-xs font-medium text-gray-700 mb-1">Jurusan</label>
-                        <select name="jurusan_unit" id="jurusan"
+                        <select name="jurusan_unit" id="jurusan" 
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-xs">
                             <option value="" disabled selected hidden>Jurusan</option>
                             <option value="Teknik Informatika dan Komputer">Teknik Informatika dan Komputer</option>

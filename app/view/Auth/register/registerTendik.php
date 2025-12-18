@@ -33,18 +33,19 @@
 
             <!-- Form -->
             <form action="/auth/handleRegister" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="role" value="<?= $role ?>">
                 
                 <!-- Nama -->
                 <div class="col-span-2 sm:col-span-1 mb-3">
                     <label class="block text-xs font-medium text-gray-700 mb-2">Nama Lengkap</label>
-                    <input type="text" name="username" placeholder="Input nama" 
+                    <input type="text" name="username" placeholder="Input nama" value="<?=  $_SESSION['input']['username'] ?? '' ?>"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs">
                 </div>
 
                 <!-- Email PNJ -->
                 <div class="col-span-2 sm:col-span-1 mb-3">
                     <label class="block text-xs font-medium text-gray-700 mb-2">Email PNJ</label>
-                    <input type="email" name="email" placeholder="Input email" 
+                    <input type="email" name="email" placeholder="Input email" value="<?=  $_SESSION['input']['email'] ?? '' ?>"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs">
                 </div>
 
@@ -53,7 +54,7 @@
                     <!-- NIM -->
                     <div class="col-span-2 sm:col-span-1">
                         <label class="block text-xs font-medium text-gray-700 mb-2">NIP</label>
-                        <input type="text" name="nomor_induk" placeholder="Input NIP" 
+                        <input type="text" name="nomor_induk" placeholder="Input NIP" value="<?=  $_SESSION['input']['nomor_induk'] ?? '' ?>"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs">
                     </div>
 
