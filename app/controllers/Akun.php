@@ -50,7 +50,7 @@ class Akun extends Controller{
     }
 
     public function handlePasswordChange(){
-        // 1. Validasi Input (User Error) - Tidak perlu try-catch
+        // 1. Validasi Input (User Error)
         if (empty($_POST['passwordBaru']) || empty($_POST['passwordLama']) || empty($_POST['passwordBaruConfirm'])) {
             Flasher::setModalInfo('Password tidak boleh kosong', 'Silahkan isi semua kolom password', 'error');
             header('location: /akun/gantiPassword');

@@ -80,7 +80,8 @@ class s_20251127_04_bookingSeeder extends Seeder{
             (44, 2, 28, 4, 'Rapat Dosen', '2025-11-23 09:00:00', '2025-11-23 11:00:00', 'NOVH-7', 'done', NULL, NULL, '2025-11-20 08:00:00', NOW()),
             (45, 3, 23, 7, 'Kunjungan Industri', '2025-11-25 08:00:00', '2025-11-25 12:00:00', 'NOVH-8', 'done', NULL, NULL, '2025-11-21 14:00:00', NOW()),
             (46, 1, 16, 3, 'Video Recording', '2025-11-28 13:00:00', '2025-11-28 15:00:00', 'NOVH-9', 'done', NULL, NULL, '2025-11-26 10:00:00', NOW()),
-            (47, 2, 6, 5, 'Evaluasi Akhir Bulan', '2025-11-30 16:00:00', '2025-11-30 17:30:00', 'NOVH-10', 'done', NULL, NULL, '2025-11-29 09:00:00', NOW());
+            (47, 2, 6, 5, 'Evaluasi Akhir Bulan', '2025-11-30 16:00:00', '2025-11-30 17:30:00', 'NOVH-10', 'done', NULL, NULL, '2025-11-29 09:00:00', NOW()),
+            (48, 2, 6, 5, 'Evaluasi Akhir Bulan', '2025-12-18 12:27:00', '2025-12-18 14:30:00', 'NOVH-10', 'pending', NULL, NULL, '2025-11-29 09:00:00', NOW());
             ";
 
         $this->db->query($sql);
