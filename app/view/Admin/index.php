@@ -123,13 +123,13 @@
                 </div>
 
                 <!-- Reschedule -->
-                <div class="bg-blue-overlay7 text-white1 p-6 rounded-2xl shadow-lg">
+                <div class="bg-blue-overlay9 text-white1 p-6 rounded-2xl shadow-lg">
                     <p class="text-white1 text-sm font-medium">Reschedule</p>
                     <p class="text-2xl font-bold mt-2"><?= $stats_booking['reschedule'] ?> Reschedule</p>
                 </div>
 
                 <!-- Selesai -->
-                <div class="bg-green1 text-white1 p-6 rounded-2xl shadow-lg">
+                <div class="bg-blue-overlay9 text-white1 p-6 rounded-2xl shadow-lg">
                     <p class="text-white1 text-sm font-medium">Selesai</p>
                     <p class="text-2xl font-bold mt-2"><?= $stats_booking['selesai'] ?> Booking</p>
                 </div>
@@ -138,13 +138,13 @@
 
             <div class="grid grid-cols-2 gap-6">
                 <!-- Dibatalkan -->
-                <div class="bg-red1 text-white1 p-6 rounded-2xl shadow-lg">
+                <div class="bg-blue-overlay9 text-white1 p-6 rounded-2xl shadow-lg">
                     <p class="text-white1 text-sm font-medium">Dibatalkan</p>
                     <p class="text-2xl font-bold mt-2"><?= $stats_booking['dibatalkan'] ?> Booking</p>
                 </div>
 
                 <!-- Dipinjam -->
-                <div class="bg-blue-overlay5 text-white1 p-6 rounded-2xl shadow-lg">
+                <div class="bg-blue-overlay9 text-white1 p-6 rounded-2xl shadow-lg">
                     <p class="text-white1 text-sm font-medium">Dipinjam</p>
                     <p class="text-2xl font-bold mt-2"><?= $stats_booking['dipinjam'] ?> Booking</p>
                 </div>
@@ -234,27 +234,27 @@
                     <p class="text-2xl font-bold mt-2"><?= $stats_anggota['total_anggota'] ?> Orang</p>
                 </div>
 
-                <div class="bg-blue-overlay8 text-white1 p-6 rounded-2xl shadow-lg">
+                <div class="bg-blue-overlay9 text-white1 p-6 rounded-2xl shadow-lg">
                     <p class="text-white1 text-sm font-medium">Dosen</p>
                     <p class="text-2xl font-bold mt-2"><?= $stats_anggota['total_dosen'] ?> Orang</p>
                 </div>
 
-                <div class="bg-blue-overlay7 text-white1 p-6 rounded-2xl shadow-lg">
+                <div class="bg-blue-overlay9 text-white1 p-6 rounded-2xl shadow-lg">
                     <p class="text-white1 text-sm font-medium">Mahasiswa</p>
                     <p class="text-2xl font-bold mt-2"><?= $stats_anggota['total_mahasiswa'] ?> Orang</p>
                 </div>
 
-                <div class="bg-blue-overlay5 text-white1 p-6 rounded-2xl shadow-lg">
+                <div class="bg-blue-overlay9 text-white1 p-6 rounded-2xl shadow-lg">
                     <p class="text-white1 text-sm font-medium">Tenaga Pendidik</p>
                     <p class="text-2xl font-bold mt-2"><?= $stats_anggota['total_tendik'] ?> Orang</p>
                 </div>
 
-                <div class="bg-green1 text-white1 p-6 rounded-2xl shadow-lg">
+                <div class="bg-blue-overlay9 text-white1 p-6 rounded-2xl shadow-lg">
                     <p class="text-white1 text-sm font-medium">Aktif</p>
                     <p class="text-2xl font-bold mt-2"><?= $stats_anggota['aktif'] ?> Orang</p>
                 </div>
 
-                <div class="bg-red1 text-white1 p-6 rounded-2xl shadow-lg">
+                <div class="bg-blue-overlay9 text-white1 p-6 rounded-2xl shadow-lg">
                     <p class="text-white1 text-sm font-medium">Tidak Aktif</p>
                     <p class="text-2xl font-bold mt-2"><?= ($stats_anggota['total_anggota'] - $stats_anggota['aktif']) ?> Orang</p>
                 </div>   
@@ -262,12 +262,12 @@
             
 
             <div class="grid grid-cols-2 gap-6">
-                <div class="bg-blue-overlay4 text-white1 p-6 rounded-2xl shadow-lg">
+                <div class="bg-blue-overlay9 text-white1 p-6 rounded-2xl shadow-lg">
                     <p class="text-white1 text-sm font-medium">Menunggu Approval</p>
                     <p class="text-2xl font-bold mt-2"><?= $stats_anggota['menunggu'] ?> Orang</p>
                 </div>
                 
-                <div class="bg-red1 text-white1 p-6 rounded-2xl shadow-lg">
+                <div class="bg-blue-overlay9 text-white1 p-6 rounded-2xl shadow-lg">
                     <p class="text-white1 text-sm font-medium">Ditolak</p>
                     <p class="text-2xl font-bold mt-2"><?= $stats_anggota['ditolak'] ?> Orang</p>
                 </div>
@@ -305,28 +305,28 @@
                     <p class="text-2xl font-bold mt-2"><?= $stats_ruangan['total_ruangan'] ?> Ruangan</p>
                 </div>
 
-                <div class="bg-green1 text-white1 p-6 rounded-2xl shadow-lg">
+                <div class="bg-blue-overlay9 text-white1 p-6 rounded-2xl shadow-lg">
                     <p class="text-white1 text-sm font-medium">Tersedia</p>
                     <p class="text-2xl font-bold mt-2"><?= $stats_ruangan['tersedia'] ?> Ruangan</p>
                 </div>
 
-                <div class="bg-red1 text-white1 p-6 rounded-2xl shadow-lg">
+                <div class="bg-blue-overlay9 text-white1 p-6 rounded-2xl shadow-lg">
                     <p class="text-white1 text-sm font-medium">Tidak Tersedia</p>
                     <p class="text-2xl font-bold mt-2"><?= $stats_ruangan['tidak_tersedia'] ?> Ruangan</p>
                 </div>
 
-                <div class="bg-blue-overlay text-white1 p-6 rounded-2xl shadow-lg">
+                <div class="bg-blue-overlay9 text-white1 p-6 rounded-2xl shadow-lg">
                     <p class="text-white1 text-sm font-medium">Ruangan Terpopuler</p>
                     <p class="text-2xl font-bold mt-2"><?= $stats_ruangan['populer_nama'] ?></p>
                 </div>
 
-                <div class="bg-yellow1 text-white1 p-6 rounded-2xl shadow-lg">
+                <div class="bg-blue-overlay9 text-white1 p-6 rounded-2xl shadow-lg">
                     <p class="text-white1 text-sm font-medium">Rating Terbaik</p>
                     <p class="text-2xl font-bold mt-2"><?= $stats_ruangan['rating_terbaik_nama'] . ' ' . $stats_ruangan['rating_terbaik_nilai'] ?></p>
                 </div>
 
                 <!-- Reschedule -->
-                <div class="bg-dark-overlay4 text-white1 p-6 rounded-2xl shadow-lg">
+                <div class="bg-blue-overlay9 text-white1 p-6 rounded-2xl shadow-lg">
                     <p class="text-white1 text-sm font-medium">Rating Terendah</p>
                     <p class="text-2xl font-bold mt-2"><?= $stats_ruangan['rating_terendah_nama'] . ' ' . $stats_ruangan['rating_terendah_nilai'] ?></p>
                 </div>

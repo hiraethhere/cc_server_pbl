@@ -23,7 +23,7 @@ class SuperAdmin extends Controller{
         $keyword = $_GET['keyword'] ?? null;
 
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-        $data['limit'] = 2;
+        $data['limit'] = 5;
         $total_data = $this->model('AdminModel')->countAdmin($keyword);
         
         // Hitung START (Offset) sesuai rumus kamu

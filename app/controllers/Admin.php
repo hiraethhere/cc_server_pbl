@@ -1741,7 +1741,7 @@ public function handleDeleteRoom(){
 
             // 1. Mulai Transaksi
             // (Pastikan class Database wrapper kamu support method beginTransaction)
-            $ruanganModel->db->beginTransaction(); 
+            // $bookingModel->db->beginTransaction(); 
 
             // 2. Eksekusi Soft Delete Ruangan
             $deleted = $ruanganModel->deleteRoom($_POST['id_room']);
@@ -1756,7 +1756,7 @@ public function handleDeleteRoom(){
             $canceledReschedules = $rescheduleModel->cancelPendingReschedulesByRoom($_POST['id_room']);
 
             // 4. Commit (Simpan semua perubahan secara permanen)
-            $ruanganModel->db->commit();
+            // $bookingModel->db->commit();
 
             // Siapkan pesan sukses
             $msg = "Ruangan berhasil dinonaktifkan.";
@@ -1770,7 +1770,7 @@ public function handleDeleteRoom(){
         } catch (Exception $e) {
             // 5. Rollback (Batalkan SEMUA perubahan jika terjadi error di langkah manapun)
             // Data ruangan akan kembali 'aktif' jika proses cancel booking error
-            $ruanganModel->db->rollBack();
+            // $ruanganModel->db->rollBack();
             Flasher::setModalInfo('Gagal', $e->getMessage(), 'error');
         }
 

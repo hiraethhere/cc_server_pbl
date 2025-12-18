@@ -193,7 +193,7 @@ function konfirmasiEdit() {
 function konfirmasiHapus() {
     Modal.confirm(
         'Hapus Ruangan?',
-        'Data ruangan akan terhapus untuk selamnaya dan tidak bisa dikembalikan',
+        'Data ruangan akan terhapus untuk selamanya dan tidak bisa dikembalikan',
         function() {
             document.getElementById('deleteRoomForm').submit();
         },
