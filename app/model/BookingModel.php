@@ -508,7 +508,8 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
         if (!empty($search)) {
             $sql .= " AND ( 
                         u.username LIKE :search OR 
-                        r.room_name LIKE :search
+                        r.room_name LIKE :search OR 
+                        b.booking_code LIKE :search
                     )";
         }
 
@@ -558,7 +559,7 @@ public function getAllBookingByUser($id_user, $limit, $offset) {
         }
 
         if (!empty($search)) {
-            $sql .= " AND (u.username LIKE :search OR r.room_name LIKE :search)";
+            $sql .= " AND (u.username LIKE :search OR r.room_name LIKE :search OR b.booking_code LIKE :search)";
         }
 
         $this->db->query($sql);

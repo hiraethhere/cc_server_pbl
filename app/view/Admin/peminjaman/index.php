@@ -26,7 +26,7 @@ function isActive($current, $check) {
             <?php 
             $tab_labels = [
                 'hariIni' => 'Hari ini',
-                'berlangsung' => 'Berlangsung',
+                'berlangsung' => 'Menunggu',
                 'reschedule' => 'Reschedule',
                 'riwayat' => 'Riwayat'
             ];
@@ -41,7 +41,7 @@ function isActive($current, $check) {
             <?php 
             $title_labels = [
                 'hariIni' => 'Peminjaman Hari ini',
-                'berlangsung' => 'Berlangsung',
+                'berlangsung' => 'Menunggu',
                 'reschedule' => 'Reschedule',
                 'riwayat' => 'Riwayat Peminjaman'
             ];
@@ -75,7 +75,7 @@ function isActive($current, $check) {
                         <?= isActive($tab, 'berlangsung') 
                             ? 'bg-blue-overlay text-white shadow-md' 
                             : 'bg-blue-overlay1 text-blue-overlay hover:bg-blue-overlay2' ?>">
-                    Berlangsung
+                    Menunggu
                 </a></a>
                 <a href="?tab=reschedule"
                 class="px-6 py-2.5 font-medium text-sm transition-all duration-200 text-center

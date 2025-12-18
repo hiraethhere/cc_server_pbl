@@ -48,7 +48,7 @@ function getStyleStatus($status): string {
    $map = [
         'pending'  => 'bg-blue-600 text-[#1E68FB]',
         'active'   => 'bg-[#38C55C]',
-        'ongoing'  => 'bg-yellow-500 text-yellow-600 ',
+        'ongoing'  => 'bg-yellow-500 text-white1 ',
         'done'     => 'bg-[#38C55C]',
         'cancelled' => 'bg-[#C90B0B]',
         'rejected' => 'bg-[#C90B0B]', //opacity 30%

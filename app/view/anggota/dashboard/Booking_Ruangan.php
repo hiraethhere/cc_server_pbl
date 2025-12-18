@@ -203,7 +203,6 @@
         </div>
     </div>
 </main>
-<?php echo $i ?>
 <script>const BASEURL = "<?= BASEURL ?>";</script>
 <script src="/js/bookingRoom.js?"v=<?php echo time(); ?>></script>
 <script>

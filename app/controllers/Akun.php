@@ -98,6 +98,7 @@ class Akun extends Controller{
             Flasher::setModalInfo('Ganti Password Berhasil', 'Silahkan login kembali', 'success');
             unset($_SESSION['user']); // Hapus session user
             unset($_SESSION['role']);
+            setcookie('ruangin_login', '', time() - 3600, '/');
             // session_destroy(); // Hancurkan session
             header('location: /auth/'); // Logout paksa setelah ganti password
             exit;

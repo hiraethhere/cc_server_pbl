@@ -875,7 +875,7 @@ class Admin extends Controller {
         if ($result === 0 ) {
             throw new Exception('internal sql error');
         }
-        sendEmail($_POST['email'] ?? 'email user', $_POST['username' ?? 'user'], "Akun anda telah aktif kembali", "anda sekarang bisa login ke ruanginPNJ" );
+        sendEmail($_POST['email'] ?? 'email_user', $_POST['username' ?? 'user'], "Akun anda telah aktif kembali", "anda sekarang bisa login ke ruanginPNJ" );
         Flasher::setModalInfo('Berhasil Aktifkan Anggota', 'Akun anggota sudah bisa aktif kembali');
         header('location: /admin/anggota');
         exit();

@@ -54,7 +54,7 @@ class s_20251127_04_bookingSeeder extends Seeder{
             (24, 2, 31, 2, NULL, '2025-12-28 08:00:00', '2025-12-28 10:00:00', 'MNT-R02', 'pending', NULL, NULL, NOW(), NOW()),
             (25, 1, 12, 3, NULL, '2025-12-14 13:00:00', '2025-12-14 15:00:00', 'STDG-1', 'done', NULL, NULL, NOW(), NOW()),
             (26, 1, 16, 3, NULL, '2025-12-05 09:00:00', '2025-12-05 11:00:00', 'STDG-2', 'done', NULL, NULL, NOW(), NOW()),
-            (27, 2, 10, 3, NULL, '2025-12-18 10:00:00', '2025-12-18 12:00:00', 'LBJ-23', 'cancelled', 'Akun anda belum diverifikasi', 'admin', NOW(), NOW()),
+            (27, 2, 6, 3, NULL, '2025-12-18 10:00:00', '2025-12-18 12:00:00', 'LBJ-23', 'ongoing', 'Akun anda belum diverifikasi', 'admin', NOW(), NOW()),
 
             -- === DATA TAMBAHAN HISTORY (ID 28-47) OKTOBER & NOVEMBER === --
             
