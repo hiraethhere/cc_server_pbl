@@ -513,7 +513,7 @@ class Admin extends Controller {
         $this->view('admin/peminjaman/detailRiwayat', $data);
     }
 
-    public function buatBooking(){
+    public function buatPeminjaman(){
 
         $data['limit'] = 5; // Jumlah data per halaman
         
@@ -1173,7 +1173,7 @@ class Admin extends Controller {
 
         if (!$id_room || !$bookingDate || !$startTime || !$endTime) {
             Flasher::setModalInfo('Gagal!', 'Semua field wajib diisi', 'error');
-            header("Location: /admin/buatBooking");
+            header("Location: /admin/buatPeminjaman");
         exit;
         }
 
@@ -1181,7 +1181,7 @@ class Admin extends Controller {
         if (!isset($_POST['nim']) || !is_array($_POST['nim'])) {
             // Handle jika tidak ada input NIM sama sekali
             Flasher::setModalInfo('Gagal!', 'Data anggota tidak valid', 'error');
-            header("Location: /admin/buatBooking");
+            header("Location: /admin/buatPeminjaman");
             exit;
         }
 
@@ -1273,7 +1273,7 @@ class Admin extends Controller {
 
             $bookingModel->commit();
             Flasher::setModalInfo('Booking Berhasil', 'Booking berhasil dibuat. Berhasil Buat Booking dari Admin kode: ' . $bookingCode ,'success');
-            header("Location: /admin/buatBooking");
+            header("Location: /admin/buatPeminjaman");
             exit;
 
         } catch (\Throwable $e) {

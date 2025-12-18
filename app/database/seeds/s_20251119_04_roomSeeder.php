@@ -18,7 +18,8 @@ class s_20251119_04_roomSeeder extends Seeder {
             (6, 1, 'Sudut Pustaka', 'sudutPustaka.jpg','Pojok literasi yang luas dengan koleksi novel. Berkonsep lesehan dengan 4 meja dan akses listrik, cocok untuk membaca santai.','Ruang Baca Kelompok (Lesehan)', 2, 'active', 6, 12, NOW(), NOW()),
             (7, 1, 'Zona Interaktif', 'zonaInteraktif.jpg','Ruang kreasi untuk melepas penat. Tersedia 2 meja lesehan, bantal warna-warni, dan aneka permainan papan (catur, dkk).','Ruang Kreasi dan Rekreasi', 2, 'active', 6, 12, NOW(), NOW()),
             (8, 1, 'Ruang Sinergi', 'ruangSinergi.jpg','Ruang telekonferensi profesional. Dilengkapi set meja kursi dan proyektor/monitor untuk mendukung rapat daring atau presentasi.','Ruang Telekonferensi', 2, 'active', 6, 12, NOW(), NOW()),
-            (9, 1, 'Ruang Layar', 'ruangLayar.jpg','Ruang audio visual lengkap dengan TV, sound system/DVD, kipas angin, 4 meja lesehan, dan bantal duduk untuk kenyamanan menonton.','Ruang Audio Visual', 2, 'active', 6, 12, NOW(), NOW());
+            (9, 1, 'Ruang Layar', 'ruangLayar.jpg','Ruang audio visual lengkap dengan TV, sound system/DVD, kipas angin, 4 meja lesehan, dan bantal duduk untuk kenyamanan menonton.','Ruang Audio Visual', 2, 'active', 6, 12, NOW(), NOW()),
+            (10, 1, 'Ruang Rapat', 'ruangRapat.jpg','Ruang rapat formal berkapasitas besar. Dirancang profesional untuk pertemuan resmi, sidang, atau diskusi strategis.','Ruang Rapat Besar', 2, 'spesial', 2, NULL, NOW(), NOW());
             ";
         $this->db->query($sql);
         $this->db->execute();

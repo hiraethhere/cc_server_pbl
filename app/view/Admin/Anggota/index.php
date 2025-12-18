@@ -287,7 +287,7 @@ $nomor = ($current_page - 1) * $limit + 1
                                 <td class="px-6 py-4 text-sm text-dark-overlay"><?= $user['jurusan_unit'] ?></td>
                                 <td class="px-6 py-4">
                                     <span class="inline-flex px-3 py-1 text-xs font-medium rounded-sm <?= getStyleStatus($user['status']) ?> text-background2 min-w-24 justify-center">
-                                        <?= htmlspecialchars(translateStatus($user['status']) ?? '-') ?>
+                                        <?= htmlspecialchars(translateStatusUser($user['status']) ?? '-') ?>
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-center">

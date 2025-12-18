@@ -86,7 +86,7 @@
             <div class="flex flex-col items-start justify-between text-xs gap-4 mt-4">
                 <div>
                     <span class="text-gray-600">Tidak mendapatkan kode? </span>
-                    <a href="" class="text-blue-600 hover:underline font-medium">Kirim ulang kode</a>
+                    <a href="/auth/resendOTP" class="text-blue-600 hover:underline font-medium">Kirim ulang kode</a>
                 </div>
 
                 <div>

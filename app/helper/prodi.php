@@ -55,7 +55,7 @@ function getProdi() {
 
 function getJurusan(){
     return [
-        'Teknik Informatika',
+        'Teknik Informatika dan Komputer',
         'Teknik Elektro',
         'Teknik Mesin',
         'Teknik Sipil',

@@ -371,6 +371,40 @@ class Auth extends Controller {
         $this->view('Auth/forgetPassword');
     }
 
+        public function resendOTP() {
+        // die("Method resendOTP terpanggil!");
+        // 1. Cek apakah ada email di session (artinya user memang sedang dalam proses reset)
+        if (!isset($_SESSION['reset_email'])) {
+            Flasher::setModalInfo('Sesi berakhir', 'Silakan masukkan email kembali', 'danger');
+            header('Location: /auth/forgetPassword');
+            exit;
+        }
+
+        // 2. (Opsional) Cek cooldown agar tidak spam (misal: hanya boleh resend tiap 60 detik)
+        if (isset($_SESSION['last_otp_resend']) && (time() - $_SESSION['last_otp_resend'] < 60)) {
+            Flasher::setModalInfo('Tunggu sebentar', 'Harap tunggu 60 detik sebelum mengirim ulang', 'warning');
+            header('Location: /auth/verifyPassword');
+            exit;
+        }
+
+        // 3. Generate OTP baru
+        $_SESSION['otp'] = generateOTP();
+        $_SESSION['otp_expire'] = time() + 600; // 10 menit
+        $_SESSION['last_otp_resend'] = time(); // Simpan waktu kirim terakhir
+
+        // 4. Kirim ulang email
+        try {
+            sendEmail($_SESSION['reset_email'], $_SESSION['name'], 'Ini adalah kode OTP baru anda', $_SESSION['otp']);
+            Flasher::setModalInfo('OTP Berhasil dikirim ulang', 'Silakan cek email anda', 'success');
+            header('Location: /auth/verifyPassword');
+            exit;
+        } catch (Exception $e) {
+            Flasher::setModalInfo($e->getMessage(), 'Gagal mengirim email', 'error');
+            header('Location: /auth/verifyPassword');
+            exit;
+        }
+    }
+
     // ini buat lupa password ya bukan password biasa
     public function verifyPassword(){
         if (!isset($_SESSION['reset_email'])) {
@@ -405,10 +439,6 @@ class Auth extends Controller {
                 unset($_SESSION['otp'], $_SESSION['otp_expire']);
                 header('location: /auth/resetPassword');
                 exit;
-
-            
-            header('location: /auth/resetPassword');
-            exit;
         }
 
         $this->view('auth/verifyOTP');

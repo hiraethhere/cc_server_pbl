@@ -25,7 +25,8 @@ function translateStatusUser($status): string
         'cancelled' => 'Dibatalkan',
         'expired'  => 'Kadaluarsa',
         'suspended' => 'Suspended',
-        'pending'  => 'Belum Aktif'
+        'pending'  => 'Belum Aktif',
+        'non-active' => 'Tidak Aktif'
     ];
 
     return $lookup[$status] ?? 'Status tidak dikenal';

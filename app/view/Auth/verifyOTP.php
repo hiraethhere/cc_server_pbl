@@ -54,7 +54,7 @@
             <div class="flex flex-col items-start justify-between text-xs gap-4 mt-4">
                 <div>
                     <span class="text-gray-600">Tidak mendapatkan kode? </span>
-                    <a href="#" id="resendLink" class="text-blue-600 hover:underline font-medium disabled:opacity-50" data-disabled="true">Kirim ulang kode</a>
+                    <a href="/auth/resendOTP" id="resendLink" class="text-blue-600 hover:underline font-medium disabled:opacity-50">Kirim ulang kode</a>
                 </div>
 
                 <div>
@@ -140,9 +140,9 @@
                 });
             });
 
-            // Timer for resend (3 minutes)
+            // Timer for resend (2 minutes)
             const TIMER_KEY = 'otp_timer_expiry';
-            const DURATION = 3 * 60; // seconds
+            const DURATION = 2 * 60; // seconds
             const display = document.getElementById('timer');
             const resendLink = document.getElementById('resendLink');
 
