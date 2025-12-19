@@ -10,6 +10,8 @@ if (!in_array($tab, $valid_tabs)) {
 function isActive($current, $check) {
     return $current === $check;
 }
+
+$nomor = ($current_page - 1) * $limit + 1
 ?>
 
 
@@ -174,10 +176,9 @@ function isActive($current, $check) {
                         </thead>
                         
                         <tbody class="divide-y divide-dark-overlay4">
-                            <?php $i = 1 ?>
                             <?php foreach($Peminjamans as $Peminjaman) : ?>
                             <tr class="hover:bg-gray-50 transition-colors duration-150">
-                                <td class="px-4 py-4 text-xs text-dark-overlay"><?= $i ?></td>
+                                <td class="px-4 py-4 text-xs text-dark-overlay"><?= $nomor ?></td>
                                 <td class="px-4 py-4 text-xs font-medium text-dark-overlay"><?= tanggal_indonesia($Peminjaman['start_time']) ?>
                                     <br>
                                     <span><?= waktu_indonesia($Peminjaman['start_time']) . '-' . waktu_indonesia($Peminjaman['end_time']) ?></span>
@@ -197,7 +198,7 @@ function isActive($current, $check) {
                                     </a>
                                 </td>
                             </tr>
-                            <?php $i++ ?>
+                            <?php $nomor++ ?>
                             <?php endforeach; ?>
                         </tbody>
                     </table>

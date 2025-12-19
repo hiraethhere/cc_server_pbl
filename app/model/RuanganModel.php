@@ -32,7 +32,7 @@ class RuanganModel {
     //     return $this->db->resultSet();
     // }
 
-        public function getRuanganForDashboard(){
+    public function getRuanganForDashboard(){
         $this->db->query("SELECT * FROM v_ruangan_dashboard");
         $this->db->execute();
         return $this->db->resultSet();
