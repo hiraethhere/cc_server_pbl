@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>Test-Login-RuanginPNJ</name>
+   <tag></tag>
+   <comment></comment>
+   <origin>WEB_RECORDER</origin>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>7dc33551-5682-44f0-9da0-e29f8132793c</testCaseGuid>
+</TestCaseEntity>

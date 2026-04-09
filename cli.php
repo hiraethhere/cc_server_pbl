@@ -250,7 +250,7 @@ function startReminder(){
         $members = $reminderModel->getBookingMembers($booking['id_booking']);
         $sentEmails = [];
 
-        // 1. KIRIM KE KETUA (Datanya sudah ada di $booking, tidak perlu query lagi)
+        // KIRIM KE KETUA (Datanya sudah ada di $booking, tidak perlu query lagi)
         if (!empty($booking['email'])) {
             $to = $booking['email'];
             $username = $booking['username'];

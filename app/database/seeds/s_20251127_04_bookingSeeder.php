@@ -15,7 +15,8 @@ class s_20251127_04_bookingSeeder extends Seeder{
         $upcoming_start = date('Y-m-d H:i:s', strtotime('+3 hours'));
         $upcoming_end   = date('Y-m-d H:i:s', strtotime('+5 hours'));
 
-        $upcoming_20min_start = date('Y-m-d H:i:s', strtotime('+10 minutes'));
+        $upcoming_20min_start = date('Y-m-d H:i:s', strtotime('+20 minutes'));
+        $ending_1_hour = date('Y-m-d H:i:s', strtotime('+60 minutes', strtotime($upcoming_20min_start)));
         $ending_10min_end = date('Y-m-d H:i:s', strtotime('+20 minutes'));
 
         $now = date('Y-m-d H:i:s');
@@ -29,10 +30,10 @@ class s_20251127_04_bookingSeeder extends Seeder{
             ) VALUES
             -- === DATA AWAL (ID 1-27) === --
             (1, 1, 6, 3, NULL, '2025-12-01 10:00:00', '2025-12-01 13:00:00', 'UJ934TG', 'done', NULL, NULL, NOW(), NOW()),
-            (2, 2, 7, 4, NULL, '2025-12-02 09:00:00', '2025-12-02 11:00:00', 'BK002', 'done', NULL, NULL, NOW(), NOW()),
-            (3, 3, 8, 4, NULL, '2025-12-03 13:00:00', '2025-12-03 15:00:00', 'BK003', 'done', NULL, NULL, NOW(), NOW()),
-            (4, 1, 6, 3, NULL, '2025-12-04 10:00:00', '2025-12-04 13:00:00', 'BK001', 'cancelled', NULL, NULL, NOW(), NOW()),
-            (5, 3, 7, 5, NULL, '2025-12-20 09:00:00', '2025-12-20 11:00:00', 'BK-NEXT', 'pending', NULL, NULL, NOW(), NOW()),
+            (2, 2, 7, 4, NULL, '2025-12-01 10:00:00', '2025-12-01 13:00:00', 'BK002', 'cancelled', NULL, NULL, NOW(), NOW()),
+            (3, 3, 8, 4, NULL, '$upcoming_20min_start', '$ending_1_hour', 'BK003', 'pending', NULL, NULL, NOW(), NOW()),
+            (4, 1, 6, 3, NULL, '$start_now', '$ongoing_end', 'BK003' ,  'pending', NULL, NULL, NOW(), NOW()),
+            (5, 3, 7, 5, NULL, '$start_now', '$ongoing_end', 'BK-NEXT', 'pending', NULL, NULL, NOW(), NOW()),
             (6, 1, 8, 4, NULL, '2025-12-21 13:00:00', '2025-12-21 15:00:00', 'DUTAPNJ', 'pending', NULL, NULL, NOW(), NOW()),
             (7, 1, 6, 4, NULL, '2025-12-17 08:00:00', '2025-12-17 10:00:00', 'DNIWW987', 'pending', NULL, NULL, NOW(), NOW()),
             (8, 2, 6, 4, NULL, '2026-01-15 14:00:00', '2026-01-15 17:00:00', 'BK1002', 'done', NULL, NULL, NOW(), NOW()),

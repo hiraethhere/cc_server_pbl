@@ -61,7 +61,7 @@
                     <!-- Jurusan -->
                     <div class="col-span-2 sm:col-span-1">
                         <label class="block text-xs font-medium text-gray-700 mb-2">Jurusan</label>
-                        <select name="jurusan_unit" 
+                        <select name="jurusan_unit" required
                             class="bg-white w-full text-xs px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="" disabled selected hidden>Jurusan</option>
                             <option value="Teknik Informatika">Teknik Informatika dan Komputer</option>

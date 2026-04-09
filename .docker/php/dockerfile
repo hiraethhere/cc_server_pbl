@@ -1,7 +1,7 @@
-# 1. Mulai dari image PHP + Apache
+# Mulai dari image PHP + Apache
 FROM php:8.2-apache
 
-# 2. Install dependensi sistem untuk Composer dan ekstensi PHP
+# Install dependensi sistem untuk Composer dan ekstensi PHP
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
