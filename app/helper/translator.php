@@ -11,8 +11,7 @@ function translateStatus($status): string
         'expired'  => 'Kadaluarsa',
         'pending'  => 'Menunggu',
         'approved' => 'Disetujui',
-        'declined' => 'Ditolak',
-        'suspended' => 'suspended'
+        'declined' => 'Ditolak'
     ];
 
     return $lookup[$status] ?? 'Status tidak dikenal';
@@ -82,8 +81,7 @@ function getStyleStatusDetail($status): string {
         'cancelled' => 'bg-[#C90B0B]/30',
         'rejected' => 'bg-[#C90B0B]/30', //opacity 30%
         'approved' => 'bg-[#38C55C]/30',
-        'declined' => 'bg-[#C90B0B]/30',
-        'suspended' => 'bg-red-overlay3'
+        'declined' => 'bg-[#C90B0B]/30'
     ];
 
     return $map[$status] ?? 'bg-gray-400';

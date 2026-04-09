@@ -2,7 +2,7 @@
 /node_modules
 
 # File CSS yang digenerate Tailwind
-# /public/css/output.css
+/public/css/output.css
 
 # Log error NPM
 npm-debug.log

@@ -203,6 +203,7 @@
                         </details>
                     </div>
                 </div>
+
                 <!-- KARTU TATA TERTIB (STICKY) -->
                 <details class="lg:top-6 bg-background2 rounded-xl shadow-xl p-4 z-10">
                     <summary class="flex items-center justify-between">

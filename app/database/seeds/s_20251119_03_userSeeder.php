@@ -23,7 +23,7 @@ class s_20251119_03_userSeeder extends Seeder{
             (4, 4, 'dosen', '$passwordUser', 'dosen@example.com', '55667788', 'Administrasi', 'Sekretariat', 'active', 0, 1, NULL, NULL, NULL, NULL, NOW(), NOW()),
             (5, 5, 'staff', '$passwordUser', 'staff@example.com', '55667789', 'Staff', 'Sekretariat', 'active', 0, 1, NULL, NULL, NULL, NULL, NOW(), NOW()),
             (6, 3, 'Shidqi Athallah Bahri', '$passwordUser', 'shidqi.athallah.bahri.tik24@stu.pnj.ac.id', '2407411038', 'Teknik Informatika dan Komputer', 'D4 Teknik Informatika', 'active', 0, 1, NULL, NULL, NULL, NULL , NOW(), NOW()),
-            (7, 4, 'Nadiva Mecca Rimanda', '$passwordUser', 'nadiva.mecca.rimanda.tik24@stu.pnj.ac.id', '2407411037', 'Teknik Informatika', NULL, 'active', 0, 1, NULL, NULL, NULL, NULL , NOW(), NOW()),
+            (7, 4, 'Nadiva Mecca Rimanda', '$passwordUser', 'nadiva.mecca.rimanda.tik24@stu.pnj.ac.id', '2407411037', 'Teknik Informatika', NULL, 'pending', 0, 1, NULL, NULL, NULL, NULL , NOW(), NOW()),
             (8, 5, 'Naqib Zuhair Al-Hudri', '$passwordUser', 'naqib.zuhair.tik24@stu.pnj.ac.id', '2407411039', 'Perpustakaan', NULL, 'active', 0, 1, NULL, NULL, NULL, NULL , NOW(), NOW()),
             (9, 3, 'antin', '$passwordUser', 'expired@example.com', '556677891', 'Teknik Informatika dan Komputer', 'Teknik Multimedia', 'active', 0, 1, NULL, NULL, NULL, '$expired' , NOW(), NOW()),
             (10, 3, 'Lebron James', '$passwordUser', 'lebron.tik24@stu.pnj.ac.id', '2407411045', 'Teknik Informatika dan Komputer', 'D4 Teknik Yapping', 'pending', 0, 1, NULL, NULL, NULL, '$expired4Years', NOW(), NOW()),

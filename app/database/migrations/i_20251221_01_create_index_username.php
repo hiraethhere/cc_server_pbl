@@ -1,6 +1,6 @@
 <?php
 
-class z_20251221_01_create_index_username extends Migration{
+class i_20251221_01_create_index_username extends Migration{
     public function up()
     {
         $index = "CREATE INDEX idx_username ON users(username);";

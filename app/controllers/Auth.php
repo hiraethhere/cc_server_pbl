@@ -134,9 +134,9 @@ class Auth extends Controller {
                 throw new Exception('Password tidak sama');
             }
 
-            // if (!validatePassword($_POST['password'])) {
-            //     throw new Exception('Password minimal 6 huruf dan 1 angka');
-            // }
+            if (!validatePassword($_POST['password'])) {
+                throw new Exception('Password minimal 6 huruf dan 1 angka');
+            }
 
             if (!validateNIM($_POST['nomor_induk'])) {
                 throw new Exception('NIM hanya boleh berisi angka');
@@ -223,7 +223,7 @@ class Auth extends Controller {
             header('Location: /auth/pending');
             exit;
 
-        } catch (Exception $e ) {
+        } catch (\Exception $e ) {
             Flasher::setModalInfo( 'Gagal Registrasi',$e->getMessage(), 'error');
             header('Location: /auth/registerForms');
             exit;

@@ -75,7 +75,7 @@ function validatePassword($password) {
     $jumlahAngka = preg_match_all('/[0-9]/', $password);
 
     // 3. Cek kondisi: Minimal 6 huruf DAN Minimal 1 angka
-    if ($jumlahHuruf >= 6 && $jumlahAngka >= 1) {
+    if ($jumlahHuruf === 4 && $jumlahAngka === 1) {
         return true; // Valid
     } else {
         return false; // Tidak Valid
