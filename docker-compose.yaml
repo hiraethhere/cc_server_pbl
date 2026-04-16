@@ -3,7 +3,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: .docker/php/Dockerfile
+      dockerfile: .docker/php/dockerfile
     container_name: ruanginPNJ_server
     ports:
       - "8082:80" # Akses project dari http://localhost:8082 di browser

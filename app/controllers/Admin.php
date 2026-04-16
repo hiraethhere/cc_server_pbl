@@ -73,7 +73,7 @@ class Admin extends Controller {
         $data['stats_ruangan'] = $dashboardModel->getRoomStats();
         $data['judul'] = 'Dashboard Admin';
         $data['navbar'] = 'dashboard';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/index', $data);
     }
 
@@ -267,7 +267,7 @@ class Admin extends Controller {
         $data['current_page'] = $page;
         $data['judul'] = 'Data Anggota';
         $data['navbar'] = 'Anggota';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/anggota/index', $data);
     }
 
@@ -286,7 +286,7 @@ class Admin extends Controller {
         $data['masaAktif'] = $date1->diff($date2)->y; 
         $data['judul'] = 'Detail Anggota';
         $data['navbar'] = 'Anggota';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/anggota/detail', $data);
     }
 
@@ -312,7 +312,7 @@ class Admin extends Controller {
         $data['judul'] = 'Selesaikan Peminjaman';
         $data['navbar'] = 'Anggota';
 
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         switch ($data['user']['role_name']) {
             case 'Mahasiswa':
                 $this->view('admin/anggota/selesaikan', $data);
@@ -324,7 +324,7 @@ class Admin extends Controller {
                 $this->view('admin/anggota/selesaikanDosen', $data);
                 break;
         }
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
     }
 
     public function selesaikanDosen($id_user = NULL){
@@ -341,7 +341,7 @@ class Admin extends Controller {
         $data['createdDate'] = tanggal_indonesia($data['user']['created_at']);
         $data['judul'] = 'Selesaikan Dosen/Tendik';
         $data['navbar'] = 'Anggota';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/anggota/selesaikanDosen');
     }
 
@@ -350,7 +350,7 @@ class Admin extends Controller {
         $data['navbar'] = 'Anggota';
         $data['dataJurusan'] = getJurusan();
         $data['dataProdi'] = getProdi();
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/anggota/tambahAnggota', $data);
     }
     
@@ -436,7 +436,7 @@ class Admin extends Controller {
 
         $data['judul'] = 'Peminjaman';
         $data['navbar'] = 'Peminjaman';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/peminjaman/index', $data);
     }
 
@@ -454,7 +454,7 @@ class Admin extends Controller {
         $data['members'] = $this->model('BookingModel')->getBookingMembers($id_booking);
         $data['judul'] = 'Detail Peminjaman Hari Ini';
         $data['navbar'] = 'Peminjaman';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/peminjaman/detailHariIni', $data);
     }
 
@@ -472,7 +472,7 @@ class Admin extends Controller {
         $data['members'] = $this->model('RescheduleModel')->getRescheduleMembers($id_res);
         $data['judul'] = 'Detail Reschedule';
         $data['navbar'] = 'Peminjaman';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/peminjaman/detailReschedule', $data);
     }
 
@@ -492,7 +492,7 @@ class Admin extends Controller {
         $data['members'] = $this->model('BookingModel')->getBookingMembers($id_booking);
         $data['judul'] = 'Detail Peminjaman yang Berlangsung';
         $data['navbar'] = 'Peminjaman';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/peminjaman/detailBerlangsung', $data);
     }
 
@@ -509,7 +509,7 @@ class Admin extends Controller {
         $data['members'] = $this->model('BookingModel')->getBookingMembers($id_booking);
         $data['judul'] = 'Detail Riwayat Peminjaman';
         $data['navbar'] = 'Peminjaman';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/peminjaman/detailRiwayat', $data);
     }
 
@@ -541,7 +541,7 @@ class Admin extends Controller {
         $data['rapat'] = $this->model('RuanganModel')->getRuangRapat();
         $data['judul'] = 'Buat Pinjaman Baru';
         $data['navbar'] = 'Peminjaman';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/Peminjaman/buatBooking', $data);
     }
 
@@ -564,7 +564,7 @@ class Admin extends Controller {
 
         $data['judul'] = 'Buat Pinjaman Baru';
         $data['navbar'] = 'Peminjaman';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/Peminjaman/bookingRuangan', $data);
     }
 
@@ -572,7 +572,7 @@ class Admin extends Controller {
         $data['rapat'] = $this->model('RuanganModel')->getRuangRapat();
         $data['judul'] = 'Buat Pinjaman Baru';
         $data['navbar'] = 'Peminjaman';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/Peminjaman/bookingRuangRapat', $data);
     }
 
@@ -609,14 +609,14 @@ class Admin extends Controller {
         $data['current_page'] = $page;
         $data['judul'] = 'Data Ruangan';
         $data['navbar'] = 'Ruangan';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/ruangan/index', $data);
     }
 
     public function tambahDataRuangan(){
         $data['judul'] = 'Tambah Data Ruangan';
         $data['navbar'] = 'Ruangan';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/ruangan/tambahRuangan');
     }
 
@@ -631,7 +631,7 @@ class Admin extends Controller {
         $data['room'] = $this->model('RuanganModel')->getRuanganWithRating($id_room);
         $data['judul'] = 'Edit Data Ruangan';
         $data['navbar'] = 'Ruangan';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/ruangan/editDataRuangan', $data);
     }
 
@@ -639,7 +639,7 @@ class Admin extends Controller {
         $data['tatib'] = $this->model('AnnouncementModel')->getAnnouncement(1);
         $data['judul'] = 'Edit Tata Tertib';
         $data['navbar'] = 'Ruangan';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/ruangan/editTataTertib', $data);
     }
 
@@ -647,7 +647,7 @@ class Admin extends Controller {
         // $data['ruangan'] = $this->model('RuanganModel')->getAllRooms 
         $data['judul'] = 'Detail Ruangan';
         $data['navbar'] = 'Ruangan';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/ruangan/dataRuangan');
     }
 
@@ -719,42 +719,42 @@ class Admin extends Controller {
         $data['judul'] = 'Feedback Pengguna';
         $data['navbar'] = 'Feedback';
         
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/feedback/index', $data);
     }
 
     public function detailAdmin(){
         $data['judul'] = 'Detail Data Admin';
         $data['navbar'] = 'superAdmin';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/superAdmin/detailAdmin', $data);
     }
 
     public function tambahAdmin(){
         $data['judul'] = 'Tambah Data Admin';
         $data['navbar'] = 'superAdmin';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/superAdmin/tambahAdmin', $data);
     }
 
     public function Akun(){
         $data['judul'] = 'Profile Admin';
         $data['navbar'] = 'Akun';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/akun/index');
     }
 
     public function gantiPassword(){
         $data['judul'] = 'Ganti Password';
         $data['navbar'] = 'Akun';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/akun/gantiPassword');
     }
 
     public function hapusAkun(){
         $data['judul'] = 'Hapus Akun';
         $data['navbar'] = 'Akun';
-        $this->view('layout/sidebar', $data);
+        $this->view('Layout/Sidebar', $data);
         $this->view('admin/akun/hapusAkun');
     }
 

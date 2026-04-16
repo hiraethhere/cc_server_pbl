@@ -1,9 +1,13 @@
 <?php
 
-$base_url = $_ENV['BASE_URL'] ?? 'http://localhost:8082/';
+$protocol = (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ? 'https://' : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://');
+
+// Gunakan fungsi pengecekan agar tidak terjadi error "already defined"
+if (!defined('BASEURL')) {
+    define('BASEURL', $protocol . $_SERVER['HTTP_HOST'] . '/');
+}
 
 
-define('BASEURL', $base_url);
 define('DB_HOST', $_ENV['DB_HOST']);
 define('DB_USER', $_ENV['DB_USERNAME']);
 define('DB_PASS', $_ENV['DB_PASSWORD']);
