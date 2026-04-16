@@ -2,11 +2,14 @@
 
 $protocol = (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') ? 'https://' : (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://');
 
-// Gunakan fungsi pengecekan agar tidak terjadi error "already defined"
-if (!defined('BASEURL')) {
-    define('BASEURL', $protocol . $_SERVER['HTTP_HOST'] . '/');
-}
+// Deteksi khusus jalur HTTPS untuk Ngrok, sisanya HTTP untuk localhost
+$isNgrok = isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'ngrok') !== false;
+$protocol = $isNgrok ? 'https://' : 'http://';
 
+if (!defined('BASEURL')) {
+    // Tanda garis miring di akhir dihilangkan untuk mencegah "//" di JavaScript
+    define('BASEURL', $protocol . $_SERVER['HTTP_HOST'] . '/'); 
+}
 
 define('DB_HOST', $_ENV['DB_HOST']);
 define('DB_USER', $_ENV['DB_USERNAME']);
